@@ -10,5 +10,5 @@ Documenting my learning process of this library
 - 
 
 ### Resources
-The Cherno - OpenGl series on YouTube \n
+The Cherno - OpenGl series on YouTube <br>
 GamesWithGabe - Making a 2D game in java
