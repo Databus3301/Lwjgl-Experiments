@@ -5,6 +5,7 @@ import Render.Renderer;
 /*
 This parent class serves as a template for all tests.
 Test are used to test the functionality of the engine.
+
  */
 public class Test {
 
