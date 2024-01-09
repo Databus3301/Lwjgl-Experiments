@@ -1,4 +1,4 @@
-package Render.Texturing;
+package Render.Entity.Texturing;
 
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL43.*;
@@ -42,7 +42,7 @@ public class Texture {
 
             STBImage.stbi_image_free(image);
         } else {
-            assert false : "[STBI Error:] (Render.Texturing.Texture) Could not load image '" + path + "'";
+            assert false : "[STBI Error:] (Render.Entity.Camera.Camera.Texturing.Texture) Could not load image '" + path + "'";
         }
 
     }

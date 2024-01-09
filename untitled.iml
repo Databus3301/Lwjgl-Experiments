@@ -18,5 +18,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="imgui-1.89.7-1-all" level="project" />
+    <orderEntry type="library" name="lwjgl" level="project" />
+    <orderEntry type="library" name="joml-1.10.5" level="project" />
   </component>
 </module>

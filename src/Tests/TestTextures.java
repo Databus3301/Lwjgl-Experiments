@@ -1,9 +1,9 @@
 package Tests;
 
-import Render.Camera.Camera;
+import Render.Entity.Camera.Camera;
 import Render.Renderer;
 import Render.Shader.Shader;
-import Render.Texturing.Texture;
+import Render.Entity.Texturing.Texture;
 import Render.Vertices.IndexBuffer;
 import Render.Vertices.VertexArray;
 import Render.Vertices.VertexBuffer;

@@ -1,12 +1,13 @@
-package Tests;
+package Tests.Pong;
 
-import Render.Camera.Camera;
+import Render.Entity.Camera.Camera;
 import Render.Renderer;
 import Render.Shader.Shader;
 import Render.Vertices.IndexBuffer;
 import Render.Vertices.VertexArray;
 import Render.Vertices.VertexBuffer;
 import Render.Vertices.VertexBufferLayout;
+import Tests.Test;
 import org.joml.*;
 
 import java.lang.Math;
@@ -21,8 +22,11 @@ public class TestPong extends Test {
     private Vector2f ballPos, wallPosLeft, wallPosRight;
     // velocity
     private Vector2f changeBallPos, changeWallPosLeft, changeWallPosRight;
+    private final float ballWidth = 100f;
+    private final float wallWidth = 100f;
 
-    private float[] vertices = {
+
+    private final float[] vertices = {
             // position		colour
             -50f, -50f,   	1.0f, 1.0f, 1.0f, 1.0f, // 0
             +50f, -50f,		1.0f, 1.0f, 1.0f, 1.0f, // 1
@@ -30,7 +34,7 @@ public class TestPong extends Test {
             -50f, +50f,		1.0f, 1.0f, 1.0f, 1.0f  // 3
     };
 
-    private int[] indices = {
+    private final int[] indices = {
             0, 1, 2,
             2, 3, 0,
     };
@@ -52,7 +56,7 @@ public class TestPong extends Test {
         ballPos = new Vector2f();
         wallPosLeft = new Vector2f(-dim.x / 2f, 0);
         wallPosRight = new Vector2f(+dim.x / 2f, 0);
-        changeBallPos = new Vector2f(250f,0.0f); // pixels per second
+        changeBallPos = new Vector2f(1250f,0.0f); // pixels per second
         changeWallPosLeft = new Vector2f();
         changeWallPosRight = new Vector2f();
 
@@ -90,9 +94,9 @@ public class TestPong extends Test {
         collideBall(dt);
     }
     public void collideBall(float dt) {
-        // if the ball
-        // 600 - ballWidth - wallWidth
-        if(ballPos.x > 600- 100*0.5*0.5 - 100*0.7*0.5 || ballPos.x < (600- 100*0.5*0.5 - 100*0.7*0.5)*-1) {
+        float wallBoundX = wallPosRight.x - ballWidth*0.5f*0.5f - wallWidth*0.7f*0.5f;
+        // if ball inside wall bounds
+        if(ballPos.x > wallBoundX || ballPos.x < wallBoundX*-1) {
             boolean collided = collideBallWithWalls(wallPosRight, dt) || collideBallWithWalls(wallPosLeft, dt);
             if(!collided) // no wall collision -> player missed
                 resetBall(dt);
@@ -104,17 +108,23 @@ public class TestPong extends Test {
 
     public boolean collideBallWithWalls(Vector2f wallPos, float dt) {
         // if the ball hit the <wallPos> wall
-        //   bP.y     + baseSize * scalar * fromCenter  |  wP.y +         wallWidth * fromCenter  && …
-        if((ballPos.y + 100      *  0.5   *  0.5) <=    (wallPos.y + 100*3.5    *    0.5) && (ballPos.y - 100*0.5*0.5) >= (wallPos.y - 100*3.5*0.5)) {
-            // if under the speed cap
-            if((Math.abs(changeBallPos.x) + Math.abs(changeBallPos.y)) < (1500 * dt)) {
+        float ballRadius = ballWidth * 0.5f * 0.5f;
+        float wallRadius = wallWidth * 3.5f * 0.5f;
+        // balls outer bound max(y)      | wall outer bound max(y)   | balls outer bound min(y)        |      wall outer bound min(y)
+        if((ballPos.y + ballRadius*0.5f) <= (wallPos.y + wallRadius) && (ballPos.y - ballRadius * 0.5f) >= (wallPos.y - wallRadius)) {
+            if((Math.abs(changeBallPos.x) + Math.abs(changeBallPos.y)) < (1500 * dt)) { // if under the speed cap
                 // add speed while keeping direction
                 Vector2f normalized = new Vector2f();
                 changeBallPos.normalize(normalized);
                 float addedSpeed = 50f * dt;
                 changeBallPos.add(new Vector2f(addedSpeed, addedSpeed).mul(normalized));
                 // clip ball out of wall
-                ballPos.set((600 - 100 * 0.5 - changeBallPos.x / 100) * normalized.x, ballPos.y);
+                float wallClipBoundX = wallPosRight.x - ballRadius - wallRadius;
+                System.out.println(changeBallPos.x / 100f);
+                System.out.println(normalized.x);
+                if(ballPos.x >= wallClipBoundX || ballPos.x <= wallClipBoundX*-1) {
+                    ballPos.set(wallClipBoundX * normalized.x, ballPos.y);
+                }
             }
             // invert the direction
             changeBallPos.set(changeBallPos.x*-1, changeBallPos.y);
@@ -125,7 +135,8 @@ public class TestPong extends Test {
     }
 
     public void resetBall(float dt) {
-        if(ballPos.x > 600- 100*0.5*0.5 - 100*0.7*0.5 || ballPos.x < (600- 100*0.5*0.5 - 100*0.7*0.5)*-1) {
+        float wallBoundX = wallPosRight.x - ballWidth*0.5f*0.5f - wallWidth*0.7f*0.5f;
+        if(ballPos.x > wallBoundX || ballPos.x < wallBoundX*-1) {
             // if the ball missed the <wallPos> wall
             float x = (r.nextFloat(200) + 200f) * (r.nextBoolean() ? 1 : -1) * dt;
             float y = r.nextFloat(130f) * (r.nextBoolean() ? 1 : -1) * dt;

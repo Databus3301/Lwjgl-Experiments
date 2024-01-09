@@ -8,6 +8,11 @@ public class TestClearColour extends Test {
     public TestClearColour() {
         m_ClearColour = new float[]{1f, 1f, 1f, 1.0f};
     }
+
+    /**
+     *  @param clearColour
+     *  specify the clear colour
+     */
     public TestClearColour(float[] clearColour) {
         m_ClearColour = clearColour;
     }

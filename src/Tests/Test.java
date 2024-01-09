@@ -2,11 +2,10 @@ package Tests;
 
 import Render.Renderer;
 
-/*
-This parent class serves as a template for all tests.
-Test are used to test the functionality of the engine.
-
- */
+/**
+Serves as a template for all tests.
+Tests are used to test the functionality of the engine.
+ **/
 public class Test {
 
     Renderer renderer;

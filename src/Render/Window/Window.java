@@ -1,6 +1,7 @@
 package Render.Window;
 
 import Tests.*;
+import Tests.Pong.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -115,9 +116,8 @@ public class Window {
 				case "pong": currentTest = new TestPong();
 					break;
 			}
-		}
-		// default case
-		currentTest = new Test();
+		} else // default case
+			currentTest = new Test();
 	}
 
 	public void run()  {
