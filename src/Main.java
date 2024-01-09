@@ -9,6 +9,7 @@ public class Main {
         else
             window = new Window();
 
+
         window.init();
         window.run();
         window.destroy();

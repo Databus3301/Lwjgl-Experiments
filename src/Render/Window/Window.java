@@ -102,20 +102,23 @@ public class Window {
 	}
 
 	public void initTest() {
-		switch (test.toLowerCase()) {
-			case "clearcolour": currentTest = new TestClearColour();
-				break;
-			case "textures": currentTest = new TestTextures();
-				break;
-			case "multipledrawcalls": currentTest = new TestMultipleDrawCalls();
-				break;
-			case "camera": currentTest = new TestCamera();
-				break;
-			case "pong": currentTest = new TestPong();
-				break;
-			default: currentTest = new Test();
-				break;
+		if(test != null) { 
+			switch (test.toLowerCase()) {
+				case "clearcolour": currentTest = new TestClearColour();
+					break;
+				case "textures": currentTest = new TestTextures();
+					break;
+				case "multipledrawcalls": currentTest = new TestMultipleDrawCalls();
+					break;
+				case "camera": currentTest = new TestCamera();
+					break;
+				case "pong": currentTest = new TestPong();
+					break;
+				default: currentTest = new Test();
+					break;
+			}
 		}
+		currentTest = new TestPong();
 	}
 
 	public void run()  {
