@@ -114,11 +114,10 @@ public class Window {
 					break;
 				case "pong": currentTest = new TestPong();
 					break;
-				default: currentTest = new Test();
-					break;
 			}
 		}
-		currentTest = new TestPong();
+		// default case
+		currentTest = new Test();
 	}
 
 	public void run()  {
