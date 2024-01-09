@@ -113,7 +113,8 @@ public class TestPong extends Test {
                 changeBallPos.normalize(normalized);
                 float addedSpeed = 50f * dt;
                 changeBallPos.add(new Vector2f(addedSpeed, addedSpeed).mul(normalized));
-                ballPos.add(normalized.negate().mul(3));
+                // clip ball out of wall
+                ballPos.set((600 - 100 * 0.5 - changeBallPos.x / 100) * normalized.x, ballPos.y);
             }
             // invert the direction
             changeBallPos.set(changeBallPos.x*-1, changeBallPos.y);
