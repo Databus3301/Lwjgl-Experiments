@@ -1,43 +1,31 @@
 package Render.Entity.Camera;
 
+import Render.Entity.Entity2D;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class Camera {
-    private Matrix4f modelMatrix, viewMatrix, projectionMatrix;
-    public Vector2f position;
-
-
+public class Camera extends Entity2D {
+    private Matrix4f viewMatrix, projectionMatrix;
     public Camera(Vector2f position) {
         this.position = position;
-        modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
         projectionMatrix = new Matrix4f();
-        initModelMatrix();
-        initViewMatrix();
-        initProjectionMatrix();
+        calcModelMatrix();
+        calcViewMatrix();
+        calcProjectionMatrix();
     }
-
-    // MODEL
-    public Matrix4f initModelMatrix() {
-        modelMatrix.identity();
-        return modelMatrix;
-    }
-    public Matrix4f translateModelMatrix(Vector3f translation) {
-        modelMatrix.translate(translation);
-        return modelMatrix;
-    }
-    public Matrix4f scaleModelMatrix(Vector3f scalor) {
-        modelMatrix.scale(scalor);
-        return modelMatrix;
-    }
-    public Matrix4f getModelMatrix() {
-        return modelMatrix;
+    public Camera() {
+        this.position = new Vector2f(0, 0);
+        viewMatrix = new Matrix4f();
+        projectionMatrix = new Matrix4f();
+        calcModelMatrix();
+        calcViewMatrix();
+        calcProjectionMatrix();
     }
 
     // VIEW
-    public Matrix4f initViewMatrix() {
+    public Matrix4f calcViewMatrix() {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         this.viewMatrix.identity();
@@ -52,7 +40,7 @@ public class Camera {
     }
 
     // PROJECTION
-    public Matrix4f initProjectionMatrix() {
+    public Matrix4f calcProjectionMatrix() {
         projectionMatrix.identity();
         projectionMatrix.ortho(-600f, 600f, -450f, 450f, 0.01f, 100f);
         return projectionMatrix;

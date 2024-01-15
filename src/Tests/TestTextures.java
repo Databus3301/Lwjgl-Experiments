@@ -76,7 +76,7 @@ public class TestTextures extends Test {
     protected void setUniforms() {
         shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
         shader.SetUniformMat4f("uView", camera.getViewMatrix());
-        shader.SetUniformMat4f("uModel", camera.getModelMatrix());
+        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
     }
 
     @Override

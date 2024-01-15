@@ -1,6 +1,6 @@
 package Tests;
 
-import org.joml.Vector3f;
+import org.joml.Vector2f;
 import static org.lwjgl.opengl.GL30.*;
 
 /*
@@ -15,11 +15,11 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class TestMultipleDrawCalls extends TestTextures {
 
-    Vector3f offset1, offset2;
+    Vector2f offset1, offset2;
     public TestMultipleDrawCalls() {
         super();
-        offset1 = new Vector3f(-50, -50, 0);
-        offset2 = new Vector3f(50, 50, 0);
+        offset1 = new Vector2f(-50, -50);
+        offset2 = new Vector2f(50, 50);
     }
 
     @Override
@@ -33,11 +33,13 @@ public class TestMultipleDrawCalls extends TestTextures {
         setUniforms();
 
         // offsetting the <model> matrix
-        shader.SetUniformMat4f("uModel", camera.translateModelMatrix(offset1));
+        camera.translate(offset1);
+        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
         renderer.Draw(va, ib, shader);
 
         // offsetting the <model> matrix
-        shader.SetUniformMat4f("uModel", camera.translateModelMatrix(offset2));
+        camera.translate(offset2);
+        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
         renderer.Draw(va, ib, shader);
 
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);

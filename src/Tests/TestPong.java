@@ -1,4 +1,4 @@
-package Tests.Pong;
+package Tests;
 
 import Render.Entity.Camera.Camera;
 import Render.Renderer;
@@ -7,7 +7,6 @@ import Render.Vertices.IndexBuffer;
 import Render.Vertices.VertexArray;
 import Render.Vertices.VertexBuffer;
 import Render.Vertices.VertexBufferLayout;
-import Tests.Test;
 import org.joml.*;
 
 import java.lang.Math;
@@ -56,13 +55,13 @@ public class TestPong extends Test {
         ballPos = new Vector2f();
         wallPosLeft = new Vector2f(-dim.x / 2f, 0);
         wallPosRight = new Vector2f(+dim.x / 2f, 0);
-        changeBallPos = new Vector2f(1250f,0.0f); // pixels per second
+        changeBallPos = new Vector2f(250f,0.0f); // pixels per second
         changeWallPosLeft = new Vector2f();
         changeWallPosRight = new Vector2f();
 
         renderer = new Renderer();
 
-        shader = new Shader("res/shaders/basic2.shader");
+        shader = new Shader("res/shaders/pong.shader");
         shader.Bind();
 
         va = new VertexArray();
@@ -155,29 +154,29 @@ public class TestPong extends Test {
         shader.Bind();
         setUniforms();
 
-        Vector3f scalar = new Vector3f(0.7f, 3.5f, 0f);
+        Vector2f scalar = new Vector2f(0.7f, 3.5f);
         // Set up left and right walls
-        camera.scaleModelMatrix(scalar);
-        camera.translateModelMatrix(new Vector3f(wallPosLeft.x / scalar.x, wallPosLeft.y / scalar.y, 0));
-        shader.SetUniformMat4f("uModel", camera.getModelMatrix());
+        camera.scale(scalar);
+        camera.translate(new Vector2f(wallPosLeft.x / scalar.x, wallPosLeft.y / scalar.y));
+        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
         renderer.Draw(va, ib, shader);
 
-        camera.initModelMatrix();
-        camera.scaleModelMatrix(scalar);
-        camera.translateModelMatrix(new Vector3f(wallPosRight.x / scalar.x, wallPosRight.y / scalar.y, 0));
-        shader.SetUniformMat4f("uModel", camera.getModelMatrix());
+        camera.calcModelMatrix();
+        camera.scale(scalar);
+        camera.translate(new Vector2f(wallPosRight.x / scalar.x, wallPosRight.y / scalar.y));
+        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
         renderer.Draw(va, ib, shader);
 
         // reset matrices
-        camera.initViewMatrix();
-        camera.initProjectionMatrix();
+        camera.calcViewMatrix();
+        camera.calcProjectionMatrix();
 
         // Set up ball
-        scalar.set(0.5f, 0.5f,0 );
-        camera.initModelMatrix();
-        camera.scaleModelMatrix(new Vector3f(scalar.x, scalar.y, 0f));
-        camera.translateModelMatrix(new Vector3f(ballPos.x / scalar.x, ballPos.y / scalar.y, 0));
-        shader.SetUniformMat4f("uModel", camera.getModelMatrix());
+        scalar.set(0.5f, 0.5f);
+        camera.calcModelMatrix();
+        camera.scale(new Vector2f(scalar.x, scalar.y));
+        camera.translate(new Vector2f(ballPos.x / scalar.x, ballPos.y / scalar.y));
+        shader.SetUniformMat4f("uModel", camera.calcViewMatrix());
         renderer.Draw(va, ib, shader);
 
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
@@ -227,10 +226,10 @@ public class TestPong extends Test {
     }
 
     protected void setUniforms() {
-        camera.initModelMatrix();
+        camera.calcModelMatrix();
 
         shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
         shader.SetUniformMat4f("uView", camera.getViewMatrix());
-        shader.SetUniformMat4f("uModel", camera.getModelMatrix());
+        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
     }
 }

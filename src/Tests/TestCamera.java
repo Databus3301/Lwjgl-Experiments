@@ -19,8 +19,7 @@ public class TestCamera extends TestTextures {
     @Override
     public void OnRender() {
         super.OnRender();
-        camera.position.x += change.x;
-        camera.position.y += change.y;
+        camera.translate(change);
     }
 
     @Override
