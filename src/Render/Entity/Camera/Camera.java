@@ -5,6 +5,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import static Render.Window.Window.dim;
+
 public class Camera extends Entity2D {
     private Matrix4f viewMatrix, projectionMatrix;
     public Camera(Vector2f position) {
@@ -42,7 +44,7 @@ public class Camera extends Entity2D {
     // PROJECTION
     public Matrix4f calcProjectionMatrix() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(-600f, 600f, -450f, 450f, 0.01f, 100f);
+        projectionMatrix.ortho(-dim.x/2f, dim.x/2f, -dim.y/2f, dim.y/2f, 0.01f, 100f);
         return projectionMatrix;
     }
     public Matrix4f getProjectionMatrix() {
