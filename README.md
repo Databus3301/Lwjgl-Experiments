@@ -1,6 +1,6 @@
 # Lwjgl-Experiments
 
-Documenting my learning process of this library
+Documenting my learning process of this Open GL and LWJGL for a school project
 
 ### Contents (/Tests)
 - Pong
