@@ -7,7 +7,11 @@ Documenting my learning process of this library
 - Camera
 - Textures
 - Clear colour
-- 
+- .Obj Model Parser
+- .Obj Model Renderer
+
+### WOP
+- Batch Rendering
 
 ### Resources
 The Cherno - OpenGl series on YouTube <br>
