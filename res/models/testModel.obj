@@ -1,0 +1,27 @@
+# Example OBJ file with 2 sets of vertices and different materials
+
+# Vertex coordinates
+v 0.0 0.0 0.0
+v 1.0 0.0 0.0
+v 1.0 1.0 0.0
+v 0.0 1.0 0.0
+
+v 0.0 0.0 1.0
+v 1.0 0.0 1.0
+v 1.0 1.0 1.0
+v 0.0 1.0 1.0
+
+# Material library
+mtllib ../materials/testMaterial.mtl
+
+# Use material for the first set of vertices
+usemtl MyMaterial
+
+# Faces for the first set of vertices
+f 1 2 3 4
+
+# Use material for the second set of vertices
+usemtl MyOtherMaterial
+
+# Faces for the second set of vertices
+f 5 6 7 8

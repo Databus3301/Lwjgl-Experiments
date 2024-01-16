@@ -41,7 +41,7 @@ public class TestTextures extends Test {
         shader = new Shader("res/shaders/basic.shader");
         shader.Bind();
 
-        texture = new Texture("res/woodCrate.png");
+        texture = new Texture("res/textures/woodCrate.png");
         texture.Bind(0);
         shader.SetUniform1i("u_Texture", 0);
 

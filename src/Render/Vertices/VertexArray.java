@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL43.glGenVertexArrays;
 public class VertexArray {
     int m_RendererID;
     public VertexArray()  {
-        m_RendererID = glGenVertexArrays();
+
     }
 
     public void Bind() {

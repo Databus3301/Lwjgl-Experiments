@@ -5,8 +5,8 @@ import Render.Entity.*;
 import Render.Entity.Camera.Camera;
 import Render.Shader.*;
 import Render.Vertices.*;
-import Render.Vertices.Model.OBJModel;
-import Render.Vertices.Model.OBJParser;
+import Render.Vertices.Model.ObjModel;
+import Render.Vertices.Model.ObjModelParser;
 import org.joml.*;
 // rewrite the pong test to use the Entity2D class
 public class TestPong2 extends Test {
@@ -16,7 +16,7 @@ public class TestPong2 extends Test {
     public TestPong2() {
         Vector2i dim = Render.Window.Window.dim;
 
-        OBJModel model = OBJParser.parseOBJ("res/models/square.obj");
+        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
 
         ball = new Entity2D(new Vector2f(), new Vector2f(100, 100), model);
         wallLeft = new Entity2D(new Vector2f(-dim.x / 2f, 0), new Vector2f(100, 100), model);

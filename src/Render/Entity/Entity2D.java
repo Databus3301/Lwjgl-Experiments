@@ -1,6 +1,6 @@
 package Render.Entity;
 
-import Render.Vertices.Model.OBJModel;
+import Render.Vertices.Model.ObjModel;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -14,28 +14,27 @@ import org.joml.Vector3f;
 public class Entity2D {
 
     protected Matrix4f modelMatrix = new Matrix4f();
-    protected OBJModel model;
+    protected ObjModel model;
 
     protected Vector2f position;  // x y position
     protected float rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
+    protected Vector2f velocity; // pixels per second
 
-    protected Vector2f velocity; // in pixels per second
-
-    public Entity2D(Vector2f position, float rotation, Vector2f scale, Vector2f velocity, OBJModel model) {
+    public Entity2D(Vector2f position, float rotation, Vector2f scale, Vector2f velocity, ObjModel model) {
         this(position, rotation, scale, model);
         this.velocity = velocity;
     }
-    public Entity2D(Vector2f position, float rotation, Vector2f scale, OBJModel model) {
+    public Entity2D(Vector2f position, float rotation, Vector2f scale, ObjModel model) {
         this(position, scale, model);
         this.rotation = rotation;
     }
 
-    public Entity2D(Vector2f position,  Vector2f scale, OBJModel model) {
+    public Entity2D(Vector2f position, Vector2f scale, ObjModel model) {
         this(position, model);
         this.scale = scale;
     }
-    public Entity2D(Vector2f position, OBJModel model) {
+    public Entity2D(Vector2f position, ObjModel model) {
         this(position);
         this.model = model;
     }
@@ -114,6 +113,10 @@ public class Entity2D {
     	return velocity;
     }
 
+    public ObjModel getModel() {
+        return model;
+    }
+
     public void setPosition(Vector2f position) {
         this.position = position;
     }
@@ -126,6 +129,10 @@ public class Entity2D {
         this.scale = scale;
     }
 
+    /**
+     * set the velocity in pixels per second
+     * @param velocity the velocity to set
+     */
     public void setVelocity(Vector2f velocity) {
     	this.velocity = velocity;
     }
