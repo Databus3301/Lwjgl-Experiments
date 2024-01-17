@@ -6,6 +6,8 @@ out/
 *.iws
 *.ipr
 .idea/
+misc.xml
+
 
 ### Eclipse ###
 .apt_generated
