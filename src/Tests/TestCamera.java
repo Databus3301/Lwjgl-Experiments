@@ -5,21 +5,23 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class TestCamera extends TestTextures {
 
-    Vector2f change;
     public TestCamera() {
         super();
-        change = new Vector2f();
     }
 
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
+        Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
+        camera.translate(effectiveVelocity.mul(dt));
+        camera.rotate(10.0f * dt);
+        if(camera.getScale().x < 6f)
+             camera.scale(new Vector2f(1.0f, 1.0f).mul(dt));
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
-        camera.translate(change);
     }
 
     @Override
@@ -27,16 +29,16 @@ public class TestCamera extends TestTextures {
         super.OnKeyInput(window, key, scancode, action, mods);
 
         if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-            change.set(-2f, 0);
+            camera.setVelocity(200f, 0);
         }
         if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-            change.set(2f, 0);
+            camera.setVelocity(-200f, 0);
         }
         if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-            change.set(0, 2f);
+            camera.setVelocity(0, -200f);
         }
         if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-            change.set(0, -2f);
+            camera.setVelocity(0, 200f);
         }
     }
 

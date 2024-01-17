@@ -1,13 +1,13 @@
 package Tests;
 
 import Render.Entity.Camera.Camera;
+import Render.Entity.Entity2D;
 import Render.Renderer;
 import Render.Shader.Shader;
 import Render.Entity.Texturing.Texture;
-import Render.Vertices.IndexBuffer;
-import Render.Vertices.VertexArray;
-import Render.Vertices.VertexBuffer;
-import Render.Vertices.VertexBufferLayout;
+import Render.Vertices.*;
+import Render.Vertices.Model.ObjModel;
+import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -15,28 +15,18 @@ import static org.lwjgl.opengl.GL30.*;
 public class TestTextures extends Test {
 
     // 100*100 box centered around 0,0 with texture coords
-    protected float[] vertices = {
-            // position		texture coord (uv?)
-            -50f, -50f,   	0.0f, 0.0f, // 0
-            +50f, -50f,		1.0f, 0.0f, // 1
-            +50f, +50f,		1.0f, 1.0f, // 2
-            -50f, +50f,		0.0f, 1.0f, // 3
-    };
-
-    protected int[] indices = {
-            0, 1, 2,
-            2, 3, 0,
-    };
+    protected Entity2D box;
 
     protected Shader shader;
     protected Texture texture;
     protected VertexArray va;
     protected IndexBuffer ib;
     protected Camera camera;
-    protected Renderer renderer;
 
     public TestTextures() {
-        renderer = new Renderer();
+        super();
+        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+        box = new Entity2D(new Vector2f(0, 0), model);
 
         shader = new Shader("res/shaders/basic.shader");
         shader.Bind();
@@ -46,14 +36,12 @@ public class TestTextures extends Test {
         shader.SetUniform1i("u_Texture", 0);
 
         va = new VertexArray();
+        float[] vertices = VertexBuffer.parseVertexArray(model.getVertexBuffer());
         VertexBuffer vb = new VertexBuffer(vertices);
-        VertexBufferLayout layout = new VertexBufferLayout();
 
-        layout.PushF(2);
-        layout.PushF(2);
-        va.AddBuffer(vb, layout);
+        va.AddBuffer(vb, Vertex.GetLayout());
 
-        ib = new IndexBuffer(indices);
+        ib = new IndexBuffer(model.getIndexBuffer());
         camera = new Camera(new Vector2f());
     }
 
@@ -70,7 +58,6 @@ public class TestTextures extends Test {
         setUniforms();
 
         renderer.Draw(va, ib, shader);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
     }
 
     protected void setUniforms() {

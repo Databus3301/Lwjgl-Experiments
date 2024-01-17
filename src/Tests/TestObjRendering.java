@@ -11,7 +11,6 @@ import static org.lwjgl.opengl.GL30.*;
 public class TestObjRendering extends Test {
     Entity2D entity;
     VertexArray va;
-
     IndexBuffer ib;
 
 

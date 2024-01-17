@@ -42,7 +42,7 @@ public class TestMultipleDrawCalls extends TestTextures {
         shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
         renderer.Draw(va, ib, shader);
 
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        //glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
     }
 
 

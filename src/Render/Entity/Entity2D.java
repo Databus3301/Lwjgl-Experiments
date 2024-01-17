@@ -136,6 +136,9 @@ public class Entity2D {
     public void setVelocity(Vector2f velocity) {
     	this.velocity = velocity;
     }
+    public void setVelocity(float x, float y) {
+        this.velocity = new Vector2f(x, y);
+    }
 
 
 
