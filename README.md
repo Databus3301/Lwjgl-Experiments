@@ -12,9 +12,9 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 
 ### WOP
 - Batch Rendering
--[] a
--[] b
--[] v
+- [ ] a
+- [ ] b
+- [ ] v
 - 
 
 ### Resources
