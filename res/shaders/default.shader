@@ -26,7 +26,7 @@ in vec3 v_position;
 void main ()
 {
     if(v_position.z > 0.0) {
-        color = vec4(v_position.z + 0.5, v_position.z + 0.5, v_position.z + 0.5, 1.0);
+        color = vec4(v_position.z + 0.2, v_position.z + 0.1, v_position.z + 0.1, 1.0);
     } else {
      color = vec4(v_position.z + 0.5, v_position.z + 0.5, v_position.z + 0.5, 0.0);
     }

@@ -17,7 +17,7 @@ public class TestObjRendering extends Test {
 
     public TestObjRendering() {
         super();
-        ObjModel model = ObjModelParser.parseOBJ("res/models/testModel3.obj");
+        ObjModel model = ObjModelParser.parseOBJ("res/models/untitled.obj");
         entity = new Entity2D(new Vector2f(0, 0), model);
 
         //float[] vertexBuffer = VertexBuffer.parseVertexArray(model.getVertexBuffer());
