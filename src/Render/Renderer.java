@@ -46,10 +46,10 @@ public class Renderer {
 //        glBindVertexArray(vertexArray_ID);
 //
 //        glEnableVertexAttribArray(0);
-//        glVertexAttribPointer(0, 3, GL_FLOAT, false, 12 * 4, 0);
+//        glVertexAttribPointer(0, 2, GL_FLOAT, false, 12 * 4, 0);
 //
 //        glEnableVertexAttribArray(1);
-//        glVertexAttribPointer(1, 3, GL_FLOAT, false, 12 * 4, GL_FLOAT*3);
+//        glVertexAttribPointer(1, 2, GL_FLOAT, false, 12 * 4, GL_FLOAT*2);
 //
 //        glEnableVertexAttribArray(2);
 //        glVertexAttribPointer(2, 2, GL_FLOAT, false, 12 * 4, GL_FLOAT*3);

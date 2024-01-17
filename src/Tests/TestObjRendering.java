@@ -14,18 +14,6 @@ public class TestObjRendering extends Test {
 
     IndexBuffer ib;
 
-    protected float[] vertices = {
-            // position		texture coord (uv?)
-            -0.5f, -0.5f,   	0.0f, 0.0f, // 0
-            +0.5f, -0.5f,		1.0f, 0.0f, // 1
-            +0.5f, +0.5f,		1.0f, 1.0f, // 2
-            -0.5f, +0.5f,		0.0f, 1.0f, // 3
-    };
-
-    protected int[] indices = {
-            0, 1, 2,
-            2, 3, 0,
-    };
 
     public TestObjRendering() {
         super();
@@ -53,6 +41,7 @@ public class TestObjRendering extends Test {
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
+        entity.setVelocity(new Vector2f(10, 0));
         renderer.tmpDraw(va, ib);
     }
 
