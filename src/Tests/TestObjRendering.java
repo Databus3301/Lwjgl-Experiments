@@ -33,9 +33,6 @@ public class TestObjRendering extends Test {
 
         ib = new IndexBuffer(model.getIndexBuffer());
 
-
-
-
     }
 
     @Override
