@@ -43,4 +43,9 @@ public class VertexBuffer {
         }
         return data;
     }
+
+    public static VertexBuffer parseVertexBuffer(Vertex[] vertices){
+        float[] data = parseVertexArray(vertices);
+        return new VertexBuffer(data);
+    }
 }

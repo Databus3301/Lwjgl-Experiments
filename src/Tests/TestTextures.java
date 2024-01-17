@@ -18,30 +18,28 @@ public class TestTextures extends Test {
     protected Entity2D box;
 
     protected Shader shader;
-    protected Texture texture;
     protected VertexArray va;
     protected IndexBuffer ib;
     protected Camera camera;
 
     public TestTextures() {
         super();
-        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
-        box = new Entity2D(new Vector2f(0, 0), model);
 
         shader = new Shader("res/shaders/basic.shader");
         shader.Bind();
 
-        texture = new Texture("res/textures/woodCrate.png");
+        Texture texture = new Texture("res/textures/woodCrate.png", 0);
         texture.Bind(0);
         shader.SetUniform1i("u_Texture", 0);
 
+        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+        box = new Entity2D(new Vector2f(0, 0), model, texture);
+
         va = new VertexArray();
-        float[] vertices = VertexBuffer.parseVertexArray(model.getVertexBuffer());
-        VertexBuffer vb = new VertexBuffer(vertices);
+        ib = model.getIndexBuffer();
 
-        va.AddBuffer(vb, Vertex.GetLayout());
+        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
 
-        ib = new IndexBuffer(model.getIndexBuffer());
         camera = new Camera(new Vector2f());
     }
 

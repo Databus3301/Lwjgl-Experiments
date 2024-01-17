@@ -18,13 +18,16 @@ public class TestPong2 extends Test {
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
 
-        ball = new Entity2D(new Vector2f(), new Vector2f(100, 100), model);
-        wallLeft = new Entity2D(new Vector2f(-dim.x / 2f, 0), new Vector2f(100, 100), model);
-        wallRight = new Entity2D(new Vector2f(+dim.x / 2f, 0), new Vector2f(100, 100), model);
+        ball = new Entity2D(new Vector2f(), model);
+        wallLeft = new Entity2D(new Vector2f(-dim.x / 2f, 0), model);
+        wallRight = new Entity2D(new Vector2f(+dim.x / 2f, 0), model);
+
+        Vector2f scale = new Vector2f(100, 100);
+        ball.setScale(scale);
+        wallLeft.setScale(scale);
+        wallRight.setScale(scale);
 
         ball.setVelocity(new Vector2f(250f, 0));
-
-
         ///////
         renderer = new Renderer();
 

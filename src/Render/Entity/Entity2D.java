@@ -1,5 +1,6 @@
 package Render.Entity;
 
+import Render.Entity.Texturing.Texture;
 import Render.Vertices.Model.ObjModel;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -15,24 +16,16 @@ public class Entity2D {
 
     protected Matrix4f modelMatrix = new Matrix4f();
     protected ObjModel model;
+    protected Texture texture;
 
     protected Vector2f position;  // x y position
     protected float rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
 
-    public Entity2D(Vector2f position, float rotation, Vector2f scale, Vector2f velocity, ObjModel model) {
-        this(position, rotation, scale, model);
-        this.velocity = velocity;
-    }
-    public Entity2D(Vector2f position, float rotation, Vector2f scale, ObjModel model) {
-        this(position, scale, model);
-        this.rotation = rotation;
-    }
-
-    public Entity2D(Vector2f position, Vector2f scale, ObjModel model) {
+    public Entity2D(Vector2f position, ObjModel model, Texture texture) {
         this(position, model);
-        this.scale = scale;
+        this.texture = texture;
     }
     public Entity2D(Vector2f position, ObjModel model) {
         this(position);

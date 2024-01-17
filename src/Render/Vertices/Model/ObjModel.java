@@ -1,10 +1,10 @@
 package Render.Vertices.Model;
 
+import Render.Vertices.IndexBuffer;
 import Render.Vertices.Vertex;
+import Render.Vertices.VertexBuffer;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ObjModel {
     public ArrayList<float[]> positions = new ArrayList<>();
@@ -22,8 +22,8 @@ public class ObjModel {
     }
 
 
-    private int[] indexBuffer;
-    public Vertex[] getVertexBuffer() {
+    private int[] indices;
+    public Vertex[] getVertices() {
         ArrayList<Vertex> vB = new ArrayList<>(positions.size());
         ArrayList<Integer> iB = new ArrayList<>(faces.size() * 3);
 
@@ -54,27 +54,33 @@ public class ObjModel {
             }
         }
 
-        indexBuffer = new int[iB.size()];
+        indices = new int[iB.size()];
         for (int i = 0; i < iB.size(); i++) {
-            indexBuffer[i] = iB.get(i);
+            indices[i] = iB.get(i);
         }
 
         Vertex[] vBArray = new Vertex[vB.size()];
         return vB.toArray(vBArray);
     }
 
-    public int[] getIndexBuffer() {
-        // if we haven't generated the index buffer yet, do so
-        if (indexBuffer == null) {
-            getVertexBuffer();
-        }
-        return indexBuffer;
+    public VertexBuffer getVertexBuffer() {
+        return VertexBuffer.parseVertexBuffer(getVertices());
     }
 
+    public IndexBuffer getIndexBuffer() {
+        // if we haven't generated the index buffer yet, do so
+        if (indices == null) {
+            getVertexBuffer();
+        }
+        return new IndexBuffer(indices);
+    }
 
-
-
-
+    public int[] getIndices() {
+        if (indices == null) {
+            getVertexBuffer();
+        }
+        return indices;
+    }
 
 
 }

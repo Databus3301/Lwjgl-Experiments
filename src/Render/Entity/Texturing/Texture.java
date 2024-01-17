@@ -3,6 +3,7 @@ package Render.Entity.Texturing;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL43.*;
 
+import Render.Shader.Shader;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
@@ -16,6 +17,13 @@ public class Texture {
     private IntBuffer m_Width;
     private IntBuffer m_Height;
     private IntBuffer channels;
+    private int textureSlot;
+
+    public Texture(String path, int slot) {
+        this(path);
+        Bind(slot);
+    }
+
     public Texture(String path) {
         m_FilePath = path;
 
@@ -44,7 +52,6 @@ public class Texture {
         } else {
             assert false : "[STBI Error:] (Render.Entity.Camera.Camera.Texturing.Texture) Could not load image '" + path + "'";
         }
-
     }
 
     public int  GetHeight(){
@@ -56,10 +63,18 @@ public class Texture {
 
 
     public void Bind(int slot){
-        glActiveTexture(GL_TEXTURE0 + slot);
+        textureSlot = slot;
+        glActiveTexture(GL_TEXTURE0 + textureSlot);
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
     }
+
+    public void Bind(){
+        glActiveTexture(GL_TEXTURE0 + textureSlot);
+        glBindTexture(GL_TEXTURE_2D, m_RendererID);
+    }
+
     public void Unbind(){
+        glActiveTexture(GL_TEXTURE0 + textureSlot);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 }

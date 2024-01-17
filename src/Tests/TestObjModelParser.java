@@ -1,5 +1,6 @@
 package Tests;
 
+import Render.Vertices.IndexBuffer;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjMaterial;
 import Render.Vertices.Model.ObjModelParser;
@@ -112,8 +113,8 @@ public class TestObjModelParser extends Test {
             System.out.println("  reflectionMap: " + material.reflectionMap);
 
 
-            float[] vB = VertexBuffer.parseVertexArray(model.getVertexBuffer());
-            int vSize = model.getVertexBuffer()[0].getSize();
+            float[] vB = VertexBuffer.parseVertexArray(model.getVertices());
+            int vSize = model.getVertices()[0].getSize();
 
             System.out.println("vertexBuffer:");
             for(int i = 0; i < vB.length; i++) {
@@ -124,14 +125,14 @@ public class TestObjModelParser extends Test {
             }
             System.out.println("");
 
-            int[] iB = model.getIndexBuffer();
+            int[] iB = model.getIndices();
             System.out.println("indexBuffer:");
-            for(int coord : iB) {
-                System.out.print(coord + " ");
+            for (int i = 0; i < iB.length; i++) {
+                if(i % 3 == 0)
+                    System.out.print("\n");
+                System.out.print(iB[i] + "\t\t");
             }
             System.out.println("");
-
-
         }
 
 
