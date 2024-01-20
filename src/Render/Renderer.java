@@ -85,11 +85,11 @@ public class Renderer {
             assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         }
 
-        VertexArray va = new VertexArray();
-        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+//        VertexArray va = new VertexArray();
+//        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
-        va.Bind();
+        entity.getVa().Bind();
         ib.Bind();
 
 

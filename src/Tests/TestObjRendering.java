@@ -49,8 +49,11 @@ public class TestObjRendering extends Test {
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
 
-        entity.setPosition(entity.getVelocity());
-        entity.accelaerate(new Vector2f(0.1f, 0.1f));
+        entity.translate(entity.getVelocity().mul(dt));
+        entity.accelaerate(new Vector2f(10f, 10f));
+
+        entity3.translate(entity3.getVelocity().mul(dt));
+        entity3.accelaerate(new Vector2f(10f, 10f));
     }
 
     @Override

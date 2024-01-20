@@ -4,6 +4,8 @@ import Render.Entity.Camera.Camera;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
+import Render.Vertices.Vertex;
+import Render.Vertices.VertexArray;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -26,6 +28,10 @@ public class Entity2D {
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
 
+    /////////// TODO: remove this / integrate it depending on batch rendering or normal rendering
+    VertexArray va = new VertexArray();
+    ///////////
+
     public Entity2D(Vector2f position, ObjModel model, Texture texture, Shader shader) {
         this(position, model, texture);
         this.shader = shader;
@@ -42,6 +48,8 @@ public class Entity2D {
     public Entity2D(Vector2f position, ObjModel model) {
         this(position);
         this.model = model;
+        if(model != null)
+            va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
     }
     public Entity2D(Vector2f position) {
         this();
@@ -130,6 +138,10 @@ public class Entity2D {
     }
     public static Camera getCamera() {
         return camera;
+    }
+
+    public VertexArray getVa() {
+        return va;
     }
 
     public void setPosition(Vector2f position) {
