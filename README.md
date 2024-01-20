@@ -16,6 +16,8 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - [ ] OBJ/3D texture loading
 - [ ] lighting / dithering shader
 - [ ] 3D camera
+- [ ] animations
+- [ ] particles
 ### Game
 - [ ] Concept lol
 - [x] …
