@@ -30,7 +30,5 @@ void main ()
     } else {
      color = vec4(v_position.z + 0.5, v_position.z + 0.5, v_position.z + 0.5, 0.0);
     }
-
-
 };
 

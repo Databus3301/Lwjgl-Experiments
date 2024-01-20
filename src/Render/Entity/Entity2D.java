@@ -1,6 +1,8 @@
 package Render.Entity;
 
+import Render.Entity.Camera.Camera;
 import Render.Entity.Texturing.Texture;
+import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -13,19 +15,29 @@ import org.joml.Vector3f;
  * it is used as a base class for all 2D entities
  */
 public class Entity2D {
-
     protected Matrix4f modelMatrix = new Matrix4f();
     protected ObjModel model;
     protected Texture texture;
+    protected Shader shader;
+    private static Camera camera = new Camera();
 
     protected Vector2f position;  // x y position
     protected float rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
 
+    public Entity2D(Vector2f position, ObjModel model, Texture texture, Shader shader) {
+        this(position, model, texture);
+        this.shader = shader;
+    }
+
     public Entity2D(Vector2f position, ObjModel model, Texture texture) {
         this(position, model);
         this.texture = texture;
+    }
+    public Entity2D(Vector2f position, ObjModel model, Shader shader) {
+        this(position, model);
+        this.shader = shader;
     }
     public Entity2D(Vector2f position, ObjModel model) {
         this(position);
@@ -110,6 +122,16 @@ public class Entity2D {
         return model;
     }
 
+    public Texture getTexture() {
+    	return texture;
+    }
+    public Shader getShader() {
+    	return shader;
+    }
+    public static Camera getCamera() {
+        return camera;
+    }
+
     public void setPosition(Vector2f position) {
         this.position = position;
     }
@@ -132,8 +154,6 @@ public class Entity2D {
     public void setVelocity(float x, float y) {
         this.velocity = new Vector2f(x, y);
     }
-
-
 
 
 }

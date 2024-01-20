@@ -64,8 +64,7 @@ public class Texture {
 
     public void Bind(int slot){
         textureSlot = slot;
-        glActiveTexture(GL_TEXTURE0 + textureSlot);
-        glBindTexture(GL_TEXTURE_2D, m_RendererID);
+        Bind();
     }
 
     public void Bind(){

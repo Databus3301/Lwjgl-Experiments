@@ -1,7 +1,10 @@
 package Render;
 
+import Render.Entity.Entity2D;
 import Render.Shader.Shader;
 import Render.Vertices.IndexBuffer;
+import Render.Vertices.Model.ObjModel;
+import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
 import Render.Vertices.VertexBuffer;
 
@@ -64,12 +67,38 @@ public class Renderer {
 //        glDrawElements(GL_TRIANGLES, iB.length, GL_UNSIGNED_INT, 0);
 //    }
 
-    public void tmpDraw(VertexArray va, IndexBuffer ib) {
-        defaultShader.Bind();
+    public void DrawEntity2D(Entity2D entity) {
+        if(entity.getShader() != null) {
+            entity.getShader().Bind();
+            SetUniforms(entity.getShader(), entity);
+        } else {
+            defaultShader.Bind();
+            SetUniforms(defaultShader, entity);
+        }
+
+        ObjModel model = entity.getModel();
+        if(model == null) {
+            assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
+        }
+
+        VertexArray va = new VertexArray();
+        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+        IndexBuffer ib = model.getIndexBuffer();
+
         va.Bind();
         ib.Bind();
 
+        if(entity.getTexture() != null) {
+            entity.getTexture().Bind();
+        }
+
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+    }
+
+    public void SetUniforms(Shader shader, Entity2D entity) {
+        shader.SetUniformMat4f("uModel", entity.calcModelMatrix());
+        shader.SetUniformMat4f("uView", Entity2D.getCamera().getViewMatrix());
+        shader.SetUniformMat4f("uProj", Entity2D.getCamera().getProjectionMatrix());
     }
 
 
