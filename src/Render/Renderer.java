@@ -76,6 +76,10 @@ public class Renderer {
             SetUniforms(defaultShader, entity);
         }
 
+        if(entity.getTexture() != null) {
+            entity.getTexture().Bind();
+        }
+
         ObjModel model = entity.getModel();
         if(model == null) {
             assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
@@ -88,9 +92,7 @@ public class Renderer {
         va.Bind();
         ib.Bind();
 
-        if(entity.getTexture() != null) {
-            entity.getTexture().Bind();
-        }
+
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
