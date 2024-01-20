@@ -1,10 +1,8 @@
 package Tests;
 
-import Render.Vertices.IndexBuffer;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjMaterial;
 import Render.Vertices.Model.ObjModelParser;
-import Render.Vertices.VertexBuffer;
 
 public class TestObjModelParser extends Test {
 
@@ -26,7 +24,7 @@ public class TestObjModelParser extends Test {
     public void displayModel() {
         // print out all the fields of model
         System.out.println("vertices:");
-        for(float[] vertex : model.positions) {
+        for(float[] vertex : model._positions) {
             System.out.print("  ");
             for(int i = 0; i < vertex.length; i++) {
                 System.out.print(vertex[i] + "\t\t");
@@ -36,7 +34,7 @@ public class TestObjModelParser extends Test {
 
 
         System.out.println("normals:");
-        for(float[] normal : model.normals) {
+        for(float[] normal : model._normals) {
             System.out.print("  ");
             for(float coord : normal) {
                 System.out.print(coord + " ");
@@ -44,7 +42,7 @@ public class TestObjModelParser extends Test {
             System.out.println();
         }
         System.out.println("textures:");
-        for(float[] texture : model.textures) {
+        for(float[] texture : model._textures) {
             System.out.print("  ");
             for(float coord : texture) {
                 System.out.print(coord + " ");
@@ -52,7 +50,7 @@ public class TestObjModelParser extends Test {
             System.out.println();
         }
         System.out.println("faces:");
-        for(int[][] face : model.faces) {
+        for(int[][] face : model._faces) {
             System.out.print("  ");
             for(int[] group : face) {
                 System.out.print("(");
@@ -65,13 +63,13 @@ public class TestObjModelParser extends Test {
         }
 
         System.out.println("materialIDs:");
-        for(int id : model.materialIDs) {
+        for(int id : model._materialIDs) {
             System.out.print("  " + id);
         }
         System.out.println("");
 
         System.out.println("materials:");
-        for(ObjMaterial material : model.materials) {
+        for(ObjMaterial material : model._materials) {
             System.out.println("_".repeat(42));
             System.out.println("  name: " + material.name);
             System.out.print("  ambient: ");
@@ -111,19 +109,6 @@ public class TestObjModelParser extends Test {
             System.out.println("  stencilDecalMap: " + material.stencilDecalMap);
             System.out.println("  alphaTextureMap: " + material.alphaTextureMap);
             System.out.println("  reflectionMap: " + material.reflectionMap);
-
-
-            float[] vB = VertexBuffer.parseVertexArray(model.getVertices());
-            int vSize = model.getVertices()[0].getSize();
-
-            System.out.println("vertexBuffer:");
-            for(int i = 0; i < vB.length; i++) {
-                if(i % (vSize) == 0)
-                    System.out.print("\n");
-                System.out.print(vB[i] + "\t\t");
-
-            }
-            System.out.println("");
 
             int[] iB = model.getIndices();
             System.out.println("indexBuffer:");

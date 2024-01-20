@@ -4,41 +4,93 @@ import Render.Vertices.IndexBuffer;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObjModel {
-    public ArrayList<float[]> positions = new ArrayList<>();
-    public ArrayList<float[]> normals = new ArrayList<>();
-    public ArrayList<float[]> textures = new ArrayList<>();
-    public ArrayList<int[][]> faces = new ArrayList<>(); // indices
+    public ArrayList<float[]> _positions = new ArrayList<>();
+    public ArrayList<float[]> _normals = new ArrayList<>();
+    public ArrayList<float[]> _textures = new ArrayList<>();
+    public ArrayList<int[][]> _faces = new ArrayList<>(); // indices
 
-    public ArrayList<ObjMaterial> materials = new ArrayList<>();
+    public ArrayList<ObjMaterial> _materials = new ArrayList<>();
+    public ArrayList<Integer> _materialIDs = new ArrayList<>();
 
-    public ArrayList<Integer> materialIDs = new ArrayList<>();
+
+    public float[][] positions;
+    public float[][] normals;
+    public float[][] textures;
+    public int[][][] faces;
+    public ObjMaterial[] materials;
+    public Integer[] materialIDs;
+
+    private int[] indices;
 
     public ObjModel() {
         // set the default material
-        materials.add(new ObjMaterial());
+        _materials.add(new ObjMaterial());
+    }
+
+    public void castToArrays() {
+        positions = toArray(_positions, float[].class);
+        normals = toArray(_normals, float[].class);
+        textures = toArray(_textures, float[].class);
+        faces = toArray(_faces, int[][].class);
+        materials = toArray(_materials, ObjMaterial.class);
+        materialIDs = toArray(_materialIDs, Integer.class);
     }
 
 
-    private int[] indices;
-    public Vertex[] getVertices() {
-        ArrayList<Vertex> vB = new ArrayList<>(positions.size());
-        ArrayList<Integer> iB = new ArrayList<>(faces.size() * 3);
+    public VertexBuffer getVertexBuffer() {
+        float[] data = new float[9 * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
+        indices = new int[faces.length * 3]; // 3 vertices per face
+        int dataIndex = 0;
+        int faceIndex = 0;
 
-        int index = 0;
-        for (int i = 0; i < faces.size(); i++) {
-            for (int j = 0; j < faces.get(i).length; j++) {
+        for (int[][] face : faces) {
+            for (int i = 0; i < face.length; i++) {
+                float[] position = positions[face[i][0]-1];
+                data[dataIndex++] = position[0];
+                data[dataIndex++] = position[1];
+                data[dataIndex++] = position[2];
+
+                float[] texture = textures[face[i][1]-1];
+                data[dataIndex++] = texture[0];
+                data[dataIndex++] = texture[1];
+
+                float[] normal = normals[face[i][2]-1];
+                data[dataIndex++] = normal[0];
+                data[dataIndex++] = normal[1];
+                data[dataIndex++] = normal[2];
+
+                data[dataIndex++] = materialIDs[faceIndex];
+
+                indices[dataIndex / 9 -1] = dataIndex / 9  -1;
+            }
+            faceIndex++;
+        }
+
+        return new VertexBuffer(data);
+    }
+
+
+    private Integer index;
+    public Vertex[] getVertices() {
+        ArrayList<Vertex> vB = new ArrayList<>(_positions.size());
+        ArrayList<Integer> iB = new ArrayList<>();
+
+        index = 0;
+        for (int i = 0; i < _faces.size(); i++) {
+            for (int j = 0; j < _faces.get(i).length; j++) {
 
                 // generate a vertex as described by the specific indexes provided by a face part
                 //System.out.print(faces.get(i)[j][0] + " " + faces.get(i)[j][1] + " " + faces.get(i)[j][2]);
                 //System.out.print("\t\t");
-                Vertex v = new Vertex(positions.get(faces.get(i)[j][0]-1));
-                if(faces.get(i)[j].length >= 2)
-                    v.texture = textures.get(faces.get(i)[j][1]-1);
-                if(faces.get(i)[j].length >= 3) {
-                    v.normal = normals.get(faces.get(i)[j][2]-1);
+                Vertex v = new Vertex(_positions.get(_faces.get(i)[j][0]-1));
+                if(_faces.get(i)[j].length >= 2)
+                    v.texture = _textures.get(_faces.get(i)[j][1]-1);
+                if(_faces.get(i)[j].length >= 3) {
+                    v.normal = _normals.get(_faces.get(i)[j][2]-1);
                 }
 
                 // if we generated a unique vertex, add it to the vertex buffer
@@ -63,9 +115,6 @@ public class ObjModel {
         return vB.toArray(vBArray);
     }
 
-    public VertexBuffer getVertexBuffer() {
-        return VertexBuffer.parseVertexBuffer(getVertices());
-    }
 
     public IndexBuffer getIndexBuffer() {
         // if we haven't generated the index buffer yet, do so
@@ -82,5 +131,11 @@ public class ObjModel {
         return indices;
     }
 
+
+    private static <T> T[] toArray(ArrayList<T> list, Class<T> c) {
+        @SuppressWarnings("unchecked")
+        T[] array = (T[]) Array.newInstance(c, list.size());
+        return list.toArray(array);
+    }
 
 }

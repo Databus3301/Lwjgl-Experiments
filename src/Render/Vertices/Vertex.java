@@ -2,7 +2,6 @@ package Render.Vertices;
 
 public class Vertex {
     public float[] position;
-    public float[] color;
     public float[] texture; // uvs
     public float[] normal;
     public int materialID;
@@ -16,22 +15,20 @@ public class Vertex {
         this(position, texture);
         this.normal = normal;
     }
-
-    public Vertex(float[] position, float[] color) {
+    public Vertex(float[] position, float[] texture) {
         this(position);
-        this.color = color;
+        this.texture = texture;
     }
 
     public Vertex(float[] position) {
         this.position = position;
-        this.color = new float[] {0, 0, 0};
         this.texture = new float[] {0, 0};
         this.normal = new float[] {0, 0, 0};
         this.materialID = 0;
     }
 
     public int getSize() {
-        return position.length + color.length + texture.length + normal.length + 1;
+        return position.length + texture.length + normal.length + 1;
     }
     public int getByteSize() {
         return getSize() * 4; // float and int both are 4 bytes
@@ -40,7 +37,6 @@ public class Vertex {
     public static VertexBufferLayout GetLayout() {
         VertexBufferLayout layout = new VertexBufferLayout();
         layout.PushF(3); // position
-        layout.PushF(3); // color
         layout.PushF(2); // texture
         layout.PushF(3); // normal
         layout.PushI(1); // materialID

@@ -15,23 +15,23 @@ public class ObjModelParser {
                 String[] parts = line.split("\\s+");
                 switch (parts[0]) {
                     case "v":
-                        model.positions.add(parseFloatArray(parts));
+                        model._positions.add(parseFloatArray(parts));
                         break;
                     case "vn":
-                        model.normals.add(parseFloatArray(parts));
+                        model._normals.add(parseFloatArray(parts));
                         break;
                     case "vt":
-                        model.textures.add(parseFloatArray(parts));
+                        model._textures.add(parseFloatArray(parts));
                         break;
                     case "f":
-                        model.faces.add(parseFace(parts));
-                        model.materialIDs.add(currentMaterialID);
+                        model._faces.add(parseFace(parts));
+                        model._materialIDs.add(currentMaterialID);
                         break;
-                    case "mtllib": model.materials.addAll(parseMTL(parts[1]));
+                    case "mtllib": model._materials.addAll(parseMTL(parts[1]));
                         break;
                     case "usemtl":
                         int count = 0;
-                        for(ObjMaterial material : model.materials) {
+                        for(ObjMaterial material : model._materials) {
                             if (material == null) continue;
                             if (material.name.equals(parts[1])) {
                                 currentMaterialID = count;
@@ -46,6 +46,7 @@ public class ObjModelParser {
             e.printStackTrace();
         }
 
+        model.castToArrays();
         return model;
     }
 
