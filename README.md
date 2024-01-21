@@ -18,6 +18,7 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - [ ] 3D camera
 - [ ] animations
 - [ ] particles
+- [ ] frustum culling
 ### Game
 - [ ] Concept lol
 - [x] …
