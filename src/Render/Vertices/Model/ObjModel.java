@@ -25,6 +25,7 @@ public class ObjModel {
     private Integer[] materialIDs;
 
     private int[] indices;
+    private IndexBuffer ib;
 
     public ObjModel() {
         // set the default material
@@ -74,12 +75,19 @@ public class ObjModel {
     }
 
 
-    public IndexBuffer getIndexBuffer() {
+    public void calcIndexBuffer() {
         // if we haven't generated the index buffer yet, do so
         if (indices == null) {
             getVertexBuffer();
         }
-        return new IndexBuffer(indices);
+        ib = new IndexBuffer(indices);
+    }
+
+    public IndexBuffer getIndexBuffer() {
+        if(ib==null) {
+            calcIndexBuffer();
+        }
+        return ib;
     }
 
     public int[] getIndices() {

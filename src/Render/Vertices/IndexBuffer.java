@@ -11,7 +11,7 @@ public class IndexBuffer {
 
         m_rendererID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW);
     }
 
     public void Bind(){

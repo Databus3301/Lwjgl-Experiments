@@ -142,10 +142,10 @@ public class Window {
 			float dt = (System.currentTimeMillis() - ms) / 1000.f;
 			ms = System.currentTimeMillis();
 
-			// FPS
+			// FPS  ||   ms per frame
 			if(lastSecond != test.get(Calendar.SECOND)) {
 				lastSecond = test.get(Calendar.SECOND);
-				System.out.println(fps + "fps");
+				System.out.println(fps + "fps" +  "   " + 1000.f/fps + "ms per frame");
 				fps = 0;
 			} else {
 				fps++;
@@ -162,8 +162,6 @@ public class Window {
 			glfwPollEvents();
 
 			GlCheckError();
-
-
 		}
 	}
 
@@ -185,7 +183,6 @@ public class Window {
 	static public void GlCheckError() {
 		while(glGetError() != 0) {
 			System.out.println("[OpenGL error:] " + Integer.toHexString(glGetError()));
-
 		}
 	}
 }
