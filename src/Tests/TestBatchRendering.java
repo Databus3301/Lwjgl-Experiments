@@ -30,20 +30,6 @@ public class TestBatchRendering extends Test {
                 index++;
             }
         }
-//        entities = new Entity2D[6];
-//        entities[0] = new Entity2D(new Vector2f(-25, 0), model, shader);
-//        entities[0].setScale(new Vector2f(25f, 25f));
-//        entities[1] = new Entity2D(new Vector2f(25, 0), model, shader);
-//        entities[1].setScale(new Vector2f(25f, 25f));
-//        entities[2] = new Entity2D(new Vector2f(25, 50), model, shader);
-//        entities[2].setScale(new Vector2f(25f, 25f));
-//        entities[3] = new Entity2D(new Vector2f(-25, 50), model, shader);
-//        entities[3].setScale(new Vector2f(25f, 25f));
-//        entities[4] = new Entity2D(new Vector2f(25, -50), model, shader);
-//        entities[4].setScale(new Vector2f(25f, 25f));
-//        entities[5] = new Entity2D(new Vector2f(-25, -50), model, shader);
-//        entities[5].setScale(new Vector2f(25f, 25f));
-
 
         b = renderer.SetupBatch(entities);
         Entity2D.getCamera().setScale(new Vector2f(5f, 5f));
