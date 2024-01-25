@@ -79,5 +79,15 @@ public class TestObjRendering extends Test {
     @Override
     public void OnClose() {
         super.OnClose();
+        if(entity.getShader() != null)
+            entity.getShader().Delete();
+        if(entity2.getShader() != null)
+            entity2.getShader().Delete();
+        if(entity3.getShader() != null)
+            entity3.getShader().Delete();
+        if(entity4.getShader() != null)
+            entity4.getShader().Delete();
+        if(entity5.getShader() != null)
+            entity5.getShader().Delete();
     }
 }

@@ -1,11 +1,14 @@
 package Render.Entity;
 
+import Render.Batch;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
+import Render.Vertices.IndexBuffer;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
+import Render.Vertices.VertexBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -105,6 +108,9 @@ public class Entity2D {
         return modelMatrix;
     }
 
+
+
+
     public void accelaerate(Vector2f acceleration) {
     	this.velocity.add(acceleration);
     }
@@ -166,6 +172,5 @@ public class Entity2D {
     public void setVelocity(float x, float y) {
         this.velocity = new Vector2f(x, y);
     }
-
 
 }

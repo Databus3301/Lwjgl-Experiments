@@ -110,7 +110,7 @@ public class TestObjModelParser extends Test {
             System.out.println("  alphaTextureMap: " + material.alphaTextureMap);
             System.out.println("  reflectionMap: " + material.reflectionMap);
 
-            int[] iB = model.getIndices();
+            int[] iB = model.getIndexBufferData();
             System.out.println("indexBuffer:");
             for (int i = 0; i < iB.length; i++) {
                 if(i % 3 == 0)

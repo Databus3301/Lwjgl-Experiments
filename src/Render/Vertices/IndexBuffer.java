@@ -6,12 +6,18 @@ import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 public class IndexBuffer {
     private int m_rendererID;
     private int m_Count;
+
     public IndexBuffer(int[] data){
         m_Count = data.length;
 
         m_rendererID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW);
+    }
+
+    public void Update(int[] data, long offset) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, data);
     }
 
     public void Bind(){

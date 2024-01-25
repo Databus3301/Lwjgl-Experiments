@@ -118,6 +118,8 @@ public class Window {
 					break;
 				case "objrendering": currentTest = new TestObjRendering();
 					break;
+				case "batchrendering": currentTest = new TestBatchRendering();
+					break;
 			}
 		} else // default case
 			currentTest = new Test();

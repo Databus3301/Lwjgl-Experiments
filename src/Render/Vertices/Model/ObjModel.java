@@ -1,13 +1,14 @@
 package Render.Vertices.Model;
 
 import Render.Vertices.IndexBuffer;
-import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
+import org.joml.Vector2f;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObjModel {
+    // TODO: OPTIMISATION:: add duplicate vertex recognition through faces (cheaper comparision) and handle indices accordingly
     public ArrayList<float[]> _positions = new ArrayList<>();
     public ArrayList<float[]> _normals = new ArrayList<>();
     public ArrayList<float[]> _textures = new ArrayList<>();
@@ -41,8 +42,8 @@ public class ObjModel {
         materialIDs = toArray(_materialIDs, Integer.class);
     }
 
-
-    public VertexBuffer getVertexBuffer() {
+    // TODO: handle this through the <Entity2D> class, to allow for batch rendering, with attributes like position and scale by adding to this calculation
+    public float[] getVertexBufferData() {
         float[] data = new float[9 * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
         indices = new int[faces.length * 3]; // 3 vertices per face
         int dataIndex = 0;
@@ -58,6 +59,7 @@ public class ObjModel {
                 float[] texture = textures[face[i][1]-1];
                 data[dataIndex++] = texture[0];
                 data[dataIndex++] = texture[1];
+                System.out.println(texture[0] + " " + texture[1]);
 
                 float[] normal = normals[face[i][2]-1];
                 data[dataIndex++] = normal[0];
@@ -71,12 +73,14 @@ public class ObjModel {
             faceIndex++;
         }
 
-        return new VertexBuffer(data);
+        return data;
     }
 
+    public VertexBuffer getVertexBuffer() {
+        return new VertexBuffer(getVertexBufferData());
+    }
 
     public void calcIndexBuffer() {
-        // if we haven't generated the index buffer yet, do so
         if (indices == null) {
             getVertexBuffer();
         }
@@ -90,13 +94,21 @@ public class ObjModel {
         return ib;
     }
 
-    public int[] getIndices() {
+    public int[] getIndexBufferData() {
         if (indices == null) {
             getVertexBuffer();
         }
         return indices;
     }
-
+    public int[] getIndexBufferData(int offset) {
+        if (indices == null) {
+            getVertexBuffer();
+        }
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] += offset;
+        }
+        return indices;
+    }
 
     private static <T> T[] toArray(ArrayList<T> list, Class<T> c) {
         @SuppressWarnings("unchecked")

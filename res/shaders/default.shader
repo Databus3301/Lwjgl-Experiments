@@ -7,11 +7,15 @@ layout(location = 2) in vec2 texCoord;
 layout(location = 3) in vec3 normals;
 layout(location = 4) in float materialID;
 
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+
 out vec3 v_position;
 
 void main()
 {
-    gl_Position = position;
+    gl_Position = uProj * uView * uModel * position;
     v_position = position.xyz;
 };
 
