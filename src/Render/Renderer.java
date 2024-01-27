@@ -119,10 +119,11 @@ public class Renderer {
         }
 
         // Create combined vertex and index buffers
+        System.out.println(totalVertices);
         VertexBuffer vb = new VertexBuffer(new float[totalVertices]);
         IndexBuffer ib = new IndexBuffer(new int[totalIndices]);
 
-        long vertexOffset = 0; // TODO: something about offset calculation, as resetting these to 0 every loop only renders the last element ergo data writing is fine up until we write past 1 enttiy
+        long vertexOffset = 0;
         long indexOffset = 0;
 
         // Append data from each entity's buffers to the combined buffers
@@ -137,7 +138,6 @@ public class Renderer {
             for (int j = 0; j < indices.length; j++) {
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
-
                 dataIndex += 7;
             }
 
@@ -149,7 +149,6 @@ public class Renderer {
         }
 
         va.AddBuffer(vb, Vertex.GetLayout());
-
         return new Batch(va, ib);
     }
 

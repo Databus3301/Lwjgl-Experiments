@@ -56,17 +56,24 @@ public class ObjModel {
                 data[dataIndex++] = position[1];
                 data[dataIndex++] = position[2];
 
-                float[] texture = textures[face[i][1]-1];
-                data[dataIndex++] = texture[0];
-                data[dataIndex++] = texture[1];
-                System.out.println(texture[0] + " " + texture[1]);
+                System.out.println(position[0] + " " + position[1] + " " + position[2]);
 
-                float[] normal = normals[face[i][2]-1];
-                data[dataIndex++] = normal[0];
-                data[dataIndex++] = normal[1];
-                data[dataIndex++] = normal[2];
+                if(face[i].length > 1) {
+                    float[] texture = textures[face[i][1] - 1];
+                    data[dataIndex++] = texture[0];
+                    data[dataIndex++] = texture[1];
+                } else dataIndex += 2;
 
-                data[dataIndex++] = materialIDs[faceIndex];
+                if(face[i].length > 2) {
+                    float[] normal = normals[face[i][2] - 1];
+                    data[dataIndex++] = normal[0];
+                    data[dataIndex++] = normal[1];
+                    data[dataIndex++] = normal[2];
+                } else dataIndex += 3;
+
+                if(face[i].length > 3)
+                    data[dataIndex++] = materialIDs[faceIndex];
+                else dataIndex++;
 
                 indices[dataIndex / 9 -1] = dataIndex / 9  -1;
             }

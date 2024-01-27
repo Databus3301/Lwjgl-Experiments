@@ -2,37 +2,43 @@ package Tests;
 
 import Render.Batch;
 import Render.Entity.Entity2D;
-import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
-import Render.Window.Window;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+
+/**
+ * Batch rendering takes a lot of memory and pre-processing, but is much faster than normal rendering, when dealing with a lot of entities
+ * A combination of Instanced Rendering and Batch Rendering would be ideal, depending on the situation
+ */
 
 public class TestBatchRendering extends Test {
 
     Entity2D[] entities;
     Batch b;
 
+    Boolean batching; // test var
+
     public TestBatchRendering() {
         super();
-        ObjModel model = ObjModelParser.parseOBJ("res/models/untitled.obj");
-        Shader shader = new Shader("res/shaders/batching.shader");
+        batching = true;
+        int DIM = 20;
 
-        entities = new Entity2D[20*20];
+        ObjModel[] model = new ObjModel[] { ObjModelParser.parseOBJ("res/models/testModel3.obj"), ObjModelParser.parseOBJ("res/models/untitled.obj"), ObjModelParser.parseOBJ("res/models/testModel.obj") };
+        entities = new Entity2D[DIM*DIM];
         int index = 0;
-        for(int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
-                entities[index] = new Entity2D(new Vector2f(20*i, 20*j), model);
-                entities[index].setScale(new Vector2f(10f, 10f));
+        for(int i = 0; i < DIM; i++) {
+            for (int j = 0; j < DIM; j++) {
+                entities[index] = new Entity2D(new Vector2f(5*i, 5*j), model[index%3]);
+                entities[index].setScale(new Vector2f(5/2f, 5/2f));
                 index++;
             }
         }
-
-        b = renderer.SetupBatch(entities);
-        Entity2D.getCamera().setScale(new Vector2f(5f, 5f));
+        if(batching)
+             b = renderer.SetupBatch(entities);
+        Entity2D.getCamera().setScale(new Vector2f(8f, 8f));
     }
 
     @Override
@@ -45,11 +51,12 @@ public class TestBatchRendering extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-//        for (Entity2D entity : entities) {
-//            renderer.DrawEntity2D(entity);
-//        }
 
-        renderer.DrawBatch(b);
+        if(batching)
+            renderer.DrawBatch(b);
+        else
+            for (Entity2D e : entities)
+                renderer.DrawEntity2D(e);
     }
 
     @Override
@@ -57,16 +64,16 @@ public class TestBatchRendering extends Test {
         super.OnKeyInput(window, key, scancode, action, mods);
 
         if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(200f, 0);
+            Entity2D.getCamera().setVelocity(400f, 0);
         }
         if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(-200f, 0);
+            Entity2D.getCamera().setVelocity(-400f, 0);
         }
         if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(0, -200f);
+            Entity2D.getCamera().setVelocity(0, -400f);
         }
         if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(0, 200f);
+            Entity2D.getCamera().setVelocity(0, 400f);
         }
     }
 }

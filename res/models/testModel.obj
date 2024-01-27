@@ -18,10 +18,5 @@ mtllib ../materials/testMaterial.mtl
 usemtl MyMaterial
 
 # Faces for the first set of vertices
-f 1 2 3 4
-
-# Use material for the second set of vertices
-usemtl MyOtherMaterial
-
-# Faces for the second set of vertices
-f 5 6 7 8
+f 1 2 3
+f 3 1 2
