@@ -4,6 +4,7 @@ import Render.Batch;
 import Render.Entity.Entity2D;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -24,7 +25,7 @@ public class TestBatchRendering extends Test {
     public TestBatchRendering() {
         super();
         batching = true;
-        int DIM = 20;
+        int DIM = 100;
 
         ObjModel[] model = new ObjModel[] { ObjModelParser.parseOBJ("res/models/testModel3.obj"), ObjModelParser.parseOBJ("res/models/untitled.obj"), ObjModelParser.parseOBJ("res/models/testModel.obj") };
         entities = new Entity2D[DIM*DIM];
@@ -38,7 +39,7 @@ public class TestBatchRendering extends Test {
         }
         if(batching)
              b = renderer.SetupBatch(entities);
-        Entity2D.getCamera().setScale(new Vector2f(8f, 8f));
+        Entity2D.getCamera().setScale(new Vector2f(4f, 4f));
     }
 
     @Override
@@ -64,16 +65,16 @@ public class TestBatchRendering extends Test {
         super.OnKeyInput(window, key, scancode, action, mods);
 
         if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(400f, 0);
+            Entity2D.getCamera().setVelocity(200f, 0);
         }
         if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(-400f, 0);
+            Entity2D.getCamera().setVelocity(-200f, 0);
         }
         if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(0, -400f);
+            Entity2D.getCamera().setVelocity(0, -200f);
         }
         if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-            Entity2D.getCamera().setVelocity(0, 400f);
+            Entity2D.getCamera().setVelocity(0, 200f);
         }
     }
 }

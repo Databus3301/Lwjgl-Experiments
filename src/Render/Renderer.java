@@ -44,41 +44,6 @@ public class Renderer {
         glDrawElements(GL_TRIANGLES, b.ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
 
-//    public void tmpDraw(int vB_ID, int[] iB) {
-//        defaultShader.Bind();
-//
-//        int vertexBuffer_ID = glGenBuffers();
-//        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer_ID);
-//        glBufferData(GL_ARRAY_BUFFER, vB, GL_STATIC_DRAW);
-//
-//        glBindBuffer(GL_ARRAY_BUFFER, vB_ID); // bind the vertex buffer
-//
-//        int indexBuffer_ID = glGenBuffers();
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_ID);
-//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, iB, GL_STATIC_DRAW);
-//
-//        int vertexArray_ID = glGenVertexArrays();
-//        glBindVertexArray(vertexArray_ID);
-//
-//        glEnableVertexAttribArray(0);
-//        glVertexAttribPointer(0, 2, GL_FLOAT, false, 12 * 4, 0);
-//
-//        glEnableVertexAttribArray(1);
-//        glVertexAttribPointer(1, 2, GL_FLOAT, false, 12 * 4, GL_FLOAT*2);
-//
-//        glEnableVertexAttribArray(2);
-//        glVertexAttribPointer(2, 2, GL_FLOAT, false, 12 * 4, GL_FLOAT*3);
-//
-//        glEnableVertexAttribArray(3);
-//        glVertexAttribPointer(3, 3, GL_FLOAT, false, 12 * 4, GL_FLOAT*2);
-//
-//        glEnableVertexAttribArray(4);
-//        glVertexAttribPointer(4, 1, GL_INT, false, 12 * 4, GL_FLOAT*3);
-//
-//
-//        glDrawElements(GL_TRIANGLES, iB.length, GL_UNSIGNED_INT, 0);
-//    }
-
     public void DrawEntity2D(Entity2D entity) {
         if(entity.getShader() != null) {
             entity.getShader().Bind();
@@ -119,7 +84,6 @@ public class Renderer {
         }
 
         // Create combined vertex and index buffers
-        System.out.println(totalVertices);
         VertexBuffer vb = new VertexBuffer(new float[totalVertices]);
         IndexBuffer ib = new IndexBuffer(new int[totalIndices]);
 
@@ -138,7 +102,7 @@ public class Renderer {
             for (int j = 0; j < indices.length; j++) {
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
-                dataIndex += 7;
+                dataIndex += Vertex.SIZE - 2;
             }
 
             vb.Update(data, vertexOffset);
@@ -160,7 +124,7 @@ public class Renderer {
     }
     public void SetUniforms(Shader shader) {
         shader.SetUniformMat4f("uModel", Entity2D.getCamera().calcModelMatrix());
-        shader.SetUniformMat4f("uView", Entity2D.getCamera().getViewMatrix());
+        shader.SetUniformMat4f("uView", Entity2D.getCamera().calcViewMatrix());
         shader.SetUniformMat4f("uProj", Entity2D.getCamera().getProjectionMatrix());
     }
 

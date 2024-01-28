@@ -16,6 +16,7 @@ public class Camera extends Entity2D {
         calcModelMatrix();
         calcViewMatrix();
         calcProjectionMatrix();
+
     }
     public Camera() {
         this.position = new Vector2f(0, 0);
@@ -31,8 +32,8 @@ public class Camera extends Entity2D {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         this.viewMatrix.identity();
-        this.viewMatrix.lookAt(new Vector3f(position.x, position.y, 20f),
-                cameraFront.add(position.x, position.y , 0.0f),
+        this.viewMatrix.lookAt(new Vector3f(position.x*-1, position.y*-1, 20f),
+                cameraFront.add(position.x*-1, position.y*-1 , 0.0f),
                 cameraUp);
         return this.viewMatrix;
     }
@@ -50,5 +51,4 @@ public class Camera extends Entity2D {
     public Matrix4f getProjectionMatrix() {
         return this.projectionMatrix;
     }
-
 }

@@ -1,6 +1,9 @@
 package Render.Vertices;
 
 public class Vertex {
+
+    public static final int SIZE = 3;
+
     public float[] position;
     public float[] texture; // uvs
     public float[] normal;
@@ -28,18 +31,18 @@ public class Vertex {
     }
 
     public int getSize() {
-        return position.length + texture.length + normal.length + 1;
+        return SIZE;
     }
     public int getByteSize() {
-        return getSize() * 4; // float and int both are 4 bytes
+        return SIZE * 4; // float and int both are 4 bytes
     }
 
     public static VertexBufferLayout GetLayout() {
         VertexBufferLayout layout = new VertexBufferLayout();
         layout.PushF(3); // position
-        layout.PushF(2); // texture
-        layout.PushF(3); // normal
-        layout.PushI(1); // materialID
+        //layout.PushF(2); // texture
+        //layout.PushF(3); // normal
+        //layout.PushI(1); // materialID
         return layout;
     }
 }

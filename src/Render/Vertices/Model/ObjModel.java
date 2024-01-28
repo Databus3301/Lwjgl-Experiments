@@ -1,6 +1,7 @@
 package Render.Vertices.Model;
 
 import Render.Vertices.IndexBuffer;
+import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
 import org.joml.Vector2f;
 
@@ -44,7 +45,7 @@ public class ObjModel {
 
     // TODO: handle this through the <Entity2D> class, to allow for batch rendering, with attributes like position and scale by adding to this calculation
     public float[] getVertexBufferData() {
-        float[] data = new float[9 * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
+        float[] data = new float[Vertex.SIZE * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
         indices = new int[faces.length * 3]; // 3 vertices per face
         int dataIndex = 0;
         int faceIndex = 0;
@@ -56,26 +57,24 @@ public class ObjModel {
                 data[dataIndex++] = position[1];
                 data[dataIndex++] = position[2];
 
-                System.out.println(position[0] + " " + position[1] + " " + position[2]);
+//                if(face[i].length > 1) {
+//                    float[] texture = textures[face[i][1] - 1];
+//                    data[dataIndex++] = texture[0];
+//                    data[dataIndex++] = texture[1];
+//                } else dataIndex += 2;
+//
+//                if(face[i].length > 2) {
+//                    float[] normal = normals[face[i][2] - 1];
+//                    data[dataIndex++] = normal[0];
+//                    data[dataIndex++] = normal[1];
+//                    data[dataIndex++] = normal[2];
+//                } else dataIndex += 3;
+//
+//                if(face[i].length > 3)
+//                    data[dataIndex++] = materialIDs[faceIndex];
+//                else dataIndex++;
 
-                if(face[i].length > 1) {
-                    float[] texture = textures[face[i][1] - 1];
-                    data[dataIndex++] = texture[0];
-                    data[dataIndex++] = texture[1];
-                } else dataIndex += 2;
-
-                if(face[i].length > 2) {
-                    float[] normal = normals[face[i][2] - 1];
-                    data[dataIndex++] = normal[0];
-                    data[dataIndex++] = normal[1];
-                    data[dataIndex++] = normal[2];
-                } else dataIndex += 3;
-
-                if(face[i].length > 3)
-                    data[dataIndex++] = materialIDs[faceIndex];
-                else dataIndex++;
-
-                indices[dataIndex / 9 -1] = dataIndex / 9  -1;
+                indices[dataIndex / Vertex.SIZE -1] = dataIndex / Vertex.SIZE  -1;
             }
             faceIndex++;
         }
