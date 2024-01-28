@@ -1,25 +1,29 @@
 package Render;
 
+import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
 import Render.Shader.Shader;
-import Render.Vertices.IndexBuffer;
+import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Vertex;
-import Render.Vertices.VertexArray;
-import Render.Vertices.VertexBuffer;
 import Render.Window.Window;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer {
 
     Shader defaultShader;
+    Camera camera;
+
     public Renderer() {
         defaultShader = new Shader("res/shaders/batching.shader");
+        camera = new Camera();
     }
     public void Draw(VertexArray va, IndexBuffer ib, Shader shader) {
         shader.Bind();
+        SetUniforms(shader);
+
         va.Bind();
         ib.Bind();
 
@@ -28,10 +32,60 @@ public class Renderer {
 
     public void Draw(VertexArray va, IndexBuffer ib) {
         defaultShader.Bind();
+        SetUniforms(defaultShader);
+
         va.Bind();
         ib.Bind();
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+    }
+
+    // TODO: actually test this lol
+
+    public void DrawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
+        if(entity.getShader() != null) {
+            entity.getShader().Bind();
+            SetUniforms(entity.getShader(), entity);
+        } else {
+            defaultShader.Bind();
+            SetUniforms(defaultShader, entity);
+        }
+
+        if(entity.getTexture() != null) {
+            entity.getTexture().Bind();
+        }
+
+        ObjModel model = entity.getModel();
+        if(model == null) {
+            assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
+        }
+
+        VertexArray va = entity.getVa();
+        IndexBuffer ib = model.getIndexBuffer();
+
+        //// setup instance VBO
+        // collect matrices into array
+        float[] modelMatricesArr = new float[modelMatrices.length * 4 * 4];
+        for (int i = 0; i < modelMatrices.length; i++) {
+            float[] m = new float[16];
+            modelMatrices[i].get(m);
+            System.arraycopy(m, 0, modelMatricesArr, i * 16, 16);
+        }
+        //
+        VertexBuffer vb = new VertexBuffer(modelMatricesArr);
+
+        VertexBufferLayout layout = new VertexBufferLayout();
+        layout.PushF(4);
+        layout.PushF(4);
+        layout.PushF(4);
+        layout.PushF(4);
+
+        va.AddBufferI(vb, layout);
+
+        va.Bind();
+        ib.Bind();
+
+        glDrawElementsInstanced(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0, modelMatrices.length);
     }
 
     public void DrawBatch(Batch b) {
@@ -43,7 +97,6 @@ public class Renderer {
 
         glDrawElements(GL_TRIANGLES, b.ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
-
     public void DrawEntity2D(Entity2D entity) {
         if(entity.getShader() != null) {
             entity.getShader().Bind();
@@ -62,11 +115,10 @@ public class Renderer {
             assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         }
 
-        //        VertexArray va = new VertexArray();
-        //        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+        VertexArray va = entity.getVa();
         IndexBuffer ib = model.getIndexBuffer();
 
-        entity.getVa().Bind();
+        va.Bind();
         ib.Bind();
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
@@ -115,21 +167,22 @@ public class Renderer {
         va.AddBuffer(vb, Vertex.GetLayout());
         return new Batch(va, ib);
     }
-
     public void SetUniforms(Shader shader, Entity2D entity) {
-        Matrix4f modelmatrix = entity.calcModelMatrix().mul(Entity2D.getCamera().calcModelMatrix());
+        Matrix4f modelmatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
         shader.SetUniformMat4f("uModel", modelmatrix);
-        shader.SetUniformMat4f("uView", Entity2D.getCamera().getViewMatrix());
-        shader.SetUniformMat4f("uProj", Entity2D.getCamera().getProjectionMatrix());
+        shader.SetUniformMat4f("uView", camera.getViewMatrix());
+        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
     }
     public void SetUniforms(Shader shader) {
-        shader.SetUniformMat4f("uModel", Entity2D.getCamera().calcModelMatrix());
-        shader.SetUniformMat4f("uView", Entity2D.getCamera().calcViewMatrix());
-        shader.SetUniformMat4f("uProj", Entity2D.getCamera().getProjectionMatrix());
+        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
+        shader.SetUniformMat4f("uView", camera.calcViewMatrix());
+        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
     }
-
 
     public void Clear() {
          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    }
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 }

@@ -24,16 +24,14 @@ public class Entity2D {
     protected ObjModel model;
     protected Texture texture;
     protected Shader shader;
-    private static Camera camera = new Camera();
 
     protected Vector2f position;  // x y position
     protected float rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
 
-    /////////// TODO: remove this / integrate it depending on batch rendering or normal rendering
-    VertexArray va = new VertexArray();
-    ///////////
+    protected boolean isStatic; // if the entity is static, it will not be updated every frame
+    protected VertexArray va = new VertexArray(); // hence why the vertex array may be final
 
     public Entity2D(Vector2f position, ObjModel model, Texture texture, Shader shader) {
         this(position, model, texture);
@@ -65,6 +63,7 @@ public class Entity2D {
         this.scale = new Vector2f(1, 1);
         this.velocity = new Vector2f();
         this.model = null;
+        this.isStatic = false;
     }
 
     /**
@@ -142,12 +141,21 @@ public class Entity2D {
     public Shader getShader() {
     	return shader;
     }
-    public static Camera getCamera() {
-        return camera;
+
+    public boolean isStatic() {
+    	return isStatic;
     }
 
     public VertexArray getVa() {
-        return va;
+        if(model == null) assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
+
+        if(isStatic)
+           return va;
+        else {
+            va = new VertexArray();
+            va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+            return va;
+        }
     }
 
     public void setPosition(Vector2f position) {
@@ -173,4 +181,16 @@ public class Entity2D {
         this.velocity = new Vector2f(x, y);
     }
 
+    public void setModel(ObjModel model) {
+        this.model = model;
+    }
+    public void setTexture(Texture texture) {
+    	this.texture = texture;
+    }
+    public void setShader(Shader shader) {
+    	this.shader = shader;
+    }
+    public void setStatic(boolean isStatic) {
+    	this.isStatic = isStatic;
+    }
 }

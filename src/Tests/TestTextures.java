@@ -18,9 +18,6 @@ public class TestTextures extends Test {
     protected Entity2D box;
 
     protected Shader shader;
-    protected VertexArray va;
-    protected IndexBuffer ib;
-    protected Camera camera;
 
     public TestTextures() {
         super();
@@ -33,14 +30,7 @@ public class TestTextures extends Test {
         shader.SetUniform1i("u_Texture", 0);
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
-        box = new Entity2D(new Vector2f(0, 0), model, texture);
-
-        va = new VertexArray();
-        ib = model.getIndexBuffer();
-
-        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
-
-        camera = new Camera(new Vector2f());
+        box = new Entity2D(new Vector2f(0, 0), model, texture, shader);
     }
 
     @Override
@@ -51,17 +41,7 @@ public class TestTextures extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-
-        shader.Bind();
-        setUniforms();
-
-        renderer.Draw(va, ib, shader);
-    }
-
-    protected void setUniforms() {
-        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
-        shader.SetUniformMat4f("uView", camera.getViewMatrix());
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
+        renderer.DrawEntity2D(box);
     }
 
     @Override
