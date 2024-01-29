@@ -17,7 +17,7 @@ public class Renderer {
     Camera camera;
 
     public Renderer() {
-        defaultShader = new Shader("res/shaders/batching.shader");
+        defaultShader = new Shader("res/shaders/instancing.shader");
         camera = new Camera();
     }
     public void Draw(VertexArray va, IndexBuffer ib, Shader shader) {
@@ -70,6 +70,12 @@ public class Renderer {
             float[] m = new float[16];
             modelMatrices[i].get(m);
             System.arraycopy(m, 0, modelMatricesArr, i * 16, 16);
+
+            System.out.println("");
+            for (int j = 0; j < 16; j++) {
+                System.out.print(m[j] + " ");
+            }
+            System.out.println("");
         }
         //
         VertexBuffer vb = new VertexBuffer(modelMatricesArr);

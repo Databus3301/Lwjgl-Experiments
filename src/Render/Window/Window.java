@@ -120,6 +120,8 @@ public class Window {
 					break;
 				case "batchrendering": currentTest = new TestBatchRendering();
 					break;
+				case "instancedrendering": currentTest = new TestInstancedRendering();
+					break;
 			}
 		} else // default case
 			currentTest = new Test();
