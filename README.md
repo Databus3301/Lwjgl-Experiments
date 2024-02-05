@@ -19,8 +19,22 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - [ ] animations
 - [ ] particles
 - [ ] frustum culling
+- [ ] scene loading/saving/parsing
 ### Game
-- [ ] Concept lol
+- [ ] Lobby
+  - [ ] Item-Stash
+  - [ ] Character Selection
+- [ ] Map
+  - [ ] Graphics
+    - [ ] fantasy forest
+    - [ ] layered
+  - [ ] Gameplay
+    - [ ] on map events
+      - [ ] boss altars
+      - [ ] shrines
+        - [ ] ability / healing / quest
+      - [ ] chests
+        - [ ] items / healing 
 - [x] …
 
 ## Resources
