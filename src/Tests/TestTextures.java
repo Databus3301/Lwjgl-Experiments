@@ -26,7 +26,6 @@ public class TestTextures extends Test {
         super();
 
         shader = new Shader("res/shaders/basic.shader");
-        shader.Bind();
 
         Texture texture = new Texture("res/textures/woodCrate.png", 0);
         texture.Bind(0);
@@ -52,10 +51,10 @@ public class TestTextures extends Test {
     public void OnRender() {
         super.OnRender();
 
-        shader.Bind();
-        setUniforms();
-
-        renderer.Draw(va, ib, shader);
+     //   shader.Bind();
+      //  setUniforms();
+renderer.DrawEntity2D(box);
+     //   renderer.Draw(va, ib, shader);
     }
 
     protected void setUniforms() {

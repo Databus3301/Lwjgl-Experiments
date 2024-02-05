@@ -24,7 +24,7 @@ public class TestBatchRendering extends Test {
 
     public TestBatchRendering() {
         super();
-        batching = true;
+        batching = false;
         int DIM = 100;
 
         ObjModel[] model = new ObjModel[] { ObjModelParser.parseOBJ("res/models/testModel3.obj"), ObjModelParser.parseOBJ("res/models/untitled.obj"), ObjModelParser.parseOBJ("res/models/testModel.obj") };
