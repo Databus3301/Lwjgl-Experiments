@@ -9,10 +9,10 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - Clear colour
 - .Obj Model Parser 
 - .Obj Model Renderer 2D
+- Batch Rendering
 
 ## WOP
 ### Engine
-- [x] Batch Rendering
 - [ ] OBJ/3D texture loading
 - [ ] lighting / dithering shader
 - [ ] 3D camera
@@ -20,6 +20,8 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - [ ] particles
 - [ ] frustum culling
 - [ ] scene loading/saving/parsing
+- [ ] interaction
+- [ ] collision
 ### Game
 - [ ] Lobby
   - [ ] Item-Stash
@@ -29,6 +31,9 @@ Documenting my learning process of this Open GL and LWJGL for a school project
     - [ ] fantasy forest
     - [ ] layered
   - [ ] Gameplay
+    - [ ] enemy waves
+      - [ ] possible interlacing if cleared to slow
+      - [ ] items/abilities to delay wave starts?
     - [ ] on map events
       - [ ] boss altars
       - [ ] shrines
