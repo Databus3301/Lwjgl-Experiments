@@ -21,7 +21,7 @@ public class TestSquare extends Test {
         texture.Bind();
         shader.SetUniform1i("u_Texture", 0);
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
-        entity = new Entity2D(new Vector2f(), model, texture);
+        entity = new Entity2D(new Vector2f(), model, texture, shader);
 
     }
 
