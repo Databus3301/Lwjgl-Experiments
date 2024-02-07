@@ -22,6 +22,8 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - [ ] scene loading/saving/parsing
 - [ ] interaction
 - [ ] collision
+- [ ] entity position management
+- [ ] hitboxes
 ### Game
 - [ ] Lobby
   - [ ] Item-Stash
