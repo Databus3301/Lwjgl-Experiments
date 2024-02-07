@@ -113,6 +113,7 @@ public class Renderer {
         }
 
         if(entity.getTexture() != null) {
+
             entity.getTexture().Bind();
         }
 

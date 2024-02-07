@@ -29,6 +29,7 @@ public class Shader {
     public void Delete() { glDeleteShader(m_RendererID); }
 
     public void SetUniform1i(String name, int i) {
+        Bind();
         int location = GetUniformLocation(name);
         glUniform1i(location, i);
     }

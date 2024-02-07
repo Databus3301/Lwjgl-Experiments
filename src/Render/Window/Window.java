@@ -122,6 +122,8 @@ public class Window {
 					break;
 				case "instancedrendering": currentTest = new TestInstancedRendering();
 					break;
+				case "square": currentTest = new TestSquare();
+					break;
 			}
 		} else // default case
 			currentTest = new Test();
