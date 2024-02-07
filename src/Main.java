@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         Window window;
         if(args.length >= 2)
-            window = new Window(args[1], new Vector2i(1024,1024));
+            window = new Window(args[1], new Vector2i(300,300));
         else
             window = new Window();
 
