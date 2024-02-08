@@ -147,7 +147,7 @@ public class Entity2D {
     }
 
     public VertexArray getVa() {
-        if(model == null) assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
+        assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
 
         if(isStatic)
            return va;

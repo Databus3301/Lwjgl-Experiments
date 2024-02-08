@@ -8,6 +8,7 @@ import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
@@ -23,9 +24,9 @@ public class TestInstancedRendering extends Test {
         Shader shader = new Shader("res/shaders/instancing.shader");
         shader.Bind();
 
-        ObjModel model = ObjModelParser.parseOBJ("res/models/untitled.obj");
-        entity = new Entity2D(new Vector2f(50, -30), model, shader);
-        entity.setScale(new Vector2f(2000, 2000));
+        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+        entity = new Entity2D(new Vector2f(-100, -30), model, shader);
+        entity.setScale(new Vector2f(1.5f, 1.5f));
 
 
         float[] m = entity.calcModelMatrix().get(new float[16]);
@@ -38,8 +39,8 @@ public class TestInstancedRendering extends Test {
 
         int COUNT = 2;
         modelMatrices = new Matrix4f[COUNT];
-        for(int i = 0; i < COUNT; i++) {
-            modelMatrices[i] = new Matrix4f().identity().translate((float)Math.random() * 100, (float)Math.random() * 100, 0);
+        for(int i = 0; i < COUNT; i++) { // (float)Math.random() * 100 // check multiplikation of model and transformation matrix
+            modelMatrices[i] = new Matrix4f().identity(); //new Matrix4f(entity.calcModelMatrix());//.translate(0.0f, 0.0f, 0.0f); //.translate(50*i, 0, 0);
         }
 
         float[] m2 = entity.calcModelMatrix().mul(modelMatrices[0]).get(new float[16]);

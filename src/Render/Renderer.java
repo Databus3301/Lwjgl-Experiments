@@ -43,23 +43,14 @@ public class Renderer {
     // TODO: actually test this lol
 
     public void DrawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
-        if(entity.getShader() != null) {
-            entity.getShader().Bind();
-            SetUniforms(entity.getShader(), entity);
-        } else {
-            defaultShader.Bind();
-            SetUniforms(defaultShader, entity);
-        }
-
-        if(entity.getTexture() != null) {
+        chooseShader(entity);
+        // choose Texture
+        if(entity.getTexture() != null)
             entity.getTexture().Bind();
-        }
-
+        // choose Model
         ObjModel model = entity.getModel();
-        if(model == null) {
-            assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
-        }
-
+        assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
+        // choose VertexArray and IndexBuffer
         VertexArray va = entity.getVa();
         IndexBuffer ib = model.getIndexBuffer();
 
@@ -104,24 +95,14 @@ public class Renderer {
         glDrawElements(GL_TRIANGLES, b.ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
     public void DrawEntity2D(Entity2D entity) {
-        if(entity.getShader() != null) {
-            entity.getShader().Bind();
-            SetUniforms(entity.getShader(), entity);
-        } else {
-            defaultShader.Bind();
-            SetUniforms(defaultShader, entity);
-        }
-
-        if(entity.getTexture() != null) {
-
+        chooseShader(entity);
+        // choose Texture
+        if(entity.getTexture() != null)
             entity.getTexture().Bind();
-        }
-
+        // choose Model
         ObjModel model = entity.getModel();
-        if(model == null) {
-            assert false : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
-        }
-
+        assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
+        // choose VertexArray and IndexBuffer
         VertexArray va = entity.getVa();
         IndexBuffer ib = model.getIndexBuffer();
 
@@ -184,6 +165,15 @@ public class Renderer {
         shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
         shader.SetUniformMat4f("uView", camera.calcViewMatrix());
         shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
+    }
+    public void chooseShader(Entity2D entity){
+        if(entity.getShader() != null) {
+            entity.getShader().Bind();
+            SetUniforms(entity.getShader(), entity);
+        } else {
+            defaultShader.Bind();
+            SetUniforms(defaultShader, entity);
+        }
     }
 
     public void Clear() {

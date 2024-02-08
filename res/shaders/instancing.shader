@@ -27,5 +27,5 @@ in vec3 v_position;
 
 void main ()
 {
-        color = vec4(v_position, 1.0);
+        color = vec4(v_position.xy+0.2, 1.0, 0.5);
 };
