@@ -18,8 +18,8 @@ public class TestSquare extends Test {
         super();
         shader = new Shader("res/shaders/basic.shader");
         texture = new Texture("res/textures/woodCrate.png", 0);
-        texture.Bind();
         shader.SetUniform1i("u_Texture", 0);
+        texture.Bind();
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         entity = new Entity2D(new Vector2f(), model, texture, shader);
 

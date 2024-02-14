@@ -42,8 +42,11 @@ public class VertexArray {
 
     public void AddBufferI(VertexBuffer vb, VertexBufferLayout layout) {
         AddBuffer(vb, layout);
+
+        assert layout.GetElements().size() != 4 : "Method might need to be updated to support different layouts"; // TODO: finish
+
         for(int i = 0; i < layout.GetElements().size(); i++) {
-            glVertexAttribDivisor(m_VertexBufferIndex-i, 1);
+            glVertexAttribDivisor(m_VertexBufferIndex - layout.GetElements().size()+i, 1);
         }
     }
 }

@@ -17,7 +17,7 @@ public class Renderer {
     Camera camera;
 
     public Renderer() {
-        defaultShader = new Shader("res/shaders/instancing.shader");
+        defaultShader = new Shader("res/shaders/batching.shader");
         camera = new Camera();
     }
     public void Draw(VertexArray va, IndexBuffer ib, Shader shader) {
@@ -44,6 +44,7 @@ public class Renderer {
 
     public void DrawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
         chooseShader(entity);
+
         // choose Texture
         if(entity.getTexture() != null)
             entity.getTexture().Bind();
@@ -54,6 +55,7 @@ public class Renderer {
         VertexArray va = entity.getVa();
         IndexBuffer ib = model.getIndexBuffer();
 
+
         //// setup instance VBO
         // collect matrices into array
         float[] modelMatricesArr = new float[modelMatrices.length * 4 * 4];
@@ -61,12 +63,6 @@ public class Renderer {
             float[] m = new float[16];
             modelMatrices[i].get(m);
             System.arraycopy(m, 0, modelMatricesArr, i * 16, 16);
-
-            System.out.println("");
-            for (int j = 0; j < 16; j++) {
-                System.out.print(m[j] + " ");
-            }
-            System.out.println("");
         }
         //
         VertexBuffer vb = new VertexBuffer(modelMatricesArr);
@@ -156,9 +152,9 @@ public class Renderer {
         return new Batch(va, ib);
     }
     public void SetUniforms(Shader shader, Entity2D entity) {
-        Matrix4f modelmatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
+        Matrix4f modelmatrix = entity.calcModelMatrix();//.mul(camera.calcModelMatrix());
         shader.SetUniformMat4f("uModel", modelmatrix);
-        shader.SetUniformMat4f("uView", camera.getViewMatrix());
+        shader.SetUniformMat4f("uView", camera.calcViewMatrix());
         shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
     }
     public void SetUniforms(Shader shader) {

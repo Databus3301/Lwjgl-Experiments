@@ -27,7 +27,7 @@ public class TestBatchRendering extends Test {
         super();
         // DEBUG
         batching = true;
-        int DIM = 250;
+        int DIM = 200;
         //
 
         renderer.setCamera(camera = new Camera());
@@ -37,7 +37,7 @@ public class TestBatchRendering extends Test {
                 ObjModelParser.parseOBJ("res/models/testModel3.obj"),
                 ObjModelParser.parseOBJ("res/models/untitled.obj"),
                 ObjModelParser.parseOBJ("res/models/testModel.obj"),
-                ObjModelParser.parseOBJ("res/models/square.obj")
+                ObjModelParser.parseOBJ("res/models/squareN.obj")
         };
 
         // spread entites out in a grid using above models
@@ -53,6 +53,7 @@ public class TestBatchRendering extends Test {
 
         if(batching)
              b = renderer.SetupBatch(entities);
+
     }
 
     @Override

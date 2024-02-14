@@ -94,6 +94,8 @@ public class Entity2D {
     public void scale(Vector2f scale) {
         this.scale.add(scale);
     }
+    public void scale(float x, float y) { this.scale.add(new Vector2f(x, y)); }
+    public void scale(float xy) { this.scale.add(new Vector2f(xy, xy)); }
 
     /**
      * calculate the model matrix for the entity
@@ -105,6 +107,14 @@ public class Entity2D {
         modelMatrix.rotate((float)Math.toRadians(rotation), new Vector3f(0, 0, 1));
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         return modelMatrix;
+    }
+
+    public void setModelMatrix(Matrix4f modelMatrix) { //TODO: remove this
+    	this.modelMatrix = modelMatrix;
+    }
+
+    public Matrix4f getModelMatrix() {
+    	return modelMatrix;
     }
 
 
