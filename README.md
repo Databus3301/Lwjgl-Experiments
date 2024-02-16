@@ -1,6 +1,6 @@
 # Lwjgl-Experiments
 
-Documenting my learning process of this Open GL and LWJGL for a school project
+Documenting my learning process of Open GL and LWJGL for a school project
 
 ## Contents (/Tests)
 - Pong
@@ -26,6 +26,7 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - [ ] hitboxes
 - [ ] sound
 - [ ] texture atlas
+- [ ] preload models and textures?
 ### Game
 - [ ] space invaders demo
 

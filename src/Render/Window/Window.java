@@ -115,7 +115,7 @@ public class Window {
 					break;
 				case "pong": currentTest = new TestPong();
 					break;
-				case "objparser": currentTest = new TestObjModelParser();
+				case "objparser" , "objmodelparser": currentTest = new TestObjModelParser();
 					break;
 				case "objrendering": currentTest = new TestObjRendering();
 					break;

@@ -53,11 +53,11 @@ public class TestPong extends Test {
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
 
-        if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-            ball.setVelocity(0, 200f);
+        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+            ball.setVelocity(-200f, 0);
         }
-        if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-            ball.setVelocity(0, -200f);
+        if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+            ball.setVelocity( 200f, 0);
         }
     }
 

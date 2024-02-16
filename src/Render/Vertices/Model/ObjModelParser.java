@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class ObjModelParser {
     public static ObjModel parseOBJ(String path) {
+        if(!path.startsWith("res/models/")) path = "res/models/" + path;
+
         ObjModel model = new ObjModel();
         int currentMaterialID = 0;
 
@@ -47,6 +49,25 @@ public class ObjModelParser {
         }
 
         model.castToArrays();
+
+        // normalize model to 0, 0 position and 1 to -1 space
+        float[] min = new float[]{Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE};
+        float[] max = new float[]{Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE};
+        for(float[] vertex : model._positions) {
+            for(int i = 0; i < 3; i++) {
+                if(vertex[i] < min[i]) min[i] = vertex[i];
+                if(vertex[i] > max[i]) max[i] = vertex[i];
+            }
+        }
+        for(float[] vertex : model._positions) {
+            for(int i = 0; i < 3; i++) {
+                vertex[i] = vertex[i] / (Math.abs(max[i]) + Math.abs(min[i]));
+                vertex[i] = vertex[i] * 2 - 1;
+            }
+        }
+
+
+
         return model;
     }
 
