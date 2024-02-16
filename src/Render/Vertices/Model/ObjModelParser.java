@@ -62,11 +62,11 @@ public class ObjModelParser {
         for(float[] vertex : model._positions) {
             for(int i = 0; i < 3; i++) {
                 vertex[i] = vertex[i] / (Math.abs(max[i]) + Math.abs(min[i]));
-                vertex[i] = vertex[i] * 2 - 1;
+                vertex[i] = vertex[i] * 2;
             }
         }
 
-
+        model.center = new float[]{(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2};
 
         return model;
     }

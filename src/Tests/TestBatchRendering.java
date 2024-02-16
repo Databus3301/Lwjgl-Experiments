@@ -7,7 +7,10 @@ import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 
+import java.sql.SQLOutput;
+
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 /**
@@ -27,7 +30,7 @@ public class TestBatchRendering extends Test {
         super();
         // DEBUG
         batching = true;
-        int DIM = 400;
+        int DIM = 200;
         //
 
         renderer.setCamera(camera = new Camera());
@@ -36,8 +39,8 @@ public class TestBatchRendering extends Test {
         ObjModel[] models = new ObjModel[] {
                 ObjModelParser.parseOBJ("res/models/testModel3.obj"),
                 ObjModelParser.parseOBJ("res/models/untitled.obj"),
-                ObjModelParser.parseOBJ("res/models/testModel.obj"),
-                ObjModelParser.parseOBJ("res/models/squareN.obj")
+                ObjModelParser.parseOBJ("res/models/square.obj"),
+                ObjModelParser.parseOBJ("res/models/big_cube.obj")
         };
 
         // spread entites out in a grid using above models
@@ -45,11 +48,14 @@ public class TestBatchRendering extends Test {
         int index = 0;
         for(int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
-                entities[index] = new Entity2D(new Vector2f(5*i-900, 5*j-900), models[3]);
+                entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[index%4]);
                 entities[index].setScale(new Vector2f(5/2f, 5/2f));
                 index++;
             }
         }
+        System.out.println("Entities: " + index);
+        // print out the first entities model data
+
 
         if(batching)
              b = renderer.SetupBatch(entities);
@@ -66,6 +72,8 @@ public class TestBatchRendering extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
+
+        glClearColor(0.3f, 0.7f, 0.6f, 1.0f);
 
         if(batching)
             renderer.DrawBatch(b);

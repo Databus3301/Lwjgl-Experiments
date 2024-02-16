@@ -119,7 +119,7 @@ public class Window {
 					break;
 				case "objrendering": currentTest = new TestObjRendering();
 					break;
-				case "batchrendering": currentTest = new TestBatchRendering();
+				case "batchrendering", "batching": currentTest = new TestBatchRendering();
 					break;
 				case "instancedrendering": currentTest = new TestInstancedRendering();
 					break;

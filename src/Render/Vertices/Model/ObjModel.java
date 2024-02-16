@@ -18,6 +18,8 @@ public class ObjModel {
     public ArrayList<ObjMaterial> _materials = new ArrayList<>();
     public ArrayList<Integer> _materialIDs = new ArrayList<>();
 
+    public float[] center = new float[3];
+
 
     private float[][] positions;
     private float[][] normals;

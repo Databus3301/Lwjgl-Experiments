@@ -24,6 +24,7 @@ public class Entity2D {
     protected Shader shader;
 
     protected Vector2f position;  // x y position
+    protected Vector2f center; // x y center
     protected float rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
@@ -46,9 +47,12 @@ public class Entity2D {
     }
     public Entity2D(Vector2f position, ObjModel model) {
         this(position);
+
+        assert model != null: "[ERROR] (Render.Entity.Entity2D) Model is null";
+
         this.model = model;
-        if(model != null)
-            va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+        center = new Vector2f(model.center[0], model.center[1]);
     }
     public Entity2D(Vector2f position) {
         this();
@@ -62,6 +66,7 @@ public class Entity2D {
         this.velocity = new Vector2f();
         this.model = null;
         this.isStatic = false;
+        this.center = new Vector2f(0, 0);
     }
 
     /**
@@ -91,9 +96,17 @@ public class Entity2D {
 
     public void scale(Vector2f scale) {
         this.scale.add(scale);
+        this.position.add(scale); // move the entity to keep the center in the same place
     }
-    public void scale(float x, float y) { this.scale.add(new Vector2f(x, y)); }
-    public void scale(float xy) { this.scale.add(new Vector2f(xy, xy)); }
+    public void scale(float x, float y) {
+        this.scale.add(new Vector2f(x, y));
+        this.position.add(new Vector2f(x, y)); // move the entity to keep the center in the same place
+    }
+    public void scale(float xy) {
+        this.scale.add(new Vector2f(xy, xy));
+        this.position.add(new Vector2f(xy, xy)); // move the entity to keep the center in the same place
+    }
+
 
     /**
      * calculate the model matrix for the entity
@@ -104,9 +117,10 @@ public class Entity2D {
             return modelMatrix;
 
         modelMatrix.identity();
-        modelMatrix.translate(new Vector3f(position.x, position.y, 0));
-        modelMatrix.rotate((float)Math.toRadians(rotation), new Vector3f(0, 0, 1));
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
+        modelMatrix.rotate((float)Math.toRadians(rotation), new Vector3f(0, 0, 1));
+        modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
+
         return modelMatrix;
     }
 
@@ -117,6 +131,10 @@ public class Entity2D {
 
     public Vector2f getPosition() {
         return position;
+    }
+    public Vector2f getCenter() {
+        Vector2f c = new Vector2f(center).add(position);
+        return c;
     }
 
     public float getRotation() {

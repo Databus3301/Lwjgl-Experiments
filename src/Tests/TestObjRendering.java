@@ -23,10 +23,12 @@ public class TestObjRendering extends Test {
         shader = new Shader("res/shaders/objrendering.shader");
         shader.Bind();
 
-        ObjModel model = ObjModelParser.parseOBJ("big_cube.obj");
+        ObjModel model = ObjModelParser.parseOBJ("square.obj");
 
         entity = new Entity2D(new Vector2f(0,0), model, shader);
         entity.setScale(new Vector2f(50f, 50f));
+
+        new TestObjModelParser(entity.getModel());
 
 //        entity2 = new Entity2D(new Vector2f(300,300), model, shader);
 //        entity2.setScale(new Vector2f(200, 200));

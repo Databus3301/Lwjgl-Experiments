@@ -13,25 +13,26 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 // rewrite the pong test to use the Entity2D class
 public class TestPong extends Test {
-    private Entity2D ball, wallLeft, wallRight;
-    private Camera camera;
+    private final Entity2D ball, wallLeft, wallRight;
+    private final Camera camera;
 
 
     public TestPong() {
         Vector2i dim = Render.Window.Window.dim;
 
-        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+
+        ObjModel model = ObjModelParser.parseOBJ("square.obj");
         Shader shader = new Shader("res/shaders/objrendering.shader");
         //shader.Bind();
+        int SCALE = 90;
 
         ball = new Entity2D(new Vector2f(), model);
         wallLeft = new Entity2D(new Vector2f(-dim.x / 2f, 0), model);
         wallRight = new Entity2D(new Vector2f(+dim.x / 2f, 0), model);
 
-//        Vector2f scale = new Vector2f(100, 100);
-//        ball.setScale(scale);
-//        wallLeft.setScale(scale);
-//        wallRight.setScale(scale);
+        ball.scale(SCALE);
+        wallLeft.scale(SCALE);
+        wallRight.scale(SCALE);
         ball.setVelocity(new Vector2f(250f, 0));
 
         renderer.setCamera(camera = new Camera(new Vector2f(), shader));

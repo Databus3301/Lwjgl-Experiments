@@ -18,6 +18,12 @@ public class TestObjModelParser extends Test {
         displayModel();
     }
 
+    public TestObjModelParser(ObjModel model) {
+        super();
+        this.model = model;
+        displayModel();
+    }
+
     public void parseOBJ(String path) {
         model = ObjModelParser.parseOBJ(path);
     }
