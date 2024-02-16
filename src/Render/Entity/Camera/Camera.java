@@ -1,6 +1,7 @@
 package Render.Entity.Camera;
 
 import Render.Entity.Entity2D;
+import Render.Shader.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -9,24 +10,28 @@ import static Render.Window.Window.dim;
 
 public class Camera extends Entity2D {
     private Matrix4f viewMatrix, projectionMatrix;
-    public Camera(Vector2f position) {
-        this.position = position;
-        viewMatrix = new Matrix4f();
-        projectionMatrix = new Matrix4f();
-        calcModelMatrix();
-        calcViewMatrix();
-        calcProjectionMatrix();
 
+    public Camera(Vector2f position, Shader shader) {
+        super(position);
+        this.shader = shader;
+        init();
+    }
+    public Camera(Vector2f position) {
+        super(position);
+        init();
     }
     public Camera() {
-        this.position = new Vector2f(0, 0);
+        super();
+        init();
+    }
+
+    public void init() {
         viewMatrix = new Matrix4f();
         projectionMatrix = new Matrix4f();
         calcModelMatrix();
         calcViewMatrix();
         calcProjectionMatrix();
     }
-
     // VIEW
     public Matrix4f calcViewMatrix() {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);

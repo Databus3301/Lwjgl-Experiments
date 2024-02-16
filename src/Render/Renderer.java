@@ -5,9 +5,7 @@ import Render.Entity.Entity2D;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
-import Render.Window.Window;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import static org.lwjgl.opengl.GL43.*;
 
@@ -17,7 +15,7 @@ public class Renderer {
     Camera camera;
 
     public Renderer() {
-        defaultShader = new Shader("res/shaders/batching.shader");
+        defaultShader = new Shader("res/shaders/basic.shader");
         camera = new Camera();
     }
     public void Draw(VertexArray va, IndexBuffer ib, Shader shader) {
@@ -40,7 +38,7 @@ public class Renderer {
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
 
-    // TODO: actually test this lol
+    // TODO: make this work fully
 
     public void DrawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
         chooseShader(entity);
@@ -107,6 +105,11 @@ public class Renderer {
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
+    public void DrawEntities2D(Entity2D[] entities) {
+        for (Entity2D entity : entities) {
+            DrawEntity2D(entity);
+        }
+    }
 
     public Batch SetupBatch(Entity2D[] entities) {
         VertexArray va = new VertexArray();
@@ -152,7 +155,7 @@ public class Renderer {
         return new Batch(va, ib);
     }
     public void SetUniforms(Shader shader, Entity2D entity) {
-        Matrix4f modelmatrix = entity.calcModelMatrix();//.mul(camera.calcModelMatrix());
+        Matrix4f modelmatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
         shader.SetUniformMat4f("uModel", modelmatrix);
         shader.SetUniformMat4f("uView", camera.calcViewMatrix());
         shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
@@ -166,7 +169,12 @@ public class Renderer {
         if(entity.getShader() != null) {
             entity.getShader().Bind();
             SetUniforms(entity.getShader(), entity);
-        } else {
+        }
+        else if(camera.getShader() != null) {
+            camera.getShader().Bind();
+            SetUniforms(camera.getShader(), entity);
+        }
+        else {
             defaultShader.Bind();
             SetUniforms(defaultShader, entity);
         }

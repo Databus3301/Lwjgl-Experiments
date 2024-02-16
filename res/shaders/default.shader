@@ -32,7 +32,7 @@ void main ()
     if(v_position.z > 0.1) {
         color = vec4(v_position.z, v_position.z, v_position.z, 1.0);
     } else {
-     color = vec4(v_position.z + 0.5, v_position.z + 0.5, v_position.z + 0.5, 0.0);
+     color = vec4(v_position.z + 0.5, v_position.z + 0.5, v_position.z + 0.5, 1.0);
     }
 };
 
