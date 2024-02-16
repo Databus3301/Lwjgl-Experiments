@@ -52,27 +52,38 @@ public class ObjModel {
 
         for (int[][] face : faces) {
             for (int i = 0; i < face.length; i++) {
-                float[] position = positions[face[i][0]-1];
+                float[] position = positions[face[i][0] - 1];
                 data[dataIndex++] = position[0];
                 data[dataIndex++] = position[1];
                 data[dataIndex++] = position[2];
 
-//                if(face[i].length > 1) {
-//                    float[] texture = textures[face[i][1] - 1];
-//                    data[dataIndex++] = texture[0];
-//                    data[dataIndex++] = texture[1];
-//                } else dataIndex += 2;
-//
-//                if(face[i].length > 2) {
-//                    float[] normal = normals[face[i][2] - 1];
-//                    data[dataIndex++] = normal[0];
-//                    data[dataIndex++] = normal[1];
-//                    data[dataIndex++] = normal[2];
-//                } else dataIndex += 3;
-//
-//                if(face[i].length > 3)
-//                    data[dataIndex++] = materialIDs[faceIndex];
-//                else dataIndex++;
+                if (Vertex.SIZE > 3) {
+                    if (face[i].length > 1) {
+                        float[] texture = textures[face[i][1] - 1];
+                        data[dataIndex++] = texture[0];
+                        data[dataIndex++] = texture[1];
+                    } else {
+                        dataIndex += 2;
+                    }
+                }
+
+                if(Vertex.SIZE > 5) {
+                    if (face[i].length > 2) {
+                        float[] normal = normals[face[i][2] - 1];
+                        data[dataIndex++] = normal[0];
+                        data[dataIndex++] = normal[1];
+                        data[dataIndex++] = normal[2];
+                    } else {
+                        dataIndex += 3;
+                    }
+                }
+
+                if(Vertex.SIZE > 8) {
+                    if (face[i].length > 3)
+                        data[dataIndex++] = materialIDs[faceIndex];
+                    else
+                        dataIndex++;
+                }
 
                 indices[dataIndex / Vertex.SIZE -1] = dataIndex / Vertex.SIZE  -1;
             }

@@ -2,6 +2,8 @@ package Tests;
 
 import Render.Renderer;
 
+// TODO: rework into interface?
+
 /**
 Serves as a template for all tests.
 Tests are used to test the functionality of the engine.

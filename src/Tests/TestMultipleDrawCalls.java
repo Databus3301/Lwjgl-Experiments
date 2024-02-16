@@ -30,19 +30,14 @@ public class TestMultipleDrawCalls extends TestTextures {
     @Override
     public void OnRender() {
         shader.Bind();
-        setUniforms();
 
         // offsetting the <model> matrix
-        camera.translate(offset1);
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
-        renderer.Draw(va, ib, shader);
+        box.translate(offset1);
+        renderer.DrawEntity2D(box);
 
         // offsetting the <model> matrix
-        camera.translate(offset2);
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
-        renderer.Draw(va, ib, shader);
-
-        //glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        box.translate(offset2);
+        renderer.DrawEntity2D(box);
     }
 
 

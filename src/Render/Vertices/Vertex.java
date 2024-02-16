@@ -2,7 +2,7 @@ package Render.Vertices;
 
 public class Vertex {
 
-    public static final int SIZE = 3;
+    public static final int SIZE = 5;
 
     public float[] position;
     public float[] texture; // uvs
@@ -40,7 +40,7 @@ public class Vertex {
     public static VertexBufferLayout GetLayout() {
         VertexBufferLayout layout = new VertexBufferLayout();
         layout.PushF(3); // position
-        //layout.PushF(2); // texture
+        layout.PushF(2); // texture
         //layout.PushF(3); // normal
         //layout.PushI(1); // materialID
         return layout;

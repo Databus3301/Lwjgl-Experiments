@@ -68,6 +68,7 @@ public class Texture {
     }
 
     public void Bind(){
+
         glActiveTexture(GL_TEXTURE0 + textureSlot);
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
     }

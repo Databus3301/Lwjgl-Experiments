@@ -11,8 +11,8 @@ out vec3 v_position;
 
 void main()
 {
-gl_Position =  uProj * uView * uModel * position;
-v_position = gl_Position.xyz +1;
+    gl_Position =  uProj * uView * uModel * position;
+    v_position = gl_Position.xyz +1;
 };
 
 #shader fragment

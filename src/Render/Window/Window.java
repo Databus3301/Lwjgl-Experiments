@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -99,6 +99,7 @@ public class Window {
 		glfwShowWindow(windowPtr);
 
 		GL.createCapabilities();
+
 	}
 
 	public void initTest() {
@@ -120,6 +121,8 @@ public class Window {
 					break;
 				case "batchrendering": currentTest = new TestBatchRendering();
 					break;
+				case "instancedrendering": currentTest = new TestInstancedRendering();
+					break;
 				case "square": currentTest = new TestSquare();
 					break;
 			}
@@ -129,8 +132,6 @@ public class Window {
 
 	public void run()  {
 		// This line is critical for LWJGL's interoperation with GLFW's OpenGL context
-		//GL.createCapabilities();
-
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

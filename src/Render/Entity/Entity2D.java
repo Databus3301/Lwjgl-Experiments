@@ -1,17 +1,15 @@
 package Render.Entity;
 
-import Render.Batch;
-import Render.Entity.Camera.Camera;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
-import Render.Vertices.IndexBuffer;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
-import Render.Vertices.VertexBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
+import java.util.Objects;
 
 /**
  * Entity2D is a class that represents a 2D entity in the world
@@ -24,16 +22,14 @@ public class Entity2D {
     protected ObjModel model;
     protected Texture texture;
     protected Shader shader;
-    private static Camera camera = new Camera();
 
     protected Vector2f position;  // x y position
     protected float rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
 
-    /////////// TODO: remove this / integrate it depending on batch rendering or normal rendering
-    VertexArray va = new VertexArray();
-    ///////////
+    protected boolean isStatic; // if the entity is static, it will not be updated every frame
+    protected VertexArray va = new VertexArray(); // hence why the vertex array may be final
 
     public Entity2D(Vector2f position, ObjModel model, Texture texture, Shader shader) {
         this(position, model, texture);
@@ -65,6 +61,7 @@ public class Entity2D {
         this.scale = new Vector2f(1, 1);
         this.velocity = new Vector2f();
         this.model = null;
+        this.isStatic = false;
     }
 
     /**
@@ -95,12 +92,17 @@ public class Entity2D {
     public void scale(Vector2f scale) {
         this.scale.add(scale);
     }
+    public void scale(float x, float y) { this.scale.add(new Vector2f(x, y)); }
+    public void scale(float xy) { this.scale.add(new Vector2f(xy, xy)); }
 
     /**
      * calculate the model matrix for the entity
      * @return
      */
     public Matrix4f calcModelMatrix() {
+        if(isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
+            return modelMatrix;
+
         modelMatrix.identity();
         modelMatrix.translate(new Vector3f(position.x, position.y, 0));
         modelMatrix.rotate((float)Math.toRadians(rotation), new Vector3f(0, 0, 1));
@@ -108,10 +110,7 @@ public class Entity2D {
         return modelMatrix;
     }
 
-
-
-
-    public void accelaerate(Vector2f acceleration) {
+    public void accelerate(Vector2f acceleration) {
     	this.velocity.add(acceleration);
     }
 
@@ -142,12 +141,21 @@ public class Entity2D {
     public Shader getShader() {
     	return shader;
     }
-    public static Camera getCamera() {
-        return camera;
+
+    public boolean isStatic() {
+    	return isStatic;
     }
 
     public VertexArray getVa() {
-        return va;
+        assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
+
+        if(isStatic)
+           return va;
+        else {
+            va = new VertexArray();
+            va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+            return va;
+        }
     }
 
     public void setPosition(Vector2f position) {
@@ -173,4 +181,16 @@ public class Entity2D {
         this.velocity = new Vector2f(x, y);
     }
 
+    public void setModel(ObjModel model) {
+        this.model = model;
+    }
+    public void setTexture(Texture texture) {
+    	this.texture = texture;
+    }
+    public void setShader(Shader shader) {
+    	this.shader = shader;
+    }
+    public void setStatic(boolean isStatic) {
+    	this.isStatic = isStatic;
+    }
 }

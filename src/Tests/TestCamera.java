@@ -1,13 +1,18 @@
 package Tests;
 
+import Render.Entity.Camera.Camera;
 import org.joml.Vector2f;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TestCamera extends TestTextures {
 
+    Camera camera;
+
     public TestCamera() {
         super();
+        renderer.setCamera(camera = new Camera());
     }
+
 
     @Override
     public void OnUpdate(float dt) {

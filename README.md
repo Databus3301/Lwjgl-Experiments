@@ -22,7 +22,14 @@ Documenting my learning process of this Open GL and LWJGL for a school project
 - [ ] scene loading/saving/parsing
 - [ ] interaction
 - [ ] collision
+- [ ] entity position management
+- [ ] hitboxes
+- [ ] sound
+- [ ] texture atlas
 ### Game
+- [ ] space invaders demo
+
+_
 - [ ] Lobby
   - [ ] Item-Stash
   - [ ] Character Selection
