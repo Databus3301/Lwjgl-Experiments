@@ -13,10 +13,10 @@ uniform mat4 uModel;
 
 void main()
 {
-        gl_Position = uProj * uView * instanceMatrix *  vec4(position, 1.0);
-        v_position = position.xyz + uModel[0].xyz + uModel[3].xyz;
+        mat4 model = uModel * instanceMatrix;
+        gl_Position = uProj * uView * model * vec4(position, 1.0);
+        v_position = position.xyz + model[0].xyz + model[3].xyz;
 }
-
 
 #shader fragment
 #version 430 core

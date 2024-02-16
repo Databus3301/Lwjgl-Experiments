@@ -1,17 +1,15 @@
 package Render.Entity;
 
-import Render.Batch;
-import Render.Entity.Camera.Camera;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
-import Render.Vertices.IndexBuffer;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
-import Render.Vertices.VertexBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
+import java.util.Objects;
 
 /**
  * Entity2D is a class that represents a 2D entity in the world
@@ -102,6 +100,9 @@ public class Entity2D {
      * @return
      */
     public Matrix4f calcModelMatrix() {
+        if(isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
+            return modelMatrix;
+
         modelMatrix.identity();
         modelMatrix.translate(new Vector3f(position.x, position.y, 0));
         modelMatrix.rotate((float)Math.toRadians(rotation), new Vector3f(0, 0, 1));
@@ -109,18 +110,7 @@ public class Entity2D {
         return modelMatrix;
     }
 
-    public void setModelMatrix(Matrix4f modelMatrix) { //TODO: remove this
-    	this.modelMatrix = modelMatrix;
-    }
-
-    public Matrix4f getModelMatrix() {
-    	return modelMatrix;
-    }
-
-
-
-
-    public void accelaerate(Vector2f acceleration) {
+    public void accelerate(Vector2f acceleration) {
     	this.velocity.add(acceleration);
     }
 

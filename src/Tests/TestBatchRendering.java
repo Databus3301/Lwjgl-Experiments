@@ -27,7 +27,7 @@ public class TestBatchRendering extends Test {
         super();
         // DEBUG
         batching = true;
-        int DIM = 200;
+        int DIM = 400;
         //
 
         renderer.setCamera(camera = new Camera());
@@ -45,7 +45,7 @@ public class TestBatchRendering extends Test {
         int index = 0;
         for(int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
-                entities[index] = new Entity2D(new Vector2f(5*i, 5*j), models[3]);
+                entities[index] = new Entity2D(new Vector2f(5*i-900, 5*j-900), models[3]);
                 entities[index].setScale(new Vector2f(5/2f, 5/2f));
                 index++;
             }

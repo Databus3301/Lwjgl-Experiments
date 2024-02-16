@@ -8,11 +8,15 @@ import Render.Vertices.Model.ObjModelParser;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
+/**
+ * Instanced rendering is a way to render multiple entities with the same model, using the same shader, in a single draw call
+ *
+ * This implementation is not working as intended, instanced rotation works, but instanced translation does not and performance is crap
+ */
 public class TestInstancedRendering extends Test {
     Camera camera;
     Entity2D entity;
