@@ -70,8 +70,7 @@ public class TestBatchRendering extends Test {
         if(batching)
             renderer.DrawBatch(b);
         else
-            for (Entity2D e : entities)
-                renderer.DrawEntity2D(e);
+            renderer.DrawEntities2D(entities);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Renderer {
     Camera camera;
 
     public Renderer() {
-        defaultShader = new Shader("res/shaders/basic.shader");
+        defaultShader = new Shader("res/shaders/batching.shader");
         camera = new Camera();
     }
     public void Draw(VertexArray va, IndexBuffer ib, Shader shader) {
