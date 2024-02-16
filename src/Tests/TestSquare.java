@@ -23,7 +23,7 @@ public class TestSquare extends Test {
         texture.Bind();
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         entity = new Entity2D(new Vector2f(), model, texture, shader);
-entity2 = new Entity2D(new Vector2f(50, 50), model, texture, shader);
+        entity2 = new Entity2D(new Vector2f(50, 50), model, texture, shader);
 
     }
 
@@ -31,7 +31,8 @@ entity2 = new Entity2D(new Vector2f(50, 50), model, texture, shader);
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
         entity.translate(new Vector2f(entity.getVelocity()).mul(dt));
-        entity2.translate(new Vector2f((entity.getPosition().x-entity2.getPosition().x), entity.getPosition().x-entity2.getPosition().y).mul(dt));
+        Vector2f v = new Vector2f(entity.getPosition());
+       entity2.translate(new Vector2f(v.sub(entity2.getPosition()).normalize()).mul(dt).mul(new Vector2f(30,30)));
     }
 
     @Override
