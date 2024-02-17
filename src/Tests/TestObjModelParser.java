@@ -56,9 +56,9 @@ public class TestObjModelParser extends Test {
             System.out.println();
         }
         System.out.println("faces:");
-        for(int[][] face : model._faces) {
+        for(short[][] face : model._faces) {
             System.out.print("  ");
-            for(int[] group : face) {
+            for(short[] group : face) {
                 System.out.print("(");
                 for(int info : group) {
                     System.out.print(info + " ");

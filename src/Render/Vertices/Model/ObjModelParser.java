@@ -8,7 +8,7 @@ public class ObjModelParser {
         if(!path.startsWith("res/models/")) path = "res/models/" + path;
 
         ObjModel model = new ObjModel();
-        int currentMaterialID = 0;
+        short currentMaterialID = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
@@ -32,7 +32,7 @@ public class ObjModelParser {
                     case "mtllib": model._materials.addAll(parseMTL(parts[1]));
                         break;
                     case "usemtl":
-                        int count = 0;
+                        short count = 0;
                         for(ObjMaterial material : model._materials) {
                             if (material == null) continue;
                             if (material.name.equals(parts[1])) {
@@ -139,14 +139,14 @@ public class ObjModelParser {
         return array;
     }
 
-    private static int[][] parseFace(String[] parts) {
-        int[][] arr = new int[parts.length - START_INDEX][];
+    private static short[][] parseFace(String[] parts) {
+        short[][] arr = new short[parts.length - START_INDEX][];
 
         for (int i = 0; i < parts.length-1; i++) {
             String[] subParts = parts[i + START_INDEX].split("/");
-            arr[i] = new int[subParts.length];
+            arr[i] = new short[subParts.length];
             for (int j =0 ; j < subParts.length; j++)
-                arr[i][j] = Integer.parseInt(subParts[j]);
+                arr[i][j] = Short.parseShort(subParts[j]);
             }
 
         return arr;

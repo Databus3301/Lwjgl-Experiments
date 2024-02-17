@@ -2,7 +2,7 @@ package Render.Vertices;
 
 public class Vertex {
 
-    public static final int SIZE = 5;
+    public static final short SIZE = 5;
 
     public float[] position;
     public float[] texture; // uvs
@@ -30,10 +30,10 @@ public class Vertex {
         this.materialID = 0;
     }
 
-    public int getSize() {
+    public short getSize() {
         return SIZE;
     }
-    public int getByteSize() {
+    public short getByteSize() {
         return SIZE * 4; // float and int both are 4 bytes
     }
 

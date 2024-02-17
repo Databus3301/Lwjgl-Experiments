@@ -3,7 +3,6 @@ package Render.Vertices.Model;
 import Render.Vertices.IndexBuffer;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
-import org.joml.Vector2f;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -13,20 +12,19 @@ public class ObjModel {
     public ArrayList<float[]> _positions = new ArrayList<>();
     public ArrayList<float[]> _normals = new ArrayList<>();
     public ArrayList<float[]> _textures = new ArrayList<>();
-    public ArrayList<int[][]> _faces = new ArrayList<>(); // indices
+    public ArrayList<short[][]> _faces = new ArrayList<>(); // indices
 
     public ArrayList<ObjMaterial> _materials = new ArrayList<>();
-    public ArrayList<Integer> _materialIDs = new ArrayList<>();
+    public ArrayList<Short> _materialIDs = new ArrayList<>();
 
     public float[] center = new float[3];
-
 
     private float[][] positions;
     private float[][] normals;
     private float[][] textures;
-    private int[][][] faces;
+    private short[][][] faces;
     private ObjMaterial[] materials;
-    private Integer[] materialIDs;
+    private Short[] materialIDs;
 
     private int[] indices;
     private IndexBuffer ib;
@@ -40,20 +38,20 @@ public class ObjModel {
         positions = toArray(_positions, float[].class);
         normals = toArray(_normals, float[].class);
         textures = toArray(_textures, float[].class);
-        faces = toArray(_faces, int[][].class);
+        faces = toArray(_faces, short[][].class);
         materials = toArray(_materials, ObjMaterial.class);
-        materialIDs = toArray(_materialIDs, Integer.class);
+        materialIDs = toArray(_materialIDs, Short.class);
     }
 
     // TODO: handle this through the <Entity2D> class, to allow for batch rendering, with attributes like position and scale by adding to this calculation
     public float[] getVertexBufferData() {
         float[] data = new float[Vertex.SIZE * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
         indices = new int[faces.length * 3]; // 3 vertices per face
-        int dataIndex = 0;
-        int faceIndex = 0;
+        short dataIndex = 0;
+        short faceIndex = 0;
 
-        for (int[][] face : faces) {
-            for (int i = 0; i < face.length; i++) {
+        for (short[][] face : faces) {
+            for (short i = 0; i < face.length; i++) {
                 float[] position = positions[face[i][0] - 1];
                 data[dataIndex++] = position[0];
                 data[dataIndex++] = position[1];
@@ -87,7 +85,7 @@ public class ObjModel {
                         dataIndex++;
                 }
 
-                indices[dataIndex / Vertex.SIZE -1] = dataIndex / Vertex.SIZE  -1;
+                indices[dataIndex / Vertex.SIZE -1] = (short) (dataIndex / Vertex.SIZE  - 1);
             }
             faceIndex++;
         }
@@ -132,7 +130,9 @@ public class ObjModel {
     private static <T> T[] toArray(ArrayList<T> list, Class<T> c) {
         @SuppressWarnings("unchecked")
         T[] array = (T[]) Array.newInstance(c, list.size());
-        return list.toArray(array);
+        list.toArray(array);
+        list = null;
+        return array;
     }
 
 }

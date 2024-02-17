@@ -18,6 +18,14 @@ public class VertexBuffer {
         glBufferData(GL_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW);
     }
 
+    public VertexBuffer(int size){
+        m_rendererID = glGenBuffers();
+        this.size = size;
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
+        glBufferData(GL_ARRAY_BUFFER, (long) size * Float.BYTES, GL_DYNAMIC_DRAW);
+    }
+
     public void Update(float[] data, long offset) {
         glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
         glBufferSubData(GL_ARRAY_BUFFER, offset, data);

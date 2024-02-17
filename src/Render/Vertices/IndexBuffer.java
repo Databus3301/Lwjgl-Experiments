@@ -14,8 +14,26 @@ public class IndexBuffer {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW);
     }
+    public IndexBuffer(short[] data){
+        m_Count = data.length;
+
+        m_rendererID = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW);
+    }
+    public IndexBuffer(int size){
+        m_Count = size;
+
+        m_rendererID = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long) size * Float.BYTES, GL_DYNAMIC_DRAW);
+    }
 
     public void Update(int[] data, long offset) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, data);
+    }
+    public void Update(short[] data, long offset) {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, data);
     }

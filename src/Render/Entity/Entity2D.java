@@ -51,7 +51,7 @@ public class Entity2D {
         assert model != null: "[ERROR] (Render.Entity.Entity2D) Model is null";
 
         this.model = model;
-        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+        //va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
         center = new Vector2f(model.center[0], model.center[1]);
     }
     public Entity2D(Vector2f position) {
@@ -67,6 +67,18 @@ public class Entity2D {
         this.model = null;
         this.isStatic = false;
         this.center = new Vector2f(0, 0);
+    }
+
+    public Entity2D instantiate() { // TODO: test this
+        Entity2D e = new Entity2D(position, model, texture, shader);
+        e.scale = scale;
+        e.velocity = new Vector2f(velocity);
+        e.isStatic = isStatic;
+        e.rotation = rotation;
+        e.center = new Vector2f(center);
+
+        return e;
+
     }
 
     /**
@@ -167,13 +179,11 @@ public class Entity2D {
     public VertexArray getVa() {
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
 
-        if(isStatic)
-           return va;
-        else {
+        if(!isStatic) {
             va = new VertexArray();
             va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
-            return va;
         }
+        return va;
     }
 
     public void setPosition(Vector2f position) {

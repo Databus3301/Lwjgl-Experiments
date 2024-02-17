@@ -50,7 +50,8 @@ public class Renderer {
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
-        VertexArray va = entity.getVa();
+        VertexArray va = new VertexArray();
+        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
 
@@ -97,7 +98,8 @@ public class Renderer {
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
-        VertexArray va = entity.getVa();
+        VertexArray va = new VertexArray();
+        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
         va.Bind();
@@ -118,13 +120,14 @@ public class Renderer {
 
         // Calculate total size of all vertex and index buffers
         for (Entity2D entity : entities) {
+
             totalVertices += entity.getModel().getVertexBuffer().GetSize();
             totalIndices += entity.getModel().getIndexBuffer().GetCount();
         }
 
         // Create combined vertex and index buffers
-        VertexBuffer vb = new VertexBuffer(new float[totalVertices]);
-        IndexBuffer ib = new IndexBuffer(new int[totalIndices]);
+        VertexBuffer vb = new VertexBuffer(totalVertices);
+        IndexBuffer ib = new IndexBuffer(totalIndices);
 
         long vertexOffset = 0;
         long indexOffset = 0;
