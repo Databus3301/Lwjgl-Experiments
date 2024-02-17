@@ -1,6 +1,10 @@
 package Render.Vertices.Model;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObjModelParser {
@@ -51,22 +55,18 @@ public class ObjModelParser {
         model.castToArrays();
 
         // normalize model to 0, 0 position and 1 to -1 space
-        float[] min = new float[]{Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE};
-        float[] max = new float[]{Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE};
+        float max_d = Float.MIN_VALUE;
+        Vector3f origin = new Vector3f();
         for(float[] vertex : model._positions) {
-            for(int i = 0; i < 3; i++) {
-                if(vertex[i] < min[i]) min[i] = vertex[i];
-                if(vertex[i] > max[i]) max[i] = vertex[i];
-            }
+            float d = origin.distance(new Vector3f(vertex[0], vertex[1], vertex[2]));
+            if (d > max_d) max_d = d;
+            System.out.println(d);
         }
         for(float[] vertex : model._positions) {
             for(int i = 0; i < 3; i++) {
-                vertex[i] = vertex[i] / (Math.abs(max[i]) + Math.abs(min[i]));
-                vertex[i] = vertex[i] * 2;
+                vertex[i] = vertex[i] / max_d * 2 - 1;
             }
         }
-
-        model.center = new float[]{(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2};
 
         return model;
     }

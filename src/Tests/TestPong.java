@@ -1,6 +1,5 @@
 package Tests;
 
-import Render.Batch;
 import Render.Entity.*;
 import Render.Entity.Camera.Camera;
 import Render.Shader.*;
@@ -24,7 +23,7 @@ public class TestPong extends Test {
         ObjModel model = ObjModelParser.parseOBJ("square.obj");
         Shader shader = new Shader("res/shaders/objrendering.shader");
         //shader.Bind();
-        int SCALE = 90;
+        int SCALE = 15;
 
         ball = new Entity2D(new Vector2f(), model);
         wallLeft = new Entity2D(new Vector2f(-dim.x / 2f, 0), model);
@@ -33,7 +32,8 @@ public class TestPong extends Test {
         ball.scale(SCALE);
         wallLeft.scale(SCALE);
         wallRight.scale(SCALE);
-        ball.setVelocity(new Vector2f(250f, 0));
+        //ball.setVelocity(new Vector2f(250f, 0));
+        new TestObjModelParser(model);
 
         renderer.setCamera(camera = new Camera(new Vector2f(), shader));
     }
@@ -42,6 +42,7 @@ public class TestPong extends Test {
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
         ball.translate(new Vector2f(ball.getVelocity()).mul(dt));
+        System.out.println(ball.getCenter());
     }
 
     @Override

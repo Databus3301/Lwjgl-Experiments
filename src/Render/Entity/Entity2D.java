@@ -52,7 +52,6 @@ public class Entity2D {
 
         this.model = model;
         //va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
-        center = new Vector2f(model.center[0], model.center[1]);
     }
     public Entity2D(Vector2f position) {
         this();
@@ -145,8 +144,7 @@ public class Entity2D {
         return position;
     }
     public Vector2f getCenter() {
-        Vector2f c = new Vector2f(center).add(position);
-        return c;
+        return position;
     }
 
     public float getRotation() {
