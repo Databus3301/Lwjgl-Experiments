@@ -38,11 +38,10 @@ public class Shader {
         glUniform4f(location, v0, v1, v2, v3);
     }
 
+    private float[] fb = new float[16];
     public void SetUniformMat4f(String name, Matrix4f mat4) {
         int location = GetUniformLocation(name);
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        mat4.get(fb);
-        glUniformMatrix4fv(location, false, fb);
+        glUniformMatrix4fv(location, false, mat4.get(fb));
     }
 
 

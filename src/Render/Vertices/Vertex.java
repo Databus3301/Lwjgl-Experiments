@@ -8,6 +8,8 @@ public class Vertex {
     public float[] texture; // uvs
     public float[] normal;
     public int materialID;
+    private static VertexBufferLayout layout;
+
 
     public Vertex(float[] position, float[] texture, float[] normal, int materialID) {
         this(position, texture, normal);
@@ -38,11 +40,13 @@ public class Vertex {
     }
 
     public static VertexBufferLayout GetLayout() {
-        VertexBufferLayout layout = new VertexBufferLayout();
-        layout.PushF(3); // position
-        layout.PushF(2); // texture
-        //layout.PushF(3); // normal
-        //layout.PushI(1); // materialID
+        if(layout == null) {
+            layout = new VertexBufferLayout();
+            layout.PushF(3); // position
+            layout.PushF(2); // texture
+            //layout.PushF(3); // normal
+            //layout.PushI(1); // materialID
+        }
         return layout;
     }
 }

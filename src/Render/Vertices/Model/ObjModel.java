@@ -30,6 +30,7 @@ public class ObjModel {
     private IndexBuffer ib;
 
     private float[] vertexBufferData;
+    private VertexBuffer vertexBuffer;
 
     public ObjModel() {
         // set the default material
@@ -47,6 +48,9 @@ public class ObjModel {
 
     // TODO: handle this through the <Entity2D> class, to allow for batch rendering, with attributes like position and scale by adding to this calculation
     public float[] getVertexBufferData() {
+        if(vertexBufferData!=null) return vertexBufferData;
+
+
         float[] data = new float[Vertex.SIZE * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
         indices = new int[faces.length * 3]; // 3 vertices per face
         short dataIndex = 0;
@@ -92,14 +96,14 @@ public class ObjModel {
             faceIndex++;
         }
 
+        vertexBufferData = data;
         return data;
     }
-
     public VertexBuffer getVertexBuffer() { // TODO: resolve memory leak????
-        if(vertexBufferData==null) {
-            vertexBufferData = getVertexBufferData();
+        if(vertexBuffer==null) {
+            vertexBuffer = new VertexBuffer(getVertexBufferData());
         }
-        return new VertexBuffer(vertexBufferData);
+        return vertexBuffer;
     }
 
     public void calcIndexBuffer() {
