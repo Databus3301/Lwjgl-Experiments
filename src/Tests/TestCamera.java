@@ -19,7 +19,7 @@ public class TestCamera extends TestTextures {
         super.OnUpdate(dt);
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
-        camera.rotate(10.0f * dt);
+        camera.rotate(10.0f * dt, 2);
         if(camera.getScale().x < 6f)
              camera.scale(new Vector2f(1.0f, 1.0f).mul(dt));
     }

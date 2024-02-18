@@ -5,10 +5,9 @@ import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.joml.*;
 
+import java.lang.Math;
 import java.util.Objects;
 
 /**
@@ -25,7 +24,7 @@ public class Entity2D {
 
     protected Vector2f position;  // x y position
     protected Vector2f center; // x y center
-    protected float rotation; // rotation in degrees
+    protected Quaternionf rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
 
@@ -53,6 +52,13 @@ public class Entity2D {
         this.model = model;
         //va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
     }
+    public Entity2D(int x, int y, ObjModel model) {
+        this(new Vector2f(x, y));
+        assert model != null: "[ERROR] (Render.Entity.Entity2D) Model is null";
+
+        this.model = model;
+        //va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+    }
     public Entity2D(Vector2f position) {
         this();
         this.position = position;
@@ -60,7 +66,7 @@ public class Entity2D {
 
     public Entity2D() {
         this.position = new Vector2f(0, 0);
-        this.rotation = 0;
+        this.rotation = new Quaternionf();
         this.scale = new Vector2f(1, 1);
         this.velocity = new Vector2f();
         this.model = null;
@@ -96,8 +102,23 @@ public class Entity2D {
      * @param rotation the rotation to rotate by
      */
 
-    public void rotate(float rotation) {
-        this.rotation += rotation;
+    public void rotate(Quaternionf rotation) {
+        this.rotation.add(rotation);
+    }
+    public void rotate(float degrees, int axis) {
+        if(axis < 0 || axis > 2) throw new IllegalArgumentException("Axis must be 0, 1, 2");
+        switch (axis) {
+            case 0 -> this.rotation.rotateAxis((float)Math.toRadians(degrees), 1, 0, 0);
+            case 1 -> this.rotation.rotateAxis((float)Math.toRadians(degrees), 0, 1, 0);
+            case 2 -> this.rotation.rotateAxis((float)Math.toRadians(degrees), 0, 0, 1);
+        }
+    }
+    public void rotate(float degrees, Vector3f axis) {
+        if(axis.x != 0 && axis.z != 1) throw new IllegalArgumentException("Axis X must be 0, 1");
+        if(axis.y != 0 && axis.y != 1) throw new IllegalArgumentException("Axis Y must be 0, 1");
+        if(axis.z != 0 && axis.x != 1) throw new IllegalArgumentException("Axis Z must be 0, 1");
+
+        this.rotation.rotateAxis((float)Math.toRadians(degrees), axis);
     }
 
     /**
@@ -129,8 +150,8 @@ public class Entity2D {
 
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
-        modelMatrix.rotate((float)Math.toRadians(rotation), new Vector3f(0, 0, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
+        modelMatrix.rotateAround(rotation, 0, 0, 0);
 
         return modelMatrix;
     }
@@ -147,7 +168,7 @@ public class Entity2D {
         return position;
     }
 
-    public float getRotation() {
+    public Quaternionf getRotation() {
         return rotation;
     }
 
@@ -188,8 +209,25 @@ public class Entity2D {
         this.position = position;
     }
 
-    public void setRotation(float rotation) {
+    public void setRotation(Quaternionf rotation) {
         this.rotation = rotation;
+    }
+    public void setRotation(float degrees, int axis) {
+        if(axis < 0 || axis > 2) throw new IllegalArgumentException("Axis must be 0, 1, 2");
+        switch (axis) {
+            case 0 -> {
+                rotation.x = 0;
+                rotation.rotateAxis((float)Math.toRadians(degrees), 1, 0, 0);
+            }
+            case 1 -> {
+                rotation.y = 0;
+                rotation.rotateAxis((float)Math.toRadians(degrees), 0, 1, 0);
+            }
+            case 2 -> {
+                rotation.z = 0;
+                rotation.rotateAxis((float)Math.toRadians(degrees), 0, 0, 1);
+            }
+        }
     }
 
     public void setScale(Vector2f scale) {

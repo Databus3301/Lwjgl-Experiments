@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer {
 
-    Shader defaultShader;
+    public Shader defaultShader;
     Camera camera;
 
     public Renderer() {
@@ -109,7 +109,8 @@ public class Renderer {
     }
     public void DrawEntities2D(Entity2D[] entities) {
         for (Entity2D entity : entities) {
-            DrawEntity2D(entity);
+            if(entity != null)
+                DrawEntity2D(entity);
         }
     }
 

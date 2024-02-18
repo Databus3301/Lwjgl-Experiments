@@ -125,6 +125,8 @@ public class Window {
 					break;
 				case "square": currentTest = new TestSquare();
 					break;
+				case "spin", "3d": currentTest = new Test3Dspin();
+					break;
 			}
 		} else // default case
 			currentTest = new Test();

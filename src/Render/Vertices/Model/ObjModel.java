@@ -29,6 +29,8 @@ public class ObjModel {
     private int[] indices;
     private IndexBuffer ib;
 
+    private float[] vertexBufferData;
+
     public ObjModel() {
         // set the default material
         _materials.add(new ObjMaterial());
@@ -93,8 +95,11 @@ public class ObjModel {
         return data;
     }
 
-    public VertexBuffer getVertexBuffer() {
-        return new VertexBuffer(getVertexBufferData());
+    public VertexBuffer getVertexBuffer() { // TODO: resolve memory leak????
+        if(vertexBufferData==null) {
+            vertexBufferData = getVertexBufferData();
+        }
+        return new VertexBuffer(vertexBufferData);
     }
 
     public void calcIndexBuffer() {
