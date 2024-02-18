@@ -39,7 +39,7 @@ public class Vertex {
         return SIZE * 4; // float and int both are 4 bytes
     }
 
-    public static VertexBufferLayout GetLayout() {
+    public static VertexBufferLayout getLayout() {
         if(layout == null) {
             layout = new VertexBufferLayout();
             layout.PushF(3); // position

@@ -1,16 +1,11 @@
 package Tests;
 
-import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
-import Render.Renderer;
 import Render.Shader.Shader;
 import Render.Entity.Texturing.Texture;
-import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
-
-import static org.lwjgl.opengl.GL30.*;
 
 public class TestTextures extends Test {
 
@@ -23,11 +18,11 @@ public class TestTextures extends Test {
         super();
 
         shader = new Shader("res/shaders/basic.shader");
-        shader.Bind();
+        shader.bind();
 
         Texture texture = new Texture("res/textures/woodCrate.png", 0);
         texture.Bind(0);
-        shader.SetUniform1i("u_Texture", 0);
+        shader.setUniform1i("u_Texture", 0);
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         box = new Entity2D(new Vector2f(0, 0), model, texture, shader);
@@ -41,12 +36,12 @@ public class TestTextures extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.DrawEntity2D(box);
+        renderer.drawEntity2D(box);
     }
 
     @Override
     public void OnClose() {
         super.OnClose();
-        shader.Delete();
+        shader.delete();
     }
 }

@@ -19,7 +19,7 @@ public class TestSquare extends Test {
         super();
         shader = new Shader("res/shaders/basic.shader");
         texture = new Texture("res/textures/woodCrate.png", 0);
-        shader.SetUniform1i("u_Texture", 0);
+        shader.setUniform1i("u_Texture", 0);
         texture.Bind();
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         entity = new Entity2D(new Vector2f(), model, texture, shader);
@@ -38,8 +38,8 @@ public class TestSquare extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.DrawEntity2D(entity);
-        renderer.DrawEntity2D(entity2);
+        renderer.drawEntity2D(entity);
+        renderer.drawEntity2D(entity2);
     }
 
     @Override

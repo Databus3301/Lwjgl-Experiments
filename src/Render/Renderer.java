@@ -18,8 +18,8 @@ public class Renderer {
         defaultShader = new Shader("res/shaders/batching.shader");
         camera = new Camera();
     }
-    public void Draw(VertexArray va, IndexBuffer ib, Shader shader) {
-        shader.Bind();
+    public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
+        shader.bind();
         SetUniforms(shader);
 
         va.Bind();
@@ -28,8 +28,8 @@ public class Renderer {
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
 
-    public void Draw(VertexArray va, IndexBuffer ib) {
-        defaultShader.Bind();
+    public void draw(VertexArray va, IndexBuffer ib) {
+        defaultShader.bind();
         SetUniforms(defaultShader);
 
         va.Bind();
@@ -40,7 +40,7 @@ public class Renderer {
 
     // TODO: make this work fully
 
-    public void DrawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
+    public void drawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
         chooseShader(entity);
 
         // choose Texture
@@ -51,7 +51,7 @@ public class Renderer {
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
         VertexArray va = new VertexArray();
-        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+        va.AddBuffer(model.getVertexBuffer(), Vertex.getLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
 
@@ -80,8 +80,8 @@ public class Renderer {
         glDrawElementsInstanced(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0, modelMatrices.length);
     }
 
-    public void DrawBatch(Batch b) {
-        defaultShader.Bind();
+    public void drawBatch(Batch b) {
+        defaultShader.bind();
         SetUniforms(defaultShader);
 
         b.ib.Bind();
@@ -89,7 +89,7 @@ public class Renderer {
 
         glDrawElements(GL_TRIANGLES, b.ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
-    public void DrawEntity2D(Entity2D entity) {
+    public void drawEntity2D(Entity2D entity) {
         chooseShader(entity);
         // choose Texture
         if(entity.getTexture() != null)
@@ -99,7 +99,7 @@ public class Renderer {
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
         VertexArray va = new VertexArray();
-        va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
+        va.AddBuffer(model.getVertexBuffer(), Vertex.getLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
         va.Bind();
@@ -107,14 +107,14 @@ public class Renderer {
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
-    public void DrawEntities2D(Entity2D[] entities) {
+    public void drawEntities2D(Entity2D[] entities) {
         for (Entity2D entity : entities) {
             if(entity != null)
-                DrawEntity2D(entity);
+                drawEntity2D(entity);
         }
     }
 
-    public Batch SetupBatch(Entity2D[] entities) {
+    public Batch setupBatch(Entity2D[] entities) {
         VertexArray va = new VertexArray();
         int totalVertices = 0;
         int totalIndices = 0;
@@ -155,34 +155,41 @@ public class Renderer {
             indexOffset += indices.length  * 4L;
         }
 
-        va.AddBuffer(vb, Vertex.GetLayout());
+        va.AddBuffer(vb, Vertex.getLayout());
         return new Batch(va, ib);
     }
+
+    // TODO: investigate performance gain of CPU side MVP calculation
     public void SetUniforms(Shader shader, Entity2D entity) {
         Matrix4f modelmatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
-        shader.SetUniformMat4f("uModel", modelmatrix);
-        shader.SetUniformMat4f("uView", camera.calcViewMatrix());
-        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
+        shader.setUniformMat4f("uModel", modelmatrix);
+        shader.setUniformMat4f("uView", camera.calcViewMatrix());
+        shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
     }
     public void SetUniforms(Shader shader) {
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
-        shader.SetUniformMat4f("uView", camera.calcViewMatrix());
-        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
+        shader.setUniformMat4f("uModel", camera.calcModelMatrix());
+        shader.setUniformMat4f("uView", camera.calcViewMatrix());
+        shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
     }
     public void chooseShader(Entity2D entity){
         if(entity.getShader() != null) {
-            entity.getShader().Bind();
+            entity.getShader().bind();
             SetUniforms(entity.getShader(), entity);
         }
         else if(camera.getShader() != null) {
-            camera.getShader().Bind();
+            camera.getShader().bind();
             SetUniforms(camera.getShader(), entity);
         }
         else {
-            defaultShader.Bind();
+            int currentID = glGetInteger(GL_CURRENT_PROGRAM);
+            if(currentID != defaultShader.getID())
+                defaultShader.bind();
+
             SetUniforms(defaultShader, entity);
         }
     }
+
+
 
     public void Clear() {
          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer

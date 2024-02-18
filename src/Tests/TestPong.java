@@ -48,7 +48,7 @@ public class TestPong extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.DrawEntities2D(new Entity2D[]{ball, wallLeft, wallRight});
+        renderer.drawEntities2D(new Entity2D[]{ball, wallLeft, wallRight});
     }
 
     @Override
@@ -67,6 +67,6 @@ public class TestPong extends Test {
     public void OnClose() {
         super.OnClose();
         if(camera.getShader() != null)
-            camera.getShader().Delete();
+            camera.getShader().delete();
     }
 }

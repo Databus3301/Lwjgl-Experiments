@@ -26,7 +26,7 @@ public class TestInstancedRendering extends Test {
         renderer.setCamera(camera = new Camera());
 
         Shader shader = new Shader("res/shaders/instancing.shader");
-        shader.Bind();
+        shader.bind();
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         entity = new Entity2D(new Vector2f(200, 0), model, shader);
@@ -66,7 +66,7 @@ public class TestInstancedRendering extends Test {
     public void OnRender() {
         super.OnRender();
 
-        renderer.DrawInstanced(entity, instaceMatrices);
+        renderer.drawInstanced(entity, instaceMatrices);
     }
 
     @Override

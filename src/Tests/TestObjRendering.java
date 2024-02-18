@@ -21,7 +21,7 @@ public class TestObjRendering extends Test {
         super();
 
         shader = new Shader("res/shaders/objrendering.shader");
-        shader.Bind();
+        shader.bind();
 
         ObjModel model = ObjModelParser.parseOBJ("square.obj");
 
@@ -68,7 +68,7 @@ public class TestObjRendering extends Test {
         super.OnRender();
 
         glClearColor(1f, 0.0f, 0.0f, 1.0f);
-        renderer.DrawEntity2D(entity);
+        renderer.drawEntity2D(entity);
 //        renderer.DrawEntity2D(entity2);
 //        renderer.DrawEntity2D(entity3);
 //        renderer.DrawEntity2D(entity4);
@@ -79,7 +79,7 @@ public class TestObjRendering extends Test {
     public void OnClose() {
         super.OnClose();
         if(entity.getShader() != null)
-            entity.getShader().Delete();
+            entity.getShader().delete();
 //        if(entity2.getShader() != null)
 //            entity2.getShader().Delete();
 //        if(entity3.getShader() != null)

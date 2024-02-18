@@ -7,8 +7,6 @@ import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 
-import java.sql.SQLOutput;
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
@@ -38,9 +36,9 @@ public class TestBatchRendering extends Test {
 
         ObjModel[] models = new ObjModel[] {
                 ObjModelParser.parseOBJ("res/models/testModel3.obj"),
-                ObjModelParser.parseOBJ("res/models/untitled.obj"),
+                ObjModelParser.parseOBJ("res/models/sphere.obj"),
                 ObjModelParser.parseOBJ("res/models/square.obj"),
-                ObjModelParser.parseOBJ("res/models/big_cube.obj")
+                ObjModelParser.parseOBJ("res/models/circle.obj")
         };
 
         // spread entites out in a grid using above models
@@ -58,7 +56,7 @@ public class TestBatchRendering extends Test {
 
 
         if(batching)
-             b = renderer.SetupBatch(entities);
+             b = renderer.setupBatch(entities);
 
     }
 
@@ -76,9 +74,9 @@ public class TestBatchRendering extends Test {
         glClearColor(0.3f, 0.7f, 0.6f, 1.0f);
 
         if(batching)
-            renderer.DrawBatch(b);
+            renderer.drawBatch(b);
         else
-            renderer.DrawEntities2D(entities);
+            renderer.drawEntities2D(entities);
     }
 
     @Override
