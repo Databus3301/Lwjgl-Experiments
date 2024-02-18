@@ -16,37 +16,37 @@ public class VertexArray {
 
     }
 
-    public void Bind() {
+    public void bind() {
         glBindVertexArray(m_RendererID);
     }
-    public void Unbind() {
+    public void unbind() {
         glBindVertexArray(0);
     }
 
-    public void AddBuffer(VertexBuffer vb, VertexBufferLayout layout) {
+    public void addBuffer(VertexBuffer vb, VertexBufferLayout layout) {
         // can be called multiple times (once for each index with <size> and <type> their <stride> (byteSize) and <pointer> location in vertex)
-        Bind();
-        vb.Bind();
-        ArrayList<VertexBufferElement> elements =  layout.GetElements();
+        bind();
+        vb.bind();
+        ArrayList<VertexBufferElement> elements =  layout.getElements();
         int offset = 0;;
         for(int i = 0; i < elements.size(); i++) {
             VertexBufferElement element = elements.get(i);
 
             glEnableVertexAttribArray(i);
-            glVertexAttribPointer(m_VertexBufferIndex+i, element.count, element.type, element.normalized, layout.GetStride(), offset);
-            offset += element.count * element.GetTypeSize(element.type);
+            glVertexAttribPointer(m_VertexBufferIndex+i, element.count, element.type, element.normalized, layout.getStride(), offset);
+            offset += element.count * element.getTypeSize(element.type);
         }
 
         m_VertexBufferIndex += elements.size();
     }
 
-    public void AddBufferI(VertexBuffer vb, VertexBufferLayout layout) {
-        AddBuffer(vb, layout);
+    public void addBufferI(VertexBuffer vb, VertexBufferLayout layout) {
+        addBuffer(vb, layout);
 
-        assert layout.GetElements().size() != 4 : "Method might need to be updated to support different layouts"; // TODO: finish
+        assert layout.getElements().size() != 4 : "Method might need to be updated to support different layouts"; // TODO: finish
 
-        for(int i = 0; i < layout.GetElements().size(); i++) {
-            glVertexAttribDivisor(m_VertexBufferIndex - layout.GetElements().size()+i, 1);
+        for(int i = 0; i < layout.getElements().size(); i++) {
+            glVertexAttribDivisor(m_VertexBufferIndex - layout.getElements().size()+i, 1);
         }
     }
 }

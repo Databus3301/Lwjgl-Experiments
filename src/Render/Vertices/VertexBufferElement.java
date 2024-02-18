@@ -15,7 +15,7 @@ public class VertexBufferElement {
         this.normalized = normalized;
     }
 
-    public int GetTypeSize(int type){
+    public int getTypeSize(int type){
         switch (type) {
             case GL_FLOAT: return 4;
             case GL_UNSIGNED_INT: return 4;

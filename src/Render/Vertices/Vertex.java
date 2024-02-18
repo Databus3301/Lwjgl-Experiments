@@ -42,8 +42,8 @@ public class Vertex {
     public static VertexBufferLayout getLayout() {
         if(layout == null) {
             layout = new VertexBufferLayout();
-            layout.PushF(3); // position
-            layout.PushF(2); // texture
+            layout.pushF(3); // position
+            layout.pushF(2); // texture
             //layout.PushF(3); // normal
             //layout.PushI(1); // materialID
         }

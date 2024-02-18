@@ -22,8 +22,8 @@ public class Renderer {
         shader.bind();
         SetUniforms(shader);
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
@@ -32,8 +32,8 @@ public class Renderer {
         defaultShader.bind();
         SetUniforms(defaultShader);
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
@@ -45,13 +45,13 @@ public class Renderer {
 
         // choose Texture
         if(entity.getTexture() != null)
-            entity.getTexture().Bind();
+            entity.getTexture().bind();
         // choose Model
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
         VertexArray va = new VertexArray();
-        va.AddBuffer(model.getVertexBuffer(), Vertex.getLayout());
+        va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
 
@@ -67,15 +67,15 @@ public class Renderer {
         VertexBuffer vb = new VertexBuffer(modelMatricesArr);
 
         VertexBufferLayout layout = new VertexBufferLayout();
-        layout.PushF(4);
-        layout.PushF(4);
-        layout.PushF(4);
-        layout.PushF(4);
+        layout.pushF(4);
+        layout.pushF(4);
+        layout.pushF(4);
+        layout.pushF(4);
 
-        va.AddBufferI(vb, layout);
+        va.addBufferI(vb, layout);
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
         glDrawElementsInstanced(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0, modelMatrices.length);
     }
@@ -84,8 +84,8 @@ public class Renderer {
         defaultShader.bind();
         SetUniforms(defaultShader);
 
-        b.ib.Bind();
-        b.va.Bind();
+        b.ib.bind();
+        b.va.bind();
 
         glDrawElements(GL_TRIANGLES, b.ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
@@ -93,17 +93,17 @@ public class Renderer {
         chooseShader(entity);
         // choose Texture
         if(entity.getTexture() != null)
-            entity.getTexture().Bind();
+            entity.getTexture().bind();
         // choose Model
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
         VertexArray va = new VertexArray();
-        va.AddBuffer(model.getVertexBuffer(), Vertex.getLayout());
+        va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
         glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
     }
@@ -122,7 +122,7 @@ public class Renderer {
         // Calculate total size of all vertex and index buffers
         for (Entity2D entity : entities) {
 
-            totalVertices += entity.getModel().getVertexBuffer().GetSize();
+            totalVertices += entity.getModel().getVertexBuffer().getSize();
             totalIndices += entity.getModel().getIndexBuffer().GetCount();
         }
 
@@ -148,14 +148,14 @@ public class Renderer {
                 dataIndex += Vertex.SIZE - 2;
             }
 
-            vb.Update(data, vertexOffset);
-            ib.Update(indices, indexOffset);
+            vb.update(data, vertexOffset);
+            ib.update(indices, indexOffset);
 
             vertexOffset += data.length    * 4L;
             indexOffset += indices.length  * 4L;
         }
 
-        va.AddBuffer(vb, Vertex.getLayout());
+        va.addBuffer(vb, Vertex.getLayout());
         return new Batch(va, ib);
     }
 

@@ -1,7 +1,6 @@
 package Render.Vertices;
 
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 
 public class IndexBuffer {
     private int m_rendererID;
@@ -29,19 +28,19 @@ public class IndexBuffer {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long) size * Float.BYTES, GL_DYNAMIC_DRAW);
     }
 
-    public void Update(int[] data, long offset) {
+    public void update(int[] data, long offset) {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, data);
     }
-    public void Update(short[] data, long offset) {
+    public void update(short[] data, long offset) {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, data);
     }
 
-    public void Bind(){
+    public void bind(){
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
     }
-    public void Unbind() {
+    public void unbind() {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     }

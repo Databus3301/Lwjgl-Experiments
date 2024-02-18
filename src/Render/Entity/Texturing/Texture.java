@@ -3,7 +3,6 @@ package Render.Entity.Texturing;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL43.*;
 
-import Render.Shader.Shader;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
@@ -21,7 +20,7 @@ public class Texture {
 
     public Texture(String path, int slot) {
         this(path);
-        Bind(slot);
+        bind(slot);
     }
 
     public Texture(String path) {
@@ -45,7 +44,7 @@ public class Texture {
 
 
         if(image != null) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, GetWidth(), GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             glBindTexture(GL_TEXTURE_2D, 0);
 
             STBImage.stbi_image_free(image);
@@ -54,26 +53,26 @@ public class Texture {
         }
     }
 
-    public int  GetHeight(){
+    public int getHeight(){
         return m_Height.get(0);
     }
-    public int GetWidth() {
+    public int getWidth() {
         return m_Width.get(0);
     }
 
 
-    public void Bind(int slot){
+    public void bind(int slot){
         textureSlot = slot;
-        Bind();
+        bind();
     }
 
-    public void Bind(){
+    public void bind(){
 
         glActiveTexture(GL_TEXTURE0 + textureSlot);
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
     }
 
-    public void Unbind(){
+    public void unbind(){
         glActiveTexture(GL_TEXTURE0 + textureSlot);
         glBindTexture(GL_TEXTURE_2D, 0);
     }

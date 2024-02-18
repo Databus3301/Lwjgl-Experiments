@@ -20,7 +20,7 @@ public class TestSquare extends Test {
         shader = new Shader("res/shaders/basic.shader");
         texture = new Texture("res/textures/woodCrate.png", 0);
         shader.setUniform1i("u_Texture", 0);
-        texture.Bind();
+        texture.bind();
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         entity = new Entity2D(new Vector2f(), model, texture, shader);
         entity2 = new Entity2D(new Vector2f(50, 50), model, texture, shader);

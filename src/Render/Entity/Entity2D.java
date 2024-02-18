@@ -200,7 +200,7 @@ public class Entity2D {
 
         if(!isStatic) {
             va = new VertexArray();
-            va.AddBuffer(model.getVertexBuffer(), Vertex.getLayout());
+            va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
         }
         return va;
     }

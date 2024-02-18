@@ -68,9 +68,9 @@ public class TestPong_ extends Test {
         VertexBuffer vb = new VertexBuffer(vertices);
         VertexBufferLayout layout = new VertexBufferLayout();
 
-        layout.PushF(2);
-        layout.PushF(4);
-        va.AddBuffer(vb, layout);
+        layout.pushF(2);
+        layout.pushF(4);
+        va.addBuffer(vb, layout);
 
         ib = new IndexBuffer(indices);
         camera = new Camera(new Vector2f());

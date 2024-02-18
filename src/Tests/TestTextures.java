@@ -21,7 +21,7 @@ public class TestTextures extends Test {
         shader.bind();
 
         Texture texture = new Texture("res/textures/woodCrate.png", 0);
-        texture.Bind(0);
+        texture.bind(0);
         shader.setUniform1i("u_Texture", 0);
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
