@@ -7,6 +7,8 @@ import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
 import org.joml.Matrix4f;
 
+import java.lang.reflect.Array;
+
 import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer {
@@ -136,18 +138,17 @@ public class Renderer {
         for (Entity2D entity : entities) {
             ObjModel model = entity.getModel();
 
-            float[] data = model.getVertexBufferData();
+            // TODO: fix index offsetting??? alternatively comment out vertexBuffer calculation in ObjModel or make a seperata batch calculation method
+            float[] data = model.getVertexBufferData().clone();
             int[] indices = model.getIndexBufferData((int)indexOffset/4); // needs to be offset by the number of vertices in the previous entities
 
             // calculate actual positions of vertices through model matrices
-//            int dataIndex = 0;
-//            for (int j = 0; j < indices.length; j++) {
-////                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
-////                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
-//                data[dataIndex++] = data[dataIndex - 1] * 1 + 0;
-//                data[dataIndex++] = data[dataIndex - 1] * 1 + 0;
-//                dataIndex += Vertex.SIZE - 2;
-//            }
+            int dataIndex = 0;
+            for (int j = 0; j < indices.length; j++) {
+                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
+                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
+                dataIndex += Vertex.SIZE - 2;
+            }
 
             vb.update(data, vertexOffset);
             ib.update(indices, indexOffset);

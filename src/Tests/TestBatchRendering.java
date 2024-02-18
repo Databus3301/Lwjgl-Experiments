@@ -35,9 +35,9 @@ public class TestBatchRendering extends Test {
         camera.setScale(new Vector2f(200f/DIM, 200f/DIM));
 
         ObjModel[] models = new ObjModel[] {
-                //ObjModelParser.parseOBJ("res/models/testModel3.obj"),
-                //ObjModelParser.parseOBJ("res/models/sphere.obj"),
-                //ObjModelParser.parseOBJ("res/models/square.obj"),
+                ObjModelParser.parseOBJ("res/models/testModel3.obj"),
+                ObjModelParser.parseOBJ("res/models/sphere.obj"),
+                ObjModelParser.parseOBJ("res/models/square.obj"),
                 ObjModelParser.parseOBJ("res/models/circle.obj")
 
         };
@@ -47,7 +47,7 @@ public class TestBatchRendering extends Test {
         int index = 0;
         for(int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
-                entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[0]); // index % models.length
+                entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[index % models.length]);
                 entities[index].setScale(new Vector2f(5/2f, 5/2f));
 
                 index++;
@@ -60,7 +60,6 @@ public class TestBatchRendering extends Test {
         if(batching)
              b = renderer.setupBatch(entities);
 
-        camera.scale(100);
     }
 
     @Override

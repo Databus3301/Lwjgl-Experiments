@@ -108,7 +108,7 @@ public class ObjModel {
 
     public void calcIndexBuffer() {
         if (indices == null) {
-            getVertexBuffer();
+            getVertexBufferData();
         }
         ib = new IndexBuffer(indices);
     }
@@ -122,13 +122,13 @@ public class ObjModel {
 
     public int[] getIndexBufferData() {
         if (indices == null) {
-            getVertexBuffer();
+            getVertexBufferData();
         }
         return indices;
     }
     public int[] getIndexBufferData(int offset) {
         if (indices == null) {
-            getVertexBuffer();
+            getVertexBufferData();
         }
         for (int i = 0; i < indices.length; i++) {
             indices[i] += offset;
