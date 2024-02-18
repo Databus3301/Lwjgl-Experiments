@@ -3,9 +3,9 @@ package Render.Vertices;
 import static org.lwjgl.opengl.GL15.*;
 
 public class VertexBuffer {
-    private int m_rendererID;
+    private final int m_rendererID;
 
-    private int size = 0;
+    private final int size;
 
     public VertexBuffer(float[] data){
         m_rendererID = glGenBuffers();
@@ -30,7 +30,7 @@ public class VertexBuffer {
         glGetBufferSubData(GL_ARRAY_BUFFER, data.length*4L, data);
     }
 
-    public void bind(){ // TODO: implement force bind on performance relevant call counts
+    public void bind(){ // TODO: implement force bind on performance relevant call-counts
         glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
     }
 

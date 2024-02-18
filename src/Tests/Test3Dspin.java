@@ -14,8 +14,6 @@ public class Test3Dspin extends Test {
     Camera camera;
     ObjModel point = ObjModelParser.parseOBJ("square.obj"); // cylinder and circle are messed up??
 
-    Batch b;
-
     public Test3Dspin() {
         super();
         renderer.setCamera(camera = new Camera(new Vector2f()));
@@ -25,19 +23,18 @@ public class Test3Dspin extends Test {
         Shader special = new Shader("res/shaders/batching.shader");
 
         ObjModel model = ObjModelParser.parseOBJ("circle.obj");
-        //ObjModel point = ObjModelParser.parseOBJ("square.obj"); // cylinder and circle are messed up??
         entities = new Entity2D[1000];
         for (int i = 0; i < 1; i++) {
             entities[i] = new Entity2D(new Vector2f(i*50, (i-1)*50), model, special);
             entities[i].scale(150);
         }
 
-        for (int i = 1; i < entities.length; i++) {
-            entities[i] = new Entity2D(new Vector2f(), point);;
-            entities[i].scale(2);
-        }
+        entities[1] = new Entity2D(new Vector2f(), point);;
+        entities[1].scale(2);
 
-        //b = renderer.SetupBatch(entities);
+        for (int i = 2; i < entities.length; i++) {
+            entities[i] = entities[1].instantiate();
+        }
     }
 
     int refs = 1;
@@ -51,13 +48,13 @@ public class Test3Dspin extends Test {
 
         entities[1].setPosition(entities[0].getCenter());
 
+
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
         renderer.drawEntities2D(entities);
-        //renderer.DrawBatch(b);
     }
 
     @Override

@@ -151,7 +151,7 @@ public class Entity2D {
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
-        modelMatrix.rotateAround(rotation, 0, 0, 0);
+        modelMatrix.rotateAround(rotation, 0, 0, 0); // TODO: actually rotate around the origin
 
         return modelMatrix;
     }

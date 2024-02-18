@@ -28,17 +28,18 @@ public class TestBatchRendering extends Test {
         super();
         // DEBUG
         batching = true;
-        int DIM = 200;
+        int DIM = 100;
         //
 
         renderer.setCamera(camera = new Camera());
         camera.setScale(new Vector2f(200f/DIM, 200f/DIM));
 
         ObjModel[] models = new ObjModel[] {
-                ObjModelParser.parseOBJ("res/models/testModel3.obj"),
-                ObjModelParser.parseOBJ("res/models/sphere.obj"),
-                ObjModelParser.parseOBJ("res/models/square.obj"),
+                //ObjModelParser.parseOBJ("res/models/testModel3.obj"),
+                //ObjModelParser.parseOBJ("res/models/sphere.obj"),
+                //ObjModelParser.parseOBJ("res/models/square.obj"),
                 ObjModelParser.parseOBJ("res/models/circle.obj")
+
         };
 
         // spread entites out in a grid using above models
@@ -46,8 +47,9 @@ public class TestBatchRendering extends Test {
         int index = 0;
         for(int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
-                entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[index%4]);
+                entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[0]); // index % models.length
                 entities[index].setScale(new Vector2f(5/2f, 5/2f));
+
                 index++;
             }
         }
@@ -58,6 +60,7 @@ public class TestBatchRendering extends Test {
         if(batching)
              b = renderer.setupBatch(entities);
 
+        camera.scale(100);
     }
 
     @Override
@@ -65,6 +68,11 @@ public class TestBatchRendering extends Test {
         super.OnUpdate(dt);
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
+
+        entities[0].rotate(50*dt, 0);
+        entities[0].rotate(50*dt, 1);
+        entities[0].rotate(50*dt, 2);
+
     }
 
     @Override

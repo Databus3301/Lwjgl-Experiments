@@ -3,25 +3,25 @@ package Render.Vertices;
 import static org.lwjgl.opengl.GL15.*;
 
 public class IndexBuffer {
-    private int m_rendererID;
-    private int m_Count;
+    private final int m_rendererID;
+    private final int count;
 
     public IndexBuffer(int[] data){
-        m_Count = data.length;
+        count = data.length;
 
         m_rendererID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW);
     }
     public IndexBuffer(short[] data){
-        m_Count = data.length;
+        count = data.length;
 
         m_rendererID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW);
     }
     public IndexBuffer(int size){
-        m_Count = size;
+        count = size;
 
         m_rendererID = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
@@ -45,5 +45,5 @@ public class IndexBuffer {
 
     }
 
-    public int GetCount() { return m_Count; }
+    public int getCount() { return count; }
 }

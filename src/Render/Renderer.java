@@ -25,7 +25,7 @@ public class Renderer {
         va.bind();
         ib.bind();
 
-        glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
 
     public void draw(VertexArray va, IndexBuffer ib) {
@@ -35,7 +35,7 @@ public class Renderer {
         va.bind();
         ib.bind();
 
-        glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
 
     // TODO: make this work fully
@@ -77,7 +77,7 @@ public class Renderer {
         va.bind();
         ib.bind();
 
-        glDrawElementsInstanced(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0, modelMatrices.length);
+        glDrawElementsInstanced(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0, modelMatrices.length);
     }
 
     public void drawBatch(Batch b) {
@@ -87,7 +87,7 @@ public class Renderer {
         b.ib.bind();
         b.va.bind();
 
-        glDrawElements(GL_TRIANGLES, b.ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, b.ib.getCount(), GL_UNSIGNED_INT, 0);
     }
     public void drawEntity2D(Entity2D entity) {
         chooseShader(entity);
@@ -105,7 +105,7 @@ public class Renderer {
         va.bind();
         ib.bind();
 
-        glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
     public void drawEntities2D(Entity2D[] entities) {
         for (Entity2D entity : entities) {
@@ -121,9 +121,8 @@ public class Renderer {
 
         // Calculate total size of all vertex and index buffers
         for (Entity2D entity : entities) {
-
             totalVertices += entity.getModel().getVertexBuffer().getSize();
-            totalIndices += entity.getModel().getIndexBuffer().GetCount();
+            totalIndices += entity.getModel().getIndexBuffer().getCount();
         }
 
         // Create combined vertex and index buffers
@@ -141,12 +140,14 @@ public class Renderer {
             int[] indices = model.getIndexBufferData((int)indexOffset/4); // needs to be offset by the number of vertices in the previous entities
 
             // calculate actual positions of vertices through model matrices
-            int dataIndex = 0;
-            for (int j = 0; j < indices.length; j++) {
-                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
-                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
-                dataIndex += Vertex.SIZE - 2;
-            }
+//            int dataIndex = 0;
+//            for (int j = 0; j < indices.length; j++) {
+////                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
+////                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
+//                data[dataIndex++] = data[dataIndex - 1] * 1 + 0;
+//                data[dataIndex++] = data[dataIndex - 1] * 1 + 0;
+//                dataIndex += Vertex.SIZE - 2;
+//            }
 
             vb.update(data, vertexOffset);
             ib.update(indices, indexOffset);

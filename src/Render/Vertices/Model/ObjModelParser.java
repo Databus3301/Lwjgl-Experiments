@@ -60,7 +60,6 @@ public class ObjModelParser {
         for(float[] vertex : model._positions) {
             float d = origin.distance(new Vector3f(vertex[0], vertex[1], vertex[2]));
             if (d > max_d) max_d = d;
-            System.out.println(d);
         }
         for(float[] vertex : model._positions) {
             for(int i = 0; i < 3; i++) {

@@ -99,7 +99,7 @@ public class ObjModel {
         vertexBufferData = data;
         return data;
     }
-    public VertexBuffer getVertexBuffer() { // TODO: resolve memory leak????
+    public VertexBuffer getVertexBuffer() {
         if(vertexBuffer==null) {
             vertexBuffer = new VertexBuffer(getVertexBufferData());
         }
