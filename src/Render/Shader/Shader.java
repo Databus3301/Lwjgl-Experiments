@@ -30,9 +30,6 @@ public class Shader {
             renderer.setCurrentShader(this);
             glUseProgram(m_RendererID);
         }
-//        int currentID = glGetInteger(GL_CURRENT_PROGRAM);
-//        if(currentID != m_RendererID )
-//            glUseProgram(m_RendererID);
     }
     public void forceBind() {
         glUseProgram(m_RendererID);

@@ -41,7 +41,6 @@ public class Renderer {
     }
 
     // TODO: make this work fully
-
     public void drawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
         chooseShader(entity);
 
@@ -83,8 +82,8 @@ public class Renderer {
     }
 
     public void drawBatch(Batch b) {
-        defaultShader.bind();
-        SetUniforms(defaultShader);
+        currentShader.bind();
+        SetUniforms(currentShader);
 
         b.ib.bind();
         b.va.bind();
@@ -175,6 +174,7 @@ public class Renderer {
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
     }
     public void chooseShader(Entity2D entity){
+
         if /**/ (entity.getShader() != null)
             entity.getShader().bind();
         else if (camera.getShader() != null)

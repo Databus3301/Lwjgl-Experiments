@@ -23,6 +23,7 @@ public class TestTextures extends Test {
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         square = new Entity2D(new Vector2f(0, 0), model, texture, shader);
+        square.scale(100);
     }
 
     @Override

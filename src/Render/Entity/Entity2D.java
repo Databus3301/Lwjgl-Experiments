@@ -131,12 +131,18 @@ public class Entity2D {
         this.position.add(scale); // move the entity to keep the center in the same place
     }
     public void scale(float x, float y) {
-        this.scale.add(new Vector2f(x, y));
-        this.position.add(new Vector2f(x, y)); // move the entity to keep the center in the same place
+        this.scale.x += x;
+        this.scale.y += y;
+
+        this.position.x += x;
+        this.position.y += y; // move the entity to keep the center in the same place
     }
     public void scale(float xy) {
-        this.scale.add(new Vector2f(xy, xy));
-        this.position.add(new Vector2f(xy, xy)); // move the entity to keep the center in the same place
+        this.scale.x += xy;
+        this.scale.y += xy;
+
+        this.position.x += xy;
+        this.position.y += xy; // move the entity to keep the center in the same place
     }
 
 
@@ -207,6 +213,10 @@ public class Entity2D {
 
     public void setPosition(Vector2f position) {
         this.position = position;
+    }
+    public void setPosition(float x, float y) {
+        this.position.x = x;
+        this.position.y = y;
     }
 
     public void setRotation(Quaternionf rotation) {
