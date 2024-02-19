@@ -138,16 +138,18 @@ public class Renderer {
         for (Entity2D entity : entities) {
             ObjModel model = entity.getModel();
 
-            // TODO: fix index offsetting??? alternatively comment out vertexBuffer calculation in ObjModel or make a seperata batch calculation method
-            float[] data = model.getVertexBufferData().clone();
-            int[] indices = model.getIndexBufferData((int)indexOffset/4); // needs to be offset by the number of vertices in the previous entities
+            float[] data = model.getVertexBufferData().clone(); // need to be cloned to protect ObjModel data from being set off arbitrarily
+            int[] indices = model.getIndexBufferData().clone(); // needs to be offset by the number of vertices in the previous entities
+
 
             // calculate actual positions of vertices through model matrices
             int dataIndex = 0;
-            for (int j = 0; j < indices.length; j++) {
+            for (int j = 0; j < indices.length; j++) { // TODO: apply rotation
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
                 dataIndex += Vertex.SIZE - 2;
+
+                indices[j] += (int)indexOffset/4;
             }
 
             vb.update(data, vertexOffset);

@@ -126,16 +126,7 @@ public class ObjModel {
         }
         return indices;
     }
-    public int[] getIndexBufferData(int offset) {
-        if (indices == null) {
-            getVertexBufferData();
-        }
-        int[] indices_l = this.indices.clone();
-        for (int i = 0; i < indices_l.length; i++) {
-            indices_l[i] += offset;
-        }
-        return indices_l;
-    }
+
 
     private static <T> T[] toArray(ArrayList<T> list, Class<T> c) {
         @SuppressWarnings("unchecked")

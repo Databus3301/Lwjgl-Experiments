@@ -39,7 +39,6 @@ public class TestBatchRendering extends Test {
                 ObjModelParser.parseOBJ("res/models/sphere.obj"),
                 ObjModelParser.parseOBJ("res/models/square.obj"),
                 ObjModelParser.parseOBJ("res/models/circle.obj")
-
         };
 
         // spread entites out in a grid using above models
@@ -54,8 +53,6 @@ public class TestBatchRendering extends Test {
             }
         }
         System.out.println("Entities: " + index);
-        // print out the first entities model data
-
 
         if(batching)
              b = renderer.setupBatch(entities);
@@ -67,11 +64,6 @@ public class TestBatchRendering extends Test {
         super.OnUpdate(dt);
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
-
-        entities[0].rotate(50*dt, 0);
-        entities[0].rotate(50*dt, 1);
-        entities[0].rotate(50*dt, 2);
-
     }
 
     @Override
