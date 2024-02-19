@@ -37,8 +37,6 @@ public class Test3Dspin extends Test {
         }
     }
 
-    int refs = 1;
-    int fs = 0;
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
@@ -47,7 +45,6 @@ public class Test3Dspin extends Test {
         entities[0].rotate(50*dt, 2);
 
         entities[1].setPosition(entities[0].getCenter());
-
 
     }
 
