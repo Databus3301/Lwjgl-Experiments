@@ -9,15 +9,13 @@ import java.util.ArrayList;
 
 public class ObjModel {
     // TODO: OPTIMISATION:: add duplicate vertex recognition through faces (cheaper comparision) and handle indices accordingly
-    public ArrayList<float[]> _positions = new ArrayList<>();
-    public ArrayList<float[]> _normals = new ArrayList<>();
-    public ArrayList<float[]> _textures = new ArrayList<>();
-    public ArrayList<short[][]> _faces = new ArrayList<>(); // indices
+    public final ArrayList<float[]> _positions = new ArrayList<>();
+    public final ArrayList<float[]> _normals = new ArrayList<>();
+    public final ArrayList<float[]> _textures = new ArrayList<>();
+    public final ArrayList<short[][]> _faces = new ArrayList<>(); // indices
 
     public ArrayList<ObjMaterial> _materials = new ArrayList<>();
     public ArrayList<Short> _materialIDs = new ArrayList<>();
-
-    public float[] center = new float[3];
 
     private float[][] positions;
     private float[][] normals;
@@ -26,6 +24,7 @@ public class ObjModel {
     private ObjMaterial[] materials;
     private Short[] materialIDs;
 
+    ///
     private int[] indices;
     private IndexBuffer ib;
 
@@ -134,6 +133,25 @@ public class ObjModel {
         list.toArray(array);
         list = null;
         return array;
+    }
+
+    public float[][] getPositions() {
+        return positions;
+    }
+    public float[][] getNormals() {
+        return normals;
+    }
+    public float[][] getTextures() {
+        return textures;
+    }
+    public short[][][] getFaces() {
+        return faces;
+    }
+    public ObjMaterial[] getMaterials() {
+        return materials;
+    }
+    public Short[] getMaterialIDs() {
+        return materialIDs;
     }
 
 }

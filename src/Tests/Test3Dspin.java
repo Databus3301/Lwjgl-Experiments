@@ -18,23 +18,21 @@ public class Test3Dspin extends Test {
         super();
         renderer.setCamera(camera = new Camera(new Vector2f()));
 
-        Shader def = new Shader("res/shaders/objrendering.shader");
+        Shader def = new Shader("res/shaders/default.shader");
         renderer.defaultShader = def;
         Shader special = new Shader("res/shaders/batching.shader");
 
         ObjModel model = ObjModelParser.parseOBJ("circle.obj");
         entities = new Entity2D[1000];
-        for (int i = 0; i < 1; i++) {
-            entities[i] = new Entity2D(new Vector2f(i*50, (i-1)*50), model, special);
-            entities[i].scale(150);
-        }
+        entities[0] = new Entity2D(new Vector2f(100, 100), model, special);
+        entities[0].scale(150);
 
         entities[1] = new Entity2D(new Vector2f(), point);;
         entities[1].scale(2);
 
-        for (int i = 2; i < entities.length; i++) {
-            entities[i] = entities[1].instantiate();
-        }
+//        for (int i = 2; i < entities.length; i++) {
+//            entities[i] = entities[1].instantiate();
+//        }
     }
 
     @Override

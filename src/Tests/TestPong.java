@@ -21,7 +21,7 @@ public class TestPong extends Test {
 
 
         ObjModel model = ObjModelParser.parseOBJ("square.obj");
-        Shader shader = new Shader("res/shaders/objrendering.shader");
+        Shader shader = new Shader("res/shaders/default.shader");
         //shader.Bind();
         int SCALE = 15;
 

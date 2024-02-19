@@ -13,11 +13,11 @@ import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer {
 
-    public Shader defaultShader;
+    public Shader defaultShader, currentShader;
     Camera camera;
 
     public Renderer() {
-        defaultShader = new Shader("res/shaders/batching.shader");
+        defaultShader = currentShader = new Shader("res/shaders/default.shader");
         camera = new Camera();
     }
     public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
@@ -141,7 +141,6 @@ public class Renderer {
             float[] data = model.getVertexBufferData().clone(); // need to be cloned to protect ObjModel data from being set off arbitrarily
             int[] indices = model.getIndexBufferData().clone(); // needs to be offset by the number of vertices in the previous entities
 
-
             // calculate actual positions of vertices through model matrices
             int dataIndex = 0;
             for (int j = 0; j < indices.length; j++) { // TODO: apply rotation
@@ -176,29 +175,27 @@ public class Renderer {
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
     }
     public void chooseShader(Entity2D entity){
-        if(entity.getShader() != null) {
+        if /**/ (entity.getShader() != null)
             entity.getShader().bind();
-            SetUniforms(entity.getShader(), entity);
-        }
-        else if(camera.getShader() != null) {
+        else if (camera.getShader() != null)
             camera.getShader().bind();
-            SetUniforms(camera.getShader(), entity);
-        }
-        else {
-            int currentID = glGetInteger(GL_CURRENT_PROGRAM);
-            if(currentID != defaultShader.getID())
-                defaultShader.bind();
+        else
+            defaultShader.bind();
+        SetUniforms(currentShader, entity);
 
-            SetUniforms(defaultShader, entity);
-        }
     }
-
-
 
     public void Clear() {
          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
     }
     public void setCamera(Camera camera) {
         this.camera = camera;
+    }
+
+    public void setCurrentShader(Shader currentShader) {
+        this.currentShader = currentShader;
+    }
+    public Shader getCurrentShader() {
+        return currentShader;
     }
 }

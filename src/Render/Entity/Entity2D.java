@@ -165,7 +165,7 @@ public class Entity2D {
         return position;
     }
     public Vector2f getCenter() {
-        return position;
+        return new Vector2f(position).sub(scale);
     }
 
     public Quaternionf getRotation() {

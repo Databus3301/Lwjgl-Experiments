@@ -2,23 +2,15 @@
 #version 330 core
 
 layout(location = 0) in vec4 position;
-layout(location = 1) in vec3 color;
-layout(location = 2) in vec2 texCoord;
-layout(location = 3) in vec3 normals;
-layout(location = 4) in float materialID;
 
 uniform mat4 uProj;
 uniform mat4 uView;
 uniform mat4 uModel;
 
-out vec3 v_position;
-
 void main()
 {
-    gl_Position = uProj * uView * uModel * position;
-    v_position = position.xyz;
+        gl_Position =  uProj * uView * uModel * position;
 };
-
 
 #shader fragment
 #version 430 core
@@ -29,10 +21,5 @@ in vec3 v_position;
 
 void main ()
 {
-    if(v_position.z > 0.1) {
-        color = vec4(v_position.z, v_position.z, v_position.z, 1.0);
-    } else {
-     color = vec4(v_position.z + 0.5, v_position.z + 0.5, v_position.z + 0.5, 1.0);
-    }
+    color = vec4(1.0, 1.0, 1.0, 1.0);
 };
-

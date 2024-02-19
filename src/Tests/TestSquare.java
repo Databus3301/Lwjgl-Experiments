@@ -17,7 +17,7 @@ public class TestSquare extends Test {
 
     public TestSquare() {
         super();
-        shader = new Shader("res/shaders/basic.shader");
+        shader = new Shader("res/shaders/texturing.shader");
         texture = new Texture("res/textures/woodCrate.png", 0);
         shader.setUniform1i("u_Texture", 0);
         texture.bind();

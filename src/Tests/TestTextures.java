@@ -9,23 +9,20 @@ import org.joml.Vector2f;
 
 public class TestTextures extends Test {
 
-    // 100*100 box centered around 0,0 with texture coords
-    protected Entity2D box;
-
+    protected Entity2D square;
     protected Shader shader;
 
     public TestTextures() {
         super();
 
-        shader = new Shader("res/shaders/basic.shader");
+        shader = new Shader("res/shaders/texturing.shader");
         shader.bind();
 
         Texture texture = new Texture("res/textures/woodCrate.png", 0);
-        texture.bind(0);
         shader.setUniform1i("u_Texture", 0);
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
-        box = new Entity2D(new Vector2f(0, 0), model, texture, shader);
+        square = new Entity2D(new Vector2f(0, 0), model, texture, shader);
     }
 
     @Override
@@ -36,7 +33,7 @@ public class TestTextures extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(box);
+        renderer.drawEntity2D(square);
     }
 
     @Override

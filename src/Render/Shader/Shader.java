@@ -1,5 +1,8 @@
 package Render.Shader;
 
+import Render.Renderer;
+import Render.Window.Window;
+import Tests.Test;
 import org.joml.Matrix4f;
 
 import java.io.File;
@@ -22,9 +25,14 @@ public class Shader {
     }
 
     public void bind() {
-        int currentID = glGetInteger(GL_CURRENT_PROGRAM);
-        if(currentID != m_RendererID )
+        Renderer renderer = Test.getRenderer();
+        if(!renderer.getCurrentShader().equals(this)) { // if the current shader is not this shader
+            renderer.setCurrentShader(this);
             glUseProgram(m_RendererID);
+        }
+//        int currentID = glGetInteger(GL_CURRENT_PROGRAM);
+//        if(currentID != m_RendererID )
+//            glUseProgram(m_RendererID);
     }
     public void forceBind() {
         glUseProgram(m_RendererID);

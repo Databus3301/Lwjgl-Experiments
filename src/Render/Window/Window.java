@@ -19,6 +19,7 @@ import org.joml.*;
 
 public class Window {
 	private long windowPtr;
+	private static Window window;
 	public static Vector2i dim = new Vector2i(1200, 900);
 
 	private Test currentTest;
@@ -43,6 +44,7 @@ public class Window {
 	public void init() {
 		initWindow();
 		initTest();
+		window = this;
 	}
 
 	public void initWindow() {
@@ -191,5 +193,9 @@ public class Window {
 		while(glGetError() != 0) {
 			System.out.println("[OpenGL error:] " + Integer.toHexString(glGetError()));
 		}
+	}
+
+	public static Window getWindow() {
+		return window;
 	}
 }

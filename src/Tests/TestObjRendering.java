@@ -20,7 +20,7 @@ public class TestObjRendering extends Test {
     public TestObjRendering() {
         super();
 
-        shader = new Shader("res/shaders/objrendering.shader");
+        shader = new Shader("res/shaders/default.shader");
         shader.bind();
 
         ObjModel model = ObjModelParser.parseOBJ("circle.obj");

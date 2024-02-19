@@ -30,7 +30,7 @@ public class TestObjModelParser extends Test {
     public void displayModel() {
         // print out all the fields of model
         System.out.println("vertices:");
-        for(float[] vertex : model._positions) {
+        for(float[] vertex : model.getPositions()) {
             System.out.print("  ");
             for(int i = 0; i < vertex.length; i++) {
                 System.out.print(vertex[i] + "\t\t");
@@ -40,7 +40,7 @@ public class TestObjModelParser extends Test {
 
 
         System.out.println("normals:");
-        for(float[] normal : model._normals) {
+        for(float[] normal : model.getNormals()) {
             System.out.print("  ");
             for(float coord : normal) {
                 System.out.print(coord + " ");
@@ -48,7 +48,7 @@ public class TestObjModelParser extends Test {
             System.out.println();
         }
         System.out.println("textures:");
-        for(float[] texture : model._textures) {
+        for(float[] texture : model.getTextures()) {
             System.out.print("  ");
             for(float coord : texture) {
                 System.out.print(coord + " ");
@@ -56,7 +56,7 @@ public class TestObjModelParser extends Test {
             System.out.println();
         }
         System.out.println("faces:");
-        for(short[][] face : model._faces) {
+        for(short[][] face : model.getFaces()) {
             System.out.print("  ");
             for(short[] group : face) {
                 System.out.print("(");
