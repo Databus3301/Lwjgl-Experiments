@@ -18,11 +18,11 @@ public class Renderer {
 
     public Renderer() {
         defaultShader = currentShader = new Shader("res/shaders/default.shader");
+        defaultShader.forceBind();
         camera = new Camera();
     }
     public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
         shader.bind();
-        SetUniforms(shader);
 
         va.bind();
         ib.bind();
@@ -31,8 +31,7 @@ public class Renderer {
     }
 
     public void draw(VertexArray va, IndexBuffer ib) {
-        defaultShader.bind();
-        SetUniforms(defaultShader);
+        SetUniforms(currentShader, null);
 
         va.bind();
         ib.bind();
@@ -43,6 +42,7 @@ public class Renderer {
     // TODO: make this work fully
     public void drawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
         chooseShader(entity);
+        SetUniforms(currentShader, entity);
 
         // choose Texture
         if(entity.getTexture() != null)
@@ -82,8 +82,7 @@ public class Renderer {
     }
 
     public void drawBatch(Batch b) {
-        currentShader.bind();
-        SetUniforms(currentShader);
+        SetUniforms(currentShader, null);
 
         b.ib.bind();
         b.va.bind();
@@ -92,6 +91,8 @@ public class Renderer {
     }
     public void drawEntity2D(Entity2D entity) {
         chooseShader(entity);
+        SetUniforms(currentShader, entity);
+
         // choose Texture
         if(entity.getTexture() != null)
             entity.getTexture().bind();
@@ -163,26 +164,30 @@ public class Renderer {
 
     // TODO: investigate performance gain of CPU side MVP calculation
     public void SetUniforms(Shader shader, Entity2D entity) {
-        Matrix4f modelmatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
-        shader.setUniformMat4f("uModel", modelmatrix);
+        Matrix4f modelMatrix;
+        if(entity == null || entity.equals(camera))
+            modelMatrix = camera.calcModelMatrix();
+        else
+            modelMatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
+
+        shader.setUniformMat4f("uModel", modelMatrix);
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
     }
-    public void SetUniforms(Shader shader) {
-        shader.setUniformMat4f("uModel", camera.calcModelMatrix());
-        shader.setUniformMat4f("uView", camera.calcViewMatrix());
-        shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
-    }
+
+    /**
+     * Choose the shader to use for rendering
+     * @param entity whose shader is chosen,<br> if the <b>entity has no shader</b> the camera's shader is chosen,<br> if the <b>camera has no shader</b> the default shader is chosen
+     */
     public void chooseShader(Entity2D entity){
+        assert entity != null && camera != null : "[ERROR] (Render.Renderer.chooseShader) No entity to choose shader from (null)";
 
         if /**/ (entity.getShader() != null)
-            entity.getShader().bind();
+            currentShader = entity.getShader();
         else if (camera.getShader() != null)
-            camera.getShader().bind();
+            currentShader = camera.getShader();
         else
-            defaultShader.bind();
-        SetUniforms(currentShader, entity);
-
+            currentShader = defaultShader;
     }
 
     public void Clear() {
@@ -193,7 +198,10 @@ public class Renderer {
     }
 
     public void setCurrentShader(Shader currentShader) {
-        this.currentShader = currentShader;
+        if(!this.currentShader.equals(currentShader)) {
+            this.currentShader = currentShader;
+            currentShader.forceBind();
+        }
     }
     public Shader getCurrentShader() {
         return currentShader;

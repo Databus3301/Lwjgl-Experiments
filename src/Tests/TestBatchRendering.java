@@ -3,6 +3,7 @@ package Tests;
 import Render.Batch;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
+import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
@@ -21,7 +22,6 @@ public class TestBatchRendering extends Test {
     Entity2D[] entities;
     Camera camera;
     Batch b;
-
     Boolean batching; // test var
 
     public TestBatchRendering() {
@@ -30,7 +30,7 @@ public class TestBatchRendering extends Test {
         batching = true;
         int DIM = 100;
         //
-
+        renderer.setCurrentShader(new Shader("res/shaders/batching.shader"));
         renderer.setCamera(camera = new Camera());
         camera.setScale(new Vector2f(200f/DIM, 200f/DIM));
 

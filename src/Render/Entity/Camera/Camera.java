@@ -20,6 +20,11 @@ public class Camera extends Entity2D {
         super(position);
         init();
     }
+    public Camera(Shader shader) {
+        super();
+        this.shader = shader;
+        init();
+    }
     public Camera() {
         super();
         init();
