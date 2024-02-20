@@ -23,17 +23,14 @@ public class Test3Dspin extends Test {
         super();
         renderer.setCamera(camera = new Camera(new Vector2f()));
 
-        Shader def = new Shader("res/shaders/default.shader");
-        renderer.defaultShader = def;
-        Shader special = new Shader("res/shaders/batching.shader");
-
-        ObjModel model = ObjModelParser.parseOBJ("testModel3.obj");
+        Shader shader = new Shader("res/shaders/batching.shader");
+        ObjModel model = ObjModelParser.parseOBJ("sphere.obj");
         positions = model.getPositions();
 
 
         entities = new Entity2D[1000];
         // rotating entity
-        main = new Entity2D(new Vector2f(0, 0), model, special);
+        main = new Entity2D(new Vector2f(0, 0), model, shader);
         main.scale(150);
         // mark entity center
         entities[0] = new Entity2D(new Vector2f(), point);;
@@ -56,7 +53,7 @@ public class Test3Dspin extends Test {
 
 
         for (int i = 1; i < entities.length; i++) {
-            Vector3f pos = new Vector3f(positions[i% positions.length][0]*150+main.getPosition().x, positions[i% positions.length][1]*150+main.getPosition().y, positions[i% positions.length][2]*150+150);
+            Vector3f pos = new Vector3f(positions[i% positions.length][0]*150+150, positions[i% positions.length][1]*150+150, positions[i% positions.length][2]*150+150);
             //pos.mul(rotationMatrix);
             pos.mul(main.getRotation().get(new Matrix3f()));
             entities[i].setPosition(pos.x, pos.y);
@@ -68,8 +65,8 @@ public class Test3Dspin extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(main);
         renderer.drawEntities2D(entities);
+        renderer.drawEntity2D(main);
     }
 
     @Override

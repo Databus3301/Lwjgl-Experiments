@@ -23,12 +23,14 @@ public class TestTextures extends Test {
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         square = new Entity2D(new Vector2f(0, 0), model, texture, shader);
-        square.scale(100);
+        square.scale(50);
     }
 
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
+        square.rotate(100.0f*dt, 2);
+        System.out.println(new Vector2f(square.getCenter()).mul(1/50f));
     }
 
     @Override

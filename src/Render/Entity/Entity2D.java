@@ -157,7 +157,7 @@ public class Entity2D {
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
-        modelMatrix.rotateAround(rotation, 0, 0, 0); // TODO: actually rotate around the origin
+        modelMatrix.rotateAround(rotation, getCenter().x-position.x/scale.x, getCenter().y-position.y/scale.y, 0); // TODO: Test if actually rotated around the entity's center
 
         return modelMatrix;
     }
@@ -171,7 +171,7 @@ public class Entity2D {
         return position;
     }
     public Vector2f getCenter() {
-        return new Vector2f(position).sub(scale);
+        return new Vector2f(position).sub(scale).add(1,1);
     }
 
     public Quaternionf getRotation() {

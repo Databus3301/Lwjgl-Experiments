@@ -22,12 +22,13 @@ public class TestBatchRendering extends Test {
     Entity2D[] entities;
     Camera camera;
     Batch b;
-    Boolean batching; // test var
+    boolean batching, spin; // test var
 
     public TestBatchRendering() {
         super();
         // DEBUG
         batching = true;
+        spin = false;
         int DIM = 100;
         //
         renderer.setCurrentShader(new Shader("res/shaders/batching.shader"));
@@ -47,7 +48,7 @@ public class TestBatchRendering extends Test {
         for(int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
                 entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[index % models.length]);
-                entities[index].setScale(new Vector2f(5/2f, 5/2f));
+                entities[index].setScale(new Vector2f(5/4f, 5/4f));
 
                 index++;
             }
@@ -56,7 +57,6 @@ public class TestBatchRendering extends Test {
 
         if(batching)
              b = renderer.setupBatch(entities);
-
     }
 
     @Override
@@ -64,6 +64,13 @@ public class TestBatchRendering extends Test {
         super.OnUpdate(dt);
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
+
+        if(spin) {
+            camera.rotate(10f*dt, 0);
+            camera.rotate(10f*dt, 1);
+            camera.rotate(10f*dt, 2);
+        }
+
     }
 
     @Override

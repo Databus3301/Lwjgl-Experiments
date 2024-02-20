@@ -55,7 +55,6 @@ public class Renderer {
         va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
-
         //// setup instance VBO
         // collect matrices into array
         float[] modelMatricesArr = new float[modelMatrices.length * 4 * 4];
@@ -183,11 +182,13 @@ public class Renderer {
         assert entity != null && camera != null : "[ERROR] (Render.Renderer.chooseShader) No entity to choose shader from (null)";
 
         if /**/ (entity.getShader() != null)
-            currentShader = entity.getShader();
+            entity.getShader().bind();
         else if (camera.getShader() != null)
-            currentShader = camera.getShader();
+            camera.getShader().bind();
         else
-            currentShader = defaultShader;
+            defaultShader.bind();
+
+
     }
 
     public void Clear() {

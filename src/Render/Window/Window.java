@@ -33,12 +33,12 @@ public class Window {
 	}
 
 	public Window(Vector2i dim) {
-		this.dim = dim;
+		Window.dim = dim;
 	}
 
 	public Window(String test, Vector2i dim) {
 		this.test = test;
-		this.dim = dim;
+		Window.dim = dim;
 	}
 
 	public void init() {
@@ -107,23 +107,23 @@ public class Window {
 	public void initTest() {
 		if(test != null) { 
 			switch (test.toLowerCase()) {
-				case "clearcolour": currentTest = new TestClearColour();
+				case "clearcolour", "cc": currentTest = new TestClearColour();
 					break;
-				case "textures": currentTest = new TestTextures();
+				case "textures", "texturing", "tex": currentTest = new TestTextures();
 					break;
-				case "multipledrawcalls": currentTest = new TestMultipleDrawCalls();
+				case "multipledrawcalls", "mdc": currentTest = new TestMultipleDrawCalls();
 					break;
-				case "camera": currentTest = new TestCamera();
+				case "camera", "c": currentTest = new TestCamera();
 					break;
 				case "pong": currentTest = new TestPong();
 					break;
-				case "objparser" , "objmodelparser": currentTest = new TestObjModelParser();
+				case "objparser" , "objmodelparser", "op": currentTest = new TestObjModelParser();
 					break;
-				case "objrendering": currentTest = new TestObjRendering();
+				case "objrendering", "or": currentTest = new TestObjRendering();
 					break;
-				case "batchrendering", "batching": currentTest = new TestBatchRendering();
+				case "batchrendering", "batching", "b", "br": currentTest = new TestBatchRendering();
 					break;
-				case "instancedrendering": currentTest = new TestInstancedRendering();
+				case "instancedrendering", "instancing", "i", "ir": currentTest = new TestInstancedRendering();
 					break;
 				case "square": currentTest = new TestSquare();
 					break;
