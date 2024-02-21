@@ -18,13 +18,19 @@ public class TestObjModelParser extends Test {
         displayModel();
     }
 
+    public TestObjModelParser(ObjModel model) {
+        super();
+        this.model = model;
+        displayModel();
+    }
+
     public void parseOBJ(String path) {
         model = ObjModelParser.parseOBJ(path);
     }
     public void displayModel() {
         // print out all the fields of model
         System.out.println("vertices:");
-        for(float[] vertex : model._positions) {
+        for(float[] vertex : model.getPositions()) {
             System.out.print("  ");
             for(int i = 0; i < vertex.length; i++) {
                 System.out.print(vertex[i] + "\t\t");
@@ -34,7 +40,7 @@ public class TestObjModelParser extends Test {
 
 
         System.out.println("normals:");
-        for(float[] normal : model._normals) {
+        for(float[] normal : model.getNormals()) {
             System.out.print("  ");
             for(float coord : normal) {
                 System.out.print(coord + " ");
@@ -42,7 +48,7 @@ public class TestObjModelParser extends Test {
             System.out.println();
         }
         System.out.println("textures:");
-        for(float[] texture : model._textures) {
+        for(float[] texture : model.getTextures()) {
             System.out.print("  ");
             for(float coord : texture) {
                 System.out.print(coord + " ");
@@ -50,9 +56,9 @@ public class TestObjModelParser extends Test {
             System.out.println();
         }
         System.out.println("faces:");
-        for(int[][] face : model._faces) {
+        for(short[][] face : model.getFaces()) {
             System.out.print("  ");
-            for(int[] group : face) {
+            for(short[] group : face) {
                 System.out.print("(");
                 for(int info : group) {
                     System.out.print(info + " ");

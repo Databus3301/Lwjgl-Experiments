@@ -2,12 +2,14 @@ package Render.Vertices;
 
 public class Vertex {
 
-    public static final int SIZE = 5;
+    public static final short SIZE = 5;
 
     public float[] position;
     public float[] texture; // uvs
     public float[] normal;
     public int materialID;
+    private static VertexBufferLayout layout;
+
 
     public Vertex(float[] position, float[] texture, float[] normal, int materialID) {
         this(position, texture, normal);
@@ -30,19 +32,21 @@ public class Vertex {
         this.materialID = 0;
     }
 
-    public int getSize() {
+    public short getSize() {
         return SIZE;
     }
-    public int getByteSize() {
+    public short getByteSize() {
         return SIZE * 4; // float and int both are 4 bytes
     }
 
-    public static VertexBufferLayout GetLayout() {
-        VertexBufferLayout layout = new VertexBufferLayout();
-        layout.PushF(3); // position
-        layout.PushF(2); // texture
-        //layout.PushF(3); // normal
-        //layout.PushI(1); // materialID
+    public static VertexBufferLayout getLayout() {
+        if(layout == null) {
+            layout = new VertexBufferLayout();
+            layout.pushF(3); // position
+            layout.pushF(2); // texture
+            //layout.PushF(3); // normal
+            //layout.PushI(1); // materialID
+        }
         return layout;
     }
 }

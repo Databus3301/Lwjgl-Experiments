@@ -1,16 +1,22 @@
 package Tests;
 
 import Render.Entity.Camera.Camera;
+import Render.Entity.Entity2D;
+import Render.Vertices.Model.ObjModel;
+import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TestCamera extends TestTextures {
 
     Camera camera;
+    Entity2D origin;
 
     public TestCamera() {
         super();
         renderer.setCamera(camera = new Camera());
+        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+        origin = new Entity2D(new Vector2f(), model);
     }
 
 
@@ -19,14 +25,15 @@ public class TestCamera extends TestTextures {
         super.OnUpdate(dt);
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
-        camera.rotate(10.0f * dt);
-        if(camera.getScale().x < 6f)
+        //camera.rotate(-100.0f*dt, 2);
+        if(camera.getScale().x < 3f)
              camera.scale(new Vector2f(1.0f, 1.0f).mul(dt));
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
+        renderer.drawEntity2D(origin);
     }
 
     @Override

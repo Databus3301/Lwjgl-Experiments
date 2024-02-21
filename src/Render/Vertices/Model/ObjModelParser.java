@@ -1,12 +1,18 @@
 package Render.Vertices.Model;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObjModelParser {
     public static ObjModel parseOBJ(String path) {
+        if(!path.startsWith("res/models/")) path = "res/models/" + path;
+
         ObjModel model = new ObjModel();
-        int currentMaterialID = 0;
+        short currentMaterialID = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
@@ -30,7 +36,7 @@ public class ObjModelParser {
                     case "mtllib": model._materials.addAll(parseMTL(parts[1]));
                         break;
                     case "usemtl":
-                        int count = 0;
+                        short count = 0;
                         for(ObjMaterial material : model._materials) {
                             if (material == null) continue;
                             if (material.name.equals(parts[1])) {
@@ -47,6 +53,20 @@ public class ObjModelParser {
         }
 
         model.castToArrays();
+
+        // normalize model to 0, 0 position and 1 to -1 space
+        float max_d = Float.MIN_VALUE;
+        Vector3f origin = new Vector3f();
+        for(float[] vertex : model._positions) {
+            float d = origin.distance(new Vector3f(vertex[0], vertex[1], vertex[2]));
+            if (d > max_d) max_d = d;
+        }
+        for(float[] vertex : model._positions) {
+            for(int i = 0; i < 3; i++) {
+                vertex[i] = vertex[i] / max_d * 2 - 1;
+            }
+        }
+
         return model;
     }
 
@@ -118,14 +138,14 @@ public class ObjModelParser {
         return array;
     }
 
-    private static int[][] parseFace(String[] parts) {
-        int[][] arr = new int[parts.length - START_INDEX][];
+    private static short[][] parseFace(String[] parts) {
+        short[][] arr = new short[parts.length - START_INDEX][];
 
         for (int i = 0; i < parts.length-1; i++) {
             String[] subParts = parts[i + START_INDEX].split("/");
-            arr[i] = new int[subParts.length];
+            arr[i] = new short[subParts.length];
             for (int j =0 ; j < subParts.length; j++)
-                arr[i][j] = Integer.parseInt(subParts[j]);
+                arr[i][j] = Short.parseShort(subParts[j]);
             }
 
         return arr;

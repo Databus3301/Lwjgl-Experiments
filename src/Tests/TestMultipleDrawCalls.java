@@ -1,7 +1,6 @@
 package Tests;
 
 import org.joml.Vector2f;
-import static org.lwjgl.opengl.GL30.*;
 
 /*
     There are for now 2 components affecting an objects position at the time of drawing,
@@ -29,15 +28,15 @@ public class TestMultipleDrawCalls extends TestTextures {
 
     @Override
     public void OnRender() {
-        shader.Bind();
+        shader.bind();
 
         // offsetting the <model> matrix
-        box.translate(offset1);
-        renderer.DrawEntity2D(box);
+        square.translate(offset1);
+        renderer.drawEntity2D(square);
 
         // offsetting the <model> matrix
-        box.translate(offset2);
-        renderer.DrawEntity2D(box);
+        square.translate(offset2);
+        renderer.drawEntity2D(square);
     }
 
 

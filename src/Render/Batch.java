@@ -1,5 +1,6 @@
 package Render;
 
+import Render.Shader.Shader;
 import Render.Vertices.IndexBuffer;
 import Render.Vertices.VertexArray;
 public class Batch {

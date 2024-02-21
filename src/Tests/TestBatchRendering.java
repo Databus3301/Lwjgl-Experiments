@@ -3,11 +3,13 @@ package Tests;
 import Render.Batch;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
+import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 /**
@@ -20,24 +22,24 @@ public class TestBatchRendering extends Test {
     Entity2D[] entities;
     Camera camera;
     Batch b;
-
-    Boolean batching; // test var
+    boolean batching, spin; // test var
 
     public TestBatchRendering() {
         super();
         // DEBUG
         batching = true;
-        int DIM = 400;
+        spin = false;
+        int DIM = 100;
         //
-
+        renderer.setCurrentShader(new Shader("res/shaders/batching.shader"));
         renderer.setCamera(camera = new Camera());
         camera.setScale(new Vector2f(200f/DIM, 200f/DIM));
 
         ObjModel[] models = new ObjModel[] {
                 ObjModelParser.parseOBJ("res/models/testModel3.obj"),
-                ObjModelParser.parseOBJ("res/models/untitled.obj"),
-                ObjModelParser.parseOBJ("res/models/testModel.obj"),
-                ObjModelParser.parseOBJ("res/models/squareN.obj")
+                ObjModelParser.parseOBJ("res/models/sphere.obj"),
+                ObjModelParser.parseOBJ("res/models/square.obj"),
+                ObjModelParser.parseOBJ("res/models/circle.obj")
         };
 
         // spread entites out in a grid using above models
@@ -45,15 +47,16 @@ public class TestBatchRendering extends Test {
         int index = 0;
         for(int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
-                entities[index] = new Entity2D(new Vector2f(5*i-900, 5*j-900), models[3]);
-                entities[index].setScale(new Vector2f(5/2f, 5/2f));
+                entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[index % models.length]);
+                entities[index].setScale(new Vector2f(5/4f, 5/4f));
+
                 index++;
             }
         }
+        System.out.println("Entities: " + index);
 
         if(batching)
-             b = renderer.SetupBatch(entities);
-
+             b = renderer.setupBatch(entities);
     }
 
     @Override
@@ -61,17 +64,25 @@ public class TestBatchRendering extends Test {
         super.OnUpdate(dt);
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
+
+        if(spin) {
+            camera.rotate(10f*dt, 0);
+            camera.rotate(10f*dt, 1);
+            camera.rotate(10f*dt, 2);
+        }
+
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
 
+        glClearColor(0.3f, 0.7f, 0.6f, 1.0f);
+
         if(batching)
-            renderer.DrawBatch(b);
+            renderer.drawBatch(b);
         else
-            for (Entity2D e : entities)
-                renderer.DrawEntity2D(e);
+            renderer.drawEntities2D(entities);
     }
 
     @Override

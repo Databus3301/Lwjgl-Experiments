@@ -1,11 +1,12 @@
 package Render.Shader;
 
+import Render.Renderer;
+import Render.Window.Window;
+import Tests.Test;
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -13,49 +14,55 @@ import java.util.Scanner;
 import static org.lwjgl.opengl.GL43.*;
 
 public class Shader {
-    private int m_RendererID;
-    private String m_FilePath;
-
-    private HashMap<String, Integer> m_UniformLocationMap = new HashMap<>();
+    private final int m_RendererID;
+    private final HashMap<String, Integer> m_UniformLocationMap = new HashMap<>();
     public Shader(String filepath) {
-        m_FilePath = filepath;
 
-        ShaderProgramSource code = ParseShader(filepath);
-        m_RendererID = CreateShader(code);
+        ShaderProgramSource code = parseShader(filepath);
+        m_RendererID = createShader(code);
+
+        m_UniformLocationMap.replaceAll((k, v) -> glGetUniformLocation(m_RendererID, k));
     }
 
-    public void Bind() { glUseProgram(m_RendererID); }
-    public void Unbind() { glUseProgram(0); }
-    public void Delete() { glDeleteShader(m_RendererID); }
+    public void bind() {
+        Renderer renderer = Test.getRenderer();
+        if(!renderer.getCurrentShader().equals(this)) { // if the current shader is not this shader
+            renderer.setCurrentShader(this);
+            glUseProgram(m_RendererID);
+        }
+    }
+    public void forceBind() {
+        glUseProgram(m_RendererID);
+    }
+    public void unbind() { glUseProgram(0); }
+    public void delete() { glDeleteShader(m_RendererID); }
 
-    public void SetUniform1i(String name, int i) {
-        Bind();
-        int location = GetUniformLocation(name);
+    public void setUniform1i(String name, int i) {
+        bind();
+        int location = getUniformLocation(name);
         glUniform1i(location, i);
     }
-    public void SetUniform4f(String name, float v0, float v1, float v2, float v3) {
-        int location = GetUniformLocation(name);
+    public void setUniform4f(String name, float v0, float v1, float v2, float v3) {
+        int location = getUniformLocation(name);
         glUniform4f(location, v0, v1, v2, v3);
     }
 
-    public void SetUniformMat4f(String name, Matrix4f mat4) {
-        int location = GetUniformLocation(name);
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        mat4.get(fb);
-        glUniformMatrix4fv(location, false, fb);
+    private float[] fb = new float[16];
+    public void setUniformMat4f(String name, Matrix4f mat4) {
+        int location = getUniformLocation(name);
+        glUniformMatrix4fv(location, false, mat4.get(fb));
     }
 
-
-    private int GetUniformLocation(String name) {
+    private int getUniformLocation(String name) {
         if(m_UniformLocationMap.containsKey(name))
-                m_UniformLocationMap.get(name);
+                return m_UniformLocationMap.get(name);
         int location = glGetUniformLocation(m_RendererID, name);
         if(location == -1)
             System.out.println("[Open GL:] Warning: uniform" + name + "doesn't exist");
         m_UniformLocationMap.put(name, location);
         return location;
     }
-     private ShaderProgramSource ParseShader(String filepath) {
+     private ShaderProgramSource parseShader(String filepath) {
         String[] shaders = new String[2];
         try {
             File shaderCode = new File(filepath);
@@ -76,6 +83,12 @@ public class Shader {
                     shaderType = 1;
                     shaders[1] = "";
                 }
+
+                if(data.contains("uniform")) {
+                    String[] tokens = data.split("[ ;]]");
+                    String name = tokens[2];
+                    m_UniformLocationMap.put(name, null);
+                }
             }
             reader.close();
         } catch (FileNotFoundException e) {
@@ -84,7 +97,8 @@ public class Shader {
         }
         return new ShaderProgramSource(shaders[0], shaders[1]);
     }
-     private int CompileShader(int type, String source) {
+
+     private int compileShader(int type, String source) {
 
         // Compile shader
         int id = glCreateShader(type);
@@ -105,10 +119,10 @@ public class Shader {
 
         return id;
     }
-     private int CreateShader(ShaderProgramSource code) {
+     private int createShader(ShaderProgramSource code) {
         int program = glCreateProgram();
-        int vs = CompileShader(GL_VERTEX_SHADER, code.VertexSource);
-        int fs = CompileShader(GL_FRAGMENT_SHADER, code.FragmentSource);
+        int vs = compileShader(GL_VERTEX_SHADER, code.VertexSource);
+        int fs = compileShader(GL_FRAGMENT_SHADER, code.FragmentSource);
 
         glAttachShader(program, vs);
         glAttachShader(program, fs);
@@ -121,5 +135,9 @@ public class Shader {
         glDeleteShader(fs);
 
         return program;
+    }
+
+    public int getID() {
+        return m_RendererID;
     }
 }

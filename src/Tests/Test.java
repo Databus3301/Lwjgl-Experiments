@@ -10,7 +10,7 @@ Tests are used to test the functionality of the engine.
  **/
 public class Test {
 
-    Renderer renderer;
+    public static Renderer renderer;
 
     public Test() {
         renderer = new Renderer();
@@ -22,4 +22,9 @@ public class Test {
     }
     public void OnClose() {}
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {}
+
+
+    public static Renderer getRenderer() {
+        return renderer;
+    }
 }

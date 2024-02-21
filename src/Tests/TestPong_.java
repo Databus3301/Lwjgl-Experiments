@@ -62,15 +62,15 @@ public class TestPong_ extends Test {
         renderer = new Renderer();
 
         shader = new Shader("res/shaders/pong.shader");
-        shader.Bind();
+        shader.bind();
 
         va = new VertexArray();
         VertexBuffer vb = new VertexBuffer(vertices);
         VertexBufferLayout layout = new VertexBufferLayout();
 
-        layout.PushF(2);
-        layout.PushF(4);
-        va.AddBuffer(vb, layout);
+        layout.pushF(2);
+        layout.pushF(4);
+        va.addBuffer(vb, layout);
 
         ib = new IndexBuffer(indices);
         camera = new Camera(new Vector2f());
@@ -151,21 +151,21 @@ public class TestPong_ extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        shader.Bind();
+        shader.bind();
         setUniforms();
 
         Vector2f scalar = new Vector2f(0.7f, 3.5f);
         // Set up left and right walls
         camera.scale(scalar);
         camera.translate(new Vector2f(wallPosLeft.x / scalar.x, wallPosLeft.y / scalar.y));
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
-        renderer.Draw(va, ib, shader);
+        shader.setUniformMat4f("uModel", camera.calcModelMatrix());
+        renderer.draw(va, ib, shader);
 
         camera.calcModelMatrix();
         camera.scale(scalar);
         camera.translate(new Vector2f(wallPosRight.x / scalar.x, wallPosRight.y / scalar.y));
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
-        renderer.Draw(va, ib, shader);
+        shader.setUniformMat4f("uModel", camera.calcModelMatrix());
+        renderer.draw(va, ib, shader);
 
         // reset matrices
         camera.calcViewMatrix();
@@ -176,8 +176,8 @@ public class TestPong_ extends Test {
         camera.calcModelMatrix();
         camera.scale(new Vector2f(scalar.x, scalar.y));
         camera.translate(new Vector2f(ballPos.x / scalar.x, ballPos.y / scalar.y));
-        shader.SetUniformMat4f("uModel", camera.calcViewMatrix());
-        renderer.Draw(va, ib, shader);
+        shader.setUniformMat4f("uModel", camera.calcViewMatrix());
+        renderer.draw(va, ib, shader);
 
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
@@ -222,14 +222,14 @@ public class TestPong_ extends Test {
     @Override
     public void OnClose() {
         super.OnClose();
-        shader.Delete();
+        shader.delete();
     }
 
     protected void setUniforms() {
         camera.calcModelMatrix();
 
-        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
-        shader.SetUniformMat4f("uView", camera.getViewMatrix());
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
+        shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
+        shader.setUniformMat4f("uView", camera.getViewMatrix());
+        shader.setUniformMat4f("uModel", camera.calcModelMatrix());
     }
 }

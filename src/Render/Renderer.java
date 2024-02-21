@@ -7,52 +7,53 @@ import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
 import org.joml.Matrix4f;
 
+import java.lang.reflect.Array;
+
 import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer {
 
-    Shader defaultShader;
+    public Shader defaultShader, currentShader;
     Camera camera;
 
     public Renderer() {
-        defaultShader = new Shader("res/shaders/basic.shader");
+        defaultShader = currentShader = new Shader("res/shaders/default.shader");
+        defaultShader.forceBind();
         camera = new Camera();
     }
-    public void Draw(VertexArray va, IndexBuffer ib, Shader shader) {
-        shader.Bind();
-        SetUniforms(shader);
+    public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
+        shader.bind();
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
-        glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
 
-    public void Draw(VertexArray va, IndexBuffer ib) {
-        defaultShader.Bind();
-        SetUniforms(defaultShader);
+    public void draw(VertexArray va, IndexBuffer ib) {
+        SetUniforms(currentShader, null);
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
-        glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
 
     // TODO: make this work fully
-
-    public void DrawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
+    public void drawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
         chooseShader(entity);
+        SetUniforms(currentShader, entity);
 
         // choose Texture
         if(entity.getTexture() != null)
-            entity.getTexture().Bind();
+            entity.getTexture().bind();
         // choose Model
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
-        VertexArray va = entity.getVa();
+        VertexArray va = new VertexArray();
+        va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
         IndexBuffer ib = model.getIndexBuffer();
-
 
         //// setup instance VBO
         // collect matrices into array
@@ -66,65 +67,68 @@ public class Renderer {
         VertexBuffer vb = new VertexBuffer(modelMatricesArr);
 
         VertexBufferLayout layout = new VertexBufferLayout();
-        layout.PushF(4);
-        layout.PushF(4);
-        layout.PushF(4);
-        layout.PushF(4);
+        layout.pushF(4);
+        layout.pushF(4);
+        layout.pushF(4);
+        layout.pushF(4);
 
-        va.AddBufferI(vb, layout);
+        va.addBufferI(vb, layout);
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
-        glDrawElementsInstanced(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0, modelMatrices.length);
+        glDrawElementsInstanced(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0, modelMatrices.length);
     }
 
-    public void DrawBatch(Batch b) {
-        defaultShader.Bind();
-        SetUniforms(defaultShader);
+    public void drawBatch(Batch b) {
+        SetUniforms(currentShader, null);
 
-        b.ib.Bind();
-        b.va.Bind();
+        b.ib.bind();
+        b.va.bind();
 
-        glDrawElements(GL_TRIANGLES, b.ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, b.ib.getCount(), GL_UNSIGNED_INT, 0);
     }
-    public void DrawEntity2D(Entity2D entity) {
+    public void drawEntity2D(Entity2D entity) {
         chooseShader(entity);
+        SetUniforms(currentShader, entity);
+
         // choose Texture
         if(entity.getTexture() != null)
-            entity.getTexture().Bind();
+            entity.getTexture().bind();
         // choose Model
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
         // choose VertexArray and IndexBuffer
-        VertexArray va = entity.getVa();
+        VertexArray va = new VertexArray();
+        va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
         IndexBuffer ib = model.getIndexBuffer();
 
-        va.Bind();
-        ib.Bind();
+        va.bind();
+        ib.bind();
 
-        glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
-    public void DrawEntities2D(Entity2D[] entities) {
+    public void drawEntities2D(Entity2D[] entities) {
         for (Entity2D entity : entities) {
-            DrawEntity2D(entity);
+            if(entity != null)
+                drawEntity2D(entity);
         }
     }
 
-    public Batch SetupBatch(Entity2D[] entities) {
+    public Batch setupBatch(Entity2D[] entities) {
         VertexArray va = new VertexArray();
         int totalVertices = 0;
         int totalIndices = 0;
 
         // Calculate total size of all vertex and index buffers
         for (Entity2D entity : entities) {
-            totalVertices += entity.getModel().getVertexBuffer().GetSize();
-            totalIndices += entity.getModel().getIndexBuffer().GetCount();
+            totalVertices += entity.getModel().getVertexBuffer().getSize();
+            totalIndices += entity.getModel().getIndexBuffer().getCount();
         }
 
         // Create combined vertex and index buffers
-        VertexBuffer vb = new VertexBuffer(new float[totalVertices]);
-        IndexBuffer ib = new IndexBuffer(new int[totalIndices]);
+        VertexBuffer vb = new VertexBuffer(totalVertices);
+        IndexBuffer ib = new IndexBuffer(totalIndices);
 
         long vertexOffset = 0;
         long indexOffset = 0;
@@ -133,51 +137,58 @@ public class Renderer {
         for (Entity2D entity : entities) {
             ObjModel model = entity.getModel();
 
-            float[] data = model.getVertexBufferData();
-            int[] indices = model.getIndexBufferData((int)indexOffset/4); // needs to be offset by the number of vertices in the previous entities
+            float[] data = model.getVertexBufferData().clone(); // need to be cloned to protect ObjModel data from being set off arbitrarily
+            int[] indices = model.getIndexBufferData().clone(); // needs to be offset by the number of vertices in the previous entities
 
             // calculate actual positions of vertices through model matrices
             int dataIndex = 0;
-            for (int j = 0; j < indices.length; j++) {
+            for (int j = 0; j < indices.length; j++) { // TODO: apply rotation
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
                 dataIndex += Vertex.SIZE - 2;
+
+                indices[j] += (int)indexOffset/4;
             }
 
-            vb.Update(data, vertexOffset);
-            ib.Update(indices, indexOffset);
+            vb.update(data, vertexOffset);
+            ib.update(indices, indexOffset);
 
             vertexOffset += data.length    * 4L;
             indexOffset += indices.length  * 4L;
         }
 
-        va.AddBuffer(vb, Vertex.GetLayout());
+        va.addBuffer(vb, Vertex.getLayout());
         return new Batch(va, ib);
     }
+
+    // TODO: investigate performance gain of CPU side MVP calculation
     public void SetUniforms(Shader shader, Entity2D entity) {
-        Matrix4f modelmatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
-        shader.SetUniformMat4f("uModel", modelmatrix);
-        shader.SetUniformMat4f("uView", camera.calcViewMatrix());
-        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
+        Matrix4f modelMatrix;
+        if(entity == null || entity.equals(camera))
+            modelMatrix = camera.calcModelMatrix();
+        else
+            modelMatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
+
+        shader.setUniformMat4f("uModel", modelMatrix);
+        shader.setUniformMat4f("uView", camera.calcViewMatrix());
+        shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
     }
-    public void SetUniforms(Shader shader) {
-        shader.SetUniformMat4f("uModel", camera.calcModelMatrix());
-        shader.SetUniformMat4f("uView", camera.calcViewMatrix());
-        shader.SetUniformMat4f("uProj", camera.getProjectionMatrix());
-    }
+
+    /**
+     * Choose the shader to use for rendering
+     * @param entity whose shader is chosen,<br> if the <b>entity has no shader</b> the camera's shader is chosen,<br> if the <b>camera has no shader</b> the default shader is chosen
+     */
     public void chooseShader(Entity2D entity){
-        if(entity.getShader() != null) {
-            entity.getShader().Bind();
-            SetUniforms(entity.getShader(), entity);
-        }
-        else if(camera.getShader() != null) {
-            camera.getShader().Bind();
-            SetUniforms(camera.getShader(), entity);
-        }
-        else {
-            defaultShader.Bind();
-            SetUniforms(defaultShader, entity);
-        }
+        assert entity != null && camera != null : "[ERROR] (Render.Renderer.chooseShader) No entity to choose shader from (null)";
+
+        if /**/ (entity.getShader() != null)
+            entity.getShader().bind();
+        else if (camera.getShader() != null)
+            camera.getShader().bind();
+        else
+            defaultShader.bind();
+
+
     }
 
     public void Clear() {
@@ -185,5 +196,15 @@ public class Renderer {
     }
     public void setCamera(Camera camera) {
         this.camera = camera;
+    }
+
+    public void setCurrentShader(Shader currentShader) {
+        if(!this.currentShader.equals(currentShader)) {
+            this.currentShader = currentShader;
+            currentShader.forceBind();
+        }
+    }
+    public Shader getCurrentShader() {
+        return currentShader;
     }
 }

@@ -20,6 +20,11 @@ public class Camera extends Entity2D {
         super(position);
         init();
     }
+    public Camera(Shader shader) {
+        super();
+        this.shader = shader;
+        init();
+    }
     public Camera() {
         super();
         init();
@@ -50,10 +55,16 @@ public class Camera extends Entity2D {
     // PROJECTION
     public Matrix4f calcProjectionMatrix() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(-dim.x/2f, dim.x/2f, -dim.y/2f, dim.y/2f, 0.01f, 100f);
+        projectionMatrix.ortho(-dim.x/2f, dim.x/2f, -dim.y/2f, dim.y/2f, -10000f, 10000f);
         return projectionMatrix;
     }
     public Matrix4f getProjectionMatrix() {
         return this.projectionMatrix;
+    }
+
+
+    @Override
+    public void rotate(float degrees, int axis) {
+       super.rotate(degrees, axis);
     }
 }

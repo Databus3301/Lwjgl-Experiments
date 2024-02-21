@@ -3,31 +3,33 @@ package Render.Vertices.Model;
 import Render.Vertices.IndexBuffer;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
-import org.joml.Vector2f;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObjModel {
     // TODO: OPTIMISATION:: add duplicate vertex recognition through faces (cheaper comparision) and handle indices accordingly
-    public ArrayList<float[]> _positions = new ArrayList<>();
-    public ArrayList<float[]> _normals = new ArrayList<>();
-    public ArrayList<float[]> _textures = new ArrayList<>();
-    public ArrayList<int[][]> _faces = new ArrayList<>(); // indices
+    public final ArrayList<float[]> _positions = new ArrayList<>();
+    public final ArrayList<float[]> _normals = new ArrayList<>();
+    public final ArrayList<float[]> _textures = new ArrayList<>();
+    public final ArrayList<short[][]> _faces = new ArrayList<>(); // indices
 
     public ArrayList<ObjMaterial> _materials = new ArrayList<>();
-    public ArrayList<Integer> _materialIDs = new ArrayList<>();
-
+    public ArrayList<Short> _materialIDs = new ArrayList<>();
 
     private float[][] positions;
     private float[][] normals;
     private float[][] textures;
-    private int[][][] faces;
+    private short[][][] faces;
     private ObjMaterial[] materials;
-    private Integer[] materialIDs;
+    private Short[] materialIDs;
 
+    ///
     private int[] indices;
     private IndexBuffer ib;
+
+    private float[] vertexBufferData;
+    private VertexBuffer vertexBuffer;
 
     public ObjModel() {
         // set the default material
@@ -38,20 +40,23 @@ public class ObjModel {
         positions = toArray(_positions, float[].class);
         normals = toArray(_normals, float[].class);
         textures = toArray(_textures, float[].class);
-        faces = toArray(_faces, int[][].class);
+        faces = toArray(_faces, short[][].class);
         materials = toArray(_materials, ObjMaterial.class);
-        materialIDs = toArray(_materialIDs, Integer.class);
+        materialIDs = toArray(_materialIDs, Short.class);
     }
 
     // TODO: handle this through the <Entity2D> class, to allow for batch rendering, with attributes like position and scale by adding to this calculation
     public float[] getVertexBufferData() {
+        if(vertexBufferData!=null) return vertexBufferData;
+
+
         float[] data = new float[Vertex.SIZE * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
         indices = new int[faces.length * 3]; // 3 vertices per face
-        int dataIndex = 0;
-        int faceIndex = 0;
+        short dataIndex = 0;
+        short faceIndex = 0;
 
-        for (int[][] face : faces) {
-            for (int i = 0; i < face.length; i++) {
+        for (short[][] face : faces) {
+            for (short i = 0; i < face.length; i++) {
                 float[] position = positions[face[i][0] - 1];
                 data[dataIndex++] = position[0];
                 data[dataIndex++] = position[1];
@@ -85,21 +90,24 @@ public class ObjModel {
                         dataIndex++;
                 }
 
-                indices[dataIndex / Vertex.SIZE -1] = dataIndex / Vertex.SIZE  -1;
+                indices[dataIndex / Vertex.SIZE -1] = (short) (dataIndex / Vertex.SIZE  - 1);
             }
             faceIndex++;
         }
 
+        vertexBufferData = data;
         return data;
     }
-
     public VertexBuffer getVertexBuffer() {
-        return new VertexBuffer(getVertexBufferData());
+        if(vertexBuffer==null) {
+            vertexBuffer = new VertexBuffer(getVertexBufferData());
+        }
+        return vertexBuffer;
     }
 
     public void calcIndexBuffer() {
         if (indices == null) {
-            getVertexBuffer();
+            getVertexBufferData();
         }
         ib = new IndexBuffer(indices);
     }
@@ -113,24 +121,37 @@ public class ObjModel {
 
     public int[] getIndexBufferData() {
         if (indices == null) {
-            getVertexBuffer();
-        }
-        return indices;
-    }
-    public int[] getIndexBufferData(int offset) {
-        if (indices == null) {
-            getVertexBuffer();
-        }
-        for (int i = 0; i < indices.length; i++) {
-            indices[i] += offset;
+            getVertexBufferData();
         }
         return indices;
     }
 
+
     private static <T> T[] toArray(ArrayList<T> list, Class<T> c) {
         @SuppressWarnings("unchecked")
         T[] array = (T[]) Array.newInstance(c, list.size());
-        return list.toArray(array);
+        list.toArray(array);
+        list = null;
+        return array;
+    }
+
+    public float[][] getPositions() {
+        return positions;
+    }
+    public float[][] getNormals() {
+        return normals;
+    }
+    public float[][] getTextures() {
+        return textures;
+    }
+    public short[][][] getFaces() {
+        return faces;
+    }
+    public ObjMaterial[] getMaterials() {
+        return materials;
+    }
+    public Short[] getMaterialIDs() {
+        return materialIDs;
     }
 
 }

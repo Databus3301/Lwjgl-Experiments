@@ -10,21 +10,21 @@ public class VertexBufferLayout {
 
     public VertexBufferLayout() {m_Stride = 0;}
 
-    public void PushI(int count) {
+    public void pushI(int count) {
         m_Elements.add(new VertexBufferElement(GL_UNSIGNED_INT, count, false));
         m_Stride += Integer.BYTES * count;
     }
-    public void PushF(int count) {
+    public void pushF(int count) {
         m_Elements.add(new VertexBufferElement(GL_FLOAT, count, false));
         m_Stride += Float.BYTES * count;
     }
-    public void PushB(int count) {
+    public void pushB(int count) {
         m_Elements.add(new VertexBufferElement(GL_UNSIGNED_BYTE, count, true));
         m_Stride += Character.BYTES * count;
     }
 
-    public ArrayList<VertexBufferElement> GetElements() { return m_Elements; }
-    public int GetStride() {
+    public ArrayList<VertexBufferElement> getElements() { return m_Elements; }
+    public int getStride() {
         return m_Stride;
     }
 }

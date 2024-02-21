@@ -1,52 +1,47 @@
 package Tests;
 
-import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
-import Render.Renderer;
 import Render.Shader.Shader;
 import Render.Entity.Texturing.Texture;
-import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 
-import static org.lwjgl.opengl.GL30.*;
-
 public class TestTextures extends Test {
 
-    // 100*100 box centered around 0,0 with texture coords
-    protected Entity2D box;
-
+    protected Entity2D square;
     protected Shader shader;
 
     public TestTextures() {
         super();
 
-        shader = new Shader("res/shaders/basic.shader");
-        shader.Bind();
+        shader = new Shader("res/shaders/texturing.shader");
+        shader.bind();
 
         Texture texture = new Texture("res/textures/woodCrate.png", 0);
-        texture.Bind(0);
-        shader.SetUniform1i("u_Texture", 0);
+        shader.setUniform1i("u_Texture", 0);
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
-        box = new Entity2D(new Vector2f(0, 0), model, texture, shader);
+        square = new Entity2D(new Vector2f(0, 0), model, texture, shader);
+        square.scale(50);
     }
 
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
+        square.rotate(100.0f*dt, 2);
+        System.out.println(new Vector2f(square.getCenter()).mul(1/50f));
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.DrawEntity2D(box);
+        renderer.drawEntity2D(square);
     }
 
     @Override
     public void OnClose() {
         super.OnClose();
-        shader.Delete();
+        shader.delete();
     }
 }
