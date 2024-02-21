@@ -15,18 +15,25 @@ public class TestSquare extends Test {
     Entity2D entity2;
     Shader shader;
     Texture texture;
-    Entity2D[] entity2DS = new Entity2D[20];
+    final int DIM = 100;
+    Entity2D[] entity2DS = new Entity2D[DIM*DIM];
     public TestSquare() {
         super();
-        shader = new Shader("res/shaders/basic.shader");
+        shader = new Shader("res/shaders/texturing.shader");
         texture = new Texture("res/textures/woodCrate.png", 0);
         shader.setUniform1i("u_Texture", 0);
         texture.bind();
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         entity = new Entity2D(new Vector2f(), model, texture, shader);
         entity2 = new Entity2D(new Vector2f(50, 50), model, texture, shader);
-        for (int i = 0; i < 20; i++) {
-            entity2DS[i] = new Entity2D(new Vector2f(i*25, i*25), model, texture, shader);
+
+        int entityIndex = 0;
+        int spacing = 15;
+        for (int i = 0; i < DIM; i++) {
+            for(int j = 0; j < DIM; j++) {
+
+                entity2DS[entityIndex++] = new Entity2D(new Vector2f(i*spacing-DIM*spacing/2f, j*spacing-DIM*spacing/2f), model, texture, shader);
+            }
         }
     }
 
@@ -37,7 +44,8 @@ public class TestSquare extends Test {
         Vector2f v = new Vector2f(entity.getPosition());
        entity2.translate(new Vector2f(v.sub(entity2.getPosition()).normalize()).mul(dt).mul(new Vector2f(100,100)));
        for (int i = 0; i < entity2DS.length; i++) {
-                entity2DS[i].translate(new Vector2f(v.sub(entity2DS[i].getPosition()).normalize()).mul(dt).mul(new Vector2f(100,100)));
+                Vector2f v2 = new Vector2f(entity.getPosition());
+                entity2DS[i].translate(new Vector2f(v2.sub(entity2DS[i].getPosition()).normalize()).mul(dt).mul(new Vector2f(100,100)));
             }
     }
 
