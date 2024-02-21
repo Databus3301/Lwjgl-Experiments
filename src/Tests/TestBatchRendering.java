@@ -28,7 +28,7 @@ public class TestBatchRendering extends Test {
         super();
         // DEBUG
         batching = true;
-        spin = false;
+        spin = true;
         int DIM = 100;
         //
         renderer.setCurrentShader(new Shader("res/shaders/batching.shader"));

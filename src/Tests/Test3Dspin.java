@@ -30,8 +30,8 @@ public class Test3Dspin extends Test {
 
         entities = new Entity2D[1000];
         // rotating entity
-        main = new Entity2D(new Vector2f(0, 0), model, shader);
-        main.scale(150);
+        main = new Entity2D(new Vector2f(-100, -100), model, shader);
+        main.scale(100);
         // mark entity center
         entities[0] = new Entity2D(new Vector2f(), point);;
         entities[0].scale(2);
@@ -39,7 +39,7 @@ public class Test3Dspin extends Test {
 
         // instantiate a new entity at each vertex position of the model
         for(int i = 1; i < entities.length; i++) {
-            entities[i] = new Entity2D(new Vector2f(positions[i% positions.length][0]*150+entities[0].getPosition().x, positions[i% positions.length][1]*150+entities[0].getPosition().y), point);
+            entities[i] = new Entity2D(new Vector2f(positions[i% positions.length][0]*main.getScale().x+main.getPosition().x, positions[i% positions.length][1]*main.getScale().y+main.getPosition().y), point);
             entities[i].scale(2);
         }
     }
@@ -53,10 +53,21 @@ public class Test3Dspin extends Test {
 
 
         for (int i = 1; i < entities.length; i++) {
-            Vector3f pos = new Vector3f(positions[i% positions.length][0]*150+150, positions[i% positions.length][1]*150+150, positions[i% positions.length][2]*150+150);
-            //pos.mul(rotationMatrix);
-            pos.mul(main.getRotation().get(new Matrix3f()));
-            entities[i].setPosition(pos.x, pos.y);
+            //Vector3f pos = new Vector3f(positions[i% positions.length][0]*150+150, positions[i% positions.length][1]*150+150, positions[i% positions.length][2]*150+150);
+            Vector3f pos = new Vector3f(
+                    positions[i% positions.length][0]*main.getScale().x+main.getPosition().x,
+                    positions[i% positions.length][1]*main.getScale().y+main.getPosition().y,
+                    positions[i% positions.length][2]*main.getScale().x+main.getScale().x
+            );
+
+            Vector3f mainPos = new Vector3f(main.getPosition(), +main.getScale().x);
+            Vector3f relativePos = pos.sub(mainPos, new Vector3f()); // Translate so main entity is at origin
+
+            Matrix3f rotationMatrix = main.getRotation().get(new Matrix3f());
+            relativePos.mul(rotationMatrix); // Rotate around origin
+
+            Vector3f rotatedPos = relativePos.add(mainPos); // Translate back
+            entities[i].setPosition(rotatedPos.x, rotatedPos.y);
         }
 
         entities[0].setPosition(main.getCenter());
