@@ -9,6 +9,7 @@ import Render.Vertices.Model.ObjModelParser;
 import org.joml.Matrix3f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Test3Dspin extends Test {
 
@@ -39,7 +40,7 @@ public class Test3Dspin extends Test {
 
         // instantiate a new entity at each vertex position of the model
         for(int i = 1; i < entities.length; i++) {
-            entities[i] = new Entity2D(new Vector2f(positions[i% positions.length][0]*main.getScale().x+main.getPosition().x, positions[i% positions.length][1]*main.getScale().y+main.getPosition().y), point);
+            entities[i] = new Entity2D(new Vector2f(), point);
             entities[i].scale(2);
         }
     }
@@ -51,23 +52,11 @@ public class Test3Dspin extends Test {
         main.rotate(50*dt, 1);
         main.rotate(50*dt, 2);
 
-
         for (int i = 1; i < entities.length; i++) {
-            //Vector3f pos = new Vector3f(positions[i% positions.length][0]*150+150, positions[i% positions.length][1]*150+150, positions[i% positions.length][2]*150+150);
-            Vector3f pos = new Vector3f(
-                    positions[i% positions.length][0]*main.getScale().x+main.getPosition().x,
-                    positions[i% positions.length][1]*main.getScale().y+main.getPosition().y,
-                    positions[i% positions.length][2]*main.getScale().x+main.getScale().x
-            );
+            Vector4f pos = new Vector4f(positions[i% positions.length][0], positions[i% positions.length][1], positions[i% positions.length][2], 1);
+            Vector4f transformed = main.calcModelMatrix().transform(pos);
 
-            Vector3f mainPos = new Vector3f(main.getPosition(), +main.getScale().x);
-            Vector3f relativePos = pos.sub(mainPos, new Vector3f()); // Translate so main entity is at origin
-
-            Matrix3f rotationMatrix = main.getRotation().get(new Matrix3f());
-            relativePos.mul(rotationMatrix); // Rotate around origin
-
-            Vector3f rotatedPos = relativePos.add(mainPos); // Translate back
-            entities[i].setPosition(rotatedPos.x, rotatedPos.y);
+            entities[i].setPosition(transformed.x, transformed.y);
         }
 
         entities[0].setPosition(main.getCenter());

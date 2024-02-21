@@ -63,6 +63,10 @@ public class Entity2D {
         this();
         this.position = position;
     }
+    public Entity2D(ObjModel model) {
+        this();
+        this.model = model;
+    }
 
     public Entity2D() {
         this.position = new Vector2f(0, 0);
@@ -157,10 +161,22 @@ public class Entity2D {
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
-        modelMatrix.rotateAround(rotation, (getCenter().x-position.x)/scale.x, (getCenter().y-position.y)/scale.y, -1f); // TODO: Test if actually rotated around the entity's center
+        modelMatrix.rotateAround(rotation, (getCenter().x-position.x)/scale.x, (getCenter().y-position.y)/scale.y, -1f);
 
         return modelMatrix;
     }
+
+    /**
+     * Basic form of collision detection often referred to as Axis-Aligned Bounding Box (AABB) collision detection.
+     * @param other entity to colide with
+     * @return hasCollided
+     */
+    public boolean collideAABB(Entity2D other) {
+        return Math.abs(getCenter().x - other.getCenter().x) < Math.abs(scale.x + other.scale.x)*1.4 &&
+                Math.abs(getCenter().y - other.getCenter().y) < Math.abs(scale.y + other.scale.y)*1.4;
+    }
+
+
 
     public void accelerate(Vector2f acceleration) {
     	this.velocity.add(acceleration);
