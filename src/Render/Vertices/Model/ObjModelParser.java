@@ -54,16 +54,36 @@ public class ObjModelParser {
 
         model.castToArrays();
 
-        // normalize model to 0, 0 position and 1 to -1 space
-        float max_d = Float.MIN_VALUE;
-        Vector3f origin = new Vector3f();
+//        // normalize model to 0, 0 position and 1 to -1 space
+//        float max_d = Float.MIN_VALUE;
+//        Vector3f origin = new Vector3f();
+//        for(float[] vertex : model._positions) {
+//            float d = origin.distance(new Vector3f(vertex[0], vertex[1], vertex[2]));
+//            if (d > max_d) max_d = d;
+//        }
+//        for(float[] vertex : model._positions) {
+//            for(int i = 0; i < 3; i++) {
+//                vertex[i] = vertex[i] / max_d * 2 - 1;
+//            }
+//        }
+        Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+        Vector3f max = new Vector3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
         for(float[] vertex : model._positions) {
-            float d = origin.distance(new Vector3f(vertex[0], vertex[1], vertex[2]));
-            if (d > max_d) max_d = d;
+            Vector3f v = new Vector3f(vertex[0], vertex[1], vertex[2]);
+            min.min(v);
+            max.max(v);
         }
+
+        // calculate the scale factor and the offset
+        Vector3f scale = new Vector3f(max).sub(min);
+        float scaleFactor = Math.max(scale.x, Math.max(scale.y, scale.z));
+        if (scaleFactor == 0) scaleFactor = 1;
+        Vector3f offset = new Vector3f(min).add(scale.mul(0.5f));
+
+        // normalize the vertices
         for(float[] vertex : model._positions) {
             for(int i = 0; i < 3; i++) {
-                vertex[i] = vertex[i] / max_d * 2 - 1;
+                vertex[i] = (vertex[i] - offset.get(i)) / (scaleFactor)*2;
             }
         }
 

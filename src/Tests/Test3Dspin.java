@@ -25,14 +25,14 @@ public class Test3Dspin extends Test {
         renderer.setCamera(camera = new Camera(new Vector2f()));
 
         Shader shader = new Shader("res/shaders/batching.shader");
-        ObjModel model = ObjModelParser.parseOBJ("sphere.obj");
+        ObjModel model = ObjModelParser.parseOBJ("circle.obj");
         positions = model.getPositions();
 
 
         entities = new Entity2D[1000];
         // rotating entity
-        main = new Entity2D(new Vector2f(-100, -100), model, shader);
-        main.scale(100);
+        main = new Entity2D(new Vector2f(0, 0), model, shader);
+        main.scale(200);
         // mark entity center
         entities[0] = new Entity2D(new Vector2f(), point);;
         entities[0].scale(2);
@@ -43,6 +43,8 @@ public class Test3Dspin extends Test {
             entities[i] = new Entity2D(new Vector2f(), point);
             entities[i].scale(2);
         }
+
+        System.out.println(main.getPosition());
     }
 
     @Override
@@ -59,7 +61,7 @@ public class Test3Dspin extends Test {
             entities[i].setPosition(transformed.x, transformed.y);
         }
 
-        entities[0].setPosition(main.getCenter());
+        entities[0].setPosition(main.getPosition());
     }
 
     @Override

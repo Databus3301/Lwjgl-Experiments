@@ -132,21 +132,21 @@ public class Entity2D {
 
     public void scale(Vector2f scale) {
         this.scale.add(scale);
-        this.position.add(scale); // move the entity to keep the center in the same place
+//        this.position.add(scale); // move the entity to keep the center in the same place
     }
     public void scale(float x, float y) {
         this.scale.x += x;
         this.scale.y += y;
 
-        this.position.x += x;
-        this.position.y += y; // move the entity to keep the center in the same place
+//        this.position.x += x;
+//        this.position.y += y; // move the entity to keep the center in the same place
     }
     public void scale(float xy) {
         this.scale.x += xy;
         this.scale.y += xy;
 
-        this.position.x += xy;
-        this.position.y += xy; // move the entity to keep the center in the same place
+//        this.position.x += xy;
+//        this.position.y += xy; // move the entity to keep the center in the same place
     }
 
 
@@ -161,7 +161,7 @@ public class Entity2D {
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
-        modelMatrix.rotateAround(rotation, (getCenter().x-position.x)/scale.x, (getCenter().y-position.y)/scale.y, -1f);
+        modelMatrix.rotateAround(rotation, (getCenter().x-position.x)/scale.x, (getCenter().y-position.y)/scale.y, 0f);
 
         return modelMatrix;
     }
@@ -176,6 +176,8 @@ public class Entity2D {
                 Math.abs(getCenter().y - other.getCenter().y) < Math.abs(scale.y + other.scale.y)*1.4;
     }
 
+    //public boolean
+
 
 
     public void accelerate(Vector2f acceleration) {
@@ -187,7 +189,7 @@ public class Entity2D {
         return position;
     }
     public Vector2f getCenter() {
-        return new Vector2f(position).sub(scale).add(1,1);
+        return new Vector2f(position);//.sub(scale).add(1,1);
     }
 
     public Quaternionf getRotation() {

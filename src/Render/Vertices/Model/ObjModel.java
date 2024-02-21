@@ -4,6 +4,7 @@ import Render.Vertices.IndexBuffer;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
 
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -30,6 +31,8 @@ public class ObjModel {
 
     private float[] vertexBufferData;
     private VertexBuffer vertexBuffer;
+
+    private Rectangle2D.Float boundingBox;
 
     public ObjModel() {
         // set the default material
@@ -153,5 +156,11 @@ public class ObjModel {
     public Short[] getMaterialIDs() {
         return materialIDs;
     }
+    public Rectangle2D.Float getBoundingBox() {
+        return boundingBox;
+    }
 
+    public void setBoundingBox(Rectangle2D.Float boundingBox) {
+        this.boundingBox = boundingBox;
+    }
 }

@@ -119,7 +119,7 @@ public class Window {
 					break;
 				case "objparser" , "objmodelparser", "op": currentTest = new TestObjModelParser();
 					break;
-				case "objrendering", "or": currentTest = new TestObjRendering();
+				case "objrendering", "or", "mr": currentTest = new TestObjRendering();
 					break;
 				case "batchrendering", "batching", "b", "br": currentTest = new TestBatchRendering();
 					break;
@@ -130,6 +130,8 @@ public class Window {
 				case "spin", "3d": currentTest = new Test3Dspin();
 					break;
 				case "collision": currentTest = new TestCollision();
+					break;
+				case "normalisation", "n": currentTest = new TestNormalisation();
 					break;
 			}
 		} else // default case

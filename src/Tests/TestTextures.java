@@ -29,8 +29,10 @@ public class TestTextures extends Test {
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
+        square.rotate(100.0f*dt, 0);
+        square.rotate(100.0f*dt, 1);
         square.rotate(100.0f*dt, 2);
-        System.out.println(new Vector2f(square.getCenter()).mul(1/50f));
+        System.out.println(new Vector2f(square.getPosition()));
     }
 
     @Override
