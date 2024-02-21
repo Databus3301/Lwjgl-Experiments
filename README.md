@@ -9,12 +9,13 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - Clear colour
 - .Obj Model Parser 
 - .Obj Model Renderer 2D
+- .Obj 3D spinning model
 - Batch Rendering
 
 ## WOP
 ### Engine
 - [ ] OBJ/3D texture loading
-- [ ] lighting / dithering shader
+- [ ] shading / lighting / dithering shader
 - [ ] 3D camera
 - [ ] animations
 - [ ] particles
@@ -22,7 +23,6 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] scene loading/saving/parsing
 - [ ] interaction
 - [ ] collision
-- [ ] entity position management
 - [ ] hitboxes
 - [ ] sound
 - [ ] texture atlas
