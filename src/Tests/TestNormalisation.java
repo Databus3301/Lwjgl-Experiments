@@ -3,6 +3,7 @@ package Tests;
 import Render.Entity.Entity2D;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
+import org.joml.Vector2f;
 
 /**
  * TestNormalisation
@@ -20,11 +21,14 @@ public class TestNormalisation extends Test{
         models[2] = ObjModelParser.parseOBJ("res/models/testModel3.obj");
         models[3] = ObjModelParser.parseOBJ("res/models/sphere.obj");
 
-        entities = new Entity2D[models.length];
-        for(int i = 0; i < entities.length; i++) {
-            entities[i] = new Entity2D(models[i]);
-            entities[i].scale(50);
-            entities[i].translate( 100*i, 0);
+        entities = new Entity2D[models.length * models.length];
+        int entityIndex = 0;
+        for (int i = 0; i < models.length; i++) {
+            for (int j = 0; j < models.length; j++) {
+                entities[entityIndex] = new Entity2D(models[(j+i)% models.length]);
+                entities[entityIndex].scale(50);
+                entities[entityIndex++].translate(-150 + 100 * j, i*100-150);
+            }
         }
 
     }
