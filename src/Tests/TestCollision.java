@@ -89,7 +89,6 @@ public class TestCollision extends Test{
 
         fc++;
         fc2++;
-
     }
 
     @Override

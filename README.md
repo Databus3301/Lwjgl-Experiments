@@ -27,6 +27,7 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] sound
 - [ ] texture atlas
 - [ ] preload models and textures?
+- [ ] BETTER model normalisation!!
 ### Game
 - [ ] space invaders demo
 
