@@ -7,22 +7,26 @@ import org.joml.Vector2f;
 
 public class TestCollision extends Test{
 
-    private static final int TESTS = 2;
+    private static final int TESTS = 3;
     Entity2D[] entities = new Entity2D[TESTS*3];
     // make them switch direction when they collide
-    boolean[][] flags = new boolean[TESTS*2][1];
+    boolean[][] flags = new boolean[TESTS][1];
     int[][] fcs = new int[TESTS][1];
     public TestCollision() {
         super();
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/sphere.obj");
-        entities[0] = new Entity2D(-300, +150, model);
-        entities[1] = new Entity2D(-300, -150, model);
-        entities[2] = new Entity2D(new Vector2f(-150, 0), model);
+        entities[0] = new Entity2D(-300, +350,  model);
+        entities[1] = new Entity2D(-300, +50,   model);
+        entities[2] = new Entity2D(-150, 200,   model);
 
-        entities[3] = new Entity2D(+200, 0, model);
-        entities[4] = new Entity2D(+200, 0, model);
-        entities[5] = new Entity2D(new Vector2f(+200, 100), model);
+        entities[3] = new Entity2D(+200, 0,     model);
+        entities[4] = new Entity2D(+200, 0,     model);
+        entities[5] = new Entity2D(+200, 100,   model);
+
+        entities[6] = new Entity2D(-300, -100,     model);
+        entities[7] = new Entity2D(0, -300,     model);
+        entities[8] = new Entity2D(-200, -100,   model);
 
         int indicator = 0;
         for (int i = 0; i < TESTS*3; i++) {
@@ -39,13 +43,9 @@ public class TestCollision extends Test{
         entities[1].setVelocity(0, +150);
         entities[3].setVelocity(-150, 0);
         entities[4].setVelocity(+150, 0);
+        entities[6].setVelocity(+150, -150);
+        entities[7].setVelocity(-150, +150);
 
-        for (boolean[] flag : flags) {
-            flag = new boolean[]{false};
-        }
-        for (int[] fc : fcs) {
-            fc = new int[]{100000};
-        }
     }
 
     @Override
@@ -61,7 +61,9 @@ public class TestCollision extends Test{
     public void OnRender() {
         super.OnRender();
         handleEntities(entities[0], entities[1], entities[2], flags[0], fcs[0]);
-        handleEntities(entities[3], entities[4], entities[5], flags[2], fcs[1]);
+        handleEntities(entities[3], entities[4], entities[5], flags[1], fcs[1]);
+        handleEntities(entities[6], entities[7], entities[8], flags[2], fcs[2]);
+
     }
 
     private void handleEntities(Entity2D e1, Entity2D e2, Entity2D c, boolean[] flag, int[] fc) {
@@ -76,13 +78,15 @@ public class TestCollision extends Test{
             flag[0] = true;
         }
         if(prevFlag[0] && !flag[0]) {
-            fc[0] = 0;
+            fc[0] = 1;
         }
         if(fc[0] == 700) {
             e1.getVelocity().mul(-1);
             e2.getVelocity().mul(-1);
         }
+        if(fc[0] == 0) fc[0] = 100000;
         fc[0]++;
+
     }
 
     @Override

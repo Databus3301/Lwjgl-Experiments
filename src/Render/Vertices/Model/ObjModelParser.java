@@ -65,8 +65,6 @@ public class ObjModelParser {
             max.max(v);
         }
 
-        model.setBoundingBox(new Vector4f(min.x, min.y, max.x - min.x, max.y - min.y));
-
         // calculate the scale factor and the offset
         Vector3f scale = new Vector3f(max).sub(min);
         float scaleFactor = Math.max(scale.x, Math.max(scale.y, scale.z));
@@ -79,6 +77,11 @@ public class ObjModelParser {
                 vertex[i] = (vertex[i] - offset.get(i)) / (scaleFactor)*2;
             }
         }
+
+        min.sub(offset).div(scaleFactor).mul(2);
+        max.sub(offset).div(scaleFactor).mul(2);
+        model.setBoundingBox(new Vector4f(min.x, min.y, max.x - min.x, max.y - min.y));
+
 
         return model;
     }
