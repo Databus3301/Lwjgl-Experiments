@@ -20,7 +20,7 @@ public class TestCollision extends Test{
         super();
 
 
-        ObjModel model = ObjModelParser.parseOBJ("res/models/sphere.obj");
+        ObjModel model = ObjModelParser.parseOBJ("res/models/circle.obj");
         entities[0] = new Entity2D(-300, +350,  model);
         entities[1] = new Entity2D(-300, +50,   model);
         entities[2] = new Entity2D(-150, 200,   model);
@@ -30,8 +30,8 @@ public class TestCollision extends Test{
         entities[5] = new Entity2D(+200, 100,   model);
 
         entities[6] = new Entity2D(-300, -100,  model);
-        entities[7] = new Entity2D(0, -300,     model);
-        entities[8] = new Entity2D(-200, -100,  model);
+        entities[7] = new Entity2D(-100, -300,     model);
+        entities[8] = new Entity2D(-100, -100,  model);
 
         int indicator = 0;
         for (int i = 0; i < TESTS*3; i++) {
