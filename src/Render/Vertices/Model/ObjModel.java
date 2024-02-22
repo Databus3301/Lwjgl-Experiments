@@ -3,6 +3,8 @@ package Render.Vertices.Model;
 import Render.Vertices.IndexBuffer;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
@@ -10,10 +12,10 @@ import java.util.ArrayList;
 
 public class ObjModel {
     // TODO: OPTIMISATION:: add duplicate vertex recognition through faces (cheaper comparision) and handle indices accordingly
-    public final ArrayList<float[]> _positions = new ArrayList<>();
-    public final ArrayList<float[]> _normals = new ArrayList<>();
-    public final ArrayList<float[]> _textures = new ArrayList<>();
-    public final ArrayList<short[][]> _faces = new ArrayList<>(); // indices
+    public ArrayList<float[]> _positions = new ArrayList<>();
+    public ArrayList<float[]> _normals = new ArrayList<>();
+    public ArrayList<float[]> _textures = new ArrayList<>();
+    public ArrayList<short[][]> _faces = new ArrayList<>(); // indices
 
     public ArrayList<ObjMaterial> _materials = new ArrayList<>();
     public ArrayList<Short> _materialIDs = new ArrayList<>();
@@ -32,11 +34,26 @@ public class ObjModel {
     private float[] vertexBufferData;
     private VertexBuffer vertexBuffer;
 
-    private Rectangle2D.Float boundingBox;
+    /**
+     * The bounding box of the model
+     * x, y, width, height
+     */
+    private Vector4f boundingBox;
 
     public ObjModel() {
         // set the default material
         _materials.add(new ObjMaterial());
+
+
+    }
+
+    public ObjModel(float[][] vertexPositions, short[][] indices) { // TODO: test this
+        this.positions = vertexPositions;
+        this.faces = new short[indices.length][3][1];
+        for(int i = 0; i < indices.length; i++) {
+            this.faces[i] = new short[][] {indices[i]};
+        }
+
     }
 
     public void castToArrays() {
@@ -46,6 +63,13 @@ public class ObjModel {
         faces = toArray(_faces, short[][].class);
         materials = toArray(_materials, ObjMaterial.class);
         materialIDs = toArray(_materialIDs, Short.class);
+
+        _positions.clear();
+        _normals.clear();
+        _textures.clear();
+        _faces.clear();
+        _materials.clear();
+        _materialIDs.clear();
     }
 
     // TODO: handle this through the <Entity2D> class, to allow for batch rendering, with attributes like position and scale by adding to this calculation
@@ -134,7 +158,6 @@ public class ObjModel {
         @SuppressWarnings("unchecked")
         T[] array = (T[]) Array.newInstance(c, list.size());
         list.toArray(array);
-        list = null;
         return array;
     }
 
@@ -156,11 +179,11 @@ public class ObjModel {
     public Short[] getMaterialIDs() {
         return materialIDs;
     }
-    public Rectangle2D.Float getBoundingBox() {
-        return boundingBox;
+    public Vector4f getBoundingBox() {
+        return new Vector4f(boundingBox);
     }
 
-    public void setBoundingBox(Rectangle2D.Float boundingBox) {
+    public void setBoundingBox(Vector4f boundingBox) {
         this.boundingBox = boundingBox;
     }
 }

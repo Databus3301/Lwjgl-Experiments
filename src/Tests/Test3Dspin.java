@@ -11,6 +11,9 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+
 public class Test3Dspin extends Test {
 
     Entity2D[] entities;
@@ -29,7 +32,7 @@ public class Test3Dspin extends Test {
         positions = model.getPositions();
 
 
-        entities = new Entity2D[1000];
+        entities = new Entity2D[model.getPositions().length + 1];
         // rotating entity
         main = new Entity2D(new Vector2f(0, 0), model, shader);
         main.scale(200);
@@ -62,6 +65,9 @@ public class Test3Dspin extends Test {
         }
 
         entities[0].setPosition(main.getPosition());
+
+        main.translate(camera.getVelocity().mul(dt, new Vector2f()));
+
     }
 
     @Override
@@ -74,6 +80,19 @@ public class Test3Dspin extends Test {
     @Override
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
+
+        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+            camera.setVelocity(-200f, 0);
+        }
+        if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+            camera.setVelocity(+200f, 0);
+        }
+        if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+            camera.setVelocity(0, +200f);
+        }
+        if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+            camera.setVelocity(0, -200f);
+        }
     }
 
 }

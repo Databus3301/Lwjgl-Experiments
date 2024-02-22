@@ -3,6 +3,7 @@ package Render.Entity;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
+import Render.Vertices.Model.ObjModelParser;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
 import org.joml.*;
@@ -167,7 +168,8 @@ public class Entity2D {
     }
 
     /**
-     * Basic form of collision detection often referred to as Axis-Aligned Bounding Box (AABB) collision detection.
+     * Basic form of collision detection often referred to as Axis-Aligned Bounding Box (AABB) collision detection. <br>
+     * Doesn't work for entities with <b>rotation</b> <br> or models with <b>axis</b> other than <b>1:1</b>
      * @param other entity to colide with
      * @return hasCollided
      */
@@ -176,9 +178,40 @@ public class Entity2D {
                 Math.abs(getCenter().y - other.getCenter().y) < Math.abs(scale.y + other.scale.y)*1.4;
     }
 
-    //public boolean
+    /**
+     * This method checks for collision between this entity and another entity using their bounding rectangles.
+     * Unlike the Axis-Aligned Bounding Box (AABB) collision detection method, this method can handle entities with non-1:1 axis ratios.
+     * However, it does not account for entity rotation, which can lead to inaccurate collision detection for rotated entities.
+     *
+     * The method transforms the bounding rectangles of the entities according to their model matrices, and then checks for intersection.
+     * The bounding rectangle is defined by a Vector4f where x and y represent the upper left corner, and z (width) and w (height) represent the dimensions.
+     *
+     * Note: This method can result in false positives for collision when entities are close to each other but not actually intersecting, especially for entities with complex shapes.
+     *
+     * @param other The other Entity2D to check for collision with.
+     * @return true if the bounding rectangles of the entities intersect, false otherwise.
+     */
+    public boolean collideRect(Entity2D other) {
+        Vector4f rect1 = model.getBoundingBox();
+        Vector4f rect2 = other.model.getBoundingBox();
 
+        Vector4f trans1 = calcModelMatrix().transform(new Vector4f(rect1.x, rect1.y, 0, 1));
+        Vector4f trans2 = other.calcModelMatrix().transform(new Vector4f(rect2.x, rect2.y, 0, 1));
+        rect1.x = trans1.x;
+        rect1.y = trans1.y;
+        rect2.x = trans2.x;
+        rect2.y = trans2.y;
 
+        rect1.z *= scale.x;
+        rect1.w *= scale.y;
+        rect2.z *= other.scale.x;
+        rect2.w *= other.scale.y;
+
+        return rect1.x < rect2.x + rect2.z &&
+                rect1.x + rect1.z > rect2.x &&
+                rect1.y < rect2.y + rect2.w &&
+                rect1.y + rect1.w > rect2.y;
+    }
 
     public void accelerate(Vector2f acceleration) {
     	this.velocity.add(acceleration);

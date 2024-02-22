@@ -2,7 +2,9 @@ package Render.Vertices.Model;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -54,13 +56,16 @@ public class ObjModelParser {
 
         model.castToArrays();
 
+        // calculate the bounding box
         Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
         Vector3f max = new Vector3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
-        for(float[] vertex : model._positions) {
+        for(float[] vertex : model.getPositions()) {
             Vector3f v = new Vector3f(vertex[0], vertex[1], vertex[2]);
             min.min(v);
             max.max(v);
         }
+
+        model.setBoundingBox(new Vector4f(min.x, min.y, max.x - min.x, max.y - min.y));
 
         // calculate the scale factor and the offset
         Vector3f scale = new Vector3f(max).sub(min);
@@ -69,7 +74,7 @@ public class ObjModelParser {
         Vector3f offset = new Vector3f(min).add(scale.mul(0.5f));
 
         // normalize the vertices
-        for(float[] vertex : model._positions) {
+        for(float[] vertex : model.getPositions()) {
             for(int i = 0; i < 3; i++) {
                 vertex[i] = (vertex[i] - offset.get(i)) / (scaleFactor)*2;
             }
