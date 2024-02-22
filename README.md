@@ -8,9 +8,12 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - Simple Textures
 - Clear colour
 - .Obj Model Parser 
+  - .Obj Model normalisation
 - .Obj Model Renderer 2D
 - .Obj 3D spinning model
 - Batch Rendering
+- 2D Collision Detection
+- Primitives
 
 ## WOP
 ### Engine
@@ -22,12 +25,10 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] frustum culling
 - [ ] scene loading/saving/parsing
 - [ ] interaction
-- [ ] collision
-- [ ] hitboxes
 - [ ] sound
 - [ ] texture atlas
 - [ ] preload models and textures?
-- [ ] BETTER model normalisation!!
+- [ ] Text rendering
 ### Game
 - [ ] space invaders demo
 
