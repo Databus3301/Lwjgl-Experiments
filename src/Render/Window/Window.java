@@ -133,6 +133,8 @@ public class Window {
 					break;
 				case "normalisation", "n": currentTest = new TestNormalisation();
 					break;
+				case "primitive", "primitives", "p": currentTest = new TestPrimitives();
+					break;
 			}
 		} else // default case
 			currentTest = new Test();

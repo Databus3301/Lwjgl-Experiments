@@ -70,6 +70,13 @@ public class Shader {
             int shaderType = 0; // Vertex = 0 | Fragment = 1;
             while(reader.hasNextLine()) {
                 String data = reader.nextLine();
+
+                if(data.contains("uniform")) {
+                    String[] tokens = data.split("[ ;]");
+                    String name = tokens[2];
+                    m_UniformLocationMap.put(name, null);
+                }
+
                 // Reading code?
                 if(!data.contains("#shader")) {
                     shaders[shaderType] += "\n" + data;
@@ -82,12 +89,6 @@ public class Shader {
                 } else if (data.contains("fragment")) {
                     shaderType = 1;
                     shaders[1] = "";
-                }
-
-                if(data.contains("uniform")) {
-                    String[] tokens = data.split("[ ;]]");
-                    String name = tokens[2];
-                    m_UniformLocationMap.put(name, null);
                 }
             }
             reader.close();
@@ -139,5 +140,10 @@ public class Shader {
 
     public int getID() {
         return m_RendererID;
+    }
+
+    public boolean hasUniform(String name) {
+        return m_UniformLocationMap.containsKey(name);
+
     }
 }

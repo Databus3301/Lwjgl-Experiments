@@ -6,7 +6,12 @@ import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL43;
 
+import java.awt.*;
 import java.lang.reflect.Array;
 
 import static org.lwjgl.opengl.GL43.*;
@@ -115,6 +120,8 @@ public class Renderer {
         }
     }
 
+
+
     public Batch setupBatch(Entity2D[] entities) {
         VertexArray va = new VertexArray();
         int totalVertices = 0;
@@ -172,6 +179,100 @@ public class Renderer {
         shader.setUniformMat4f("uModel", modelMatrix);
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
+        if(shader.hasUniform("uColor"))
+            shader.setUniform4f("uColor",1 ,1 , 1, 1);
+    }
+
+    ///// PRIMITIVES /////
+    public void drawPoint(Vector2f pos, float size, Vector4f color) {
+        defaultShader.bind();
+        SetUniforms(defaultShader, null, color);
+
+        GL43.glPointSize(size);
+        GL43.glBegin(GL_POINTS);
+        GL43.glVertex2f(pos.x, pos.y);
+        GL43.glEnd();
+    }
+    public void drawPoint(Vector2f pos, float size) {
+        drawPoint(pos, size, new Vector4f(1, 1, 1, 1));
+    }
+    public void drawPoint(Vector2f pos) {
+        drawPoint(pos, 2);
+    }
+
+    public void drawPoints(Vector2f[] positions, float size, Vector4f color) {
+        defaultShader.bind();
+        SetUniforms(defaultShader, null, color);
+
+        GL43.glPointSize(size);
+        GL43.glBegin(GL_POINTS);
+        for (Vector2f pos : positions) {
+            GL43.glVertex2f(pos.x, pos.y);
+        }
+        GL43.glEnd();
+    }
+    public void drawPoints(Vector2f[] positions, float size) {
+        drawPoints(positions, size, new Vector4f(1, 1, 1, 1));
+    }
+
+    public void drawLine(Vector2f from, Vector2f to, float size, Vector4f color) {
+        defaultShader.bind();
+        SetUniforms(defaultShader, null, color);
+
+        GL43.glLineWidth(size);
+        GL43.glBegin(GL_LINES);
+        GL43.glVertex2f(from.x , from.y);
+        GL43.glVertex2f(to.x , to.y);
+        GL43.glEnd();
+    }
+    public void drawLine(Vector2f from, Vector2f to, float size) {
+        drawLine(from, to, size, new Vector4f(1, 1, 1, 1));
+    }
+    public void drawLine(Vector2f from, Vector2f to) {
+        drawLine(from, to, 2);
+    }
+
+    public void drawLinesConnected(Vector2f[] positions, float size, boolean loop, Vector4f color) {
+        defaultShader.bind();
+        SetUniforms(defaultShader, null, color);
+
+        GL43.glLineWidth(size);
+        GL43.glBegin(loop ? GL_LINE_LOOP : GL_LINE_STRIP);
+        for (Vector2f pos : positions) {
+            GL43.glVertex2f(pos.x, pos.y);
+        }
+        GL43.glEnd();
+    }
+    public void drawLinesConnected(Vector2f[] positions, float size, boolean loop) {
+        drawLinesConnected(positions, size, loop, new Vector4f(1, 1, 1, 1));
+    }
+    public void drawLinesConnected(Vector2f[] positions, float size) {
+        drawLinesConnected(positions, size, false);
+    }
+    public void drawLinesConnected(Vector2f[] positions) {
+        drawLinesConnected(positions, 2);
+    }
+
+    public void drawRect(Vector2f pos, Vector2f dim, Vector4f color) {
+        defaultShader.bind();
+        SetUniforms(defaultShader, null, color);
+
+        drawLinesConnected(new Vector2f[] {
+                new Vector2f(pos.x, pos.y),
+                new Vector2f(pos.x + dim.x, pos.y),
+                new Vector2f(pos.x + dim.x, pos.y + dim.y),
+                new Vector2f(pos.x, pos.y + dim.y)
+        }, 2, true, color);
+    }
+    public void drawRect(Vector2f pos, Vector2f dim) {
+        drawRect(pos, dim, new Vector4f(1, 1, 1, 1));
+    }
+    ///////////////////////
+    public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
+        SetUniforms(shader, entity);
+        if(shader.hasUniform("uColor")) {
+            shader.setUniform4f("uColor", color.x, color.y, color.z, color.w);
+        }
     }
 
     /**
