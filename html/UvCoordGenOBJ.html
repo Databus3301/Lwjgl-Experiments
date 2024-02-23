@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Uv Coord Getter</title>
+</head>
+<body>
+    <input type="text" id="atlasDimX" placeholder="Atlas X" size="5" />
+    <input type="text" id="atlasDimY" placeholder="Atlas Y" size="5" />
+    <u>Atlas Dims</u><br />
+
+    <input type="text" id="img00" placeholder="X1" size="2" />
+    <input type="text" id="imgX0" placeholder="Y1" size="2" />
+    <input type="text" id="img0Y" placeholder="X2" size="2" />
+    <input type="text" id="imgXY" placeholder="Y2" size="2" />
+    <u>Texture Corners</u><br />
+
+    <button type="button" onclick="
+    atlasDims[0] = document.getElementById('atlasDimX').value;
+    atlasDims[1] = document.getElementById('atlasDimY').value;
+    document.getElementById('Texture Array').innerHTML = pixelsToUv([document.getElementById('img00').value,document.getElementById('imgX0').value,document.getElementById('img0Y').value,document.getElementById('imgXY').value])
+    ">
+        Get Texture
+    </button><br />
+    
+    <textarea id="Texture Array" cols="100" rows="10" placeholder="Your Texture Class Implementaion Will Display Here "></textarea>
+
+    <script>
+        let atlasDims = [];
+        let textureName;
+
+        function pixelsToUv(textureCorners) {
+            let uvTextureCoords = [];
+            uvTextureCoords[0] = ["vt " + textureCorners[0] / atlasDims[0], textureCorners[1] / atlasDims[1]];
+            uvTextureCoords[2] = ["vt " + textureCorners[2] / atlasDims[0], textureCorners[3] / atlasDims[1]];
+            uvTextureCoords[3] = [uvTextureCoords[0][0], uvTextureCoords[2][1]];
+            uvTextureCoords[1] = [uvTextureCoords[2][0], uvTextureCoords[0][1]];
+
+            return (uvTextureCoords.join('\n').replaceAll(',', ' '));
+        }
+    </script>
+</body>
+</html>
