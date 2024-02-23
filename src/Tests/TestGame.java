@@ -6,20 +6,22 @@ import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.glClearColor;
 
-public class TestSquare extends Test {
+public class TestGame extends Test {
     Entity2D entity;
+    int livePoints = 0;
     Entity2D entity2;
     Shader shader;
     Texture texture;
-    final int DIM = 100;
+    final int DIM = 10;
     Entity2D[] entity2DS = new Entity2D[DIM * DIM];
     Vector2f scale = new Vector2f(4, 4);
 
-    public TestSquare() {
+    public TestGame() {
         super();
         shader = new Shader("res/shaders/texturing.shader");
         texture = new Texture("res/textures/woodCrate.png", 0);
@@ -28,8 +30,10 @@ public class TestSquare extends Test {
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         entity = new Entity2D(new Vector2f(), model, texture, shader);
         entity.scale(scale);
-
-        int entityIndex = 0;
+        livePoints = 500;
+        entity2 = new Entity2D(new Vector2f(200, 200), model, texture, shader);
+        entity2.scale(scale);
+       /* int entityIndex = 0;
         int spacing = 15;
         for (int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
@@ -39,6 +43,8 @@ public class TestSquare extends Test {
 
             }
         }
+
+        */
     }
 
     @Override
@@ -46,15 +52,20 @@ public class TestSquare extends Test {
         super.OnUpdate(dt);
         entity.translate(new Vector2f(entity.getVelocity()).mul(dt));
         Vector2f v = new Vector2f(entity.getPosition());
-        for (int i = 0; i < entity2DS.length; i++) {
+        entity2.translate(new Vector2f(v.sub(entity2.getPosition()).normalize()).mul(dt).mul(new Vector2f(100, 100)));
+       /* for (int i = 0; i < entity2DS.length; i++) {
             Vector2f v2 = new Vector2f(entity.getPosition());
             if (entity2DS[i] == null) continue;
             entity2DS[i].translate(new Vector2f(v2.sub(entity2DS[i].getPosition()).normalize()).mul(dt).mul(new Vector2f(100, 100)));
             if (entity.collideRect(entity2DS[i])) {
-                entity2DS[i]= null;
+                entity2DS[i] = null;
+                livePoints -= 1;
             }
         }
-
+*/
+        if (entity.collideRect(entity2)) {
+            livePoints -= 1;
+        }
     }
 
     @Override
@@ -62,7 +73,10 @@ public class TestSquare extends Test {
         super.OnRender();
         renderer.drawEntity2D(entity);
         renderer.drawEntities2D(entity2DS);
+       // renderer.drawEntity2D(entity2);
         glClearColor(0.435f, 0.639f, 0.271f, 1);
+        //renderer.drawRect(new Vector2f(-1280,440), new Vector2f(500,25), new Vector4f(1,0,0,1));
+        renderer.fillRect(new Vector2f(-1280, 615), new Vector2f(livePoints, 25), new Vector4f(1, 0, 0, 1));
     }
 
     @Override
@@ -81,4 +95,21 @@ public class TestSquare extends Test {
             entity.setVelocity(new Vector2f(200, 0));
         }
     }
+
+    public class Bullet {
+        Vector2f position;
+        Vector2f velocity;
+        Entity2D shotBy;
+        Texture texture;
+        Shader shader;
+
+        public Bullet(Vector2f position, Vector2f velocity, Entity2D shotBy, Texture texture, Shader shader) {
+            this.shotBy = shotBy;
+            this.position = position;
+            this.velocity = velocity;
+            this.texture = texture;
+            this.shader = shader;
+        }
+    }
 }
+

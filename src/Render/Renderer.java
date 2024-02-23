@@ -267,6 +267,17 @@ public class Renderer {
     public void drawRect(Vector2f pos, Vector2f dim) {
         drawRect(pos, dim, new Vector4f(1, 1, 1, 1));
     }
+    public void fillRect(Vector2f pos, Vector2f dim, Vector4f color) {
+        defaultShader.bind();
+        SetUniforms(defaultShader, null, color);
+
+        GL43.glBegin(GL_QUADS);
+        GL43.glVertex2f(pos.x, pos.y);
+        GL43.glVertex2f(pos.x + dim.x, pos.y);
+        GL43.glVertex2f(pos.x + dim.x, pos.y + dim.y);
+        GL43.glVertex2f(pos.x, pos.y + dim.y);
+        GL43.glEnd();
+    }
     ///////////////////////
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);
