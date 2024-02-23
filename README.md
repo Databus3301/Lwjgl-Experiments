@@ -32,7 +32,6 @@ Documenting my learning process of Open GL and LWJGL for a school project
 ### Game
 - [ ] space invaders demo
 
-_
 - [ ] Lobby
   - [ ] Item-Stash
   - [ ] Character Selection
@@ -60,5 +59,5 @@ Tutorials: <br>
 [GamesWithGabe - Making a 2D game in java](https://www.youtube.com/watch?v=VyKE7vz65rY&list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE)
 
 Assets: <br>
-[Font](https://opengameart.org/content/ascii-bitmap-font-oldschool#comment-105057)
+[Font](https://opengameart.org/content/ascii-bitmap-font-oldschool#comment-105057) <br>
 [Camera Model](https://rigmodels.com/model.php?view=Camera-3d-model__7WSLWPG7ZGVUXV18PUHLN2G4N)
