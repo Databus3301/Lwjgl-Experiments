@@ -24,12 +24,10 @@
         Get Texture
     </button><br />
     
-    <textarea id="Texture Array" cols="100" rows="10" placeholder="Your Texture Class Implementaion Will Display Here "></textarea>
+    <textarea id="Texture Array" cols="100" rows="10" readonly="true" placeholder="Your Texture Class Implementaion Will Display Here "></textarea>
 
     <script>
         let atlasDims = [];
-        let textureName;
-
         function pixelsToUv(textureCorners) {
             let uvTextureCoords = [];
             uvTextureCoords[0] = ["vt " + textureCorners[0] / atlasDims[0], textureCorners[1] / atlasDims[1]];

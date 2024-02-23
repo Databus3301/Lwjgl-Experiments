@@ -18,8 +18,8 @@ public class TestTextures extends Test {
         shader = new Shader("res/shaders/texturing.shader");
         shader.bind();
 
-        Texture texture = new Texture("res/textures/fonts/oldschool_white.png", 0);
-        //Texture texture = new Texture("res/textures/woodCrate.png", 0);
+        //Texture texture = new Texture("res/textures/fonts/oldschool_white.png", 0);
+        Texture texture = new Texture("res/textures/woodCrate.png", 0);
         shader.setUniform1i("u_Texture", 0);
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");

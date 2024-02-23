@@ -1,6 +1,8 @@
 #shader vertex
-#version 330 core   
-   
+#version 300 es
+
+precision highp float;
+
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec2 texCoord;
 
@@ -13,12 +15,14 @@ uniform mat4 uModel;
 void main()   
 {   
     gl_Position = uProj * uView * uModel * position;
-    v_TexCoord = texCoord*2;
+    v_TexCoord = texCoord;
 };
 
 
 #shader fragment
-#version 430 core
+#version 300 es
+
+precision highp float;
 
 layout (location = 0) out vec4 color;
 
