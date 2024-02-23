@@ -13,7 +13,7 @@ uniform mat4 uModel;
 void main()   
 {   
     gl_Position = uProj * uView * uModel * position;
-    v_TexCoord = texCoord;
+    v_TexCoord = texCoord*2;
 };
 
 

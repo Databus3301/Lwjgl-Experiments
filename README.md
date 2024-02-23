@@ -53,7 +53,11 @@ _
 - [x] …
 
 ## Resources
+Tutorials: <br>
 [Open Gl Doc](https://docs.gl) <br>
 [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection) <br>
 [The Cherno - OpenGl series on YouTube](https://www.youtube.com/watch?v=W3gAzLwfIP0&list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2) <br>
 [GamesWithGabe - Making a 2D game in java](https://www.youtube.com/watch?v=VyKE7vz65rY&list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE)
+
+Assets: <br>
+[Font](https://opengameart.org/content/ascii-bitmap-font-oldschool#comment-105057)

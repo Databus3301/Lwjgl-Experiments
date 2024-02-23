@@ -40,7 +40,7 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         STBImage.stbi_set_flip_vertically_on_load(true);
-        ByteBuffer image = STBImage.stbi_load(path, m_Width, m_Height, channels, 0);
+        ByteBuffer image = STBImage.stbi_load(path, m_Width, m_Height, channels, 4);
 
 
         if(image != null) {
