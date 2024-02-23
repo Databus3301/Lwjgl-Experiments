@@ -69,13 +69,13 @@ public class TestObjModelParser extends Test {
         }
 
         System.out.println("materialIDs:");
-        for(int id : model._materialIDs) {
+        for(short id : model.getMaterialIDs()) {
             System.out.print("  " + id);
         }
         System.out.println("");
 
         System.out.println("materials:");
-        for(ObjMaterial material : model._materials) {
+        for(ObjMaterial material : model.getMaterials()) {
             System.out.println("_".repeat(42));
             System.out.println("  name: " + material.name);
             System.out.print("  ambient: ");
@@ -116,15 +116,17 @@ public class TestObjModelParser extends Test {
             System.out.println("  alphaTextureMap: " + material.alphaTextureMap);
             System.out.println("  reflectionMap: " + material.reflectionMap);
 
-            int[] iB = model.getIndexBufferData();
-            System.out.println("indexBuffer:");
-            for (int i = 0; i < iB.length; i++) {
-                if(i % 3 == 0)
-                    System.out.print("\n");
-                System.out.print(iB[i] + "\t\t");
-            }
-            System.out.println("");
+
         }
+
+//        int[] iB = model.getIndexBufferData();
+//        System.out.println("indexBuffer:");
+//        for (int i = 0; i < iB.length; i++) {
+//            if(i % 3 == 0)
+//                System.out.print("\n");
+//            System.out.print(iB[i] + "\t\t");
+//        }
+//        System.out.println("");
 
 
 

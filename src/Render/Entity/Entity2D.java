@@ -80,11 +80,11 @@ public class Entity2D {
     }
 
     public Entity2D instantiate() { // TODO: test this
-        Entity2D e = new Entity2D(position, model, texture, shader);
-        e.scale = scale;
+        Entity2D e = new Entity2D(new Vector2f(position), model, texture, shader);
+        e.scale = new Vector2f(scale);
         e.velocity = new Vector2f(velocity);
         e.isStatic = isStatic;
-        e.rotation = rotation;
+        e.rotation = new Quaternionf(rotation);
         e.center = new Vector2f(center);
 
         return e;

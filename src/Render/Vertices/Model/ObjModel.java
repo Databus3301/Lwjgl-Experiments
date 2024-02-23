@@ -18,14 +18,14 @@ public class ObjModel {
     public ArrayList<short[][]> _faces = new ArrayList<>(); // indices
 
     public ArrayList<ObjMaterial> _materials = new ArrayList<>();
-    public ArrayList<Short> _materialIDs = new ArrayList<>();
+    public ArrayList<short[]> _materialIDs = new ArrayList<>();
 
     private float[][] positions;
     private float[][] normals;
     private float[][] textures;
     private short[][][] faces;
     private ObjMaterial[] materials;
-    private Short[] materialIDs;
+    private short[] materialIDs;
 
     ///
     private int[] indices;
@@ -43,8 +43,6 @@ public class ObjModel {
     public ObjModel() {
         // set the default material
         _materials.add(new ObjMaterial());
-
-
     }
 
     public ObjModel(float[][] vertexPositions, short[][] indices) { // TODO: test this
@@ -53,7 +51,6 @@ public class ObjModel {
         for(int i = 0; i < indices.length; i++) {
             this.faces[i] = new short[][] {indices[i]};
         }
-
     }
 
     public void castToArrays() {
@@ -62,7 +59,13 @@ public class ObjModel {
         textures = toArray(_textures, float[].class);
         faces = toArray(_faces, short[][].class);
         materials = toArray(_materials, ObjMaterial.class);
-        materialIDs = toArray(_materialIDs, Short.class);
+        short[][] IDs = toArray(_materialIDs, short[].class);
+        materialIDs = new short[IDs.length];
+        for(int i = 0; i < IDs.length; i++) {
+            materialIDs[i] = IDs[i][0];
+        }
+
+
 
         _positions.clear();
         _normals.clear();
@@ -176,7 +179,7 @@ public class ObjModel {
     public ObjMaterial[] getMaterials() {
         return materials;
     }
-    public Short[] getMaterialIDs() {
+    public short[] getMaterialIDs() {
         return materialIDs;
     }
     public Vector4f getBoundingBox() {

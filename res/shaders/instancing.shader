@@ -16,7 +16,7 @@ uniform mat4 uModel;
 void main()
 {
         mat4 model = uModel * instanceMatrix;
-        gl_Position = uProj * uView * model * vec4(position, 1.0);
+        gl_Position = uProj * uView * model * vec4(position, 1.0f);
         v_position = position.xyz + model[0].xyz + model[3].xyz;
 }
 
@@ -31,5 +31,5 @@ in vec3 v_position;
 
 void main ()
 {
-        color = vec4(v_position.xy+0.2, 1.0, 0.2);
+        color = vec4(v_position.xy+0.2f, 1.0f, 0.2f);
 };

@@ -14,7 +14,7 @@ public class ObjModelParser {
         if(!path.startsWith("res/models/")) path = "res/models/" + path;
 
         ObjModel model = new ObjModel();
-        short currentMaterialID = 0;
+        short[] currentMaterialID = new short[]{0};
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
@@ -42,7 +42,7 @@ public class ObjModelParser {
                         for(ObjMaterial material : model._materials) {
                             if (material == null) continue;
                             if (material.name.equals(parts[1])) {
-                                currentMaterialID = count;
+                                currentMaterialID[0] = count;
                                 break; // found index
                             }
                             count++;

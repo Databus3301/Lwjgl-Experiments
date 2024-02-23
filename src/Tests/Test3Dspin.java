@@ -35,7 +35,7 @@ public class Test3Dspin extends Test {
         entities = new Entity2D[model.getPositions().length + 1];
         // rotating entity
         main = new Entity2D(new Vector2f(0, 0), model, shader);
-        main.scale(200);
+        main.scale(300);
         // mark entity center
         entities[0] = new Entity2D(new Vector2f(), point);;
         entities[0].scale(2);

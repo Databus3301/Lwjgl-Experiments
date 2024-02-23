@@ -14,7 +14,7 @@ out vec3 v_position;
 void main()
 {
     gl_Position =  uProj * uView * uModel * position;
-    v_position = gl_Position.xyz +1;
+    v_position = gl_Position.xyz +1.0f;
 };
 
 #shader fragment
@@ -28,5 +28,5 @@ in vec3 v_position;
 
 void main ()
 {
-    color = vec4(v_position, 0.5);
+    color = vec4(v_position, 0.5f);
 };

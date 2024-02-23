@@ -31,12 +31,12 @@ public class TestMultipleDrawCalls extends TestTextures {
         shader.bind();
 
         // offsetting the <model> matrix
-        square.translate(offset1);
-        renderer.drawEntity2D(square);
+        e.translate(offset1);
+        renderer.drawEntity2D(e);
 
         // offsetting the <model> matrix
-        square.translate(offset2);
-        renderer.drawEntity2D(square);
+        e.translate(offset2);
+        renderer.drawEntity2D(e);
     }
 
 

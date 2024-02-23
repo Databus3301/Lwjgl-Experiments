@@ -23,7 +23,7 @@ public class TestObjRendering extends Test {
         shader = new Shader("res/shaders/default.shader");
         shader.bind();
 
-        ObjModel model = ObjModelParser.parseOBJ("circle.obj");
+        ObjModel model = ObjModelParser.parseOBJ("cam.obj");
 
         entity = new Entity2D(new Vector2f(0,0), model, shader);
         entity.setScale(new Vector2f(50f, 50f));
