@@ -19,10 +19,9 @@ public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
     private final int maxLP = 15000;
-    private Entity2D target;
+    private final Entity2D target;
     private final Shader shader;
-    private Texture entityTexture;
-    private Texture projectileTexture;
+    private final Texture projectileTexture;
     private final ArrayList<Entity2D> enemies = new ArrayList<>();
     private float timeBetweenShot = 0;
     private Projectile proj;
@@ -34,7 +33,7 @@ public class TestGame extends Test {
         int numOfEnemies = 1000;
         float scale = 2f;
 
-        entityTexture = new Texture("res/textures/woodCrate.png", 0);
+        Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
         projectileTexture = new Texture("res/textures/fireball.png", 0);
 
         shader = new Shader("res/shaders/texturing.shader");
@@ -49,7 +48,7 @@ public class TestGame extends Test {
         target.scale(scale);
 
         for (int i = 0; i < numOfEnemies; i++) {
-            enemies.add(new Entity2D(new Vector2f((float) Math.random()*Window.dim.x, (float) Math.random()*Window.dim.y), model, entityTexture, shader));
+            enemies.add(new Entity2D(new Vector2f((float) Math.random()*Window.dim.x-Window.dim.x/2f, (float) Math.random()*Window.dim.y-Window.dim.y/2f), model, entityTexture, shader));
             enemies.get(i).scale(scale);
         }
 
@@ -74,7 +73,7 @@ public class TestGame extends Test {
             if (enemy == null) continue;
             // move enemy to player
             Vector2f v2 = new Vector2f(player.getPosition());
-            enemy.translate(new Vector2f(v2.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(100, 100)));
+            enemy.translate(new Vector2f(v2.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(250, 250)));
             // damage player
             if (player.collideRect(enemy) && livePoints > 0)
                     livePoints -= 1;
@@ -95,10 +94,10 @@ public class TestGame extends Test {
         }
 
         timeBetweenShot += dt;
-        if (timeBetweenShot > 1) { // shoot every second
+        if (timeBetweenShot > 0.2f) { // shoot every second/5
             // direction to target
             Vector2f v3 = new Vector2f(target.getPosition());
-            Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(100, 100));
+            Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(300, 300));
             // shoot new projectile
             proj = new Projectile(new Vector2f(player.getPosition().x, player.getPosition().y), player.getModel(), projectileTexture, shader, player, projectileVelocity);
             proj.scale(20);

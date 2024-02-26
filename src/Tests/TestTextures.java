@@ -1,16 +1,24 @@
 package Tests;
 
 import Render.Entity.Entity2D;
+import Render.Entity.Texturing.Font;
 import Render.Shader.Shader;
 import Render.Entity.Texturing.Texture;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 
+import static org.lwjgl.opengl.GL11C.glClearColor;
+
 public class TestTextures extends Test {
 
     protected Entity2D e;
+    protected String s = "Hallo Cornelius!";
+    protected int index = 0;
     protected Shader shader;
+
+    Font font = new Font(new Vector2f(128, 64), 32, 18, 5, 18, 7, 9, 0);
+
 
     public TestTextures() {
         super();
@@ -18,31 +26,26 @@ public class TestTextures extends Test {
         shader = new Shader("res/shaders/texturing.shader");
         shader.bind();
 
-        //Texture texture = new Texture("res/textures/fonts/oldschool_white.png", 0);
-        Texture texture = new Texture("res/textures/cam2.jpg", 0);
-        Texture texture2 = new Texture("res/textures/cam3.jpg", 1);
+        Texture texture = new Texture("res/textures/fonts/oldschool_black.png", 0);
+        //Texture texture = new Texture("res/textures/cam2.jpg", 0);
 
-        ObjModel model = ObjModelParser.parseOBJ("res/models/cam.obj");
+        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         e = new Entity2D(new Vector2f(0, 0), model, texture, shader);
         e.scale(300);
+
     }
 
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        //square.rotate(10f * dt, 0);
-        e.rotate(10f * dt, 1);
-        //square.rotate(10f * dt, 2);
-
+        //e.rotate(10f * dt, 1);
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
-        shader.setUniform1i("u_Texture", 1);
-        Entity2D e2 = e.instantiate();
-        renderer.drawEntity2D(e2);
-        shader.setUniform1i("u_Texture", 0);
+
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         renderer.drawEntity2D(e);
     }
 

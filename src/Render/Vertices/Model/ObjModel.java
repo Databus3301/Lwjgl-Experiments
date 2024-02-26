@@ -189,4 +189,7 @@ public class ObjModel {
     public void setBoundingBox(Vector4f boundingBox) {
         this.boundingBox = boundingBox;
     }
+    public void setTextures(float[][] textures) {
+        this.textures = textures;
+    }
 }

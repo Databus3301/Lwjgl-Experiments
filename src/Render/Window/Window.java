@@ -166,6 +166,9 @@ public class Window {
                 case "game", "g":
                     currentTest = new TestGame();
                     break;
+                case "font", "f":
+                    currentTest = new TestFont();
+                    break;
             }
         } else // default case
             currentTest = new Test();
