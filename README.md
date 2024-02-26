@@ -30,6 +30,8 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] preload models and textures?
 - [ ] Text rendering
 - [ ] mouse input
+- [ ] double buffering
+- [ ] material texture loading
 ### Game
 - [ ] space invaders demo
 

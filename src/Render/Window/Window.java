@@ -76,6 +76,20 @@ public class Window {
             if (currentTest != null) currentTest.OnKeyInput(window, key, scancode, action, mods);
         });
 
+        // maintain starting aspect ratio of viewport on resize
+        glfwSetFramebufferSizeCallback(windowPtr, (window, width, height) -> {
+            float targetAspect = (float) dim.x / dim.y;
+            dim.x = width;
+            dim.y = height;
+            float newAspect =  (float) width / height;
+            if (newAspect > targetAspect) {
+                dim.x = (int) (dim.y * targetAspect);
+            } else {
+                dim.y = (int) (dim.x / targetAspect);
+            }
+            glViewport(0, 0, dim.x, dim.y);
+        });
+
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -102,7 +116,6 @@ public class Window {
         glfwShowWindow(windowPtr);
 
         GL.createCapabilities();
-
     }
 
     public void initTest() {
@@ -156,6 +169,13 @@ public class Window {
             }
         } else // default case
             currentTest = new Test();
+
+        glfwSetCursorPosCallback(windowPtr, (window, xpos, ypos) -> {
+            currentTest.mousePos.x = (float) xpos;
+            currentTest.mousePos.y = (float) ypos;
+        });
+        glfwSetMouseButtonCallback(windowPtr, (window, button, action, mods) -> currentTest.OnKeyInput(window, button, -1, action, mods));
+
     }
 
     public void run() {
@@ -224,5 +244,8 @@ public class Window {
 
     public static Window getWindow() {
         return window;
+    }
+    public static long getWindowPtr() {
+        return window.windowPtr;
     }
 }

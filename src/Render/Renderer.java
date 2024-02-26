@@ -5,14 +5,12 @@ import Render.Entity.Entity2D;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
+import Render.Window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL43;
 
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL43.*;
@@ -275,6 +273,7 @@ public class Renderer {
     public void drawRect(Vector2f pos, Vector2f dim) {
         drawRect(pos, dim, new Vector4f(1, 1, 1, 1));
     }
+
     public void fillRect(Vector2f pos, Vector2f dim, Vector4f color) {
         defaultShader.bind();
         SetUniforms(defaultShader, null, color);
@@ -286,6 +285,10 @@ public class Renderer {
         GL43.glVertex2f(pos.x, pos.y + dim.y);
         GL43.glEnd();
     }
+    public void fillRect(Vector2f pos, Vector2f dim) {
+        fillRect(pos, dim, new Vector4f(1, 1, 1, 1));
+    }
+
     ///////////////////////
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);
@@ -307,17 +310,26 @@ public class Renderer {
             camera.getShader().bind();
         else
             defaultShader.bind();
-
-
     }
 
-    public void Clear() {
+    public void clear() {
          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
     }
+
+    public Vector2f screenToWorldCoords(Vector2f screenCoords) {
+        // copy vec
+        Vector4f projectedCoords = new Vector4f(screenCoords, 0, 1);
+        // normalize
+        projectedCoords.x = (projectedCoords.x / Window.dim.x) * 2 - 1;
+        projectedCoords.y = (projectedCoords.y / Window.dim.y) * -2 + 1;
+        // "3D to 2D" (inverse of projection matrix "2D to 3D")
+        projectedCoords.mul(camera.getProjectionMatrix().invert(new Matrix4f()));
+        return new Vector2f(projectedCoords.x, projectedCoords.y);
+    }
+
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
-
     public void setCurrentShader(Shader currentShader) {
         if(!this.currentShader.equals(currentShader)) {
             this.currentShader = currentShader;

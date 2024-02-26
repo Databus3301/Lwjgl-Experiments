@@ -1,6 +1,7 @@
 package Tests;
 
 import Render.Renderer;
+import org.joml.Vector2f;
 
 // TODO: rework into interface?
 
@@ -11,6 +12,7 @@ Tests are used to test the functionality of the engine.
 public class Test {
 
     public static Renderer renderer;
+    public Vector2f mousePos = new Vector2f(0, 0);
 
     public Test() {
         renderer = new Renderer();
@@ -18,7 +20,7 @@ public class Test {
     public void OnUpdate(float dt) {
     }
     public void OnRender() {
-        renderer.Clear();
+        renderer.clear();
     }
     public void OnClose() {}
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {}
