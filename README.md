@@ -54,10 +54,19 @@ Documenting my learning process of Open GL and LWJGL for a school project
 
 ## Resources
 Tutorials: <br>
+[LWJGL - Get Started](https://www.lwjgl.org/guide) <br>
 [Open Gl Doc](https://docs.gl) <br>
+[learnopengl.com | blog](https://learnopengl.com/) <br>
 [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection) <br>
+[LWJGL3-demos](https://github.com/LWJGL/lwjgl3-demos) <br>
 [The Cherno - OpenGl series on YouTube](https://www.youtube.com/watch?v=W3gAzLwfIP0&list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2) <br>
-[GamesWithGabe - Making a 2D game in java](https://www.youtube.com/watch?v=VyKE7vz65rY&list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE)
+[GamesWithGabe - Making a 2D game in java](https://www.youtube.com/watch?v=VyKE7vz65rY&list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE) <br>
+[Acerola](https://www.youtube.com/@Acerola_t) <br>
+[Vercidium](https://www.youtube.com/@Vercidium) <br>
+[Brendan Galea - The Math behind (most) 3D games - Perspective Projection](https://www.youtube.com/watch?v=Do_vEjd6gF0) <br>
+[pikuma - Math for Game Developers: Why do we use 4x4 Matrices in 3D Graphics?](https://www.youtube.com/watch?v=Do_vEjd6gF0) <br>
+[3Blue1Brown: Linear Algebra](https://www.youtube.com/playlist?list=PL0-GT3co4r2y2YErbmuJw2L5tW4Ew2O5B) <br>`
+
 
 Assets: <br>
 [Font](https://opengameart.org/content/ascii-bitmap-font-oldschool#comment-105057) <br>
