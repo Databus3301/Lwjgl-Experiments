@@ -179,9 +179,8 @@ public class Window {
     }
 
     public void run() {
-        // This line is critical for LWJGL's interoperation with GLFW's OpenGL context
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //
 
         Calendar test = Calendar.getInstance();
         int lastSecond = test.get(Calendar.SECOND);

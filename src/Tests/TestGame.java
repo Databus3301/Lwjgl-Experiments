@@ -24,7 +24,6 @@ public class TestGame extends Test {
     private Texture entityTexture;
     private Texture projectileTexture;
     private final ArrayList<Entity2D> enemies = new ArrayList<>();
-    private final Vector2f scale = new Vector2f(4, 4);
     private float timeBetweenShot = 0;
     private Projectile proj;
 
@@ -32,8 +31,11 @@ public class TestGame extends Test {
     public TestGame() {
         super();
 
+        int numOfEnemies = 1000;
+        float scale = 2f;
+
         entityTexture = new Texture("res/textures/woodCrate.png", 0);
-        projectileTexture = new Texture("res/models/square.png", 0);
+        projectileTexture = new Texture("res/textures/fireball.png", 0);
 
         shader = new Shader("res/shaders/texturing.shader");
         shader.setUniform1i("u_Texture", 0);
@@ -45,9 +47,6 @@ public class TestGame extends Test {
 
         target = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
         target.scale(scale);
-
-        int numOfEnemies = 100;
-
 
         for (int i = 0; i < numOfEnemies; i++) {
             enemies.add(new Entity2D(new Vector2f((float) Math.random()*Window.dim.x, (float) Math.random()*Window.dim.y), model, entityTexture, shader));

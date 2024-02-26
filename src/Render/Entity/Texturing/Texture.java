@@ -30,7 +30,6 @@ public class Texture {
         m_Height = BufferUtils.createIntBuffer(1);
         channels = BufferUtils.createIntBuffer(1);
 
-
         m_RendererID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
