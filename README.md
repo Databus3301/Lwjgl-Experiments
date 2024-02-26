@@ -54,11 +54,13 @@ Documenting my learning process of Open GL and LWJGL for a school project
 
 ## Resources
 Tutorials: <br>
+<sub> text </sub>
 [LWJGL - Get Started](https://www.lwjgl.org/guide) <br>
 [Open Gl Doc](https://docs.gl) <br>
 [learnopengl.com | blog](https://learnopengl.com/) <br>
 [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection) <br>
 [LWJGL3-demos](https://github.com/LWJGL/lwjgl3-demos) <br>
+<sub> videos </sub>
 [The Cherno - OpenGl series on YouTube](https://www.youtube.com/watch?v=W3gAzLwfIP0&list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2) <br>
 [GamesWithGabe - Making a 2D game in java](https://www.youtube.com/watch?v=VyKE7vz65rY&list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE) <br>
 [Acerola](https://www.youtube.com/@Acerola_t) <br>
