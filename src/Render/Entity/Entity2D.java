@@ -192,6 +192,8 @@ public class Entity2D {
      * @return true if the bounding rectangles of the entities intersect, false otherwise.
      */
     public boolean collideRect(Entity2D other) {
+        if(other == null || other.model == null || model == null) return false;
+
         Vector4f rect1 = model.getBoundingBox();
         Vector4f rect2 = other.model.getBoundingBox();
 
