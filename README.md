@@ -57,7 +57,7 @@ Tutorials: <br>
 <sub> text </sub>
 [LWJGL - Get Started](https://www.lwjgl.org/guide) <br>
 [Open Gl Doc](https://docs.gl) <br>
-[learnopengl.com | blog](https://learnopengl.com/) <br>
+[learnopengl.com | ausführliches Buch](https://learnopengl.com/) <br>
 [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection) <br>
 [LWJGL3-demos](https://github.com/LWJGL/lwjgl3-demos) <br>
 <sub> videos </sub>
