@@ -29,6 +29,7 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] texture atlas
 - [ ] preload models and textures?
 - [ ] Text rendering
+- [ ] mouse input
 ### Game
 - [ ] space invaders demo
 
