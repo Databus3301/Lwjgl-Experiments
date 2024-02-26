@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL43;
 
 import java.awt.*;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL43.*;
 
@@ -117,6 +118,13 @@ public class Renderer {
         for (Entity2D entity : entities) {
             if(entity != null)
                 drawEntity2D(entity);
+        }
+    }
+    public void drawEntities2D(ArrayList<Entity2D> entities) {
+        for (Entity2D entity : entities) {
+            if(entity != null) {
+                drawEntity2D(entity);
+            }
         }
     }
 
