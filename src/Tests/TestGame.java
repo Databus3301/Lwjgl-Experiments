@@ -22,6 +22,7 @@ public class TestGame extends Test {
     private final Entity2D target;
     private final Shader shader;
     private final Texture projectileTexture;
+    private final ArrayList<Projectile> projectiles = new ArrayList<>();
     private final ArrayList<Entity2D> enemies = new ArrayList<>();
     private float timeBetweenShot = 0;
     private Projectile proj;
@@ -99,8 +100,10 @@ public class TestGame extends Test {
             Vector2f v3 = new Vector2f(target.getPosition());
             Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(300, 300));
             // shoot new projectile
-            proj = new Projectile(new Vector2f(player.getPosition().x, player.getPosition().y), player.getModel(), projectileTexture, shader, player, projectileVelocity);
-            proj.scale(20);
+            projectiles.add(new Projectile(new Vector2f(player.getPosition().x, player.getPosition().y), player.getModel(), projectileTexture, shader, player, projectileVelocity));
+            for (int i = 0; i < projectiles.size(); i++) {
+                projectiles.get(i).scale(20);
+            }
             // reset timer
             timeBetweenShot = 0;
         }
