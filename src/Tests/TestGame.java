@@ -66,9 +66,7 @@ public class TestGame extends Test {
             //target.translate(new Vector2f(v.sub(target.getPosition()).normalize()).mul(dt).mul(new Vector2f(100, 100)));
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
-        // move projectile
-        if (proj != null)
-            proj.translate(proj.getVelocity().mul(dt, new Vector2f()));
+
 
         for (Entity2D enemy : enemies) {
             if (enemy == null) continue;
@@ -85,14 +83,18 @@ public class TestGame extends Test {
              System.exit(0);
         }
 
-        // damage enemies
-        if (proj != null){
-            for (int i = 0; i < enemies.size(); i++) {
-                if (proj.collideRect(enemies.get(i))) {
-                  enemies.set(i,null);
+        // damage enemies and move projectiles
+        for (int j = 0; j < projectiles.size(); j++) {
+            if (projectiles.get(j) != null){
+                for (int i = 0; i < enemies.size(); i++) {
+                    if (projectiles.get(j).collideRect(enemies.get(i))) {
+                        enemies.set(i,null);
+                    }
                 }
+                projectiles.get(j).translate(projectiles.get(j).getVelocity().mul(dt, new Vector2f()));
             }
         }
+
 
         timeBetweenShot += dt;
         if (timeBetweenShot > 0.2f) { // shoot every second/5
@@ -118,8 +120,7 @@ public class TestGame extends Test {
         renderer.drawEntity2D(player);
         renderer.drawEntities2D(enemies);
         renderer.drawEntity2D(target);
-        if (proj != null)
-            renderer.drawEntity2D(proj);
+        renderer.drawProjectiles(projectiles);
 
         // live points
         renderer.fillRect(new Vector2f(-Window.dim.x/2f, Window.dim.y/2f-25), new Vector2f(player.getScale().x * ((float) maxLP /Window.dim.x), 25), new Vector4f(1, 0, 0, 1));

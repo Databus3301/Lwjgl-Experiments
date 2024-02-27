@@ -2,6 +2,7 @@ package Render;
 
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
+import Render.Entity.Projectile;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
@@ -123,9 +124,16 @@ public class Renderer {
             if(entity != null) {
                 drawEntity2D(entity);
             }
+
         }
     }
-
+public void drawProjectiles(ArrayList<Projectile> projectiles) {
+        for (Projectile projectile : projectiles) {
+            if(projectile != null) {
+                drawEntity2D(projectile);
+            }
+        }
+    }
 
 
     public Batch setupBatch(Entity2D[] entities) {
