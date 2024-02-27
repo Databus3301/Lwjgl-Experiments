@@ -3,9 +3,11 @@ package Render;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
 import Render.Entity.Projectile;
+import Render.Entity.Texturing.Font;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
+import Render.Vertices.Model.ObjModelParser;
 import Render.Window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -18,12 +20,12 @@ import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer {
 
-    public Shader defaultShader, currentShader;
+    public Shader currentShader;
     Camera camera;
 
     public Renderer() {
-        defaultShader = currentShader = new Shader("res/shaders/default.shader");
-        defaultShader.forceBind();
+        currentShader = new Shader("res/shaders/default.shader");
+        Shader.DEFAULT.forceBind();
         camera = new Camera();
     }
     public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
@@ -42,6 +44,46 @@ public class Renderer {
         ib.bind();
 
         glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
+    }
+
+    public void drawText(String text, Font font, Shader shader, Vector2f pos, Vector2f scale) {
+        shader.bind();
+
+        float characterAspect = font.getCharacterAspect();
+        scale.x *= characterAspect;
+
+        Entity2D[] eChars = new Entity2D[text.length()];
+        ObjModel base = ObjModel.SQUARE.clone();
+
+//        VertexArray va = new VertexArray();
+//        va.addBuffer(base.getVertexBuffer(), Vertex.getLayout());
+//        IndexBuffer ib = base.getIndexBuffer();
+
+        int xOffset = 0;
+
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '\n') {
+                pos.y -= scale.y/characterAspect*2;
+                pos.x -= (((xOffset+1f) * scale.x*2));
+                xOffset = 0;
+                continue;
+            }
+
+            ObjModel model = base.clone();
+            eChars[i] = new Entity2D(new Vector2f(pos.x + i * scale.x*2, pos.y), model, font.getTexture(), shader);
+            eChars[i].scale(scale);
+            eChars[i].getModel().setTextures(font.getCharTexCoords(text.charAt(i)));
+            xOffset++;
+        }
+
+        //drawEntities2D(eChars);
+        Batch batch = setupBatch(eChars);
+        drawBatch(batch);
+    }
+    
+    public void drawText(String text, Vector2f pos, Vector2f scale) {
+        setCurrentShader(Shader.TEXTURING);
+        drawText(text, Font.RETRO, currentShader, pos, scale);
     }
 
     // TODO: make this work fully
@@ -143,8 +185,9 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
 
         // Calculate total size of all vertex and index buffers
         for (Entity2D entity : entities) {
-            totalVertices += entity.getModel().getVertexBuffer().getSize();
-            totalIndices += entity.getModel().getIndexBuffer().getCount();
+            if (entity == null) continue;
+            totalVertices += entity.getModel().getVertexCount();
+            totalIndices += entity.getModel().getIndexCount();
         }
 
         // Create combined vertex and index buffers
@@ -156,6 +199,7 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
 
         // Append data from each entity's buffers to the combined buffers
         for (Entity2D entity : entities) {
+            if (entity == null) continue;
             ObjModel model = entity.getModel();
 
             float[] data = model.getVertexBufferData().clone(); // need to be cloned to protect ObjModel data from being set off arbitrarily
@@ -199,8 +243,8 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
 
     ///// PRIMITIVES /////
     public void drawPoint(Vector2f pos, float size, Vector4f color) {
-        defaultShader.bind();
-        SetUniforms(defaultShader, null, color);
+        Shader.DEFAULT.bind();
+        SetUniforms(Shader.DEFAULT, null, color);
 
         GL43.glPointSize(size);
         GL43.glBegin(GL_POINTS);
@@ -215,8 +259,8 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
     }
 
     public void drawPoints(Vector2f[] positions, float size, Vector4f color) {
-        defaultShader.bind();
-        SetUniforms(defaultShader, null, color);
+        Shader.DEFAULT.bind();
+        SetUniforms(Shader.DEFAULT, null, color);
 
         GL43.glPointSize(size);
         GL43.glBegin(GL_POINTS);
@@ -230,8 +274,8 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
     }
 
     public void drawLine(Vector2f from, Vector2f to, float size, Vector4f color) {
-        defaultShader.bind();
-        SetUniforms(defaultShader, null, color);
+        Shader.DEFAULT.bind();
+        SetUniforms(Shader.DEFAULT, null, color);
 
         GL43.glLineWidth(size);
         GL43.glBegin(GL_LINES);
@@ -247,8 +291,8 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
     }
 
     public void drawLinesConnected(Vector2f[] positions, float size, boolean loop, Vector4f color) {
-        defaultShader.bind();
-        SetUniforms(defaultShader, null, color);
+        Shader.DEFAULT.bind();
+        SetUniforms(Shader.DEFAULT, null, color);
 
         GL43.glLineWidth(size);
         GL43.glBegin(loop ? GL_LINE_LOOP : GL_LINE_STRIP);
@@ -268,8 +312,8 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
     }
 
     public void drawRect(Vector2f pos, Vector2f dim, Vector4f color) {
-        defaultShader.bind();
-        SetUniforms(defaultShader, null, color);
+        Shader.DEFAULT.bind();
+        SetUniforms(Shader.DEFAULT, null, color);
 
         drawLinesConnected(new Vector2f[] {
                 new Vector2f(pos.x, pos.y),
@@ -283,8 +327,8 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
     }
 
     public void fillRect(Vector2f pos, Vector2f dim, Vector4f color) {
-        defaultShader.bind();
-        SetUniforms(defaultShader, null, color);
+        Shader.DEFAULT.bind();
+        SetUniforms(Shader.DEFAULT, null, color);
 
         GL43.glBegin(GL_QUADS);
         GL43.glVertex2f(pos.x, pos.y);
@@ -317,7 +361,7 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
         else if (camera.getShader() != null)
             camera.getShader().bind();
         else
-            defaultShader.bind();
+            Shader.DEFAULT.bind();
     }
 
     public void clear() {

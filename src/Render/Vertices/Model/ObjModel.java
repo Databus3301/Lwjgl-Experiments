@@ -3,14 +3,15 @@ package Render.Vertices.Model;
 import Render.Vertices.IndexBuffer;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexBuffer;
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import java.awt.geom.Rectangle2D;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObjModel {
+    public static final ObjModel SQUARE = ObjModelParser.parseOBJ("square.obj");
+
+
     // TODO: OPTIMISATION:: add duplicate vertex recognition through faces (cheaper comparision) and handle indices accordingly
     public ArrayList<float[]> _positions = new ArrayList<>();
     public ArrayList<float[]> _normals = new ArrayList<>();
@@ -33,6 +34,9 @@ public class ObjModel {
 
     private float[] vertexBufferData;
     private VertexBuffer vertexBuffer;
+
+    private int vertexCount;
+    private int indexCount;
 
     /**
      * The bounding box of the model
@@ -65,7 +69,10 @@ public class ObjModel {
             materialIDs[i] = IDs[i][0];
         }
 
-
+        calcIndexCount();
+        calcVertexCount();
+        System.out.println("Vertex Count: " + vertexCount);
+        System.out.println("Index Count: " + indexCount);
 
         _positions.clear();
         _normals.clear();
@@ -156,6 +163,29 @@ public class ObjModel {
         return indices;
     }
 
+    public ObjModel clone()  {
+        ObjModel model = new ObjModel();
+        model.positions = positions.clone();
+        model.normals = normals.clone();
+        model.textures = textures.clone();
+        model.faces = faces.clone();
+        model.materials = materials.clone();
+        model.materialIDs = materialIDs.clone();
+        model.boundingBox = new Vector4f(boundingBox);
+        model.calcIndexCount();
+        model.calcVertexCount();
+        return model;
+    }
+
+    public int calcVertexCount() {
+        vertexCount = Vertex.SIZE*faces.length*3;
+        return vertexCount;
+    }
+    public int calcIndexCount() {
+        indexCount = faces.length*3;
+        return indexCount;
+    }
+
 
     private static <T> T[] toArray(ArrayList<T> list, Class<T> c) {
         @SuppressWarnings("unchecked")
@@ -163,6 +193,7 @@ public class ObjModel {
         list.toArray(array);
         return array;
     }
+
 
     public float[][] getPositions() {
         return positions;
@@ -186,10 +217,44 @@ public class ObjModel {
         return new Vector4f(boundingBox);
     }
 
+    public int getVertexCount() {
+        return vertexCount;
+    }
+    public int getIndexCount() {
+        return indexCount;
+    }
+
     public void setBoundingBox(Vector4f boundingBox) {
         this.boundingBox = boundingBox;
     }
     public void setTextures(float[][] textures) {
         this.textures = textures;
     }
+    public void setPositions(float[][] positions) {
+        this.positions = positions;
+    }
+
+    public void setNormals(float[][] normals) {
+        this.normals = normals;
+    }
+
+    public void setFaces(short[][][] faces) {
+        this.faces = faces;
+        calcIndexCount();
+        calcVertexCount();
+    }
+
+    public void setMaterials(ObjMaterial[] materials) {
+        this.materials = materials;
+    }
+
+    public void setMaterialIDs(short[] materialIDs) {
+        this.materialIDs = materialIDs;
+    }
+
+    public void setIndices(int[] indices) {
+        this.indices = indices;
+    }
+
+
 }

@@ -169,6 +169,8 @@ public class Window {
                 case "font", "f":
                     currentTest = new TestFont();
                     break;
+                default:
+                    currentTest = new Test();
             }
         } else // default case
             currentTest = new Test();

@@ -14,9 +14,14 @@ import java.util.Scanner;
 import static org.lwjgl.opengl.GL43.*;
 
 public class Shader {
+    public static final Shader DEFAULT = new Shader("default.shader");
+    public static final Shader TEXTURING = new Shader("texturing.shader");
+
     private final int m_RendererID;
     private final HashMap<String, Integer> m_UniformLocationMap = new HashMap<>();
     public Shader(String filepath) {
+        if(!filepath.startsWith("res/shaders"))
+            filepath = "res/shaders/" + filepath;
 
         ShaderProgramSource code = parseShader(filepath);
         m_RendererID = createShader(code);

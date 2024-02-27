@@ -3,17 +3,19 @@ package Render.Entity.Texturing;
 import org.joml.Vector2f;
 
 public class Font {
-    Vector2f bitmapSize;
-    int asciiOffset;
-    int charsPerRow;
-    int rows;
-    int cols;
-    int charWidth;
-    int charHeight;
-    int charSpacing;
+    public static final Font RETRO = new Font(new Texture("fonts/oldschool_black.png", 0), 32, 18, 5, 18, 7, 9, 0);
+    private Vector2f bitmapSize;
+    private int asciiOffset;
+    private int charsPerRow;
+    private int rows;
+    private int cols;
+    private int charWidth;
+    private int charHeight;
+    private int charSpacing;
+    private Texture fontTexture;
 
-    public Font(Vector2f bitmapSize, int asciiOffset, int charsPerRow, int rows, int cols, int charWidth, int charHeight, int charSpacing) {
-        this.bitmapSize = bitmapSize;
+    public Font(Texture font, int asciiOffset, int charsPerRow, int rows, int cols, int charWidth, int charHeight, int charSpacing) {
+        this.bitmapSize = new Vector2f(font.getWidth(), font.getHeight());
         this.asciiOffset = asciiOffset;
         this.charsPerRow = charsPerRow;
         this.rows = rows;
@@ -24,7 +26,7 @@ public class Font {
     }
 
     public Font copy() {
-        return new Font(bitmapSize, asciiOffset, charsPerRow, rows, cols, charWidth, charHeight, charSpacing);
+        return new Font(fontTexture, asciiOffset, charsPerRow, rows, cols, charWidth, charHeight, charSpacing);
     }
 
     public float[][] getCharTexCoords(int c) {
@@ -101,5 +103,13 @@ public class Font {
 
     public void setCharSpacing(int charSpacing) {
         this.charSpacing = charSpacing;
+    }
+
+    public float getCharacterAspect() {
+        return (float)charWidth/charHeight;
+    }
+
+    public Texture getTexture() {
+        return fontTexture;
     }
 }

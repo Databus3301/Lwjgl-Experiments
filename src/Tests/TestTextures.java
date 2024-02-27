@@ -13,12 +13,7 @@ import static org.lwjgl.opengl.GL11C.glClearColor;
 public class TestTextures extends Test {
 
     protected Entity2D e;
-    protected String s = "Hallo Cornelius!";
-    protected int index = 0;
     protected Shader shader;
-
-    Font font = new Font(new Vector2f(128, 64), 32, 18, 5, 18, 7, 9, 0);
-
 
     public TestTextures() {
         super();
@@ -26,8 +21,7 @@ public class TestTextures extends Test {
         shader = new Shader("res/shaders/texturing.shader");
         shader.bind();
 
-        Texture texture = new Texture("res/textures/fonts/oldschool_black.png", 0);
-        //Texture texture = new Texture("res/textures/cam2.jpg", 0);
+        Texture texture = new Texture("res/textures/cam2.jpg", 0);
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         e = new Entity2D(new Vector2f(0, 0), model, texture, shader);
@@ -38,7 +32,7 @@ public class TestTextures extends Test {
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        //e.rotate(10f * dt, 1);
+        e.rotate(10f * dt, 1);
     }
 
     @Override

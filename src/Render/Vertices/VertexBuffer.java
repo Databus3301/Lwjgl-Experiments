@@ -27,7 +27,7 @@ public class VertexBuffer {
         glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
         glBufferSubData(GL_ARRAY_BUFFER, offset, data);
 
-        glGetBufferSubData(GL_ARRAY_BUFFER, data.length*4L, data);
+        //glGetBufferSubData(GL_ARRAY_BUFFER, data.length*4L, data);
     }
 
     public void bind(){ // TODO: implement force bind on performance relevant call-counts

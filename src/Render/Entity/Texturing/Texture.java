@@ -24,7 +24,10 @@ public class Texture {
     }
 
     public Texture(String path) {
+        if(!path.startsWith("res/textures"))
+            path = "res/textures/" + path;
         m_FilePath = path;
+
 
         m_Width = BufferUtils.createIntBuffer(1);
         m_Height = BufferUtils.createIntBuffer(1);
