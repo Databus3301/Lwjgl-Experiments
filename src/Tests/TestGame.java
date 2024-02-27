@@ -103,9 +103,7 @@ public class TestGame extends Test {
             Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(300, 300));
             // shoot new projectile
             projectiles.add(new Projectile(new Vector2f(player.getPosition().x, player.getPosition().y), player.getModel(), projectileTexture, shader, player, projectileVelocity));
-            for (int i = 0; i < projectiles.size(); i++) {
-                projectiles.get(i).scale(20);
-            }
+            projectiles.getLast().scale(20);
             // reset timer
             timeBetweenShot = 0;
         }
