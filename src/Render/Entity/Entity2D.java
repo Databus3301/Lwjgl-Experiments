@@ -2,13 +2,14 @@ package Render.Entity;
 
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
+import Render.Vertices.Model.ObjMaterial;
 import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
 import org.joml.*;
 
 import java.lang.Math;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -18,9 +19,10 @@ import java.util.Objects;
  * it is used as a base class for all 2D entities
  */
 public class Entity2D {
-    protected Matrix4f modelMatrix = new Matrix4f();
+    protected Matrix4f modelMatrix = new Matrix4f(); // TODO: keep up to date, throughout method calls like scale() and rotate() to avoid recalculating everything every frame
     protected ObjModel model;
     protected Texture texture;
+    protected HashMap<String, Texture> textures;
     protected Shader shader;
 
     protected Vector2f position;  // x y position
@@ -49,14 +51,13 @@ public class Entity2D {
         this(position);
 
         assert model != null: "[ERROR] (Render.Entity.Entity2D) Model is null";
-
         this.model = model;
         //va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
     }
     public Entity2D(int x, int y, ObjModel model) {
         this(new Vector2f(x, y));
-        assert model != null: "[ERROR] (Render.Entity.Entity2D) Model is null";
 
+        assert model != null: "[ERROR] (Render.Entity.Entity2D) Model is null";
         this.model = model;
         //va.AddBuffer(model.getVertexBuffer(), Vertex.GetLayout());
     }

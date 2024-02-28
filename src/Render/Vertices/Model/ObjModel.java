@@ -71,8 +71,6 @@ public class ObjModel {
 
         calcIndexCount();
         calcVertexCount();
-        System.out.println("Vertex Count: " + vertexCount);
-        System.out.println("Index Count: " + indexCount);
 
         _positions.clear();
         _normals.clear();

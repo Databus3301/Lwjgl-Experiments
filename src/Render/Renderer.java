@@ -21,12 +21,14 @@ import static org.lwjgl.opengl.GL43.*;
 public class Renderer {
 
     public Shader currentShader;
+    public int mode = GL_FILL;
     Camera camera;
 
     public Renderer() {
         currentShader = new Shader("res/shaders/default.shader");
         Shader.DEFAULT.forceBind();
         camera = new Camera();
+        glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
     public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
         shader.bind();
@@ -55,10 +57,6 @@ public class Renderer {
         Entity2D[] eChars = new Entity2D[text.length()];
         ObjModel base = ObjModel.SQUARE.clone();
 
-//        VertexArray va = new VertexArray();
-//        va.addBuffer(base.getVertexBuffer(), Vertex.getLayout());
-//        IndexBuffer ib = base.getIndexBuffer();
-
         int xOffset = 0;
 
         for (int i = 0; i < text.length(); i++) {
@@ -76,7 +74,6 @@ public class Renderer {
             xOffset++;
         }
 
-        //drawEntities2D(eChars);
         Batch batch = setupBatch(eChars);
         drawBatch(batch);
     }
@@ -390,5 +387,10 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
     }
     public Shader getCurrentShader() {
         return currentShader;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+        glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
 }

@@ -13,22 +13,24 @@ import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.opengl.GL11.GL_LINE;
 
 public class Test3Dspin extends Test {
 
     Entity2D[] entities;
     Entity2D main;
     float[][] positions;
-
     Camera camera;
     ObjModel point = ObjModelParser.parseOBJ("square.obj"); // cylinder and circle are messed up??
 
     public Test3Dspin() {
         super();
+        renderer.setMode(GL_LINE); // wireframe mode
+
         renderer.setCamera(camera = new Camera(new Vector2f()));
 
         Shader shader = new Shader("res/shaders/batching.shader");
-        ObjModel model = ObjModelParser.parseOBJ("circle.obj");
+        ObjModel model = ObjModelParser.parseOBJ("testModel3.obj");
         positions = model.getPositions();
 
 
@@ -46,8 +48,6 @@ public class Test3Dspin extends Test {
             entities[i] = new Entity2D(new Vector2f(), point);
             entities[i].scale(2);
         }
-
-        System.out.println(main.getPosition());
     }
 
     @Override

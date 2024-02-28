@@ -1,12 +1,9 @@
 package Render.Vertices.Model;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.awt.geom.Rectangle2D;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObjModelParser {
@@ -41,7 +38,7 @@ public class ObjModelParser {
                         short count = 0;
                         for(ObjMaterial material : model._materials) {
                             if (material == null) continue;
-                            if (material.name.equals(parts[1])) {
+                            if (material.getName().equals(parts[1])) {
                                 currentMaterialID[0] = count;
                                 break; // found index
                             }
@@ -96,53 +93,71 @@ public class ObjModelParser {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\s+");
                 switch (parts[0]) {
-                    case "newmtl": materials.add(new ObjMaterial());
+                    case "newmtl":
+                        materials.add(new ObjMaterial());
                         currentReadingIndex++;
-                        materials.get(currentReadingIndex).name = parts[1];
+                        materials.get(currentReadingIndex).setName(parts[1]);
                         break;
-                    case "Ka": materials.get(currentReadingIndex).ambient = parseFloatArray(parts);
+                    case "Ka":
+                        materials.get(currentReadingIndex).setAmbient(parseFloatArray(parts));
                         break;
-                    case "Kd": materials.get(currentReadingIndex).diffuse = parseFloatArray(parts);
+                    case "Kd":
+                        materials.get(currentReadingIndex).setDiffuse(parseFloatArray(parts));
                         break;
-                    case "Ks": materials.get(currentReadingIndex).specular = parseFloatArray(parts);
+                    case "Ks":
+                        materials.get(currentReadingIndex).setSpecular(parseFloatArray(parts));
                         break;
-                    case "Tf": materials.get(currentReadingIndex).transmissionFilter = parseFloatArray(parts);
+                    case "Tf":
+                        materials.get(currentReadingIndex).setTransmissionFilter(parseFloatArray(parts));
                         break;
-                    case "Ke": materials.get(currentReadingIndex).emission = parseFloatArray(parts);
+                    case "Ke":
+                        materials.get(currentReadingIndex).setEmission(parseFloatArray(parts));
                         break;
-                    case "Ns": materials.get(currentReadingIndex).shininess = Float.parseFloat(parts[1]);
+                    case "Ns":
+                        materials.get(currentReadingIndex).setShininess(Float.parseFloat(parts[1]));
                         break;
-                    case "Ni": materials.get(currentReadingIndex).opticalDensity = Float.parseFloat(parts[1]);
+                    case "Ni":
+                        materials.get(currentReadingIndex).setOpticalDensity(Float.parseFloat(parts[1]));
                         break;
-                    case "illum": materials.get(currentReadingIndex).illuminationModel = Integer.parseInt(parts[1]);
+                    case "illum":
+                        materials.get(currentReadingIndex).setIlluminationModel(Integer.parseInt(parts[1]));
                         break;
-                    case "map_Ka": materials.get(currentReadingIndex).ambientTextureMap = parts[1];
+                    case "map_Ka":
+                        materials.get(currentReadingIndex).setAmbientTextureMap(parts[1]);
                         break;
-                    case "map_Kd": materials.get(currentReadingIndex).diffuseTextureMap = parts[1];
+                    case "map_Kd":
+                        materials.get(currentReadingIndex).setDiffuseTextureMap(parts[1]);
                         break;
-                    case "map_Ks": materials.get(currentReadingIndex).specularTextureMap = parts[1];
+                    case "map_Ks":
+                        materials.get(currentReadingIndex).setSpecularTextureMap(parts[1]);
                         break;
-                    case "map_Ns": materials.get(currentReadingIndex).specularHighlightTextureMap = parts[1];
+                    case "map_Ns":
+                        materials.get(currentReadingIndex).setSpecularHighlightTextureMap(parts[1]);
                         break;
-                    case "map_bump": materials.get(currentReadingIndex).bumpMap = parts[1];
+                    case "map_bump":
+                        materials.get(currentReadingIndex).setBumpMap(parts[1]);
                         break;
-                    case "disp": materials.get(currentReadingIndex).displacementMap = parts[1];
+                    case "disp":
+                        materials.get(currentReadingIndex).setDisplacementMap(parts[1]);
                         break;
-                    case "decal": materials.get(currentReadingIndex).stencilDecalMap = parts[1];
+                    case "decal":
+                        materials.get(currentReadingIndex).setStencilDecalMap(parts[1]);
                         break;
-                    case "map_d": materials.get(currentReadingIndex).alphaTextureMap = parts[1];
+                    case "map_d":
+                        materials.get(currentReadingIndex).setAlphaTextureMap(parts[1]);
                         break;
                     case "refl":
                         parts[0] = ""; // TODO: parse possible reflection map arguments correctly
-                        materials.get(currentReadingIndex).reflectionMap = String.join( " ", parts);
+                        materials.get(currentReadingIndex).setReflectionMap(String.join(" ", parts));
                         break;
+
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return materials;
 
+        return materials;
     }
 
     private static final int START_INDEX = 1;

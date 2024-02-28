@@ -4,6 +4,8 @@ import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjMaterial;
 import Render.Vertices.Model.ObjModelParser;
 
+import java.util.Arrays;
+
 public class TestObjModelParser extends Test {
 
     ObjModel model;
@@ -77,44 +79,44 @@ public class TestObjModelParser extends Test {
         System.out.println("materials:");
         for(ObjMaterial material : model.getMaterials()) {
             System.out.println("_".repeat(42));
-            System.out.println("  name: " + material.name);
+            System.out.println("  name: " + material.getName());
             System.out.print("  ambient: ");
-            for(float coord : material.ambient) {
+            for(float coord : material.getAmbient()) {
                 System.out.print(coord + " ");
             }
             System.out.println();
             System.out.print("  diffuse: ");
-            for(float coord : material.diffuse) {
+            for(float coord : material.getDiffuse()) {
                 System.out.print(coord + " ");
             }
             System.out.println();
             System.out.print("  specular: ");
-            for(float coord : material.specular) {
+            for(float coord : material.getSpecular()) {
                 System.out.print(coord + " ");
             }
             System.out.println();
             System.out.print("  transmissionFilter: ");
-            for(float coord : material.transmissionFilter) {
+            for(float coord : material.getTransmissionFilter()) {
                 System.out.print(coord + " ");
             }
             System.out.println();
             System.out.print("  emission: ");
-            for(float coord : material.emission) {
+            for(float coord : material.getEmission()) {
                 System.out.print(coord + " ");
             }
             System.out.println();
-            System.out.println("  shininess: " + material.shininess);
-            System.out.println("  opticalDensity: " + material.opticalDensity);
-            System.out.println("  illuminationModel: " + material.illuminationModel);
-            System.out.println("  ambientTextureMap: " + material.ambientTextureMap);
-            System.out.println("  diffuseTextureMap: " + material.diffuseTextureMap);
-            System.out.println("  specularTextureMap: " + material.specularTextureMap);
-            System.out.println("  specularHighlightTextureMap: " + material.specularHighlightTextureMap);
-            System.out.println("  bumpMap: " + material.bumpMap);
-            System.out.println("  displacementMap: " + material.displacementMap);
-            System.out.println("  stencilDecalMap: " + material.stencilDecalMap);
-            System.out.println("  alphaTextureMap: " + material.alphaTextureMap);
-            System.out.println("  reflectionMap: " + material.reflectionMap);
+            System.out.println("  shininess: " + material.getShininess());
+            System.out.println("  opticalDensity: " + material.getOpticalDensity());
+            System.out.println("  illuminationModel: " + material.getIlluminationModel());
+            System.out.println("  ambientTextureMap: " + material.getAmbientTextureMap());
+            System.out.println("  diffuseTextureMap: " + material.getDiffuseTextureMap());
+            System.out.println("  specularTextureMap: " + material.getSpecularTextureMap());
+            System.out.println("  specularHighlightTextureMap: " + material.getSpecularHighlightTextureMap());
+            System.out.println("  bumpMap: " + material.getBumpMap());
+            System.out.println("  displacementMap: " + material.getDisplacementMap());
+            System.out.println("  stencilDecalMap: " + material.getStencilDecalMap());
+            System.out.println("  alphaTextureMap: " + material.getAlphaTextureMap());
+            System.out.println("  reflectionMap: " + material.getReflectionMap());
 
 
         }
