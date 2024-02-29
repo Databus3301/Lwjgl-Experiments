@@ -54,27 +54,42 @@ public class Renderer {
         float characterAspect = font.getCharacterAspect();
         scale.x *= characterAspect;
 
-        Entity2D[] eChars = new Entity2D[text.length()];
-        ObjModel base = ObjModel.SQUARE.clone();
+        //Entity2D[] eChars = new Entity2D[text.length()];
+        float[][][] texCoordArr = new float[text.length()][][];
+        Entity2D base = new Entity2D(ObjModel.SQUARE.clone());
+        base.scale(scale);
+        base.setPosition(pos);
+        base.setShader(shader);
 
         int xOffset = 0;
 
+//        for (int i = 0; i < text.length(); i++) {
+//            if (text.charAt(i) == '\n') {
+//                pos.y -= scale.y/characterAspect*2;
+//                pos.x -= (((xOffset+1f) * scale.x*2));
+//                xOffset = 0;
+//                continue;
+//            }
+//
+//            ObjModel model = base.clone();
+//            eChars[i] = new Entity2D(new Vector2f(pos.x + i * scale.x*2, pos.y), model, font.getTexture(), shader);
+//            eChars[i].scale(scale);
+//            eChars[i].getModel().setTextures(font.getCharTexCoords(text.charAt(i)));
+//            xOffset++;
+//        }
         for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '\n') {
-                pos.y -= scale.y/characterAspect*2;
-                pos.x -= (((xOffset+1f) * scale.x*2));
-                xOffset = 0;
-                continue;
-            }
+//            if (text.charAt(i) == '\n') {
+//                pos.y -= scale.y / characterAspect * 2;
+//                pos.x -= (((xOffset + 1f) * scale.x * 2));
+//                xOffset = 0;
+//                continue;
+//            }
 
-            ObjModel model = base.clone();
-            eChars[i] = new Entity2D(new Vector2f(pos.x + i * scale.x*2, pos.y), model, font.getTexture(), shader);
-            eChars[i].scale(scale);
-            eChars[i].getModel().setTextures(font.getCharTexCoords(text.charAt(i)));
-            xOffset++;
+            texCoordArr[i] = font.getCharTexCoords(text.charAt(i));
+            //xOffset++;
         }
 
-        Batch batch = setupBatch(eChars);
+        Batch batch = setupBatch(texCoordArr, base, new Vector2f(scale.x*2, 0));
         drawBatch(batch);
     }
     
@@ -166,7 +181,7 @@ public class Renderer {
 
         }
     }
-public void drawProjectiles(ArrayList<Projectile> projectiles) {
+    public void drawProjectiles(ArrayList<Projectile> projectiles) {
         for (Projectile projectile : projectiles) {
             if(projectile != null) {
                 drawEntity2D(projectile);
@@ -211,6 +226,72 @@ public void drawProjectiles(ArrayList<Projectile> projectiles) {
 
                 indices[j] += (int)indexOffset/4;
             }
+
+            vb.update(data, vertexOffset);
+            ib.update(indices, indexOffset);
+
+            vertexOffset += data.length    * 4L;
+            indexOffset += indices.length  * 4L;
+        }
+
+        va.addBuffer(vb, Vertex.getLayout());
+        return new Batch(va, ib);
+    }
+    public Batch setupBatch(float[][][] texCoordArr, Entity2D base, Vector2f offset) {
+        assert base != null : "[ERROR] (Render.Renderer.setupBatch) base entity is null";
+        assert base.getModel() != null : "[ERROR] (Render.Renderer.setupBatch) base entity has no model";
+        assert texCoordArr != null : "[ERROR] (Render.Renderer.setupBatch) textureCoords array is null";
+        assert texCoordArr.length > 0 : "[ERROR] (Render.Renderer.setupBatch) textureCoords array is empty";
+        assert texCoordArr[0][0].length == 2 : "[ERROR] (Render.Renderer.setupBatch) textureCoords array has wrong dimensions";
+        assert offset != null : "[ERROR] (Render.Renderer.setupBatch) offset is null";
+
+        ObjModel model = base.getModel();
+        setCurrentShader(base.getShader());
+
+        VertexArray va = new VertexArray();
+        int totalVertices = model.getVertexCount() * texCoordArr.length;
+        int totalIndices  = model.getIndexCount()  * texCoordArr.length;
+
+        // Create combined vertex and index buffers
+        VertexBuffer vb = new VertexBuffer(totalVertices);
+        IndexBuffer ib = new IndexBuffer(totalIndices);
+
+        long vertexOffset = 0;
+        long indexOffset = 0;
+
+        // Append data from each entity's buffers to the combined buffers
+        for (int i = 0; i < texCoordArr.length; i++) {
+            model.setTextures(texCoordArr[i]);
+
+            // log all texture coordinates
+            System.out.println("tex1");
+            for (float[] texCoord : texCoordArr[i]) {
+                System.out.println(texCoord[0] + " " + texCoord[1]);
+            }
+            System.out.println("...............");
+
+            // because we cache the vertexbuffer darta in the getVertexBufferData method the texture coordinates aren't updated automatically
+            // change them at tex2
+
+
+            float[] data = model.getVertexBufferData().clone(); // need to be cloned to protect ObjModel data from being set off arbitrarily
+            int[] indices = model.getIndexBufferData().clone(); // needs to be offset by the number of vertices in the previous entities
+
+            // TODO: calculate actual positions of vertices through model matrices
+            int dataIndex = 0;
+            System.out.println("tex2");
+            for (int j = 0; j < indices.length; j++) { // TODO: apply rotation
+                data[dataIndex++] = data[dataIndex - 1] * base.getScale().x  + base.getPosition().x + offset.x * i; // baseScale /1.2f
+                data[dataIndex++] = data[dataIndex - 1] * base.getScale().y  + base.getPosition().y + offset.y * i; // baseScale /1.2f
+
+                System.out.println(data[dataIndex] + " " + data[dataIndex+1]);
+
+                dataIndex += Vertex.SIZE - 2;
+
+                indices[j] += (int)indexOffset/4;
+            }
+            System.out.println("...............");
+
 
             vb.update(data, vertexOffset);
             ib.update(indices, indexOffset);
