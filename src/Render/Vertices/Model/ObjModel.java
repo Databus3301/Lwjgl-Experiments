@@ -176,7 +176,7 @@ public class ObjModel {
     }
 
     public int calcVertexCount() {
-        vertexCount = Vertex.SIZE*faces.length*3;
+        vertexCount = faces.length*3;
         return vertexCount;
     }
     public int calcIndexCount() {

@@ -203,7 +203,7 @@ public class Renderer {
         }
 
         // Create combined vertex and index buffers
-        VertexBuffer vb = new VertexBuffer(totalVertices);
+        VertexBuffer vb = new VertexBuffer(totalVertices*Vertex.SIZE);
         IndexBuffer ib = new IndexBuffer(totalIndices);
 
         long vertexOffset = 0;
@@ -237,7 +237,7 @@ public class Renderer {
         va.addBuffer(vb, Vertex.getLayout());
         return new Batch(va, ib);
     }
-    public Batch setupBatch(float[][][] texCoordArr, Entity2D base, Vector2f offset) {
+    public Batch setupBatch(float[][][] texCoordArr, Entity2D base, Vector2f offset) { // TODO: handle new lines
         assert base != null : "[ERROR] (Render.Renderer.setupBatch) base entity is null";
         assert base.getModel() != null : "[ERROR] (Render.Renderer.setupBatch) base entity has no model";
         assert texCoordArr != null : "[ERROR] (Render.Renderer.setupBatch) textureCoords array is null";
@@ -249,7 +249,7 @@ public class Renderer {
         setCurrentShader(base.getShader());
 
         VertexArray va = new VertexArray();
-        int totalVertices = model.getVertexCount() * texCoordArr.length;
+        int totalVertices = model.getVertexCount() * texCoordArr.length * Vertex.SIZE;
         int totalIndices  = model.getIndexCount()  * texCoordArr.length;
 
         // Create combined vertex and index buffers
@@ -260,38 +260,33 @@ public class Renderer {
         long indexOffset = 0;
 
         // Append data from each entity's buffers to the combined buffers
+        short[][][] faces = model.getFaces();
+        float[][] positions = model.getPositions();
+
         for (int i = 0; i < texCoordArr.length; i++) {
-            model.setTextures(texCoordArr[i]);
+            float[] data = new float[model.getVertexCount()*Vertex.SIZE];
+            int[] indices = new int[model.getIndexCount()];
 
-            // log all texture coordinates
-            System.out.println("tex1");
-            for (float[] texCoord : texCoordArr[i]) {
-                System.out.println(texCoord[0] + " " + texCoord[1]);
+            short dataIndex = 0;
+            for (short[][] face : faces) {
+                for (short k = 0; k < face.length; k++) {
+                    float[] position = positions[face[k][0] - 1];
+                    data[dataIndex++] = position[0] * base.getScale().x  + base.getPosition().x + offset.x * i;
+                    data[dataIndex++] = position[1] * base.getScale().y  + base.getPosition().y + offset.y * i;
+                    data[dataIndex++] = position[2];
+
+                    if (Vertex.SIZE > 3) {
+                        if (face[k].length > 1) {
+                            float[] texture = texCoordArr[i][face[k][1]-1]; // potential optimisation:
+                            data[dataIndex++] = texture[0];
+                            data[dataIndex++] = texture[1];
+                        } else {
+                            dataIndex += 2;
+                        }
+                    }
+                    indices[dataIndex / Vertex.SIZE -1] = (short) (dataIndex / Vertex.SIZE  - 1) + (int)indexOffset/4;
+                }
             }
-            System.out.println("...............");
-
-            // because we cache the vertexbuffer darta in the getVertexBufferData method the texture coordinates aren't updated automatically
-            // change them at tex2
-
-
-            float[] data = model.getVertexBufferData().clone(); // need to be cloned to protect ObjModel data from being set off arbitrarily
-            int[] indices = model.getIndexBufferData().clone(); // needs to be offset by the number of vertices in the previous entities
-
-            // TODO: calculate actual positions of vertices through model matrices
-            int dataIndex = 0;
-            System.out.println("tex2");
-            for (int j = 0; j < indices.length; j++) { // TODO: apply rotation
-                data[dataIndex++] = data[dataIndex - 1] * base.getScale().x  + base.getPosition().x + offset.x * i; // baseScale /1.2f
-                data[dataIndex++] = data[dataIndex - 1] * base.getScale().y  + base.getPosition().y + offset.y * i; // baseScale /1.2f
-
-                System.out.println(data[dataIndex] + " " + data[dataIndex+1]);
-
-                dataIndex += Vertex.SIZE - 2;
-
-                indices[j] += (int)indexOffset/4;
-            }
-            System.out.println("...............");
-
 
             vb.update(data, vertexOffset);
             ib.update(indices, indexOffset);
