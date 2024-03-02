@@ -1,21 +1,30 @@
 package Tests;
 
+import Render.Entity.Entity2D;
+import Render.Vertices.Model.ObjModel;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
-public class TestMouseInput extends Test{
+public class TestMouseInput extends Test {
+
+    Entity2D tracker;
     public TestMouseInput() {
         super();
+        tracker = new Entity2D(ObjModel.SQUARE);
+        tracker.scale(5);
     }
 
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
+        tracker.setPosition(renderer.screenToWorldCoords(mousePos));
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
+        renderer.drawEntity2D(tracker);
     }
 
     @Override

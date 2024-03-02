@@ -14,6 +14,9 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - Batch Rendering
 - 2D Collision Detection
 - Primitives
+- Mouse Input
+- Keyboard Input
+- Text Rendering
 
 ## WOP
 ### Engine
@@ -28,8 +31,6 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] sound
 - [ ] texture atlas
 - [ ] preload models and textures?
-- [ ] Text rendering
-- [ ] mouse input
 - [ ] double buffering
 - [ ] material texture loading
 ### Game

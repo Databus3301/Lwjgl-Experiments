@@ -170,6 +170,9 @@ public class Window {
                 case "font", "f":
                     currentTest = new TestFont();
                     break;
+                case "mouseinput", "mouse", "mi":
+                    currentTest = new TestMouseInput();
+                    break;
                 default:
                     currentTest = new Test();
             }
