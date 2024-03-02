@@ -11,7 +11,7 @@ import java.nio.IntBuffer;
 
 public class Texture {
 
-    private int m_RendererID = 0;
+    private int m_RendererID;
     private String m_FilePath;
     private IntBuffer m_Width;
     private IntBuffer m_Height;

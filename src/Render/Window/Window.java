@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
+import java.time.LocalTime;
 import java.util.Calendar;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -187,8 +188,7 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //
 
-        Calendar test = Calendar.getInstance();
-        int lastSecond = test.get(Calendar.SECOND);
+        int lastSecond = LocalTime.now().getSecond(); //test.get(Calendar.SECOND);
         int fps = 0;
 
         long ms = System.currentTimeMillis();
@@ -200,13 +200,12 @@ public class Window {
             ms = System.currentTimeMillis();
 
             // FPS  ||   ms per frame
-            if (lastSecond != test.get(Calendar.SECOND)) {
-                lastSecond = test.get(Calendar.SECOND);
+            if (lastSecond != LocalTime.now().getSecond()) {
+                lastSecond = LocalTime.now().getSecond();
                 System.out.println(fps + "fps" + "   " + 1000.f / fps + "ms per frame");
                 fps = 0;
             } else {
                 fps++;
-                test = Calendar.getInstance();
             }
 
 

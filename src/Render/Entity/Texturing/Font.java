@@ -3,7 +3,7 @@ package Render.Entity.Texturing;
 import org.joml.Vector2f;
 
 public class Font {
-    public static final Font RETRO = new Font(new Texture("fonts/oldschool_black.png", 0), 32, 18, 5, 18, 7, 9, 0);
+    public static final Font RETRO = new Font(new Texture("fonts/oldschool_white.png", 0), 32, 18, 5, 18, 7, 9, 0);
     private Vector2f bitmapSize;
     private int asciiOffset;
     private int charsPerRow;
