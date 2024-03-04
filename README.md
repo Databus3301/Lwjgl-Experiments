@@ -58,6 +58,8 @@ Documenting my learning process of Open GL and LWJGL for a school project
       - [ ] projectile salve (getting bigger with each bullet/hit?)
       - [ ] slow big projectiles
       - [ ] fast small projectiles
+      - [ ] shield
+      - [ ] piercing
 - [x] …
 
 ## Resources

@@ -72,7 +72,6 @@ public class TestPong extends Test {
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
 
-        // move the left wall with W/A/S/D and the right one with arrow keys
         if (key == GLFW_KEY_W && action == GLFW_PRESS) {
             wallLeft.setVelocity(new Vector2f(0, 200f));
         }
