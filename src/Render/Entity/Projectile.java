@@ -11,10 +11,11 @@ public class Projectile extends Entity2D {
     private float dmg;
     private float armorPen;
 
-    public Projectile(Vector2f position, ObjModel model, Texture texture, Shader shader, Entity2D owner, Vector2f velocity) {
+    public Projectile(Vector2f position, ObjModel model, Texture texture, Shader shader, Entity2D owner, Vector2f velocity, float dmg) {
         super(position, model, texture, shader);
         this.owner = owner;
         this.velocity = velocity;
+        this.dmg = dmg;
     }
 
 

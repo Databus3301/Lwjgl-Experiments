@@ -1,13 +1,13 @@
 package Render;
 
 import Render.Entity.Camera.Camera;
+import Render.Entity.Enemy;
 import Render.Entity.Entity2D;
 import Render.Entity.Projectile;
 import Render.Entity.Texturing.Font;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
 import Render.Window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -206,7 +206,7 @@ public class Renderer {
                 drawEntity2D(entity);
         }
     }
-    public void drawEntities2D(ArrayList<Entity2D> entities) {
+    public void drawEntities2D(ArrayList<Enemy> entities) {
         for (Entity2D entity : entities) {
             if(entity != null) {
                 drawEntity2D(entity);

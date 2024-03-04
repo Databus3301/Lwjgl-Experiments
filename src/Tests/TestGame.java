@@ -1,5 +1,6 @@
 package Tests;
 
+import Render.Entity.Enemy;
 import Render.Entity.Entity2D;
 import Render.Entity.Projectile;
 import Render.Entity.Texturing.Texture;
@@ -18,12 +19,12 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
-    private final int maxLP = 15000;
+    private final int maxLP = 100000;
     private final Entity2D target;
     private final Shader shader;
     private final Texture projectileTexture;
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
-    private final ArrayList<Entity2D> enemies = new ArrayList<>();
+    private final ArrayList<Enemy> enemies = new ArrayList<>();
     private float timeBetweenShot = 0;
     private final int[] keyArr = new int[4];
 
@@ -49,7 +50,7 @@ public class TestGame extends Test {
         target.scale(scale);
 
         for (int i = 0; i < numOfEnemies; i++) {
-            enemies.add(new Entity2D(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader));
+            enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader, 50));
             enemies.get(i).scale(scale);
         }
 
@@ -68,11 +69,11 @@ public class TestGame extends Test {
         target.setPosition(renderer.screenToWorldCoords(mousePos));
 
 
-        for (Entity2D enemy : enemies) {
+        for (Enemy enemy : enemies) {
             if (enemy == null) continue;
             // move enemy to player
             Vector2f v2 = new Vector2f(player.getPosition());
-            enemy.translate(new Vector2f(v2.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(250, 250)));
+            enemy.translate(new Vector2f(v2.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(200, 200)));
             // damage player
             if (player.collideRect(enemy) && livePoints > 0)
                 livePoints -= 1;
@@ -87,23 +88,32 @@ public class TestGame extends Test {
         for (int j = 0; j < projectiles.size(); j++) {
             if (projectiles.get(j) != null) {
                 for (int i = 0; i < enemies.size(); i++) {
-                    if (projectiles.get(j).collideRect(enemies.get(i))) {
-                        enemies.set(i, null);
+                    if (projectiles.get(j).collideRect(enemies.get(i))&& enemies.get(i).getIframes() == 0) {
+                        enemies.get(i).setHealth(enemies.get(i).getHealth() - projectiles.get(j).getDmg());
+                        enemies.get(i).setIframes(10);
+
                     }
                 }
                 projectiles.get(j).translate(projectiles.get(j).getVelocity().mul(dt, new Vector2f()));
             }
         }
-
+        //enemies dead?
+        for (int i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i) != null && enemies.get(i).getHealth() <= 0) {
+                enemies.set(i, null);
+            }
+            enemies.get(i).setIframes(enemies.get(i).getIframes() - 1);
+        }
 
         timeBetweenShot += dt;
-        if (timeBetweenShot > 0.2f) { // shoot every second/5
+        if (timeBetweenShot > 2.0f) { // shoot every second/5
             // direction to target
             Vector2f v3 = new Vector2f(target.getPosition());
             Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(300, 300));
             // shoot new projectile
-            projectiles.add(new Projectile(new Vector2f(player.getPosition().x, player.getPosition().y), player.getModel(), projectileTexture, shader, player, projectileVelocity));
+            projectiles.add(new Projectile(new Vector2f(player.getPosition().x, player.getPosition().y), player.getModel(), projectileTexture, shader, player, projectileVelocity, 10));
             projectiles.getLast().scale(20);
+
             // reset timer
             timeBetweenShot = 0;
         }
