@@ -4,12 +4,18 @@ import Tests.*;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.openal.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import org.lwjgl.openal.ALCapabilities;
+
+import static org.lwjgl.openal.AL11.*;
+import static org.lwjgl.openal.ALC11.*;
+
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.time.LocalTime;
-import java.util.Calendar;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -25,6 +31,8 @@ public class Window {
 
     private Test currentTest;
     private String test;
+    private long audioDevice;
+    private long ALcontext;
 
 
     public Window() {
@@ -117,6 +125,18 @@ public class Window {
         glfwShowWindow(windowPtr);
 
         GL.createCapabilities();
+
+        // OpenAL
+        audioDevice = alcOpenDevice((ByteBuffer) null);
+        if (audioDevice == NULL)
+            throw new IllegalStateException("Failed to open the default device.");
+        ALcontext = alcCreateContext(audioDevice, (IntBuffer) null);
+        if (ALcontext == NULL)
+            throw new IllegalStateException("Failed to create an OpenAL context.");
+        alcMakeContextCurrent(ALcontext);
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+
     }
 
     public void initTest() {
@@ -176,6 +196,9 @@ public class Window {
                 case "bubblesort":
                     currentTest = new TestBubbleSortVis();
                 break;
+                case "audio", "a":
+                    currentTest = new TestAudio();
+                    break;
                 default:
                     currentTest = new Test();
             }
@@ -233,6 +256,10 @@ public class Window {
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(windowPtr);
         glfwDestroyWindow(windowPtr);
+
+        // Close OpenAL
+        alcDestroyContext(ALcontext);
+        alcCloseDevice(audioDevice);
 
 
         // Terminate GLFW and free the error callback
