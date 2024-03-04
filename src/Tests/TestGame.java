@@ -25,7 +25,7 @@ public class TestGame extends Test {
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
     private final ArrayList<Entity2D> enemies = new ArrayList<>();
     private float timeBetweenShot = 0;
-    private Projectile proj;
+    private final int[] keyArr = new int[4];
 
 
     public TestGame() {
@@ -49,7 +49,7 @@ public class TestGame extends Test {
         target.scale(scale);
 
         for (int i = 0; i < numOfEnemies; i++) {
-            enemies.add(new Entity2D(new Vector2f((float) Math.random()*Window.dim.x-Window.dim.x/2f, (float) Math.random()*Window.dim.y-Window.dim.y/2f), model, entityTexture, shader));
+            enemies.add(new Entity2D(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader));
             enemies.get(i).scale(scale);
         }
 
@@ -62,8 +62,8 @@ public class TestGame extends Test {
         // move player
         player.translate(new Vector2f(player.getVelocity()).mul(dt));
         // move target to player
-            //Vector2f v = new Vector2f(player.getPosition());
-            //target.translate(new Vector2f(v.sub(target.getPosition()).normalize()).mul(dt).mul(new Vector2f(100, 100)));
+        //Vector2f v = new Vector2f(player.getPosition());
+        //target.translate(new Vector2f(v.sub(target.getPosition()).normalize()).mul(dt).mul(new Vector2f(100, 100)));
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
 
@@ -75,20 +75,20 @@ public class TestGame extends Test {
             enemy.translate(new Vector2f(v2.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(250, 250)));
             // damage player
             if (player.collideRect(enemy) && livePoints > 0)
-                    livePoints -= 1;
+                livePoints -= 1;
         }
 
         if (livePoints <= 0) {
-             System.out.println("Game Over");
-             System.exit(0);
+            System.out.println("Game Over");
+            System.exit(0);
         }
 
         // damage enemies and move projectiles
         for (int j = 0; j < projectiles.size(); j++) {
-            if (projectiles.get(j) != null){
+            if (projectiles.get(j) != null) {
                 for (int i = 0; i < enemies.size(); i++) {
                     if (projectiles.get(j).collideRect(enemies.get(i))) {
-                        enemies.set(i,null);
+                        enemies.set(i, null);
                     }
                 }
                 projectiles.get(j).translate(projectiles.get(j).getVelocity().mul(dt, new Vector2f()));
@@ -121,26 +121,65 @@ public class TestGame extends Test {
         renderer.drawProjectiles(projectiles);
 
         // live points
-        renderer.fillRect(new Vector2f(-Window.dim.x/2f, Window.dim.y/2f-25), new Vector2f(player.getScale().x * ((float) maxLP /Window.dim.x), 25), new Vector4f(1, 0, 0, 1));
-        renderer.fillRect(new Vector2f(-Window.dim.x/2f, Window.dim.y/2f-25f), new Vector2f(player.getScale().x * ((float) livePoints /Window.dim.x), 25), new Vector4f(0, 1, 0, 1));
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25), new Vector2f(player.getScale().x * ((float) maxLP / Window.dim.x), 25), new Vector4f(1, 0, 0, 1));
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f), new Vector2f(player.getScale().x * ((float) livePoints / Window.dim.x), 25), new Vector4f(0, 1, 0, 1));
         // draw rect above player : player.getPosition().sub(widthLP/2f, player.getScale().y*-6
     }
 
     @Override
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
-        if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+        //one Key press
+        if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             player.setVelocity(new Vector2f(0, 200));
+            keyArr[0] = GLFW_KEY_W;
+            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, 200));
+            if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, 200));
         }
-        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+        if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             player.setVelocity(new Vector2f(-200, 0));
+            keyArr[1] = GLFW_KEY_A;
+            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(-200, 200));
+            if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(-200, -200));
         }
-        if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+        if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             player.setVelocity(new Vector2f(0, -200));
+            keyArr[2] = GLFW_KEY_S;
+            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, -200));
+            if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, -200));
         }
-        if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+        if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             player.setVelocity(new Vector2f(200, 0));
+            keyArr[3] = GLFW_KEY_D;
+            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(200, 200));
+            if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(200, -200));
         }
+        //Release keys
+        if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
+            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, 0));
+            else if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, 0));
+            else player.setVelocity(new Vector2f(0, 0));
+            keyArr[0] = 0;
+        }
+        if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(0, 200));
+            else if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(0, -200));
+            else player.setVelocity(new Vector2f(0, 0));
+            keyArr[1] = 0;
+        }
+        if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, 0));
+            else if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, 0));
+            else player.setVelocity(new Vector2f(0, 0));
+            keyArr[2] = 0;
+        }
+        if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
+            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(0, 200));
+            else if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(0, -200));
+            else player.setVelocity(new Vector2f(0, 0));
+            keyArr[3] = 0;
+        }
+
     }
 
 }
