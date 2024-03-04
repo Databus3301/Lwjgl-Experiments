@@ -433,6 +433,9 @@ public class Renderer {
     public void drawRect(Vector2f pos, Vector2f dim) {
         drawRect(pos, dim, new Vector4f(1, 1, 1, 1));
     }
+    public void drawRect(int i, int i1, int i2, int i3) {
+        drawRect(new Vector2f(i, i1), new Vector2f(i2, i3));
+    }
 
     public void fillRect(Vector2f pos, Vector2f dim, Vector4f color) {
         Shader.DEFAULT.bind();
@@ -504,4 +507,5 @@ public class Renderer {
         this.mode = mode;
         glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
+
 }

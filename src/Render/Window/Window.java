@@ -173,6 +173,9 @@ public class Window {
                 case "mouseinput", "mouse", "mi":
                     currentTest = new TestMouseInput();
                     break;
+                case "bubblesort":
+                    currentTest = new TestBubbleSortVis();
+                break;
                 default:
                     currentTest = new Test();
             }
