@@ -1,4 +1,4 @@
-package Render.Window;
+package Render;
 
 import Tests.*;
 import org.joml.Vector2i;
@@ -10,7 +10,6 @@ import org.lwjgl.system.MemoryStack;
 
 import org.lwjgl.openal.ALCapabilities;
 
-import static org.lwjgl.openal.AL11.*;
 import static org.lwjgl.openal.ALC11.*;
 
 import java.nio.ByteBuffer;

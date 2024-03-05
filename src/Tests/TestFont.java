@@ -1,7 +1,7 @@
 package Tests;
 
 import Render.Batch;
-import Render.Window.Window;
+import Render.Window;
 import org.joml.Vector2f;
 
 public class TestFont extends Test{

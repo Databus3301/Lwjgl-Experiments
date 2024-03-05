@@ -1,4 +1,4 @@
-import Render.Window.Window;
+import Render.Window;
 import org.joml.Vector2i;
 
 import static java.lang.Integer.parseInt;

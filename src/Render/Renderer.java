@@ -8,7 +8,6 @@ import Render.Entity.Texturing.Font;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
-import Render.Window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;

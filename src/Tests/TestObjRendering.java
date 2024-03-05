@@ -4,10 +4,8 @@ import Render.Entity.Entity2D;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
-import Render.Window.Window;
 import org.joml.Vector2f;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.*;
 
 

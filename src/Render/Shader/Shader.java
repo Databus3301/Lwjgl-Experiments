@@ -1,7 +1,6 @@
 package Render.Shader;
 
 import Render.Renderer;
-import Render.Window.Window;
 import Tests.Test;
 import org.joml.Matrix4f;
 

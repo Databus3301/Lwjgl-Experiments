@@ -5,7 +5,7 @@ import Render.Entity.Camera.Camera;
 import Render.Shader.*;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
-import Render.Window.Window;
+import Render.Window;
 import org.joml.*;
 
 import java.lang.Math;
@@ -20,7 +20,7 @@ public class TestPong extends Test {
 
 
     public TestPong() {
-        Vector2i dim = Render.Window.Window.dim;
+        Vector2i dim = Window.dim;
 
 
         ObjModel model = ObjModelParser.parseOBJ("square.obj");

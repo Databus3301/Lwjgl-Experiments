@@ -7,7 +7,7 @@ import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
-import Render.Window.Window;
+import Render.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 

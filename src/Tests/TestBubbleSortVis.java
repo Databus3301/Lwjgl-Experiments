@@ -1,6 +1,6 @@
 package Tests;
 
-import Render.Window.Window;
+import Render.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 

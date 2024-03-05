@@ -1,57 +1,39 @@
 package Tests;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.ShortBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static org.lwjgl.openal.AL11.*;
+import Audio.AudioSource;
+import org.joml.Vector3f;
 
 public class TestAudio extends Test {
-    int source;
-    int buffer;
+    int f;
+    AudioSource audioSource = new AudioSource();
 
     public TestAudio() {
         super();
-        source = alGenSources();
-        buffer = alGenBuffers();
-
-        try {
-            ShortBuffer rawAudioBuffer = loadWavFile("res/audio/sample.wav");
-            alBufferData(buffer, AL_FORMAT_STEREO16, rawAudioBuffer, 44100);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        alSourcei(source, AL_BUFFER, buffer);
+        audioSource.playSound("res/audio/sample.wav");
     }
-
-
-    private ShortBuffer loadWavFile(String filename) throws UnsupportedAudioFileException, IOException {
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filename));
-        AudioFormat audioFormat = audioStream.getFormat();
-
-        byte[] audioBytes = new byte[(int) (audioStream.getFrameLength() * audioFormat.getFrameSize())];
-        audioStream.read(audioBytes);
-
-        ByteBuffer byteBuffer = ByteBuffer.wrap(audioBytes);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-
-        return byteBuffer.asShortBuffer();
-    }
-
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        alSourcePlay(source);
+
+        f++;
+
+        if (f == 3000)
+            audioSource.pauseSound();
+
+        if (f == 6000)
+            audioSource.resumeSound();
+
+        if (f == 9000)
+            audioSource.stopSound();
+
+        if (f == 12000)
+            audioSource.playSound("res/audio/sample.wav");
+
+        if (f == 15000)
+            f = 0;
+
+        //audioSource.setPosition(new Vector3f(0, 0, 0));
+
     }
 
     @Override
