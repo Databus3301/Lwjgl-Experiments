@@ -1,15 +1,18 @@
 package Tests;
 
+import Audio.AudioClip;
 import Audio.AudioSource;
-import org.joml.Vector3f;
 
 public class TestAudio extends Test {
     int f;
     AudioSource audioSource = new AudioSource();
+    AudioClip audioClip;
 
     public TestAudio() {
         super();
         audioSource.playSound("res/audio/sample.wav");
+        audioClip = audioSource.getAudioClip();
+
     }
     @Override
     public void OnUpdate(float dt) {
@@ -20,24 +23,28 @@ public class TestAudio extends Test {
         if (f == 3000)
             audioSource.pauseSound();
 
-        if (f == 6000)
+        if (f == 5000)
             audioSource.resumeSound();
 
-        if (f == 9000)
+        if (f == 6000)
             audioSource.stopSound();
 
-        if (f == 12000)
-            audioSource.playSound("res/audio/sample.wav");
+        if (f == 7000)
+            audioSource.playSound(audioClip);
 
         if (f == 15000)
             f = 0;
-
-        //audioSource.setPosition(new Vector3f(0, 0, 0));
 
     }
 
     @Override
     public void OnRender() {
         super.OnRender();
+    }
+
+    @Override
+    public void OnClose() {
+        super.OnClose();
+        audioSource.cleanup();
     }
 }

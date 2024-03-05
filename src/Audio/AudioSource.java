@@ -10,8 +10,13 @@ import static org.lwjgl.openal.AL10.*;
 /**
  * AudioPlayer class to <b>play audio</b> files
  * <br><br>
- * Supported file types: .wav (PCM format)???
- * yet to test other formats
+ * Supported file types: <br>
+ * AIFF (.aif, .aiff)<br>
+ * AU (.au)<br>
+ * SND (.snd)<br>
+ * MIDI (.mid, .midi, .rmi)<br>
+ * RMF (.rmf)<br>
+ * WAVE (.wav)<br>
  */
 
 public class AudioSource {
@@ -21,25 +26,27 @@ public class AudioSource {
     int source;
     int buffer;
 
+    AudioClip audioClip = null;
+
     public AudioSource() {
         source = alGenSources();
         buffer = alGenBuffers();
+        position = new Vector3f(0, 0, 0);
     }
 
     public void playSound(String filename) {
-        AudioClip audioClip = null;
         try {
             audioClip = AudioLoader.loadWavFile(filename);
         } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
-
-        assert audioClip != null : "Audio file not found!";
         playSound(audioClip);
     }
 
     public void playSound(AudioClip clip) {
         assert clip != null;
+        this.audioClip = clip;
+
         int formatAL = AL_FORMAT_MONO8;
         if (clip.getChannels() == 1)
             formatAL += clip.getSampleSizeInBits() / 8 - 1;
@@ -91,4 +98,11 @@ public class AudioSource {
         alSource3f(source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
     }
 
+
+    public Vector3f getPosition() {
+        return position;
+    }
+    public AudioClip getAudioClip() {
+        return audioClip;
+    }
 }
