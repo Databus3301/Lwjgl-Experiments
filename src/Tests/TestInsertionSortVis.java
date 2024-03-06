@@ -30,7 +30,7 @@ public class TestInsertionSortVis extends Test {
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
         // implement insertion sort
-        if(f == 300) {
+        if(f == 1) {
             if (!list.isEmpty()) {
                 for (int k = 0; k < sortedList.size(); k++) {
                     if (list.get(i) < sortedList.get(k)) {

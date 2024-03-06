@@ -12,11 +12,14 @@ public class TestCamera extends TestTextures {
     Camera camera;
     Entity2D origin;
 
+    Entity2D offscreen;
+
     public TestCamera() {
         super();
         renderer.setCamera(camera = new Camera());
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
         origin = new Entity2D(new Vector2f(), model);
+        offscreen = new Entity2D(new Vector2f(2000, 0), model);
     }
 
 
@@ -34,6 +37,7 @@ public class TestCamera extends TestTextures {
     public void OnRender() {
         super.OnRender();
         renderer.drawEntity2D(origin);
+        renderer.drawEntity2D(offscreen);
     }
 
     @Override

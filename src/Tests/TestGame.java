@@ -31,7 +31,7 @@ public class TestGame extends Test {
     public TestGame() {
         super();
 
-        int numOfEnemies = 10000;
+        int numOfEnemies = 1000;
         float scale = 2f;
 
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
@@ -64,10 +64,9 @@ public class TestGame extends Test {
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
 
+        enemyLoop:
         for (Enemy enemy : enemies) {
-            // move enemy to player
-            Vector2f v2 = new Vector2f(player.getPosition());
-            enemy.translate(new Vector2f(v2.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(200, 200)));
+
             // damage player
             if (player.collideRect(enemy) && livePoints > 0)
                 livePoints -= 1;
@@ -79,6 +78,20 @@ public class TestGame extends Test {
                     //projectiles.set(projectiles.indexOf(projectile), null);
                 }
             }
+            // push away from each other
+            for (Enemy enemy2 : enemies) {
+                if (enemy != enemy2 && enemy.distance(enemy2) < 500f && enemy.collideAABB(enemy2)) {
+                    Vector2f v1 = new Vector2f(enemy.getPosition());
+                    Vector2f v2 = new Vector2f(enemy2.getPosition());
+                    Vector2f v3 = new Vector2f(v1.sub(v2).normalize()).mul(dt).mul(new Vector2f(200, 200));
+                    enemy.translate(v3);
+                    continue enemyLoop;
+                }
+            }
+
+            // move enemy to player
+            Vector2f v = new Vector2f(player.getPosition());
+            enemy.translate(new Vector2f(v.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(200, 200)));
         }
 
         if (livePoints <= 0) {

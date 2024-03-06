@@ -167,6 +167,16 @@ public class Entity2D {
 
         return modelMatrix;
     }
+    public Matrix4f calcModelMatrixNoRotation() {
+        if(isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
+            return modelMatrix;
+
+        modelMatrix.identity();
+        modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
+        modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
+
+        return modelMatrix;
+    }
 
     /**
      * Basic form of collision detection often referred to as Axis-Aligned Bounding Box (AABB) collision detection. <br>
@@ -214,6 +224,10 @@ public class Entity2D {
                 rect1.x + rect1.z > rect2.x &&
                 rect1.y < rect2.y + rect2.w &&
                 rect1.y + rect1.w > rect2.y;
+    }
+
+    public float distance(Entity2D other) {
+        return position.distance(other.position);
     }
 
     public void accelerate(Vector2f acceleration) {
