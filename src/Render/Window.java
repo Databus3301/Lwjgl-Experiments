@@ -195,6 +195,9 @@ public class Window {
                 case "bubblesort":
                     currentTest = new TestBubbleSortVis();
                 break;
+                case "insertion":
+                    currentTest = new TestInsertionSortVis();
+                    break;
                 case "audio", "a":
                     currentTest = new TestAudio();
                     break;
