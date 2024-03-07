@@ -83,3 +83,12 @@ Tutorials: <br>
 Assets: <br>
 [Font](https://opengameart.org/content/ascii-bitmap-font-oldschool#comment-105057) <br>
 [Camera Model](https://rigmodels.com/model.php?view=Camera-3d-model__7WSLWPG7ZGVUXV18PUHLN2G4N)
+
+## intelij-IDEA "install" (hopefully)
+- git clone / new project from VCS
+- project-structure
+     - select newest sdk
+- import lib folder as lib (right-click)
+- import lwjgl2 folder as lwjgl lib
+- set run configuration to new application and set program argumente to "-" "TEST_NAME" "dimX" "dimY" or provide program args via some other way
+- potentially run repair tool
