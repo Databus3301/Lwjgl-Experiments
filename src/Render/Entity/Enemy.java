@@ -3,6 +3,7 @@ package Render.Entity;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
+import Render.Window;
 import org.joml.Vector2f;
 
 public class Enemy extends Entity2D{
@@ -29,5 +30,13 @@ public class Enemy extends Entity2D{
     }
     public void setIframes(int iframes) {
         this.iframes = iframes;
+    }
+
+    public Vector2f worldToCell(Vector2f worldPos, Vector2f cellSize) {
+        return new Vector2f((int) ((worldPos.x + 10000) / cellSize.x), (int) ((worldPos.y + 10000) / cellSize.y));
+    }
+
+    public int cellToHash(Vector2f cellPos) {
+        return (int) (cellPos.x * 3301 + cellPos.y * 1097);
     }
 }

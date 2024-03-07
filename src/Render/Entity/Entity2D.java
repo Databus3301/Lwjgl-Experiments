@@ -225,6 +225,9 @@ public class Entity2D {
                 rect1.y < rect2.y + rect2.w &&
                 rect1.y + rect1.w > rect2.y;
     }
+    public boolean collideCircle(Entity2D other) {
+        return position.distance(other.position) < scale.x + other.scale.x;
+    }
 
     public float distance(Entity2D other) {
         return position.distance(other.position);

@@ -77,7 +77,8 @@ Tutorials: <br>
 [Vercidium](https://www.youtube.com/@Vercidium) <br>
 [Brendan Galea - The Math behind (most) 3D games - Perspective Projection](https://www.youtube.com/watch?v=Do_vEjd6gF0) <br>
 [pikuma - Math for Game Developers: Why do we use 4x4 Matrices in 3D Graphics?](https://www.youtube.com/watch?v=Do_vEjd6gF0) <br>
-[3Blue1Brown: Linear Algebra](https://www.youtube.com/playlist?list=PL0-GT3co4r2y2YErbmuJw2L5tW4Ew2O5B) <br>`
+[3Blue1Brown: Linear Algebra](https://www.youtube.com/playlist?list=PL0-GT3co4r2y2YErbmuJw2L5tW4Ew2O5B) <br>
+[Coding Adventure: Simulating Fluids](https://www.youtube.com/watch?v=rSKMYc1CQHE) <br>
 
 
 Assets: <br>
