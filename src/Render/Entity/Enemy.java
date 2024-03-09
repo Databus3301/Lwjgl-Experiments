@@ -36,6 +36,10 @@ public class Enemy extends Entity2D{
         return new Vector2f((int) ((worldPos.x + 10000) / cellSize.x), (int) ((worldPos.y + 10000) / cellSize.y));
     }
 
+    public Vector2f cellToWorld(Vector2f cellPos, Vector2f cellSize) {
+        return new Vector2f(cellPos.x * cellSize.x - 10000, cellPos.y * cellSize.y - 10000);
+    }
+
     public int cellToHash(Vector2f cellPos) {
         return (int) (cellPos.x * 3301 + cellPos.y * 1097);
     }

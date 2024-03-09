@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
-    private final int maxLP = 1000000;
+    private final int maxLP = 10000;
     private final Entity2D target;
     private final Shader shader;
     private final Texture projectileTexture;
@@ -28,14 +28,15 @@ public class TestGame extends Test {
     private final int[] enemyGridKeyArr; // spatial lookup
     private final int[] enemyGridArr;
     private final int[] startIndeces;
+    private final Vector2f cellSize = new Vector2f(30);
     private float timeBetweenShot = 0;
     private final int[] keyArr = new int[4];
 
     public TestGame() {
         super();
 
-        int numOfEnemies = 10000;
-        float scale = 7f;
+        int numOfEnemies = 10;
+        float scale = 20f;
 
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
         projectileTexture = new Texture("res/textures/fireball.png", 0);
@@ -46,7 +47,7 @@ public class TestGame extends Test {
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
 
         player = new Entity2D(new Vector2f(), model, entityTexture, shader);
-        player.scale(scale*2);
+        player.scale(scale*4);
 
         target = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
         target.scale(scale);
@@ -74,18 +75,24 @@ public class TestGame extends Test {
 
         int enemyIndex = 0;
         for (Enemy enemy : enemies) {
-            enemyGridKeyArr[enemyIndex] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition(), new Vector2f(100, 100)))  % enemyGridArr.length;
+            enemyGridKeyArr[enemyIndex] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition(), cellSize))  % enemyGridArr.length;
             enemyGridArr[enemyIndex] = enemyIndex;
 
             // damage player
-            if (player.collideRect(enemy) && livePoints > 0)
+            if (player.collideRect(enemy) && livePoints > 0) {
+                // push away from player
+                Vector2f v1 = new Vector2f(player.getPosition());
+                Vector2f v2 = new Vector2f(enemy.getPosition());
+                v2.add( (float) Math.random()*20f-1f, (float) Math.random()*20f-1f); // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
+                Vector2f v3 = new Vector2f(v1.sub(v2).normalize().mul(-1));
+                enemy.translate(v3);
                 livePoints -= 1;
+            }
             // damage enemies
             for (Projectile projectile : projectiles) {
                 if (enemy.getIframes() == 0 && projectile.collideAABB(enemy)) {
                     enemy.setHealth(enemy.getHealth() - projectile.getDmg());
                     enemy.setIframes(200);
-                    //projectiles.set(projectiles.indexOf(projectile), null);
                 }
             }
 
@@ -93,24 +100,31 @@ public class TestGame extends Test {
             //TODO: Investigate cell coordinate mapping issue
 
             // push away from each other
-            int cellKey = enemyGridKeyArr[enemyIndex];
-            int startIndex = startIndeces[cellKey];
+            int[] cellKeys = new int[5];
+            cellKeys[0] = enemyGridKeyArr[enemyIndex];
+            cellKeys[1] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, 50),  cellSize))  % enemyGridArr.length;
+            cellKeys[2] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, -50), cellSize)) % enemyGridArr.length;
+            cellKeys[3] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(50, 0),  cellSize))  % enemyGridArr.length;
+            cellKeys[4] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(-50, 0), cellSize)) % enemyGridArr.length;
+            for(int cellKey: cellKeys) {
+                int startIndex = startIndeces[cellKey];
 
-            for (int j = startIndex; j < startIndeces.length; j++) {
-                if (enemyGridKeyArr[j] != cellKey)
-                    break;
-                Enemy enemy2 = enemies.get(enemyGridArr[j]);
-                if (enemy != enemy2 && enemy.collideCircle(enemy2)) {
-                    Vector2f v1 = new Vector2f(enemy.getPosition());
-                    Vector2f v2 = new Vector2f(enemy2.getPosition());
-                    Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
-                    enemy.translate(v3);
+                for (int j = startIndex; j < startIndeces.length; j++) {
+                    if (enemyGridKeyArr[j] != cellKey || enemyGridArr[j] > enemies.size() - 1)
+                        break;
+                    Enemy enemy2 = enemies.get(enemyGridArr[j]);
+                    if (enemy != enemy2 && enemy.collideCircle(enemy2)) {
+                        Vector2f v1 = new Vector2f(enemy.getPosition());
+                        Vector2f v2 = new Vector2f(enemy2.getPosition());
+                        Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
+
+                        enemy.translate(v3);
+                    }
                 }
+                // move enemy to player
+                Vector2f v = new Vector2f(player.getPosition());
+                enemy.translate(new Vector2f(v.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(20, 20)));
             }
-            // move enemy to player
-            Vector2f v = new Vector2f(player.getPosition());
-            enemy.translate(new Vector2f(v.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(200, 200)));
-
             enemyIndex++;
         }
 
@@ -164,7 +178,7 @@ public class TestGame extends Test {
             }
         };
 
-        //timeBetweenShot += dt;
+        timeBetweenShot += dt;
         if (timeBetweenShot > 2.0f) { // shoot every 2 seconds
             // direction to target
             Vector2f v3 = new Vector2f(target.getPosition());
