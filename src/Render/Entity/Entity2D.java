@@ -2,7 +2,6 @@ package Render.Entity;
 
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
-import Render.Vertices.Model.ObjMaterial;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Vertex;
 import Render.Vertices.VertexArray;
@@ -33,6 +32,7 @@ public class Entity2D {
 
     protected boolean isStatic; // if the entity is static, it will not be updated every frame
     protected VertexArray va = new VertexArray(); // hence why the vertex array may be final
+    protected boolean hasDescription = false;
 
     public Entity2D(Vector2f position, ObjModel model, Texture texture, Shader shader) {
         this(position, model, texture);
@@ -102,6 +102,17 @@ public class Entity2D {
     public void translate(float x, float y) {
         this.position.add(new Vector2f(x, y));
     }
+    public void translateTowards(Vector2f target, float speed) {
+        Vector2f direction = new Vector2f(target).sub(position).normalize().mul(speed);
+        this.position.add(direction);
+    }
+    public void translateTowards(Entity2D target, float speed) {
+        Vector2f direction = new Vector2f(target.getPosition()).sub(position).normalize().mul(speed);
+        this.position.add(direction);
+    }
+    public void translateIn(Vector2f direction, float speed) {
+        this.position.add(new Vector2f(direction).normalize().mul(speed));
+    }
 
     /**
      * rotate the entity by the given rotation
@@ -134,21 +145,14 @@ public class Entity2D {
 
     public void scale(Vector2f scale) {
         this.scale.add(scale);
-//        this.position.add(scale); // move the entity to keep the center in the same place
     }
     public void scale(float x, float y) {
         this.scale.x += x;
         this.scale.y += y;
-
-//        this.position.x += x;
-//        this.position.y += y; // move the entity to keep the center in the same place
     }
     public void scale(float xy) {
         this.scale.x += xy;
         this.scale.y += xy;
-
-//        this.position.x += xy;
-//        this.position.y += xy; // move the entity to keep the center in the same place
     }
 
 
@@ -235,6 +239,24 @@ public class Entity2D {
 
     public void accelerate(Vector2f acceleration) {
     	this.velocity.add(acceleration);
+    }
+    public void accelerate(float x, float y) {
+        this.velocity.add(x, y);
+    }
+    public void accelerateTowards(Vector2f target, float speed) {
+        Vector2f direction = new Vector2f(target).sub(position).normalize().mul(speed);
+        this.velocity.add(direction);
+    }
+    public void accelerateTowards(Entity2D target, float speed) {
+        Vector2f direction = new Vector2f(target.getPosition()).sub(position).normalize().mul(speed);
+        this.velocity.add(direction);
+    }
+    public void slow(Vector2f deceleration) {
+        // prevent the entity from moving backwards and stop at 0, 0
+        if(velocity.x > 0) velocity.x = Math.max(0, velocity.x - deceleration.x);
+        else if(velocity.x < 0) velocity.x = Math.min(0, velocity.x + deceleration.x);
+        if(velocity.y > 0) velocity.y = Math.max(0, velocity.y - deceleration.y);
+        else if(velocity.y < 0) velocity.y = Math.min(0, velocity.y + deceleration.y);
     }
 
 
@@ -337,5 +359,23 @@ public class Entity2D {
     }
     public void setStatic(boolean isStatic) {
     	this.isStatic = isStatic;
+    }
+
+    public String getDescription() {
+        return "Position: " + position + "\n" +
+                    "Center: " + center + "\n" +
+                    "Rotation: " + rotation + "\n" +
+                    "Scale: " + scale + "\n" +
+                    "Velocity: " + velocity + "\n" +
+                    "Model: " + model + "\n" +
+                    "Texture: " + texture + "\n" +
+                    "Shader: " + shader + "\n" +
+                    "Is Static: " + isStatic + "\n";
+    }
+    public void setHasDescription(boolean hasDescription) {
+        this.hasDescription = hasDescription;
+    }
+    public boolean hasDescription() {
+        return hasDescription;
     }
 }

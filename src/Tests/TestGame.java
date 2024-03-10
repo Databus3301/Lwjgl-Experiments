@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
-    private final int maxLP = 10000000;
+    private final int maxLP = 500000;
 
     private final Shader shader;
     private final int[] keyArr = new int[4];
@@ -33,13 +33,13 @@ public class TestGame extends Test {
     private final int[] spatialLookUp; // for spatial partitioning
     private final int[] enemyCellPositions;
     private final int[] startIndeces;
-    private final Vector2f cellSize = new Vector2f(30);
+    private final Vector2f cellSize = new Vector2f(200);
 
     public TestGame() {
         super();
 
-        int numOfEnemies = 1000;
-        float scale = 20f;
+        int numOfEnemies = 500;
+        float scale = 3f;
 
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
         projectileTexture = new Texture("res/textures/fireball.png", 0);
@@ -57,7 +57,7 @@ public class TestGame extends Test {
 
         for (int i = 0; i < numOfEnemies; i++) {
             enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader, 50));
-            enemies.get(i).scale(scale);
+            enemies.get(i).scale(scale*i/100);
         }
 
         livePoints = maxLP;
@@ -78,8 +78,14 @@ public class TestGame extends Test {
 
         int enemyIndex = 0;
         for (Enemy enemy : enemies) {
+
             spatialLookUp[enemyIndex] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition(), cellSize))  % enemyCellPositions.length; // save cell hashes to array
             enemyCellPositions[enemyIndex] = enemyIndex;                                                                                 // save enemy index to array
+
+            // mark entity closest to cursor
+            if(enemy.collideRect(target))
+                renderer.drawText("Cell: " + spatialLookUp[enemyIndex] + "\nCollisions: " + enemy.getCollisions() + "\nChecks: " + enemy.getChecks(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), new Vector2f(5));
+
 
             if (player.collideRect(enemy) && livePoints > 0) {
                 // push away from player
@@ -101,34 +107,52 @@ public class TestGame extends Test {
 
             // push away from each other
             int[] cellKeys = new int[5];
-            cellKeys[0] = spatialLookUp[enemyIndex];
+            cellKeys[0] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition(), cellSize))  % enemyCellPositions.length;
             cellKeys[1] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, cellSize.y),  cellSize))  % enemyCellPositions.length;
             cellKeys[2] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, -cellSize.y), cellSize)) % enemyCellPositions.length;
             cellKeys[3] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(cellSize.x, 0),  cellSize))  % enemyCellPositions.length;
             cellKeys[4] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(-cellSize.x, 0), cellSize)) % enemyCellPositions.length;
-            for(int cellKey: cellKeys) {
-                int startIndex = startIndeces[cellKey];
+//            for(int cellKey: cellKeys) {
+//                int startIndex = startIndeces[cellKey];
+//
+//                for (int j = startIndex; j < startIndeces.length; j++) {
+//                    if (spatialLookUp[j] != cellKey || enemyCellPositions[j] > enemies.size() - 1)
+//                        break;
+//                    Enemy enemy2 = enemies.get(enemyCellPositions[j]);
+//                    enemy.addCheck();
+//                    enemy2.addCheck();
+//                    if (enemy != enemy2 && enemy.collideCircle(enemy2)) {
+//                        Vector2f v1 = new Vector2f(enemy.getPosition());
+//                        Vector2f v2 = new Vector2f(enemy2.getPosition());
+//                        Vector2f v3 = new Vector2f(v1.sub(v2));
+//                        enemy.addCollision();
+//                        enemy2.addCollision();
+//
+//                        float overlap = enemy.getScale().x + enemy2.getScale().x - v3.length();
+//                        if (overlap > 0) {
+//                            v3.normalize().mul(overlap*0.1f);
+//                            enemy.translateIn(v3, 100*dt);
+//                            enemy2.translateIn(v3.mul(-1), 100*dt);
+//                        }
+//                    }
+//                }
+//            }
+            for(Enemy enemy1 : enemies) {
+                enemy1.addCheck();
+                enemy.addCheck();
+                if(enemy != enemy1 && enemy.collideCircle(enemy1)) {
+                    Vector2f v1 = new Vector2f(enemy.getPosition());
+                    Vector2f v2 = new Vector2f(enemy1.getPosition());
+                    Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
 
-                for (int j = startIndex; j < startIndeces.length; j++) {
-                    if (spatialLookUp[j] != cellKey || enemyCellPositions[j] > enemies.size() - 1)
-                        break;
-                    Enemy enemy2 = enemies.get(enemyCellPositions[j]);
-                    if (enemy != enemy2 && enemy.collideCircle(enemy2)) {
-                        Vector2f v1 = new Vector2f(enemy.getPosition());
-                        Vector2f v2 = new Vector2f(enemy2.getPosition());
-                        Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
-                        // direction to player
-                        Vector2f v4 = new Vector2f(v1.sub(player.getPosition()).normalize());
-                        // cancel out the direction to player
-                        v3.sub(v4.mul(v3.dot(v4) / v4.lengthSquared()).div(2f));
+                    enemy.translate(v3);
 
-                        enemy.translate(v3);
-                    }
+                    enemy.addCollision();
+                    enemy1.addCollision();
                 }
             }
             // move enemy to player
-            Vector2f v = new Vector2f(player.getPosition());
-            enemy.translate(new Vector2f(v.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(200, 200)));
+            enemy.translateTowards(player, 100*dt);
             enemyIndex++;
         }
 
@@ -149,7 +173,7 @@ public class TestGame extends Test {
         int startIndex = 0;
         int lastCellKey = spatialLookUp[0];
         for(int j = 0; j < spatialLookUp.length; j++) {
-            if(spatialLookUp[j] != lastCellKey) {
+            if (spatialLookUp[j] != lastCellKey) {
                 lastCellKey = spatialLookUp[j];
                 startIndex = j;
             }
@@ -181,7 +205,7 @@ public class TestGame extends Test {
             }
         };
 
-        timeBetweenShot += dt;
+        //timeBetweenShot += dt;
         if (timeBetweenShot > 2.0f) { // shoot every 2 seconds
             // direction to target
             Vector2f v3 = new Vector2f(target.getPosition());

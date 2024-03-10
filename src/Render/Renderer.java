@@ -49,6 +49,7 @@ public class Renderer {
 
     public Batch drawText(String text, Font font, Shader shader, Vector2f pos, Vector2f scale) {
         setCurrentShader(shader);
+        font.getTexture().bind();
 
         float characterAspect = font.getCharacterAspect();
         scale.x *= characterAspect;
@@ -122,7 +123,9 @@ public class Renderer {
 
         va.addBuffer(vb, Vertex.getLayout());
 
-        return new Batch(va, ib);
+        Batch b = new Batch(va, ib);
+        drawBatch(b);
+        return b;
     }
     
     public Batch drawText(String text, Vector2f pos, Vector2f scale) {
@@ -182,6 +185,7 @@ public class Renderer {
     public void drawEntity2D(Entity2D entity) {
         chooseShader(entity);
         SetUniforms(currentShader, entity);
+
 
         // choose Texture
         if(entity.getTexture() != null)

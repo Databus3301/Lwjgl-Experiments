@@ -23,6 +23,7 @@ public class Font {
         this.charWidth = charWidth;
         this.charHeight = charHeight;
         this.charSpacing = charSpacing;
+        this.fontTexture = font;
     }
 
     public Font copy() {

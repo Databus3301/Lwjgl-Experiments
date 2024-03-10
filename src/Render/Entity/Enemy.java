@@ -9,6 +9,8 @@ import org.joml.Vector2f;
 public class Enemy extends Entity2D{
     private int iframes = 0;
     private float health;
+    private int collisions = 0;
+    private int checks = 0;
     public Enemy (Vector2f position, ObjModel model, Texture texture, Shader shader, float health) {
         super(position, model, texture, shader);
         this.health = health;
@@ -42,5 +44,19 @@ public class Enemy extends Entity2D{
 
     public int cellToHash(Vector2f cellPos) {
         return (int) (cellPos.x * 3301 + cellPos.y * 1097);
+    }
+
+    public int getCollisions() {
+        return collisions;
+    }
+    public int addCollision() {
+        return collisions++;
+    }
+
+    public int getChecks() {
+        return checks;
+    }
+    public int addCheck() {
+        return checks++;
     }
 }
