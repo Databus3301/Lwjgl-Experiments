@@ -19,23 +19,26 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
-    private final int maxLP = 10000;
-    private final Entity2D target;
+    private final int maxLP = 10000000;
+
     private final Shader shader;
-    private final Texture projectileTexture;
+    private final int[] keyArr = new int[4];
+
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
+    private final Texture projectileTexture;
+    private float timeBetweenShot = 0;
+    private final Entity2D target;
+
     private final ArrayList<Enemy> enemies = new ArrayList<>();
-    private final int[] enemyGridKeyArr; // spatial lookup
-    private final int[] enemyGridArr;
+    private final int[] spatialLookUp; // for spatial partitioning
+    private final int[] enemyCellPositions;
     private final int[] startIndeces;
     private final Vector2f cellSize = new Vector2f(30);
-    private float timeBetweenShot = 0;
-    private final int[] keyArr = new int[4];
 
     public TestGame() {
         super();
 
-        int numOfEnemies = 10;
+        int numOfEnemies = 1000;
         float scale = 20f;
 
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
@@ -59,8 +62,8 @@ public class TestGame extends Test {
 
         livePoints = maxLP;
 
-        enemyGridKeyArr = new int[enemies.size()];
-        enemyGridArr = new int[enemies.size()];
+        spatialLookUp = new int[enemies.size()];
+        enemyCellPositions = new int[enemies.size()];
         startIndeces = new int[enemies.size()];
     }
 
@@ -69,16 +72,15 @@ public class TestGame extends Test {
         super.OnUpdate(dt);
 
         // move player
-        player.translate(new Vector2f(player.getVelocity()).mul(dt));
+        player.translate(new Vector2f(player.getVelocity()).mul(300*dt));
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
 
         int enemyIndex = 0;
         for (Enemy enemy : enemies) {
-            enemyGridKeyArr[enemyIndex] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition(), cellSize))  % enemyGridArr.length;
-            enemyGridArr[enemyIndex] = enemyIndex;
+            spatialLookUp[enemyIndex] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition(), cellSize))  % enemyCellPositions.length; // save cell hashes to array
+            enemyCellPositions[enemyIndex] = enemyIndex;                                                                                 // save enemy index to array
 
-            // damage player
             if (player.collideRect(enemy) && livePoints > 0) {
                 // push away from player
                 Vector2f v1 = new Vector2f(player.getPosition());
@@ -86,6 +88,7 @@ public class TestGame extends Test {
                 v2.add( (float) Math.random()*20f-1f, (float) Math.random()*20f-1f); // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
                 Vector2f v3 = new Vector2f(v1.sub(v2).normalize().mul(-1));
                 enemy.translate(v3);
+                // damage player
                 livePoints -= 1;
             }
             // damage enemies
@@ -96,62 +99,62 @@ public class TestGame extends Test {
                 }
             }
 
-            //TODO: push them orthongonal their direction as to not have them push back?
-            //TODO: Investigate cell coordinate mapping issue
-
             // push away from each other
             int[] cellKeys = new int[5];
-            cellKeys[0] = enemyGridKeyArr[enemyIndex];
-            cellKeys[1] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, 50),  cellSize))  % enemyGridArr.length;
-            cellKeys[2] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, -50), cellSize)) % enemyGridArr.length;
-            cellKeys[3] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(50, 0),  cellSize))  % enemyGridArr.length;
-            cellKeys[4] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(-50, 0), cellSize)) % enemyGridArr.length;
+            cellKeys[0] = spatialLookUp[enemyIndex];
+            cellKeys[1] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, cellSize.y),  cellSize))  % enemyCellPositions.length;
+            cellKeys[2] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(0, -cellSize.y), cellSize)) % enemyCellPositions.length;
+            cellKeys[3] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(cellSize.x, 0),  cellSize))  % enemyCellPositions.length;
+            cellKeys[4] = enemy.cellToHash(enemy.worldToCell(enemy.getPosition().add(-cellSize.x, 0), cellSize)) % enemyCellPositions.length;
             for(int cellKey: cellKeys) {
                 int startIndex = startIndeces[cellKey];
 
                 for (int j = startIndex; j < startIndeces.length; j++) {
-                    if (enemyGridKeyArr[j] != cellKey || enemyGridArr[j] > enemies.size() - 1)
+                    if (spatialLookUp[j] != cellKey || enemyCellPositions[j] > enemies.size() - 1)
                         break;
-                    Enemy enemy2 = enemies.get(enemyGridArr[j]);
+                    Enemy enemy2 = enemies.get(enemyCellPositions[j]);
                     if (enemy != enemy2 && enemy.collideCircle(enemy2)) {
                         Vector2f v1 = new Vector2f(enemy.getPosition());
                         Vector2f v2 = new Vector2f(enemy2.getPosition());
                         Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
+                        // direction to player
+                        Vector2f v4 = new Vector2f(v1.sub(player.getPosition()).normalize());
+                        // cancel out the direction to player
+                        v3.sub(v4.mul(v3.dot(v4) / v4.lengthSquared()).div(2f));
 
                         enemy.translate(v3);
                     }
                 }
-                // move enemy to player
-                Vector2f v = new Vector2f(player.getPosition());
-                enemy.translate(new Vector2f(v.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(20, 20)));
             }
+            // move enemy to player
+            Vector2f v = new Vector2f(player.getPosition());
+            enemy.translate(new Vector2f(v.sub(enemy.getPosition()).normalize()).mul(dt).mul(new Vector2f(200, 200)));
             enemyIndex++;
         }
 
         // sort both arrays
-        for (int j = 1; j < enemyGridArr.length; j++) {
-            int key = enemyGridKeyArr[j];
-            int value = enemyGridArr[j];
+        for (int j = 1; j < enemyCellPositions.length; j++) {
+            int key = spatialLookUp[j];
+            int value = enemyCellPositions[j];
             int k = j - 1;
-            while (k >= 0 && enemyGridKeyArr[k] > key) {
-                enemyGridKeyArr[k + 1] = enemyGridKeyArr[k];
-                enemyGridArr[k + 1] = enemyGridArr[k];
+            while (k >= 0 && spatialLookUp[k] > key) {
+                spatialLookUp[k + 1] = spatialLookUp[k];
+                enemyCellPositions[k + 1] = enemyCellPositions[k];
                 k--;
             }
-            enemyGridKeyArr[k + 1] = key;
-            enemyGridArr[k + 1] = value;
+            spatialLookUp[k + 1] = key;
+            enemyCellPositions[k + 1] = value;
         }
 
         int startIndex = 0;
-        int lastCellKey = enemyGridKeyArr[0];
-        for(int j = 0; j < enemyGridKeyArr.length; j++) {
-            if(enemyGridKeyArr[j] != lastCellKey) {
-                lastCellKey = enemyGridKeyArr[j];
+        int lastCellKey = spatialLookUp[0];
+        for(int j = 0; j < spatialLookUp.length; j++) {
+            if(spatialLookUp[j] != lastCellKey) {
+                lastCellKey = spatialLookUp[j];
                 startIndex = j;
             }
-            startIndeces[enemyGridKeyArr[j]] = startIndex;
+            startIndeces[spatialLookUp[j]] = startIndex;
         }
-
 
         if (livePoints <= 0) {
             System.out.println("Game Over");
@@ -204,65 +207,45 @@ public class TestGame extends Test {
         renderer.drawEntity2D(player);
 
         // live points
-        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25), new Vector2f(player.getScale().x * ((float) maxLP / Window.dim.x), 25), new Vector4f(1, 0, 0, 1));
-        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f), new Vector2f(player.getScale().x * ((float) livePoints / Window.dim.x), 25), new Vector4f(0, 1, 0, 1));
-        // draw rect above player : player.getPosition().sub(widthLP/2f, player.getScale().y*-6
+        float widthLP = (float) Window.dim.x / 4f;
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f), new Vector2f(widthLP * ((float) livePoints / maxLP), 25), new Vector4f(0, 1, 0, 1));
     }
 
     @Override
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
-        //one Key press
-        if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-            player.setVelocity(new Vector2f(0, 200));
-            keyArr[0] = GLFW_KEY_W;
-            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, 200));
-            if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, 200));
-        }
-        if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-            player.setVelocity(new Vector2f(-200, 0));
-            keyArr[1] = GLFW_KEY_A;
-            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(-200, 200));
-            if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(-200, -200));
-        }
-        if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-            player.setVelocity(new Vector2f(0, -200));
-            keyArr[2] = GLFW_KEY_S;
-            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, -200));
-            if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, -200));
-        }
-        if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-            player.setVelocity(new Vector2f(200, 0));
-            keyArr[3] = GLFW_KEY_D;
-            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(200, 200));
-            if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(200, -200));
-        }
-        //Release keys
-        if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
-            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, 0));
-            else if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, 0));
-            else player.setVelocity(new Vector2f(0, 0));
-            keyArr[0] = 0;
-        }
-        if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
-            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(0, 200));
-            else if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(0, -200));
-            else player.setVelocity(new Vector2f(0, 0));
-            keyArr[1] = 0;
-        }
-        if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
-            if (keyArr[1] == GLFW_KEY_A) player.setVelocity(new Vector2f(-200, 0));
-            else if (keyArr[3] == GLFW_KEY_D) player.setVelocity(new Vector2f(200, 0));
-            else player.setVelocity(new Vector2f(0, 0));
-            keyArr[2] = 0;
-        }
-        if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
-            if (keyArr[0] == GLFW_KEY_W) player.setVelocity(new Vector2f(0, 200));
-            else if (keyArr[2] == GLFW_KEY_S) player.setVelocity(new Vector2f(0, -200));
-            else player.setVelocity(new Vector2f(0, 0));
-            keyArr[3] = 0;
-        }
 
+        // release keys
+        if (key == GLFW_KEY_W && action == GLFW_RELEASE)
+            keyArr[0] = 0;
+        if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+            keyArr[1] = 0;
+        if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+            keyArr[2] = 0;
+        if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+            keyArr[3] = 0;
+
+        // register keys
+        if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+            keyArr[0] = GLFW_KEY_W;
+        if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
+            keyArr[1] = GLFW_KEY_A;
+        if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+            keyArr[2] = GLFW_KEY_S;
+        if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+            keyArr[3] = GLFW_KEY_D;
+
+        // apply velocity
+        player.setVelocity(new Vector2f(0, 0));
+        if(keyArr[0] == GLFW_KEY_W)
+            player.accelerate(new Vector2f(0, 1));
+        if(keyArr[1] == GLFW_KEY_A)
+            player.accelerate(new Vector2f(-1, 0));
+        if(keyArr[2] == GLFW_KEY_S)
+            player.accelerate(new Vector2f(0, -1));
+        if(keyArr[3] == GLFW_KEY_D)
+            player.accelerate(new Vector2f(1, 0));
     }
 
 }

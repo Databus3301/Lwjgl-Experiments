@@ -33,6 +33,7 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] preload models and textures?
 - [ ] double buffering
 - [ ] material texture loading
+- [ ] compute shaders
 ### Game
 - [ ] space invaders demo
 

@@ -7,7 +7,6 @@ import org.joml.Vector2f;
 
 public class Projectile extends Entity2D {
     private Entity2D owner;
-
     private float dmg;
     private float armorPen;
 
