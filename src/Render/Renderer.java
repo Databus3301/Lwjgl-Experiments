@@ -482,7 +482,7 @@ public class Renderer {
          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
     }
 
-    public Vector2f screenToWorldCoords(Vector2f screenCoords) {
+    public Vector2f screenToWorldCoords(Vector2f screenCoords) { // TODO: adapt to moving camera
         // copy vec
         Vector4f projectedCoords = new Vector4f(screenCoords, 0, 1);
         // normalize

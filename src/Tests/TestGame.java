@@ -46,7 +46,7 @@ public class TestGame extends Test {
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
 
         player = new Entity2D(new Vector2f(), model, entityTexture, shader);
-        player.scale(scale*4);
+        player.scale(scale*(4+numOfEnemies/100));
 
         target = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
         target.scale(scale);
@@ -68,11 +68,10 @@ public class TestGame extends Test {
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
 
-        int enemyIndex = 0;
         for (Enemy enemy : enemies) {
             // mark entity closest to cursor
             if(enemy.collideRect(target))
-                renderer.drawText("Collisions: " + enemy.getCollisions() + "\nChecks: " + enemy.getChecks(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), new Vector2f(5));
+                renderer.drawText("Health: " + enemy.getHealth(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), new Vector2f(5));
 
 
             if (player.collideRect(enemy) && livePoints > 0) {
@@ -96,8 +95,8 @@ public class TestGame extends Test {
             // push away from each other
             for(Enemy enemy1 : enemies) {
                 enemy1.addCheck();
-                enemy.addCheck();
-                if(enemy != enemy1 && enemy.collideCircle(enemy1)) {
+                enemy.addCheck(); // TODO: check the performance on the distance checks vs pure collision
+                if(enemy != enemy1 && enemy.getCenter().distance(enemy1.getCenter()) > enemy.getScale().maxComponent() && enemy.collideCircle(enemy1)) {
                     Vector2f v1 = new Vector2f(enemy.getPosition());
                     Vector2f v2 = new Vector2f(enemy1.getPosition());
                     Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
@@ -110,7 +109,6 @@ public class TestGame extends Test {
             }
             // move enemy to player
             enemy.translateTowards(player, 100*dt);
-            enemyIndex++;
         }
 
         if (livePoints <= 0) {
@@ -122,9 +120,9 @@ public class TestGame extends Test {
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).reduceIframes();
             if (enemies.get(i).getHealth() <= 0) {
-                Enemy last = enemies.getLast();
+                Enemy last = enemies.get(enemies.size()-1);
                 enemies.set(i, last);
-                enemies.removeLast();
+                enemies.remove(enemies.size()-1);
             }
         }
 
@@ -132,13 +130,13 @@ public class TestGame extends Test {
             Projectile projectile = projectiles.get(i);
             projectile.translate(projectile.getVelocity().mul(dt, new Vector2f()));
             if (projectile.getPosition().x < -Window.dim.x / 2f || projectile.getPosition().x > Window.dim.x / 2f || projectile.getPosition().y < -Window.dim.y / 2f || projectile.getPosition().y > Window.dim.y / 2f) {
-                Projectile last = projectiles.getLast();
+                Projectile last = projectiles.get(projectiles.size()-1);
                 projectiles.set(i, last);
-                projectiles.removeLast();
+                projectiles.remove(projectiles.size()-1);
             }
         };
 
-        //timeBetweenShot += dt;
+        timeBetweenShot += dt;
         if (timeBetweenShot > 2.0f) { // shoot every 2 seconds
             // direction to target
             Vector2f v3 = new Vector2f(target.getPosition());
