@@ -1,5 +1,6 @@
 package Tests;
 
+import Render.Entity.Camera.Camera;
 import Render.Entity.Enemy;
 import Render.Entity.Entity2D;
 import Render.Entity.Projectile;
@@ -22,6 +23,7 @@ public class TestGame extends Test {
     private final int maxLP = 500000;
 
     private final Shader shader;
+    private final Camera camera;
     private final int[] keyArr = new int[4];
 
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
@@ -33,6 +35,7 @@ public class TestGame extends Test {
 
     public TestGame() {
         super();
+        renderer.setCamera(camera = new Camera(new Vector2f(0, 0)));
 
         int numOfEnemies = 500;
         float scale = 3f;
@@ -45,10 +48,10 @@ public class TestGame extends Test {
 
         ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
 
-        player = new Entity2D(new Vector2f(), model, entityTexture, shader);
-        player.scale(scale*(4+numOfEnemies/100));
+        player = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
+        player.scale(scale*(4+numOfEnemies/100f));
 
-        target = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
+        target = new Entity2D(new Vector2f(), model, entityTexture, shader);
         target.scale(scale);
 
         for (int i = 0; i < numOfEnemies; i++) {
@@ -65,6 +68,7 @@ public class TestGame extends Test {
 
         // move player
         player.translate(new Vector2f(player.getVelocity()).mul(300*dt));
+        camera.centerOn(player);
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
 
@@ -94,17 +98,13 @@ public class TestGame extends Test {
 
             // push away from each other
             for(Enemy enemy1 : enemies) {
-                enemy1.addCheck();
-                enemy.addCheck(); // TODO: check the performance on the distance checks vs pure collision
+                // TODO: check the performance on the distance checks vs pure collision
                 if(enemy != enemy1 && enemy.getCenter().distance(enemy1.getCenter()) > enemy.getScale().maxComponent() && enemy.collideCircle(enemy1)) {
                     Vector2f v1 = new Vector2f(enemy.getPosition());
                     Vector2f v2 = new Vector2f(enemy1.getPosition());
                     Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
 
                     enemy.translate(v3);
-
-                    enemy.addCollision();
-                    enemy1.addCollision();
                 }
             }
             // move enemy to player
@@ -129,7 +129,7 @@ public class TestGame extends Test {
         for(int i = 0; i < projectiles.size(); i++) {
             Projectile projectile = projectiles.get(i);
             projectile.translate(projectile.getVelocity().mul(dt, new Vector2f()));
-            if (projectile.getPosition().x < -Window.dim.x / 2f || projectile.getPosition().x > Window.dim.x / 2f || projectile.getPosition().y < -Window.dim.y / 2f || projectile.getPosition().y > Window.dim.y / 2f) {
+        if (projectile.getPosition().x < -Window.dim.x / 2f + player.getPosition().x  + 100 || projectile.getPosition().x > Window.dim.x / 2f + player.getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + player.getPosition().y  + 100|| projectile.getPosition().y > Window.dim.y / 2f + player.getPosition().y  + 100) {
                 Projectile last = projectiles.get(projectiles.size()-1);
                 projectiles.set(i, last);
                 projectiles.remove(projectiles.size()-1);
@@ -142,11 +142,11 @@ public class TestGame extends Test {
             Vector2f v3 = new Vector2f(target.getPosition());
             Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(300, 300));
             // shoot new projectile
-            projectiles.add(new Projectile(new Vector2f(player.getPosition().x, player.getPosition().y), player.getModel(), projectileTexture, shader, player, projectileVelocity, 20));
+            projectiles.add(new Projectile(new Vector2f(player.getPosition()), player.getModel(), projectileTexture, shader, player, projectileVelocity, 20));
             projectiles.getLast().scale(20);
 
             // reset timer
-            timeBetweenShot = 0;
+            //timeBetweenShot = 0;
         }
     }
 

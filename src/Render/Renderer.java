@@ -186,7 +186,6 @@ public class Renderer {
         chooseShader(entity);
         SetUniforms(currentShader, entity);
 
-
         // choose Texture
         if(entity.getTexture() != null)
             entity.getTexture().bind();
@@ -490,7 +489,7 @@ public class Renderer {
         projectedCoords.y = (projectedCoords.y / Window.dim.y) * -2 + 1;
         // "3D to 2D" (inverse of projection matrix "2D to 3D")
         projectedCoords.mul(camera.getProjectionMatrix().invert(new Matrix4f()));
-        return new Vector2f(projectedCoords.x, projectedCoords.y);
+        return new Vector2f(projectedCoords.x, projectedCoords.y).sub(camera.getPosition());
     }
 
     public void setCamera(Camera camera) {

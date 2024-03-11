@@ -11,7 +11,6 @@ import static Render.Window.dim;
 
 public class Camera extends Entity2D {
     private Matrix4f viewMatrix, projectionMatrix;
-    private Vector4f cameraWindow;
 
     public Camera(Vector2f position, Shader shader) {
         super(position);
@@ -38,15 +37,21 @@ public class Camera extends Entity2D {
         calcModelMatrix();
         calcViewMatrix();
         calcProjectionMatrix();
-        cameraWindow = new Vector4f(-dim.x/2f, -dim.y/2f, dim.x/2f, dim.y/2f);
     }
+    // MODEL
+    @Override
+    public Matrix4f calcModelMatrix() {
+        offset = position.mul(-1, new Vector2f());
+        return super.calcModelMatrix();
+    }
+
     // VIEW
     public Matrix4f calcViewMatrix() {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         this.viewMatrix.identity();
-        this.viewMatrix.lookAt(new Vector3f(position.x*-1, position.y*-1, 20f),
-                cameraFront.add(position.x*-1, position.y*-1 , 0.0f),
+        this.viewMatrix.lookAt(new Vector3f(-position.x, -position.y, 20f),
+                cameraFront.add(-position.x, -position.y , 0.0f),
                 cameraUp);
         return this.viewMatrix;
     }
@@ -66,8 +71,14 @@ public class Camera extends Entity2D {
     }
 
 
-    @Override
-    public void rotate(float degrees, int axis) {
-       super.rotate(degrees, axis);
+    public void centerOn(Vector2f position) {
+        this.position.x = -position.x;
+        this.position.y = -position.y;
+    }
+    public void centerOn(Entity2D entity) {
+        float lerpFactor = 0.03f; // This value can be adjusted for faster or slower camera movement
+        Vector2f targetPosition = entity.getPosition().mul(-1, new Vector2f());
+        this.position.x += (targetPosition.x - this.position.x) * lerpFactor;
+        this.position.y += (targetPosition.y - this.position.y) * lerpFactor;
     }
 }

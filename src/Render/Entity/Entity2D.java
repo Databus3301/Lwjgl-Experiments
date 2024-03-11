@@ -25,6 +25,7 @@ public class Entity2D {
     protected Shader shader;
 
     protected Vector2f position;  // x y position
+    protected Vector2f offset; // x y offset
     protected Vector2f center; // x y center
     protected Quaternionf rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
@@ -78,6 +79,7 @@ public class Entity2D {
         this.model = null;
         this.isStatic = false;
         this.center = new Vector2f(0, 0);
+        this.offset = new Vector2f(0, 0);
     }
 
     public Entity2D instantiate() { // TODO: test this
@@ -164,10 +166,15 @@ public class Entity2D {
         if(isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
             return modelMatrix;
 
+        Vector2f oldPosition = new Vector2f(position);
+        position.add(offset);
+
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
         modelMatrix.rotateAround(rotation, (getCenter().x-position.x)/scale.x, (getCenter().y-position.y)/scale.y, 0f);
+
+        position = oldPosition;
 
         return modelMatrix;
     }
@@ -258,7 +265,9 @@ public class Entity2D {
         if(velocity.y > 0) velocity.y = Math.max(0, velocity.y - deceleration.y);
         else if(velocity.y < 0) velocity.y = Math.min(0, velocity.y + deceleration.y);
     }
-
+    public void offset(Vector2f offset) {
+        this.offset.add(offset);
+    }
 
     public Vector2f getPosition() {
         return position;
@@ -302,6 +311,9 @@ public class Entity2D {
             va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
         }
         return va;
+    }
+    public Vector2f getOffset() {
+        return offset;
     }
 
     public void setPosition(Vector2f position) {
@@ -361,6 +373,10 @@ public class Entity2D {
     	this.isStatic = isStatic;
     }
 
+    public void setOffset(Vector2f offset) {
+        this.offset = offset;
+    }
+
     public String getDescription() {
         return "Position: " + position + "\n" +
                     "Center: " + center + "\n" +
@@ -370,12 +386,7 @@ public class Entity2D {
                     "Model: " + model + "\n" +
                     "Texture: " + texture + "\n" +
                     "Shader: " + shader + "\n" +
-                    "Is Static: " + isStatic + "\n";
-    }
-    public void setHasDescription(boolean hasDescription) {
-        this.hasDescription = hasDescription;
-    }
-    public boolean hasDescription() {
-        return hasDescription;
+                    "Is Static: " + isStatic + "\n" +
+                    "Offset: " + offset + "\n";
     }
 }
