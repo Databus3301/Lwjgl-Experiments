@@ -32,7 +32,6 @@ public class TestGame extends Test {
     private final Texture projectileTexture;
     private float timeBetweenShot = 0;
     private final Entity2D target;
-    private final Entity2D point;
 
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private boolean shouldSimulate = true;
@@ -57,8 +56,6 @@ public class TestGame extends Test {
 
         target = new Entity2D(new Vector2f(), model, entityTexture, shader);
         target.scale(scale);
-        point = new Entity2D(new Vector2f(), model);
-        point.scale(50);
 
         for (int i = 0; i < numOfEnemies; i++) {
             enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader, 50));
@@ -67,6 +64,7 @@ public class TestGame extends Test {
 
         livePoints = maxLP;
 
+        colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 0, 1));
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 0, 1));
     }
 
@@ -78,7 +76,6 @@ public class TestGame extends Test {
             String text = "> GAME OVER <";
             float size = 20;
             renderer.drawText(text, renderer.centerFirstLine(text, size, Font.RETRO), new Vector2f(size), Font.RETRO, Shader.TEXTURING, colorReplacement);
-
             shouldSimulate = false;
         }
 
@@ -173,8 +170,6 @@ public class TestGame extends Test {
         renderer.drawEntities2D(projectiles);
         renderer.drawEntity2D(player);
         renderer.drawEntity2D(target);
-
-        renderer.drawUI(point);
 
         // live points
         float widthLP = (float) Window.dim.x / 4f;
