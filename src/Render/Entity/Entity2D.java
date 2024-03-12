@@ -32,8 +32,7 @@ public class Entity2D {
     protected Vector2f velocity; // pixels per second
 
     protected boolean isStatic; // if the entity is static, it will not be updated every frame
-    protected VertexArray va = new VertexArray(); // hence why the vertex array may be final
-    protected boolean hasDescription = false;
+    protected boolean isHidden; // if the entity is hidden, it will not be drawn
 
     public Entity2D(Vector2f position, ObjModel model, Texture texture, Shader shader) {
         this(position, model, texture);
@@ -78,24 +77,26 @@ public class Entity2D {
         this.velocity = new Vector2f();
         this.model = null;
         this.isStatic = false;
+        this.isHidden = false;
         this.center = new Vector2f(0, 0);
         this.offset = new Vector2f(0, 0);
     }
 
     public Entity2D instantiate() { // TODO: test this
         Entity2D e = new Entity2D(new Vector2f(position), model, texture, shader);
+        e.rotation = new Quaternionf(rotation);
         e.scale = new Vector2f(scale);
         e.velocity = new Vector2f(velocity);
         e.isStatic = isStatic;
-        e.rotation = new Quaternionf(rotation);
+        e.isHidden = isHidden;
         e.center = new Vector2f(center);
+        e.offset = new Vector2f(offset);
 
         return e;
-
     }
 
     /**
-     * translate the entity by the given vector
+     * translate/move the entity by the given vector
      * @param translation the vector to translate by
      */
     public void translate(Vector2f translation) {
@@ -302,18 +303,24 @@ public class Entity2D {
     public boolean isStatic() {
     	return isStatic;
     }
-
-    public VertexArray getVa() {
-        assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
-
-        if(!isStatic) {
-            va = new VertexArray();
-            va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
-        }
-        return va;
+    public boolean isHidden() {
+        return isHidden;
     }
     public Vector2f getOffset() {
         return offset;
+    }
+
+    public String getDescription() {
+        return "Position: " + position + "\n" +
+                "Center: " + center + "\n" +
+                "Rotation: " + rotation + "\n" +
+                "Scale: " + scale + "\n" +
+                "Velocity: " + velocity + "\n" +
+                "Model: " + model + "\n" +
+                "Texture: " + texture + "\n" +
+                "Shader: " + shader + "\n" +
+                "Is Static: " + isStatic + "\n" +
+                "Offset: " + offset + "\n";
     }
 
     public void setPosition(Vector2f position) {
@@ -372,21 +379,18 @@ public class Entity2D {
     public void setStatic(boolean isStatic) {
     	this.isStatic = isStatic;
     }
+    public void hide() {
+        isHidden = true;
+    }
+    public void show() {
+        isHidden = false;
+    }
+    public void setHidde(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
 
     public void setOffset(Vector2f offset) {
         this.offset = offset;
     }
 
-    public String getDescription() {
-        return "Position: " + position + "\n" +
-                    "Center: " + center + "\n" +
-                    "Rotation: " + rotation + "\n" +
-                    "Scale: " + scale + "\n" +
-                    "Velocity: " + velocity + "\n" +
-                    "Model: " + model + "\n" +
-                    "Texture: " + texture + "\n" +
-                    "Shader: " + shader + "\n" +
-                    "Is Static: " + isStatic + "\n" +
-                    "Offset: " + offset + "\n";
-    }
 }

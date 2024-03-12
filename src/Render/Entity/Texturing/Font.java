@@ -4,6 +4,8 @@ import org.joml.Vector2f;
 
 public class Font {
     public static final Font RETRO = new Font(new Texture("fonts/oldschool_white.png", 0), 32, 18, 5, 18, 7, 9, 0);
+    public static final Font RETRO_BLACK = new Font(new Texture("fonts/oldschool_black.png", 0), 32, 18, 5, 18, 7, 9, 0);
+    public static final Font RETRO_TRANSPARENT_WHITE = new Font(new Texture("fonts/oldschool_transparent_white.png", 0), 32, 18, 5, 18, 7, 9, 0);
     private Vector2f bitmapSize;
     private int asciiOffset;
     private int charsPerRow;
@@ -12,7 +14,7 @@ public class Font {
     private int charWidth;
     private int charHeight;
     private int charSpacing;
-    private Texture fontTexture;
+    private final Texture fontTexture;
 
     public Font(Texture font, int asciiOffset, int charsPerRow, int rows, int cols, int charWidth, int charHeight, int charSpacing) {
         this.bitmapSize = new Vector2f(font.getWidth(), font.getHeight());

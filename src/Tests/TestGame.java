@@ -4,10 +4,11 @@ import Render.Entity.Camera.Camera;
 import Render.Entity.Enemy;
 import Render.Entity.Entity2D;
 import Render.Entity.Projectile;
+import Render.Entity.Texturing.ColorReplacement;
+import Render.Entity.Texturing.Font;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
 import Render.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -20,9 +21,10 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
-    private final int maxLP = 500000;
+    private final int maxLP = 50000;
 
     private final Shader shader;
+    private final ColorReplacement colorReplacement = new ColorReplacement();
     private final Camera camera;
     private final int[] keyArr = new int[4];
 
@@ -30,8 +32,10 @@ public class TestGame extends Test {
     private final Texture projectileTexture;
     private float timeBetweenShot = 0;
     private final Entity2D target;
+    private final Entity2D point;
 
     private final ArrayList<Enemy> enemies = new ArrayList<>();
+    private boolean shouldSimulate = true;
 
     public TestGame() {
         super();
@@ -46,13 +50,15 @@ public class TestGame extends Test {
         shader = new Shader("res/shaders/texturing.shader");
         shader.setUniform1i("u_Texture", 0);
 
-        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+        ObjModel model = ObjModel.SQUARE;
 
         player = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
         player.scale(scale*(4+numOfEnemies/100f));
 
         target = new Entity2D(new Vector2f(), model, entityTexture, shader);
         target.scale(scale);
+        point = new Entity2D(new Vector2f(), model);
+        point.scale(50);
 
         for (int i = 0; i < numOfEnemies; i++) {
             enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader, 50));
@@ -60,12 +66,24 @@ public class TestGame extends Test {
         }
 
         livePoints = maxLP;
+
+        colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 0, 1));
     }
 
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
 
+        if (livePoints <= 0) {
+            String text = "> GAME OVER <";
+            float size = 20;
+            renderer.drawText(text, renderer.centerFirstLine(text, size, Font.RETRO), new Vector2f(size), Font.RETRO, Shader.TEXTURING, colorReplacement);
+
+            shouldSimulate = false;
+        }
+
+
+        if(!shouldSimulate) return;
         // move player
         player.translate(new Vector2f(player.getVelocity()).mul(300*dt));
         camera.centerOn(player);
@@ -111,11 +129,6 @@ public class TestGame extends Test {
             enemy.translateTowards(player, 100*dt);
         }
 
-        if (livePoints <= 0) {
-            System.out.println("Game Over");
-            System.exit(0);
-        }
-
         //enemies dead?
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).reduceIframes();
@@ -129,7 +142,7 @@ public class TestGame extends Test {
         for(int i = 0; i < projectiles.size(); i++) {
             Projectile projectile = projectiles.get(i);
             projectile.translate(projectile.getVelocity().mul(dt, new Vector2f()));
-        if (projectile.getPosition().x < -Window.dim.x / 2f + player.getPosition().x  + 100 || projectile.getPosition().x > Window.dim.x / 2f + player.getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + player.getPosition().y  + 100|| projectile.getPosition().y > Window.dim.y / 2f + player.getPosition().y  + 100) {
+        if (projectile.getPosition().x < -Window.dim.x / 2f + player.getPosition().x - 100 || projectile.getPosition().x > Window.dim.x / 2f + player.getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + player.getPosition().y  - 100|| projectile.getPosition().y > Window.dim.y / 2f + player.getPosition().y  + 100) {
                 Projectile last = projectiles.get(projectiles.size()-1);
                 projectiles.set(i, last);
                 projectiles.remove(projectiles.size()-1);
@@ -137,7 +150,7 @@ public class TestGame extends Test {
         };
 
         timeBetweenShot += dt;
-        if (timeBetweenShot > 2.0f) { // shoot every 2 seconds
+        if (timeBetweenShot > .2f) { // shoot every 2 seconds
             // direction to target
             Vector2f v3 = new Vector2f(target.getPosition());
             Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(300, 300));
@@ -146,7 +159,7 @@ public class TestGame extends Test {
             projectiles.getLast().scale(20);
 
             // reset timer
-            //timeBetweenShot = 0;
+            timeBetweenShot = 0;
         }
     }
 
@@ -157,9 +170,11 @@ public class TestGame extends Test {
 
         // entities
         renderer.drawEntities2D(enemies);
-        renderer.drawEntity2D(target);
-        renderer.drawProjectiles(projectiles);
+        renderer.drawEntities2D(projectiles);
         renderer.drawEntity2D(player);
+        renderer.drawEntity2D(target);
+
+        renderer.drawUI(point);
 
         // live points
         float widthLP = (float) Window.dim.x / 4f;

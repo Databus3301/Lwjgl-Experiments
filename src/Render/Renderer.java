@@ -1,9 +1,8 @@
 package Render;
 
 import Render.Entity.Camera.Camera;
-import Render.Entity.Enemy;
 import Render.Entity.Entity2D;
-import Render.Entity.Projectile;
+import Render.Entity.Texturing.ColorReplacement;
 import Render.Entity.Texturing.Font;
 import Render.Shader.Shader;
 import Render.Vertices.*;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL43.*;
 
-public class Renderer {
+public class Renderer { // TODO: drawUI method to draw absolute positioned UI elements
 
     public Shader currentShader;
     public int mode = GL_FILL;
@@ -29,25 +28,28 @@ public class Renderer {
         camera = new Camera();
         glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
+    public void draw(VertexArray va, IndexBuffer ib) {
+        va.bind();
+        ib.bind();
+
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
+    }
+    public void draw(VertexArray va, IndexBuffer ib, Vector4f color) {
+        SetUniforms(currentShader, null, color);
+        draw(va, ib);
+    }
+    public void draw(VertexArray va, IndexBuffer ib, Matrix4f colorSwaps) {
+        SetUniforms(currentShader, null, colorSwaps);
+        draw(va, ib);
+    }
     public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
         shader.bind();
-
-        va.bind();
-        ib.bind();
-
-        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
+        SetUniforms(shader, null);
+        draw(va, ib);
     }
 
-    public void draw(VertexArray va, IndexBuffer ib) {
-        SetUniforms(currentShader, null);
 
-        va.bind();
-        ib.bind();
-
-        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
-    }
-
-    public Batch drawText(String text, Font font, Shader shader, Vector2f pos, Vector2f scale) {
+    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font, Shader shader) {
         setCurrentShader(shader);
         font.getTexture().bind();
 
@@ -124,13 +126,35 @@ public class Renderer {
         va.addBuffer(vb, Vertex.getLayout());
 
         Batch b = new Batch(va, ib);
-        drawBatch(b);
         return b;
     }
-    
+    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font, Shader shader, Vector4f color) {
+        Batch b = drawText(text, pos, scale, font, shader);
+        draw(b.va, b.ib, color);
+        return b;
+    }
+    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font, Shader shader, ColorReplacement cR) {
+        Batch b = drawText(text, pos, scale, font, shader);
+        draw(b.va, b.ib, cR.getSwappingMatrix());
+        return b;
+    }
+    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font) {
+        return drawText(text, pos, scale, font, Shader.TEXTURING);
+    }
     public Batch drawText(String text, Vector2f pos, Vector2f scale) {
-        setCurrentShader(Shader.TEXTURING);
-        return drawText(text, Font.RETRO, currentShader, pos, scale);
+        return drawText(text, pos, scale, Font.RETRO, Shader.TEXTURING);
+    }
+    public Vector2f centerLongestLine(String text, float scale, Font font) {
+        int longestLine = 0;
+        for (String line : text.split("\n")) {
+            if (line.length() > longestLine)
+                longestLine = line.length();
+        }
+        return new Vector2f((font.getCharWidth() * - longestLine)*scale/10, font.getCharHeight()*scale/4);
+    }
+    public Vector2f centerFirstLine(String text, float scale, Font font) {
+        int lineLength = text.split("\n")[0].length();
+        return new Vector2f((font.getCharWidth() * - lineLength)*scale/10, font.getCharHeight()*scale/4);
     }
 
     // TODO: make this work fully
@@ -175,14 +199,12 @@ public class Renderer {
     }
 
     public void drawBatch(Batch b) {
-        SetUniforms(currentShader, null);
-
-        b.ib.bind();
-        b.va.bind();
-
-        glDrawElements(GL_TRIANGLES, b.ib.getCount(), GL_UNSIGNED_INT, 0);
+        draw(b.va, b.ib);
     }
     public void drawEntity2D(Entity2D entity) {
+        assert entity != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D is null";
+        if(entity.isHidden()) return;
+
         chooseShader(entity);
         SetUniforms(currentShader, entity);
 
@@ -202,28 +224,22 @@ public class Renderer {
 
         glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
-    public void drawEntities2D(Entity2D[] entities) {
-        for (Entity2D entity : entities) {
+    public <T extends Entity2D> void drawEntities2D(T[] entities) {
+        for (T entity : entities) {
             if(entity != null)
                 drawEntity2D(entity);
         }
     }
-    public void drawEntities2D(ArrayList<Enemy> entities) {
-        for (Entity2D entity : entities) {
-            if(entity != null) {
+    public <T extends Entity2D> void drawEntities2D(ArrayList<T> entities) {
+        for (T entity : entities) {
+            if(entity != null)
                 drawEntity2D(entity);
-            }
-
         }
     }
-    public void drawProjectiles(ArrayList<Projectile> projectiles) {
-        for (Projectile projectile : projectiles) {
-            if(projectile != null) {
-                drawEntity2D(projectile);
-            }
-        }
+    public void drawUI(Entity2D entity) {
+        entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
+        drawEntity2D(entity);
     }
-
 
     public Batch setupBatch(Entity2D[] entities) {
         VertexArray va = new VertexArray();
@@ -347,8 +363,22 @@ public class Renderer {
         shader.setUniformMat4f("uModel", modelMatrix);
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
+
         if(shader.hasUniform("uColor"))
             shader.setUniform4f("uColor",1 ,1 , 1, 1);
+        if(shader.hasUniform("uColors"))
+            shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP);
+    }
+    public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
+        SetUniforms(shader, entity);
+        if(shader.hasUniform("uColor")) {
+            shader.setUniform4f("uColor", color.x, color.y, color.z, color.w);
+        }
+    }
+    public void SetUniforms(Shader shader, Entity2D entity, Matrix4f colors) {
+        SetUniforms(shader, entity);
+        if(shader.hasUniform("uColors"))
+            shader.setUniformMat4f("uColors", colors);
     }
 
     ///// PRIMITIVES /////
@@ -455,12 +485,6 @@ public class Renderer {
     }
 
     ///////////////////////
-    public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
-        SetUniforms(shader, entity);
-        if(shader.hasUniform("uColor")) {
-            shader.setUniform4f("uColor", color.x, color.y, color.z, color.w);
-        }
-    }
 
     /**
      * Choose the shader to use for rendering

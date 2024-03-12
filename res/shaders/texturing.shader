@@ -29,9 +29,16 @@ layout (location = 0) out vec4 color;
 in vec2 v_TexCoord;
 
 uniform sampler2D u_Texture;
+uniform mat4 uColors;
 
 void main ()
 {
     vec4 texColor = texture(u_Texture, v_TexCoord);
-    color = vec4(texColor);
+    color = texColor;
+
+    float tolerance = 0.05;
+    vec3 diff = color.xyz - uColors[0].xyz;
+    if(length(diff) < tolerance)
+        color = vec4(uColors[1].xyz, color.a);
+
 };
