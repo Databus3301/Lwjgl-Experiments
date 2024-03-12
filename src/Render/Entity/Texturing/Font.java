@@ -1,6 +1,7 @@
 package Render.Entity.Texturing;
 
 import org.joml.Vector2f;
+import org.w3c.dom.Text;
 
 public class Font {
     public static final Font RETRO = new Font(new Texture("fonts/oldschool_white.png", 0), 32, 18, 5, 18, 7, 9, 0);
@@ -43,6 +44,29 @@ public class Font {
                 {(col * charWidth) / bitmapSize.x, (bitmapSize.y - row * charHeight) / bitmapSize.y}, // bottom left corner
         };
     }
+
+    // TODO: investigate direct characterAspect access in contrast to possible recalculating it here
+    public Vector2f centerLongestLine(TextPosParams params) {
+        String text = params.getText();
+        Font font = params.getFont();
+        Vector2f scale = params.getSize();
+
+        int longestLine = 0;
+        for (String line : text.split("\n")) {
+            if (line.length() > longestLine)
+                longestLine = line.length();
+        }
+        new Vector2f((font.getCharWidth() * - longestLine)*scale.x/(font.getCharHeight()+1f), font.getCharHeight()*scale.y/((font.getCharWidth()+1)/2f));
+    }
+    public static Vector2f centerFirstLine(TextPosParams params) {
+        String text = params.getText();
+        Font font = params.getFont();
+        Vector2f scale = params.getSize();
+
+        int lineLength = text.split("\n")[0].length();
+        return new Vector2f((font.getCharWidth() * - lineLength)*scale.x/(font.getCharHeight()+1f), font.getCharHeight()*scale.y/((font.getCharWidth()+1)/2f));
+    }
+
 
     public Vector2f getBitmapSize() {
         return bitmapSize;

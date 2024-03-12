@@ -66,6 +66,8 @@ public class TestGame extends Test {
 
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 0, 1));
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 0, 1));
+
+        System.out.println(colorReplacement.getSwappingMatrix());
     }
 
     @Override
@@ -75,7 +77,7 @@ public class TestGame extends Test {
         if (livePoints <= 0) {
             String text = "> GAME OVER <";
             float size = 20;
-            renderer.drawText(text, renderer.centerFirstLine(text, size, Font.RETRO), new Vector2f(size), Font.RETRO, Shader.TEXTURING, colorReplacement);
+            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine, colorReplacement);
             shouldSimulate = false;
         }
 
@@ -90,7 +92,7 @@ public class TestGame extends Test {
         for (Enemy enemy : enemies) {
             // mark entity closest to cursor
             if(enemy.collideRect(target))
-                renderer.drawText("Health: " + enemy.getHealth(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), new Vector2f(5));
+                renderer.drawText("Health: " + enemy.getHealth(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
 
 
             if (player.collideRect(enemy) && livePoints > 0) {
@@ -114,7 +116,7 @@ public class TestGame extends Test {
             // push away from each other
             for(Enemy enemy1 : enemies) {
                 // TODO: check the performance on the distance checks vs pure collision
-                if(enemy != enemy1 && enemy.getCenter().distance(enemy1.getCenter()) > enemy.getScale().maxComponent() && enemy.collideCircle(enemy1)) {
+                if(enemy != enemy1 && enemy.collideCircle(enemy1)) {
                     Vector2f v1 = new Vector2f(enemy.getPosition());
                     Vector2f v2 = new Vector2f(enemy1.getPosition());
                     Vector2f v3 = new Vector2f(v1.sub(v2).normalize());

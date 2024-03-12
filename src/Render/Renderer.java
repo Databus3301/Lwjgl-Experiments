@@ -4,15 +4,18 @@ import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
 import Render.Entity.Texturing.ColorReplacement;
 import Render.Entity.Texturing.Font;
+import Render.Entity.Texturing.TextPosParams;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL43;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import static org.lwjgl.opengl.GL43.*;
 
@@ -49,12 +52,24 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
 
 
-    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font, Shader shader) {
+    public Batch drawText(String text, Vector2f pos, float size, Font font, Shader shader, Function<TextPosParams, Vector2f> layoutingFunction, ColorReplacement cR) {
+        if(text == null || text.isEmpty()) return null;
+        if(font == null) font = Font.RETRO;
+        if(shader == null) shader = Shader.TEXTURING;
+        if (size <= 0) size = 1;
+        if(pos == null) pos = new Vector2f(0, 0);
+        if(layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
+
         setCurrentShader(shader);
         font.getTexture().bind();
 
+        pos = layoutingFunction.apply(new TextPosParams(pos, new Vector2f(size), font, text)); // TODO: analyse memory usage
+
+        Vector2f scale = new Vector2f(size);
         float characterAspect = font.getCharacterAspect();
         scale.x *= characterAspect;
+
+
 
         float[][][] texCoordArr = new float[text.length()][][];
         ObjModel model = ObjModel.SQUARE.clone();
@@ -65,7 +80,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                 newLineIndices.add(i);
             texCoordArr[i] = font.getCharTexCoords(text.charAt(i));
         }
-
 
         VertexArray va = new VertexArray();
         int totalVertices = model.getVertexCount() * texCoordArr.length * Vertex.SIZE;
@@ -124,38 +138,20 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }
 
         va.addBuffer(vb, Vertex.getLayout());
+        if(cR != null)
+            draw(va, ib, cR.getSwappingMatrix());
+        else
+            draw(va, ib, currentShader);
 
-        Batch b = new Batch(va, ib);
-        return b;
+        return new Batch(va, ib);
     }
-    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font, Shader shader, Vector4f color) {
-        Batch b = drawText(text, pos, scale, font, shader);
-        draw(b.va, b.ib, color);
-        return b;
+    public Batch drawText(String text, Vector2f pos, float scale, Font font) {
+        return drawText(text, pos, scale, font, null, null, null);
     }
-    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font, Shader shader, ColorReplacement cR) {
-        Batch b = drawText(text, pos, scale, font, shader);
-        draw(b.va, b.ib, cR.getSwappingMatrix());
-        return b;
+    public Batch drawText(String text, Vector2f pos, float scale) {
+        return drawText(text, pos, scale, null, null, null, null);
     }
-    public Batch drawText(String text, Vector2f pos, Vector2f scale, Font font) {
-        return drawText(text, pos, scale, font, Shader.TEXTURING);
-    }
-    public Batch drawText(String text, Vector2f pos, Vector2f scale) {
-        return drawText(text, pos, scale, Font.RETRO, Shader.TEXTURING);
-    }
-    public Vector2f centerLongestLine(String text, float scale, Font font) {
-        int longestLine = 0;
-        for (String line : text.split("\n")) {
-            if (line.length() > longestLine)
-                longestLine = line.length();
-        }
-        return new Vector2f((font.getCharWidth() * - longestLine)*scale/10, font.getCharHeight()*scale/4);
-    }
-    public Vector2f centerFirstLine(String text, float scale, Font font) {
-        int lineLength = text.split("\n")[0].length();
-        return new Vector2f((font.getCharWidth() * - lineLength)*scale/10, font.getCharHeight()*scale/4);
-    }
+
 
     // TODO: make this work fully
     public void drawInstanced(Entity2D entity, Matrix4f[] modelMatrices) {
@@ -367,7 +363,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         if(shader.hasUniform("uColor"))
             shader.setUniform4f("uColor",1 ,1 , 1, 1);
         if(shader.hasUniform("uColors"))
-            shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP);
+            shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
     }
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);

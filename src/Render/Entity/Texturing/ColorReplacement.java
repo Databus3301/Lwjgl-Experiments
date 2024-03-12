@@ -4,7 +4,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 public class ColorReplacement {
-    public static final Matrix4f NO_SWAP = new Matrix4f().zero();
+    public static final Matrix4f NO_SWAP_MATRIX = new Matrix4f().zero();
+    public static final ColorReplacement NO_SWAP = new ColorReplacement();
     private final Matrix4f cSwaps;
     private int lastPair = 0;
     public ColorReplacement() {
