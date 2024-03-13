@@ -56,7 +56,7 @@ public class Font {
             if (line.length() > longestLine)
                 longestLine = line.length();
         }
-        new Vector2f((font.getCharWidth() * - longestLine)*scale.x/(font.getCharHeight()+1f), font.getCharHeight()*scale.y/((font.getCharWidth()+1)/2f));
+       return new Vector2f((font.getCharWidth() * - longestLine)*scale.x/(font.getCharHeight()+1f), font.getCharHeight()*scale.y/((font.getCharWidth()+1)/2f));
     }
     public static Vector2f centerFirstLine(TextPosParams params) {
         String text = params.getText();

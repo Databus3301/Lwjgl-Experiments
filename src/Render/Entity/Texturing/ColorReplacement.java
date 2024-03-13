@@ -7,17 +7,24 @@ public class ColorReplacement {
     public static final Matrix4f NO_SWAP_MATRIX = new Matrix4f().zero();
     public static final ColorReplacement NO_SWAP = new ColorReplacement();
     private final Matrix4f cSwaps;
-    private int lastPair = 0;
+    private int lastPair = 1;
     public ColorReplacement() {
         cSwaps = new Matrix4f().zero();
     }
+
+    /**
+     * Swaps the colors of the two given colors in the next draw call, if the shader supports it <br><br>
+     * with colors in <b>rgba</b>
+     * @param c1 color one (to be replaced)
+     * @param c2 color two (to insert in place of c1)
+     */
     public void swap(Vector4f c1, Vector4f c2) {
         if(lastPair == 1) {
-            cSwaps.setRow(0, c1);
-            cSwaps.setRow(1, c2);
+            cSwaps.setColumn(0, c1);
+            cSwaps.setColumn(1, c2);
         } else {
-            cSwaps.setRow(2, c1);
-            cSwaps.setRow(3, c2);
+            cSwaps.setColumn(2, c1);
+            cSwaps.setColumn(3, c2);
         }
         lastPair = (lastPair + 1) % 2;
     }
@@ -26,7 +33,7 @@ public class ColorReplacement {
         swap(c1, c2);
     }
     public void replaceRow(Vector4f c, int row) {
-        cSwaps.setRow(row, c);
+        cSwaps.setColumn(row, c);
     }
     public Matrix4f getSwappingMatrix() {
         return cSwaps;

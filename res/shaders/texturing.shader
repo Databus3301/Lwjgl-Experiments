@@ -38,7 +38,11 @@ void main ()
 
     float tolerance = 0.05;
     vec3 diff = color.xyz - uColors[0].xyz;
-    if(length(diff) < tolerance)
+    if(length(diff) < tolerance) {
         color = vec4(uColors[1].xyz, color.a);
-
+    } else {
+        vec3 diff = color.xyz - uColors[2].xyz;
+        if (length(diff) < tolerance)
+        color = vec4(uColors[3].xyz, color.a);
+    }
 };

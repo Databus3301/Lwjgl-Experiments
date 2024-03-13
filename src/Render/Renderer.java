@@ -63,7 +63,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         setCurrentShader(shader);
         font.getTexture().bind();
 
-        pos = layoutingFunction.apply(new TextPosParams(pos, new Vector2f(size), font, text)); // TODO: analyse memory usage
+        pos = layoutingFunction.apply(new TextPosParams(pos, new Vector2f(size), font, text));
 
         Vector2f scale = new Vector2f(size);
         float characterAspect = font.getCharacterAspect();
@@ -360,10 +360,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
 
-        if(shader.hasUniform("uColor"))
-            shader.setUniform4f("uColor",1 ,1 , 1, 1);
-        if(shader.hasUniform("uColors"))
-            shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
+//        if(shader.hasUniform("uColor"))
+//            shader.setUniform4f("uColor",1 ,1 , 1, 1);
+//        if(shader.hasUniform("uColors"))
+//            shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
     }
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);

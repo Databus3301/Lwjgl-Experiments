@@ -63,7 +63,7 @@ public class Entity2D {
     }
     public Entity2D(Vector2f position) {
         this();
-        this.position = position;
+        this.position.set(position);
     }
     public Entity2D(ObjModel model) {
         this();
@@ -105,13 +105,15 @@ public class Entity2D {
     public void translate(float x, float y) {
         this.position.add(new Vector2f(x, y));
     }
-    public void translateTowards(Vector2f target, float speed) {
-        Vector2f direction = new Vector2f(target).sub(position).normalize().mul(speed);
-        this.position.add(direction);
+    public Vector2f translateTowards(Vector2f target, float speed) {
+        Vector2f direction = new Vector2f(target).sub(position).normalize();
+        this.position.add(direction.mul(speed, new Vector2f()));
+        return direction;
     }
-    public void translateTowards(Entity2D target, float speed) {
-        Vector2f direction = new Vector2f(target.getPosition()).sub(position).normalize().mul(speed);
-        this.position.add(direction);
+    public Vector2f translateTowards(Entity2D target, float speed) {
+        Vector2f direction = new Vector2f(target.getPosition()).sub(position).normalize();
+        this.position.add(direction.mul(speed, new Vector2f()));
+        return direction;
     }
     public void translateIn(Vector2f direction, float speed) {
         this.position.add(new Vector2f(direction).normalize().mul(speed));
@@ -163,11 +165,12 @@ public class Entity2D {
      * calculate the model matrix for the entity
      * @return
      */
+    private final Vector2f oldPosition = new Vector2f();
     public Matrix4f calcModelMatrix() {
         if(isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
             return modelMatrix;
 
-        Vector2f oldPosition = new Vector2f(position);
+        oldPosition.set(position);
         position.add(offset);
 
         modelMatrix.identity();
@@ -214,14 +217,21 @@ public class Entity2D {
      * @param other The other Entity2D to check for collision with.
      * @return true if the bounding rectangles of the entities intersect, false otherwise.
      */
+    private final Vector4f trans1 = new Vector4f(); // save memory by declaring
+    private final Vector4f trans2 = new Vector4f(); // them outside the method
     public boolean collideRect(Entity2D other) {
         if(other == null || other.model == null || model == null) return false;
 
         Vector4f rect1 = model.getBoundingBox();
         Vector4f rect2 = other.model.getBoundingBox();
 
-        Vector4f trans1 = calcModelMatrix().transform(new Vector4f(rect1.x, rect1.y, 0, 1));
-        Vector4f trans2 = other.calcModelMatrix().transform(new Vector4f(rect2.x, rect2.y, 0, 1));
+        trans1.x = rect1.x;
+        trans1.y = rect1.y;
+        trans2.x = rect2.x;
+        trans2.y = rect2.y;
+
+        calcModelMatrix().transform(trans1);
+        other.calcModelMatrix().transform(trans2);
         rect1.x = trans1.x;
         rect1.y = trans1.y;
         rect2.x = trans2.x;
@@ -274,7 +284,7 @@ public class Entity2D {
         return position;
     }
     public Vector2f getCenter() {
-        return new Vector2f(position);//.sub(scale).add(1,1);
+        return position;
     }
 
     public Quaternionf getRotation() {

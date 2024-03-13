@@ -11,6 +11,7 @@ import static Render.Window.dim;
 
 public class Camera extends Entity2D {
     private Matrix4f viewMatrix, projectionMatrix;
+    private boolean calculatedModelMatrixForThisFrame = false;
 
     public Camera(Vector2f position, Shader shader) {
         super(position);
@@ -41,6 +42,9 @@ public class Camera extends Entity2D {
     // MODEL
     @Override
     public Matrix4f calcModelMatrix() {
+        if(calculatedModelMatrixForThisFrame) return modelMatrix;
+
+        calculatedModelMatrixForThisFrame = true;
         offset = position.mul(-1, new Vector2f());
         return super.calcModelMatrix();
     }
@@ -80,5 +84,9 @@ public class Camera extends Entity2D {
         Vector2f targetPosition = entity.getPosition().mul(-1, new Vector2f());
         this.position.x += (targetPosition.x - this.position.x) * lerpFactor;
         this.position.y += (targetPosition.y - this.position.y) * lerpFactor;
+    }
+
+    public void onRender() {
+        calculatedModelMatrixForThisFrame = false;
     }
 }

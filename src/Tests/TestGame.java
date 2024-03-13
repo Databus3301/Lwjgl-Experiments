@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
-    private final int maxLP = 50000;
+    private final int maxLP = 5000000;
 
     private final Shader shader;
     private final ColorReplacement colorReplacement = new ColorReplacement();
@@ -64,8 +64,8 @@ public class TestGame extends Test {
 
         livePoints = maxLP;
 
-        colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 0, 1));
-        colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 0, 1));
+        colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 0, 0, 1));
+        colorReplacement.swap(new Vector4f(0, 0, 0, 1), new Vector4f(0, 0, 1, 1));
 
         System.out.println(colorReplacement.getSwappingMatrix());
     }
@@ -116,13 +116,8 @@ public class TestGame extends Test {
             // push away from each other
             for(Enemy enemy1 : enemies) {
                 // TODO: check the performance on the distance checks vs pure collision
-                if(enemy != enemy1 && enemy.collideCircle(enemy1)) {
-                    Vector2f v1 = new Vector2f(enemy.getPosition());
-                    Vector2f v2 = new Vector2f(enemy1.getPosition());
-                    Vector2f v3 = new Vector2f(v1.sub(v2).normalize());
-
-                    enemy.translate(v3);
-                }
+                if(enemy != enemy1 && enemy.collideCircle(enemy1))
+                    enemy.translateTowards(enemy1, -100*dt); // negated "towards" becomes "away"
             }
             // move enemy to player
             enemy.translateTowards(player, 100*dt);
@@ -150,13 +145,13 @@ public class TestGame extends Test {
 
         timeBetweenShot += dt;
         if (timeBetweenShot > .2f) { // shoot every 2 seconds
-            // direction to target
-            Vector2f v3 = new Vector2f(target.getPosition());
-            Vector2f projectileVelocity = new Vector2f(v3.sub(player.getPosition()).normalize()).mul(new Vector2f(300, 300));
             // shoot new projectile
-            projectiles.add(new Projectile(new Vector2f(player.getPosition()), player.getModel(), projectileTexture, shader, player, projectileVelocity, 20));
-            projectiles.getLast().scale(20);
-
+            projectiles.add(new Projectile(player, 20, shader, player.getModel(), projectileTexture));
+            // direction to target
+            int lastIndex = projectiles.size()-1;
+            Vector2f projectileVelocity = projectiles.get(lastIndex).translateTowards(target, 0);
+            projectiles.get(lastIndex).setVelocity(projectileVelocity.mul(300));
+            projectiles.get(lastIndex).scale(20);
             // reset timer
             timeBetweenShot = 0;
         }
