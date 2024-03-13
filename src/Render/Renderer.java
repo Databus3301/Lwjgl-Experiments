@@ -70,7 +70,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         scale.x *= characterAspect;
 
 
-
         float[][][] texCoordArr = new float[text.length()][][];
         ObjModel model = ObjModel.SQUARE.clone();
 
@@ -360,10 +359,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
 
-//        if(shader.hasUniform("uColor"))
-//            shader.setUniform4f("uColor",1 ,1 , 1, 1);
-//        if(shader.hasUniform("uColors"))
-//            shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
+        if(shader.hasUniform("uColor"))
+            shader.setUniform4f("uColor",1 ,1 , 1, 1);
+        if(shader.hasUniform("uColors"))
+            shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
     }
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);
@@ -521,13 +520,17 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             currentShader.forceBind();
         }
     }
-    public Shader getCurrentShader() {
-        return currentShader;
-    }
-
     public void setMode(int mode) {
         this.mode = mode;
         glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
+    public Shader getCurrentShader() {
+        return currentShader;
+    }
+    public Camera getCamera() {
+        return camera;
+    }
+
+
 
 }

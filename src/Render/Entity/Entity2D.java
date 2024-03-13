@@ -3,8 +3,6 @@ package Render.Entity;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Vertex;
-import Render.Vertices.VertexArray;
 import org.joml.*;
 
 import java.lang.Math;
@@ -26,7 +24,6 @@ public class Entity2D {
 
     protected Vector2f position;  // x y position
     protected Vector2f offset; // x y offset
-    protected Vector2f center; // x y center
     protected Quaternionf rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
@@ -78,7 +75,6 @@ public class Entity2D {
         this.model = null;
         this.isStatic = false;
         this.isHidden = false;
-        this.center = new Vector2f(0, 0);
         this.offset = new Vector2f(0, 0);
     }
 
@@ -89,7 +85,6 @@ public class Entity2D {
         e.velocity = new Vector2f(velocity);
         e.isStatic = isStatic;
         e.isHidden = isHidden;
-        e.center = new Vector2f(center);
         e.offset = new Vector2f(offset);
 
         return e;
@@ -107,12 +102,12 @@ public class Entity2D {
     }
     public Vector2f translateTowards(Vector2f target, float speed) {
         Vector2f direction = new Vector2f(target).sub(position).normalize();
-        this.position.add(direction.mul(speed, new Vector2f()));
+        this.position.add(direction.x * speed, direction.y * speed);
         return direction;
     }
     public Vector2f translateTowards(Entity2D target, float speed) {
         Vector2f direction = new Vector2f(target.getPosition()).sub(position).normalize();
-        this.position.add(direction.mul(speed, new Vector2f()));
+        this.position.add(direction.x * speed, direction.y * speed);
         return direction;
     }
     public void translateIn(Vector2f direction, float speed) {
@@ -176,7 +171,7 @@ public class Entity2D {
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
-        modelMatrix.rotateAround(rotation, (getCenter().x-position.x)/scale.x, (getCenter().y-position.y)/scale.y, 0f);
+        modelMatrix.rotateAround(rotation, (getPosition().x-position.x)/scale.x, (getPosition().y-position.y)/scale.y, 0f);
 
         position = oldPosition;
 
@@ -196,13 +191,14 @@ public class Entity2D {
     /**
      * Basic form of collision detection often referred to as Axis-Aligned Bounding Box (AABB) collision detection. <br>
      * Doesn't work for entities with <b>rotation</b> <br> or models with <b>axis</b> other than <b>1:1</b>
-     * @param other entity to colide with
+     * @param other entity to collide with
      * @return hasCollided
      */
     public boolean collideAABB(Entity2D other) {
-        return Math.abs(getCenter().x - other.getCenter().x) < Math.abs(scale.x + other.scale.x)*1.4 &&
-                Math.abs(getCenter().y - other.getCenter().y) < Math.abs(scale.y + other.scale.y)*1.4;
+        return Math.abs(getPosition().x - other.getPosition().x) < Math.abs(scale.x + other.scale.x)*1.4 &&
+                Math.abs(getPosition().y - other.getPosition().y) < Math.abs(scale.y + other.scale.y)*1.4;
     }
+
 
     /**
      * This method checks for collision between this entity and another entity using their bounding rectangles.
@@ -217,8 +213,6 @@ public class Entity2D {
      * @param other The other Entity2D to check for collision with.
      * @return true if the bounding rectangles of the entities intersect, false otherwise.
      */
-    private final Vector4f trans1 = new Vector4f(); // save memory by declaring
-    private final Vector4f trans2 = new Vector4f(); // them outside the method
     public boolean collideRect(Entity2D other) {
         if(other == null || other.model == null || model == null) return false;
 
@@ -247,6 +241,9 @@ public class Entity2D {
                 rect1.y < rect2.y + rect2.w &&
                 rect1.y + rect1.w > rect2.y;
     }
+    private final Vector4f trans1 = new Vector4f(); // save memory by declaring
+    private final Vector4f trans2 = new Vector4f(); // them outside the method
+
     public boolean collideCircle(Entity2D other) {
         return position.distance(other.position) < scale.x + other.scale.x;
     }
@@ -283,10 +280,6 @@ public class Entity2D {
     public Vector2f getPosition() {
         return position;
     }
-    public Vector2f getCenter() {
-        return position;
-    }
-
     public Quaternionf getRotation() {
         return rotation;
     }
@@ -322,7 +315,6 @@ public class Entity2D {
 
     public String getDescription() {
         return "Position: " + position + "\n" +
-                "Center: " + center + "\n" +
                 "Rotation: " + rotation + "\n" +
                 "Scale: " + scale + "\n" +
                 "Velocity: " + velocity + "\n" +

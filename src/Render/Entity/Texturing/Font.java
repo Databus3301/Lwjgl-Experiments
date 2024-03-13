@@ -1,5 +1,6 @@
 package Render.Entity.Texturing;
 
+import Tests.Test;
 import org.joml.Vector2f;
 import org.w3c.dom.Text;
 
@@ -46,25 +47,41 @@ public class Font {
     }
 
     // TODO: investigate direct characterAspect access in contrast to possible recalculating it here
-    public Vector2f centerLongestLine(TextPosParams params) {
-        String text = params.getText();
-        Font font = params.getFont();
-        Vector2f scale = params.getSize();
-
+    public Vector2f centerLongestLine(TextPosParams p) {
         int longestLine = 0;
-        for (String line : text.split("\n")) {
+        for (String line : p.text.split("\n")) {
             if (line.length() > longestLine)
                 longestLine = line.length();
         }
-       return new Vector2f((font.getCharWidth() * - longestLine)*scale.x/(font.getCharHeight()+1f), font.getCharHeight()*scale.y/((font.getCharWidth()+1)/2f));
-    }
-    public static Vector2f centerFirstLine(TextPosParams params) {
-        String text = params.getText();
-        Font font = params.getFont();
-        Vector2f scale = params.getSize();
 
-        int lineLength = text.split("\n")[0].length();
-        return new Vector2f((font.getCharWidth() * - lineLength)*scale.x/(font.getCharHeight()+1f), font.getCharHeight()*scale.y/((font.getCharWidth()+1)/2f));
+       return new Vector2f((p.font.getCharWidth() * - longestLine)*p.size.x/(p.font.getCharHeight()+1f), p.font.getCharHeight()*p.size.y/((p.font.getCharWidth()+1)/2f));
+    }
+    public Vector2f centerLongestLineUI(TextPosParams p) {
+        Vector2f cam = Test.renderer.getCamera().getPosition();
+
+        int longestLine = 0;
+        for (String line : p.text.split("\n")) {
+            if (line.length() > longestLine)
+                longestLine = line.length();
+        }
+
+        return new Vector2f((p.font.getCharWidth() * - longestLine)*p.size.x/(p.font.getCharHeight()+1f) - cam.x, p.font.getCharHeight()*p.size.y/((p.font.getCharWidth()+1)/2f) - cam.y);
+    }
+    public static Vector2f centerFirstLine(TextPosParams p) {
+        int lineLength = p.text.split("\n")[0].length();
+        float xComponent = (p.font.getCharWidth() * - lineLength) * p.size.x / (p.font.getCharHeight() + 1f) + p.pos.x / 2;
+        float yComponent = p.font.getCharHeight() * p.size.y / ((p.font.getCharWidth() + 1) / 2f) + p.pos.y + p.font.getCharWidth();
+
+        return new Vector2f(xComponent, yComponent);
+    }
+    public static Vector2f centerFirstLineUI(TextPosParams p) {
+        Vector2f cam = Test.renderer.getCamera().getPosition();
+
+        int lineLength = p.text.split("\n")[0].length();
+        float xComponent = (p.font.getCharWidth() * - lineLength) * p.size.x / (p.font.getCharHeight() + 1f) + p.pos.x / 2 - cam.x;
+        float yComponent = p.font.getCharHeight() * p.size.y / ((p.font.getCharWidth() + 1) / 2f) + p.pos.y + p.font.getCharWidth() - cam.y ;
+
+        return new Vector2f(xComponent, yComponent);
     }
 
 

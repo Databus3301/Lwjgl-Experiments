@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Entity2D player;
     private int livePoints;
-    private final int maxLP = 5000000;
+    private final int maxLP = 50000;
 
     private final Shader shader;
     private final ColorReplacement colorReplacement = new ColorReplacement();
@@ -40,7 +40,7 @@ public class TestGame extends Test {
         super();
         renderer.setCamera(camera = new Camera(new Vector2f(0, 0)));
 
-        int numOfEnemies = 500;
+        int numOfEnemies = 1000;
         float scale = 3f;
 
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
@@ -66,8 +66,6 @@ public class TestGame extends Test {
 
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 0, 0, 1));
         colorReplacement.swap(new Vector4f(0, 0, 0, 1), new Vector4f(0, 0, 1, 1));
-
-        System.out.println(colorReplacement.getSwappingMatrix());
     }
 
     @Override
@@ -77,7 +75,7 @@ public class TestGame extends Test {
         if (livePoints <= 0) {
             String text = "> GAME OVER <";
             float size = 20;
-            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine, colorReplacement);
+            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLineUI, colorReplacement);
             shouldSimulate = false;
         }
 
@@ -90,10 +88,9 @@ public class TestGame extends Test {
         target.setPosition(renderer.screenToWorldCoords(mousePos));
 
         for (Enemy enemy : enemies) {
-            // mark entity closest to cursor
+            // print debug info if on cursor
             if(enemy.collideRect(target))
                 renderer.drawText("Health: " + enemy.getHealth(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
-
 
             if (player.collideRect(enemy) && livePoints > 0) {
                 // push away from player
@@ -136,7 +133,8 @@ public class TestGame extends Test {
         for(int i = 0; i < projectiles.size(); i++) {
             Projectile projectile = projectiles.get(i);
             projectile.translate(projectile.getVelocity().mul(dt, new Vector2f()));
-        if (projectile.getPosition().x < -Window.dim.x / 2f + player.getPosition().x - 100 || projectile.getPosition().x > Window.dim.x / 2f + player.getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + player.getPosition().y  - 100|| projectile.getPosition().y > Window.dim.y / 2f + player.getPosition().y  + 100) {
+            // remove the projectile if it's out of bounds
+            if (projectile.getPosition().x < -Window.dim.x / 2f + player.getPosition().x - 100 || projectile.getPosition().x > Window.dim.x / 2f + player.getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + player.getPosition().y  - 100|| projectile.getPosition().y > Window.dim.y / 2f + player.getPosition().y  + 100) {
                 Projectile last = projectiles.get(projectiles.size()-1);
                 projectiles.set(i, last);
                 projectiles.remove(projectiles.size()-1);
@@ -144,14 +142,14 @@ public class TestGame extends Test {
         };
 
         timeBetweenShot += dt;
-        if (timeBetweenShot > .2f) { // shoot every 2 seconds
+        if (timeBetweenShot > .2f) { // shoot every .2f seconds
             // shoot new projectile
-            projectiles.add(new Projectile(player, 20, shader, player.getModel(), projectileTexture));
+            projectiles.add(new Projectile(player, 20, shader, ObjModel.SQUARE, projectileTexture));
             // direction to target
-            int lastIndex = projectiles.size()-1;
-            Vector2f projectileVelocity = projectiles.get(lastIndex).translateTowards(target, 0);
-            projectiles.get(lastIndex).setVelocity(projectileVelocity.mul(300));
-            projectiles.get(lastIndex).scale(20);
+            Projectile last = projectiles.get(projectiles.size()-1);
+            Vector2f direction = last.translateTowards(target, 0);
+            last.setVelocity(direction.mul(300));
+            last.scale(20);
             // reset timer
             timeBetweenShot = 0;
         }
@@ -170,8 +168,8 @@ public class TestGame extends Test {
 
         // live points
         float widthLP = (float) Window.dim.x / 4f;
-        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
-        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f), new Vector2f(widthLP * ((float) livePoints / maxLP), 25), new Vector4f(0, 1, 0, 1));
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) livePoints / maxLP), 25), new Vector4f(0, 1, 0, 1));
     }
 
     @Override
