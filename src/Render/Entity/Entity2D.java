@@ -245,7 +245,8 @@ public class Entity2D {
     private final Vector4f trans2 = new Vector4f(); // them outside the method
 
     public boolean collideCircle(Entity2D other) {
-        return position.distance(other.position) < scale.x + other.scale.x;
+        Vector2f p2 = other.position;
+        return position.distanceSquared(p2.x, p2.y) < (scale.x + other.scale.x) * (scale.x + other.scale.x);
     }
 
     public float distance(Entity2D other) {

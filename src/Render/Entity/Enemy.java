@@ -31,5 +31,4 @@ public class Enemy extends Entity2D{
     public void setIframes(int iframes) {
         this.iframes = iframes;
     }
-
 }

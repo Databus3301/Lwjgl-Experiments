@@ -153,6 +153,10 @@ public class TestGame extends Test {
             // reset timer
             timeBetweenShot = 0;
         }
+
+        for (Enemy enemy : enemies) {
+            enemy.worldToCell();
+        }
     }
 
     @Override
