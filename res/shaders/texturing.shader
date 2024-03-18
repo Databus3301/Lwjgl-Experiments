@@ -22,7 +22,7 @@ void main()
 #shader fragment
 #version 300 es
 
-precision highp float;
+precision lowp float;
 
 layout (location = 0) out vec4 color;
 

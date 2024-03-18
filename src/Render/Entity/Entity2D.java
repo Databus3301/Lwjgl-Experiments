@@ -171,8 +171,8 @@ public class Entity2D {
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
-        modelMatrix.rotateAround(rotation, (getPosition().x-position.x)/scale.x, (getPosition().y-position.y)/scale.y, 0f);
-
+        if(!rotation.equals(new Quaternionf()))
+            modelMatrix.rotateAround(rotation, (getPosition().x-position.x)/scale.x, (getPosition().y-position.y)/scale.y, 0f);
         position = oldPosition;
 
         return modelMatrix;
@@ -198,7 +198,10 @@ public class Entity2D {
         return Math.abs(getPosition().x - other.getPosition().x) < Math.abs(scale.x + other.scale.x)*1.4 &&
                 Math.abs(getPosition().y - other.getPosition().y) < Math.abs(scale.y + other.scale.y)*1.4;
     }
-
+    public boolean collideAABB(Vector2f pos2) {
+        return Math.abs(getPosition().x - pos2.x) < Math.abs(scale.x)*1.4 &&
+                Math.abs(getPosition().y - pos2.y) < Math.abs(scale.y)*1.4;
+    }
 
     /**
      * This method checks for collision between this entity and another entity using their bounding rectangles.

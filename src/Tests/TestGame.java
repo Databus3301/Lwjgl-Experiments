@@ -40,7 +40,7 @@ public class TestGame extends Test {
         super();
         renderer.setCamera(camera = new Camera(new Vector2f(0, 0)));
 
-        int numOfEnemies = 1000;
+        int numOfEnemies = 100;
         float scale = 3f;
 
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
@@ -52,19 +52,19 @@ public class TestGame extends Test {
         ObjModel model = ObjModel.SQUARE;
 
         player = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
-        player.scale(scale*(4+numOfEnemies/100f));
+        player.scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
 
         target = new Entity2D(new Vector2f(), model, entityTexture, shader);
         target.scale(scale);
 
         for (int i = 0; i < numOfEnemies; i++) {
             enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader, 50));
-            enemies.get(i).scale(scale*i/100);
+            enemies.get(i).scale(scale*i/(numOfEnemies/10f));
         }
 
         livePoints = maxLP;
 
-        colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 0, 0, 1));
+        colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 1, 1));
         colorReplacement.swap(new Vector4f(0, 0, 0, 1), new Vector4f(0, 0, 1, 1));
     }
 
@@ -152,10 +152,6 @@ public class TestGame extends Test {
             last.scale(20);
             // reset timer
             timeBetweenShot = 0;
-        }
-
-        for (Enemy enemy : enemies) {
-            enemy.worldToCell();
         }
     }
 

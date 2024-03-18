@@ -165,7 +165,7 @@ public class Window {
                 case "batchrendering", "batching", "b", "br":
                     currentTest = new TestBatchRendering();
                     break;
-                case "instancedrendering", "instancing", "i", "ir":
+                case "instancedrendering", "instancing", "ir":
                     currentTest = new TestInstancedRendering();
                     break;
                 case "square":
@@ -200,6 +200,9 @@ public class Window {
                     break;
                 case "audio", "a":
                     currentTest = new TestAudio();
+                    break;
+                case "interactable", "i":
+                    currentTest = new TestInteractable();
                     break;
                 default:
                     currentTest = new Test();
