@@ -21,6 +21,7 @@ public class Entity2D {
     protected Texture texture;
     protected HashMap<String, Texture> textures;
     protected Shader shader;
+    protected Vector4f color;
 
     protected Vector2f position;  // x y position
     protected Vector2f offset; // x y offset
@@ -76,6 +77,7 @@ public class Entity2D {
         this.isStatic = false;
         this.isHidden = false;
         this.offset = new Vector2f(0, 0);
+        this.color = new Vector4f(1, 1, 1, 1);
     }
 
     public Entity2D instantiate() { // TODO: test this
@@ -86,6 +88,7 @@ public class Entity2D {
         e.isStatic = isStatic;
         e.isHidden = isHidden;
         e.offset = new Vector2f(offset);
+        e.color = new Vector4f(color);
 
         return e;
     }
@@ -327,6 +330,9 @@ public class Entity2D {
                 "Is Static: " + isStatic + "\n" +
                 "Offset: " + offset + "\n";
     }
+    public Vector4f getColor() {
+        return color;
+    }
 
     public void setPosition(Vector2f position) {
         this.position = position;
@@ -393,9 +399,19 @@ public class Entity2D {
     public void setHidde(boolean isHidden) {
         this.isHidden = isHidden;
     }
-
     public void setOffset(Vector2f offset) {
         this.offset = offset;
+    }
+    public void setOffset(float x, float y) {
+        this.offset.x = x;
+        this.offset.y = y;
+    }
+    public void setColor(float r, float g, float b, float a) {
+        if(color == null) color = new Vector4f(r, g, b, a);
+        else color.set(r, g, b, a);
+    }
+    public void setColor(Vector4f color) {
+        this.color = color;
     }
 
 }

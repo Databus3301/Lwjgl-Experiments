@@ -4,6 +4,10 @@ import Render.Entity.Camera.Camera;
 import Render.Renderer;
 import org.joml.Vector2f;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 // TODO: rework into interface?
 
 /**

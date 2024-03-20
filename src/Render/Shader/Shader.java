@@ -3,6 +3,7 @@ package Render.Shader;
 import Render.Renderer;
 import Tests.Test;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,6 +50,10 @@ public class Shader {
     public void setUniform4f(String name, float v0, float v1, float v2, float v3) {
         int location = getUniformLocation(name);
         glUniform4f(location, v0, v1, v2, v3);
+    }
+    public void setUniform4f(String name, Vector4f vec4) {
+        int location = getUniformLocation(name);
+        glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
     }
 
     private float[] fb = new float[16];

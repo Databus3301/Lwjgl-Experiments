@@ -360,8 +360,12 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
 
-        if(shader.hasUniform("uColor"))
-            shader.setUniform4f("uColor",1 ,1 , 1, 1);
+        if(shader.hasUniform("uColor")) {
+            if(entity != null)
+                shader.setUniform4f("uColor", entity.getColor());
+            else
+                shader.setUniform4f("uColor",1 ,1 , 1, 1);
+        }
         if(shader.hasUniform("uColors"))
             shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
     }

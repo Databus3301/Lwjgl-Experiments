@@ -9,17 +9,31 @@ public class TestInteractable extends Test {
     int lastState = 0;
     public TestInteractable() {
         super();
-        interactable = new Interactable(ObjModel.SQUARE);
+        interactable = new Interactable(ObjModel.SQUARE, this);
         interactable.scale(30);
+
+        interactable.setDraggedCallback((interactable) -> {
+            interactable.setPosition(renderer.screenToWorldCoords(mousePos));
+        });
+        interactable.setHoverCallback((interactable) -> {
+            interactable.setColor(0, 1, 0, 1);
+        });
+        interactable.setPressedCallback((interactable) -> { // TODO: delay till it counts as dragged to avoid accidental drags and actually show this?
+            interactable.setColor(1, 0, 0, 1);
+        });
+        interactable.setReleasedCallback((interactable) -> {
+            interactable.setColor(0, 0, 1, 1);
+        });
+        interactable.setDefaultCallback((interactable) -> {
+            interactable.setColor(1, 1, 1, 1);
+        });
     }
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        if(interactable.getState() != lastState) {
-            lastState = interactable.getState();
-            System.out.println(interactable.getState());
-        }
-        interactable.updateStates(mousePos);
+        if(interactable.hasChangedState())
+            System.out.println("State: " + interactable.getState());
+        interactable.onUpdate(mousePos);
     }
     @Override
     public void OnRender() {

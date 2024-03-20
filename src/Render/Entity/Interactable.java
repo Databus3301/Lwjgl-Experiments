@@ -5,6 +5,9 @@ import Render.Vertices.Model.ObjModel;
 import Tests.Test;
 import org.joml.Vector2f;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -19,7 +22,15 @@ public class Interactable extends Entity2D {
 
     private int state = States.DEFAULT;
 
-    // write all constructors for this class from entity2d
+    private Consumer<Interactable> defaultCallback = (interactable) -> {};
+    private Consumer<Interactable> hoverCallback = (interactable) -> {};
+    private Consumer<Interactable> pressedCallback = (interactable) -> {};
+    private Consumer<Interactable> releasedCallback = (interactable) -> {};
+    private Consumer<Interactable> draggedCallback = (interactable) -> {};
+
+    private int lastState = States.DEFAULT;
+    private boolean changedState = false;
+
     public Interactable() {
         super();
     }
@@ -28,6 +39,11 @@ public class Interactable extends Entity2D {
     }
     public Interactable(ObjModel model) {
         super(model);
+    }
+    public Interactable(ObjModel model, Test test) {
+        super(model);
+        // every time tets::onUpdate is called, update the state of the interactable
+
     }
     public Interactable(int x, int y, ObjModel model) {
         super(x, y, model);
@@ -39,6 +55,35 @@ public class Interactable extends Entity2D {
         super(position, model, shader);
     }
 
+
+    public void onUpdate(Vector2f mousePos) {
+        updateStates(mousePos);
+
+        switch (state) {
+            case States.DEFAULT:
+                defaultCallback.accept(this);
+            break;
+            case States.HOVER:
+                hoverCallback.accept(this);
+            break;
+            case States.PRESSED:
+                pressedCallback.accept(this);
+            break;
+            case States.RELEASED:
+                releasedCallback.accept(this);
+            break;
+            case States.DRAGGED:
+                draggedCallback.accept(this);
+            break;
+        }
+
+        if(this.getState() != lastState) {
+            lastState = this.getState();
+            changedState = true;
+        } else {
+            changedState = false;
+        }
+    }
 
     public void updateStates(int key, int scancode, int action, int mods, Vector2f mousePos) {
         // depending on position and user input, change state
@@ -52,9 +97,13 @@ public class Interactable extends Entity2D {
         }
     }
     public void updateStates(Vector2f mousePos) {
-        if (state == States.DEFAULT && isHovered(mousePos)) {
+        if ((state == States.DEFAULT || state == States.RELEASED) && isHovered(mousePos)) {
             state = States.HOVER;
-        } else if (state == States.HOVER && !isHovered(mousePos)) {
+        }
+        else if (state == States.PRESSED && isHovered(mousePos)) {
+            state = States.DRAGGED;
+        }
+        else if (state == States.HOVER && !isHovered(mousePos)) {
             state = States.DEFAULT;
         }
     }
@@ -73,6 +122,31 @@ public class Interactable extends Entity2D {
         public static final int PRESSED = 2;
         public static final int RELEASED = 3;
         public static final int DRAGGED = 4;
-        public static final int ClICKED = 5;
+
+    }
+
+
+    public void setDefaultCallback(Consumer<Interactable> callback) {
+        this.defaultCallback = callback;
+    }
+
+    public void setHoverCallback(Consumer<Interactable> callback) {
+        this.hoverCallback = callback;
+    }
+
+    public void setPressedCallback(Consumer<Interactable> callback) {
+        this.pressedCallback = callback;
+    }
+
+    public void setReleasedCallback(Consumer<Interactable> callback) {
+        this.releasedCallback = callback;
+    }
+
+    public void setDraggedCallback(Consumer<Interactable> callback) {
+        this.draggedCallback = callback;
+    }
+
+    public boolean hasChangedState() {
+        return changedState;
     }
 }
