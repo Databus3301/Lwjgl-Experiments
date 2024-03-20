@@ -160,12 +160,10 @@ public class Entity2D {
      * calculate the model matrix for the entity
      * @return
      */
-    private final Vector2f oldPosition = new Vector2f();
     public Matrix4f calcModelMatrix() {
         if(isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
             return modelMatrix;
 
-        oldPosition.set(position);
         position.add(offset);
 
         modelMatrix.identity();
@@ -173,7 +171,8 @@ public class Entity2D {
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
         if(!rotation.equals(new Quaternionf()))
             modelMatrix.rotateAround(rotation, (getPosition().x-position.x)/scale.x, (getPosition().y-position.y)/scale.y, 0f);
-        position = oldPosition;
+
+        position.sub(offset);
 
         return modelMatrix;
     }

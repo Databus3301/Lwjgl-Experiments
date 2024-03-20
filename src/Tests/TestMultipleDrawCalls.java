@@ -28,12 +28,11 @@ public class TestMultipleDrawCalls extends TestTextures {
 
     @Override
     public void OnRender() {
-        shader.bind();
+        super.OnRender();
 
         // offsetting the <model> matrix
         e.translate(offset1);
         renderer.drawEntity2D(e);
-
         // offsetting the <model> matrix
         e.translate(offset2);
         renderer.drawEntity2D(e);

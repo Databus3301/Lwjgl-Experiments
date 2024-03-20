@@ -45,7 +45,7 @@ public class Camera extends Entity2D {
         if(calculatedModelMatrixForThisFrame) return modelMatrix;
 
         calculatedModelMatrixForThisFrame = true;
-        //offset = position.mul(-1, new Vector2f());
+        offset = position.mul(-1, new Vector2f());
         return super.calcModelMatrix();
     }
 
@@ -81,7 +81,7 @@ public class Camera extends Entity2D {
     }
     public void centerOn(Entity2D entity) {
         float lerpFactor = 0.03f; // determines camera speed
-        Vector2f targetPosition = entity.getPosition().mul(-1, new Vector2f());
+        Vector2f targetPosition = entity.getPosition().mul(-1f, new Vector2f());
         this.position.x += (targetPosition.x - this.position.x) * lerpFactor;
         this.position.y += (targetPosition.y - this.position.y) * lerpFactor;
     }

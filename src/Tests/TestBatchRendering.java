@@ -27,7 +27,7 @@ public class TestBatchRendering extends Test {
     public TestBatchRendering() {
         super();
         // DEBUG
-        batching = false; // TODO: FIX THIS
+        batching = true;
         spin = false;
         int DIM = 10;
         //
@@ -46,9 +46,9 @@ public class TestBatchRendering extends Test {
         entities = new Entity2D[DIM*DIM];
         int index = 0;
         for(int i = 0; i < DIM; i++) {
-            for (int j = 0; j < DIM; j++) {
-                entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[index % models.length]);
-                //entities[index].setScale(new Vector2f(5/4f, 5/4f));
+            for (int j = 0; j < DIM; j++) { // TODO: investigate weird 1:20 ratio of entity position between batching and non-batching
+                entities[index] = new Entity2D(new Vector2f(2*i-DIM, 2*j-DIM).mul(1.5f), models[index % models.length]);
+                entities[index].setScale(new Vector2f(5/4f, 5/4f));
 
                 index++;
             }

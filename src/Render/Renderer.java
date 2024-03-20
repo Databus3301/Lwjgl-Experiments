@@ -267,8 +267,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             // calculate actual positions of vertices through model matrices
             int dataIndex = 0;
             for (int j = 0; j < indices.length; j++) { // TODO: apply rotation
-                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x;
-                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y  + entity.getPosition().y;
+                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x + entity.getOffset().x ;
+                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y + entity.getPosition().y + entity.getOffset().y;
                 dataIndex += Vertex.SIZE - 2;
 
                 indices[j] += (int)indexOffset/4;
