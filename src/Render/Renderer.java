@@ -194,6 +194,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
 
     public void drawBatch(Batch b) {
+        SetUniforms(currentShader, null);
         draw(b.va, b.ib);
     }
     public <T extends Entity2D> void drawEntity2D(T entity) {
