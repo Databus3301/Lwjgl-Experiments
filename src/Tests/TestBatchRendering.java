@@ -20,35 +20,35 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 public class TestBatchRendering extends Test {
 
     Entity2D[] entities;
+    boolean batching, spin; // test var
     Camera camera;
     Batch b;
-    boolean batching, spin; // test var
 
     public TestBatchRendering() {
         super();
         // DEBUG
-        batching = true;
-        spin = true;
-        int DIM = 100;
+        batching = false; // TODO: FIX THIS
+        spin = false;
+        int DIM = 10;
         //
-        renderer.setCurrentShader(new Shader("res/shaders/batching.shader"));
+        renderer.setCurrentShader(new Shader("batching.shader"));
         renderer.setCamera(camera = new Camera());
         camera.setScale(new Vector2f(200f/DIM, 200f/DIM));
 
         ObjModel[] models = new ObjModel[] {
-                ObjModelParser.parseOBJ("res/models/testModel3.obj"),
-                ObjModelParser.parseOBJ("res/models/sphere.obj"),
-                ObjModelParser.parseOBJ("res/models/square.obj"),
-                ObjModelParser.parseOBJ("res/models/circle.obj")
+                ObjModelParser.parseOBJ("square.obj"),
+                ObjModelParser.parseOBJ("sphere.obj"),
+                ObjModelParser.parseOBJ("circle.obj"),
+                ObjModelParser.parseOBJ("testModel3.obj"),
         };
 
-        // spread entites out in a grid using above models
+        // spread entities out in a grid using above models
         entities = new Entity2D[DIM*DIM];
         int index = 0;
         for(int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
                 entities[index] = new Entity2D(new Vector2f(5*i-DIM*2, 5*j-DIM*2), models[index % models.length]);
-                entities[index].setScale(new Vector2f(5/4f, 5/4f));
+                //entities[index].setScale(new Vector2f(5/4f, 5/4f));
 
                 index++;
             }
@@ -70,7 +70,6 @@ public class TestBatchRendering extends Test {
             camera.rotate(10f*dt, 1);
             camera.rotate(10f*dt, 2);
         }
-
     }
 
     @Override

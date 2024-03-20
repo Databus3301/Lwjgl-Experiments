@@ -21,9 +21,9 @@ import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer { // TODO: drawUI method to draw absolute positioned UI elements
 
-    public Shader currentShader;
-    public int mode = GL_FILL;
-    Camera camera;
+    private Shader currentShader;
+    private int mode = GL_FILL;
+    private Camera camera;
 
     public Renderer() {
         currentShader = new Shader("res/shaders/default.shader");
@@ -196,7 +196,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     public void drawBatch(Batch b) {
         draw(b.va, b.ib);
     }
-    public void drawEntity2D(Entity2D entity) {
+    public <T extends Entity2D> void drawEntity2D(T entity) {
         assert entity != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D is null";
         if(entity.isHidden()) return;
 
@@ -283,7 +283,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         va.addBuffer(vb, Vertex.getLayout());
         return new Batch(va, ib);
     }
-    private Batch _setupBatch(float[][][] texCoordArr, Entity2D base, Vector2f offset, ArrayList<Integer> newLineIndices) { // TODO: handle new lines
+    private Batch _setupBatch(float[][][] texCoordArr, Entity2D base, Vector2f offset) {
         assert base != null : "[ERROR] (Render.Renderer.setupBatch) base entity is null";
         assert base.getModel() != null : "[ERROR] (Render.Renderer.setupBatch) base entity has no model";
         assert texCoordArr != null : "[ERROR] (Render.Renderer.setupBatch) textureCoords array is null";

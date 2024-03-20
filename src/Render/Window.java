@@ -150,7 +150,7 @@ public class Window {
                 case "multipledrawcalls", "mdc":
                     currentTest = new TestMultipleDrawCalls();
                     break;
-                case "camera", "c":
+                case "camera", "cam", "c":
                     currentTest = new TestCamera();
                     break;
                 case "pong":
@@ -244,8 +244,8 @@ public class Window {
 
 
             if (currentTest != null) {
-                currentTest.OnRender();
                 currentTest.OnUpdate(dt);
+                currentTest.OnRender();
             }
 
             glfwSwapBuffers(windowPtr);

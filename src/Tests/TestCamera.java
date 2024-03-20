@@ -7,17 +7,16 @@ import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
 import static org.lwjgl.glfw.GLFW.*;
 
-public class TestCamera extends TestTextures {
+public class TestCamera extends Test {
 
-    Camera camera;
     Entity2D origin;
-
     Entity2D offscreen;
+    Camera camera;
 
     public TestCamera() {
         super();
         renderer.setCamera(camera = new Camera());
-        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+        ObjModel model = ObjModelParser.parseOBJ("square.obj");
         origin = new Entity2D(new Vector2f(), model);
         offscreen = new Entity2D(new Vector2f(2000, 0), model);
     }
@@ -29,8 +28,8 @@ public class TestCamera extends TestTextures {
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
         //camera.rotate(-100.0f*dt, 2);
-        if(camera.getScale().x < 3f)
-             camera.scale(new Vector2f(1.0f, 1.0f).mul(dt));
+        if(camera.getScale().x < 90f)
+             camera.scale(new Vector2f(10.0f, 10.0f).mul(dt));
     }
 
     @Override
