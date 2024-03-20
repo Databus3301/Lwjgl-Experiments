@@ -6,6 +6,7 @@ import org.joml.Vector4f;
 public class ColorReplacement {
     public static final Matrix4f NO_SWAP_MATRIX = new Matrix4f().zero();
     public static final ColorReplacement NO_SWAP = new ColorReplacement();
+    public static final ColorReplacement SWAP_BLACK_WHITE = new ColorReplacement().swap(new Vector4f(0, 0, 0, 1), new Vector4f(1, 1, 1, 1)).swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 0, 0, 1));
     private final Matrix4f cSwaps;
     private int lastPair = 1;
     public ColorReplacement() {
@@ -18,7 +19,7 @@ public class ColorReplacement {
      * @param c1 color one (to be replaced)
      * @param c2 color two (to insert in place of c1)
      */
-    public void swap(Vector4f c1, Vector4f c2) {
+    public ColorReplacement swap(Vector4f c1, Vector4f c2) {
         if(lastPair == 1) {
             cSwaps.setColumn(0, c1);
             cSwaps.setColumn(1, c2);
@@ -27,10 +28,11 @@ public class ColorReplacement {
             cSwaps.setColumn(3, c2);
         }
         lastPair = (lastPair + 1) % 2;
+        return this;
     }
-    public void swap(Vector4f c1, Vector4f c2, int pair) {
+    public ColorReplacement swap(Vector4f c1, Vector4f c2, int pair) {
         lastPair = (pair + 1) % 2;
-        swap(c1, c2);
+        return swap(c1, c2);
     }
     public void replaceRow(Vector4f c, int row) {
         cSwaps.setColumn(row, c);

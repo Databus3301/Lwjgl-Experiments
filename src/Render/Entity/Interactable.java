@@ -1,9 +1,11 @@
 package Render.Entity;
 
+import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Tests.Test;
 import org.joml.Vector2f;
+import org.w3c.dom.Text;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -40,10 +42,11 @@ public class Interactable extends Entity2D {
     public Interactable(ObjModel model) {
         super(model);
     }
-    public Interactable(ObjModel model, Test test) {
-        super(model);
-        // every time tets::onUpdate is called, update the state of the interactable
-
+    public Interactable(Vector2f position, ObjModel model, Texture texture) {
+        super(position, model, texture);
+    }
+    public Interactable(Vector2f position, ObjModel model, Texture texture, Shader shader) {
+        super(position, model, texture, shader);
     }
     public Interactable(int x, int y, ObjModel model) {
         super(x, y, model);

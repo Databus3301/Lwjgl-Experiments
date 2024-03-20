@@ -1,10 +1,12 @@
 package Render.Entity;
 
+import Render.Entity.Texturing.ColorReplacement;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import org.joml.*;
 
+import java.awt.*;
 import java.lang.Math;
 import java.util.HashMap;
 import java.util.Objects;
@@ -21,7 +23,9 @@ public class Entity2D {
     protected Texture texture;
     protected HashMap<String, Texture> textures;
     protected Shader shader;
+
     protected Vector4f color;
+    protected ColorReplacement colorReplacement;
 
     protected Vector2f position;  // x y position
     protected Vector2f offset; // x y offset
@@ -334,6 +338,10 @@ public class Entity2D {
         return color;
     }
 
+    public ColorReplacement getColorReplacement() {
+        return colorReplacement;
+    }
+
     public void setPosition(Vector2f position) {
         this.position = position;
     }
@@ -413,5 +421,7 @@ public class Entity2D {
     public void setColor(Vector4f color) {
         this.color = color;
     }
-
+    public void setColorReplacement(ColorReplacement colorReplacement) {
+        this.colorReplacement = colorReplacement;
+    }
 }
