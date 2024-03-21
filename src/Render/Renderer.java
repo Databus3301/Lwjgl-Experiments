@@ -472,6 +472,12 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     public void drawRect(int i, int i1, int i2, int i3) {
         drawRect(new Vector2f(i, i1), new Vector2f(i2, i3));
     }
+    public void drawRect(Vector4f rect) {
+        drawRect(new Vector2f(rect.x, rect.y), new Vector2f(rect.z, rect.w));
+    }
+    public void drawRect(Vector4f rect, Vector4f color) {
+        drawRect(new Vector2f(rect.x, rect.y), new Vector2f(rect.z, rect.w), color);
+    }
 
     public void fillRect(Vector2f pos, Vector2f dim, Vector4f color) {
         Shader.DEFAULT.bind();
@@ -487,8 +493,60 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     public void fillRect(Vector2f pos, Vector2f dim) {
         fillRect(pos, dim, new Vector4f(1, 1, 1, 1));
     }
+    public void drawCircle(Vector2f pos, float radius, Vector4f color) {
+        Shader.DEFAULT.bind();
+        SetUniforms(Shader.DEFAULT, null, color);
+
+        GL43.glBegin(GL_LINE_LOOP);
+        for (int i = 0; i < 360; i++) {
+            float angle = (float) Math.toRadians(i);
+            GL43.glVertex2f(pos.x + (float) Math.cos(angle) * radius, pos.y + (float) Math.sin(angle) * radius);
+        }
+        GL43.glEnd();
+    }
 
     ///////////////////////
+    ////////// DEBUGS //////////
+    public <T extends Entity2D>void drawCollisionAABB(T entity) {
+        ObjModel model = entity.getModel();
+        Vector2f scale = entity.getScale();
+        if(model == null) return;
+        Vector4f rect = model.getBoundingBox();
+        Vector2f pos = entity.getPosition();
+        float x = pos.x + rect.x * scale.x;
+        float y = pos.y + rect.y * scale.y;
+        float w = rect.z * scale.x;
+        float h = rect.w * scale.y;
+        drawRect(new Vector4f(x, y, w, h), new Vector4f(1, 0, 0, 1));
+    }
+    public <T extends Entity2D>void drawCollisionCircle(T entity) {
+        ObjModel model = entity.getModel();
+        Vector2f scale = entity.getScale();
+        if(model == null) return;
+        float r = scale.x;
+        drawCircle(entity.getPosition(), r, new Vector4f(1, 0, 0, 1));
+    }
+    private final Vector4f trans = new Vector4f();
+    public <T extends Entity2D> void drawCollisionRect(T entity) {
+        assert entity.getModel() != null: "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
+
+        ObjModel model = entity.getModel();
+        Vector2f scale = entity.getScale();
+
+        Vector4f rect1 = model.getBoundingBox();
+
+        trans.x = rect1.x;
+        trans.y = rect1.y;
+
+        entity.calcModelMatrix().transform(trans);
+        rect1.x = trans.x;
+        rect1.y = trans.y;
+
+        rect1.z *= scale.x;
+        rect1.w *= scale.y;
+
+        drawRect(rect1, new Vector4f(1, 0, 0, 1));
+    }
 
     /**
      * Choose the shader to use for rendering

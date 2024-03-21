@@ -27,7 +27,9 @@ public class Test {
         renderer.getCamera().onRender();
         renderer.clear();
     }
-    public void OnClose() {}
+    public void OnClose() {
+        renderer.getCurrentShader().delete();
+    }
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {}
 
 

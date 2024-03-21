@@ -17,6 +17,8 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - Mouse Input
 - Keyboard Input
 - Text Rendering
+- Interactables
+- Sound
 
 ## WOP
 ### Engine
@@ -28,7 +30,6 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] frustum culling
 - [ ] scene loading/saving/parsing
 - [ ] interaction
-- [ ] sound
 - [ ] texture atlas
 - [ ] preload models and textures?
 - [ ] double buffering

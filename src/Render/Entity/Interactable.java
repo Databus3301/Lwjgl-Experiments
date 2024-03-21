@@ -22,15 +22,18 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Interactable extends Entity2D {
 
-    private int state = States.DEFAULT;
+    private States state = States.DEFAULT;
+    private float triggerDistance = 1000;
 
     private Consumer<Interactable> defaultCallback = (interactable) -> {};
     private Consumer<Interactable> hoverCallback = (interactable) -> {};
     private Consumer<Interactable> pressedCallback = (interactable) -> {};
     private Consumer<Interactable> releasedCallback = (interactable) -> {};
     private Consumer<Interactable> draggedCallback = (interactable) -> {};
+    private QuintConsumer<Interactable, Integer, Integer, Integer, Vector2f>
+                                    keyCallback = (interactable, key, scancode, action, mousePos) -> {};
 
-    private int lastState = States.DEFAULT;
+    private States lastState = States.DEFAULT;
     private boolean changedState = false;
 
     public Interactable() {
@@ -42,20 +45,11 @@ public class Interactable extends Entity2D {
     public Interactable(ObjModel model) {
         super(model);
     }
-    public Interactable(Vector2f position, ObjModel model, Texture texture) {
-        super(position, model, texture);
-    }
     public Interactable(Vector2f position, ObjModel model, Texture texture, Shader shader) {
         super(position, model, texture, shader);
     }
-    public Interactable(int x, int y, ObjModel model) {
-        super(x, y, model);
-    }
     public Interactable(Vector2f position, ObjModel model) {
         super(position, model);
-    }
-    public Interactable(Vector2f position, ObjModel model, Shader shader) {
-        super(position, model, shader);
     }
 
 
@@ -63,19 +57,19 @@ public class Interactable extends Entity2D {
         updateStates(mousePos);
 
         switch (state) {
-            case States.DEFAULT:
+            case DEFAULT:
                 defaultCallback.accept(this);
             break;
-            case States.HOVER:
+            case HOVER:
                 hoverCallback.accept(this);
             break;
-            case States.PRESSED:
+            case PRESSED:
                 pressedCallback.accept(this);
             break;
-            case States.RELEASED:
+            case RELEASED:
                 releasedCallback.accept(this);
             break;
-            case States.DRAGGED:
+            case DRAGGED:
                 draggedCallback.accept(this);
             break;
         }
@@ -86,6 +80,10 @@ public class Interactable extends Entity2D {
         } else {
             changedState = false;
         }
+    }
+    public void onKeyInput(int key, int scancode, int action, int mods, Vector2f mousePos) {
+        updateStates(key, scancode, action, mods, mousePos);
+        keyCallback.accept(this, key, scancode, action, mousePos);
     }
 
     public void updateStates(int key, int scancode, int action, int mods, Vector2f mousePos) {
@@ -112,44 +110,54 @@ public class Interactable extends Entity2D {
     }
 
     public boolean isHovered(Vector2f mousePos) {
-           return collideAABB(Test.renderer.screenToWorldCoords(mousePos));
+        return collideAABB(Test.renderer.screenToWorldCoords(mousePos));
     }
 
-    public int getState() {
-        return state;
-    }
 
-    static class States {
-        public static final int DEFAULT = 0;
-        public static final int HOVER = 1;
-        public static final int PRESSED = 2;
-        public static final int RELEASED = 3;
-        public static final int DRAGGED = 4;
-
+    public enum States {
+        DEFAULT,
+        HOVER,
+        PRESSED,
+        RELEASED,
+        DRAGGED
     }
 
 
     public void setDefaultCallback(Consumer<Interactable> callback) {
         this.defaultCallback = callback;
     }
-
     public void setHoverCallback(Consumer<Interactable> callback) {
         this.hoverCallback = callback;
     }
-
     public void setPressedCallback(Consumer<Interactable> callback) {
         this.pressedCallback = callback;
     }
-
     public void setReleasedCallback(Consumer<Interactable> callback) {
         this.releasedCallback = callback;
     }
-
     public void setDraggedCallback(Consumer<Interactable> callback) {
         this.draggedCallback = callback;
+    }
+    public void setKeyCallback(QuintConsumer<Interactable, Integer, Integer, Integer, Vector2f> callback) {
+        this.keyCallback = callback;
+    }
+
+    public void setTriggerDistance(float triggerDistance) {
+        this.triggerDistance = triggerDistance;
     }
 
     public boolean hasChangedState() {
         return changedState;
+    }
+    public float getTriggerDistance() {
+        return triggerDistance;
+    }
+    public States getState() {
+        return state;
+    }
+
+    @FunctionalInterface
+    public interface QuintConsumer<T, U, V, W, X> {
+        void accept(T t, U u, V v, W w, X x);
     }
 }

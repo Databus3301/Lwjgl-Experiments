@@ -12,25 +12,27 @@ import org.joml.Vector2f;
  */
 public class TestNormalisation extends Test{
     Entity2D[] entities;
-    ObjModel[] models;
     public TestNormalisation() {
         super();
-        models = new ObjModel[4];
-        models[0] = ObjModelParser.parseOBJ("res/models/square.obj");
-        models[1] = ObjModelParser.parseOBJ("res/models/circle.obj");
-        models[2] = ObjModelParser.parseOBJ("res/models/testModel3.obj");
-        models[3] = ObjModelParser.parseOBJ("res/models/sphere.obj");
+        ObjModel[] models = new ObjModel[]{
+            ObjModelParser.parseOBJ("res/models/square.obj"),
+            ObjModelParser.parseOBJ("res/models/circle.obj"),
+            ObjModelParser.parseOBJ("res/models/testModel3.obj"),
+            ObjModelParser.parseOBJ("res/models/sphere.obj"),
+            ObjModelParser.parseOBJ("res/models/cam.obj"),
+        };
 
+        int scale = 25;
         entities = new Entity2D[models.length * models.length];
         int entityIndex = 0;
         for (int i = 0; i < models.length; i++) {
             for (int j = 0; j < models.length; j++) {
                 entities[entityIndex] = new Entity2D(models[(j+i)% models.length]);
-                entities[entityIndex].scale(50);
-                entities[entityIndex++].translate(-150 + 100 * j, i*100-150);
+                entities[entityIndex].scale(scale);
+                int offset = scale*(models.length-1); // auto center everything
+                entities[entityIndex++].translate(j * scale*2 - offset , i * scale*2 - offset);
             }
         }
-
     }
 
     @Override

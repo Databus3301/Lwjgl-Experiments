@@ -7,10 +7,10 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class ObjModelParser {
-    public static ObjModel parseOBJ(String path) {
+    public static ObjModel parseOBJ(String path, ObjModel base) {
         if(!path.startsWith("res/models/")) path = "res/models/" + path;
 
-        ObjModel model = new ObjModel();
+        ObjModel model = base != null ? base : new ObjModel();
         short[] currentMaterialID = new short[]{0};
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -81,6 +81,9 @@ public class ObjModelParser {
 
 
         return model;
+    }
+    public static ObjModel parseOBJ(String path) {
+        return parseOBJ(path, null);
     }
 
     public static ArrayList<ObjMaterial> parseMTL(String path) {

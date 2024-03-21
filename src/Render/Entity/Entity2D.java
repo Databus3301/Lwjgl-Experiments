@@ -2,6 +2,7 @@ package Render.Entity;
 
 import Render.Entity.Texturing.ColorReplacement;
 import Render.Entity.Texturing.Texture;
+import Render.Renderer;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import org.joml.*;
@@ -107,18 +108,18 @@ public class Entity2D {
     public void translate(float x, float y) {
         this.position.add(new Vector2f(x, y));
     }
-    public Vector2f translateTowards(Vector2f target, float speed) {
+    public Vector2f translateTowards(Vector2f target, float by) {
         Vector2f direction = new Vector2f(target).sub(position).normalize();
-        this.position.add(direction.x * speed, direction.y * speed);
+        this.position.add(direction.x * by, direction.y * by);
         return direction;
     }
-    public Vector2f translateTowards(Entity2D target, float speed) {
+    public Vector2f translateTowards(Entity2D target, float by) {
         Vector2f direction = new Vector2f(target.getPosition()).sub(position).normalize();
-        this.position.add(direction.x * speed, direction.y * speed);
+        this.position.add(direction.x * by, direction.y * by);
         return direction;
     }
-    public void translateIn(Vector2f direction, float speed) {
-        this.position.add(new Vector2f(direction).normalize().mul(speed));
+    public void translateIn(Vector2f direction, float by) {
+        this.position.add(new Vector2f(direction).normalize().mul(by));
     }
 
     /**
@@ -201,12 +202,12 @@ public class Entity2D {
      * @return hasCollided
      */
     public boolean collideAABB(Entity2D other) {
-        return Math.abs(getPosition().x - other.getPosition().x) < Math.abs(scale.x + other.scale.x)*1.4 &&
-                Math.abs(getPosition().y - other.getPosition().y) < Math.abs(scale.y + other.scale.y)*1.4;
+        return Math.abs(getPosition().x - other.getPosition().x) < Math.abs(scale.x + other.scale.x)  &&
+                Math.abs(getPosition().y - other.getPosition().y) < Math.abs(scale.y + other.scale.y);
     }
     public boolean collideAABB(Vector2f pos2) {
-        return Math.abs(getPosition().x - pos2.x) < Math.abs(scale.x)*1.4 &&
-                Math.abs(getPosition().y - pos2.y) < Math.abs(scale.y)*1.4;
+        return Math.abs(getPosition().x - pos2.x) < Math.abs(scale.x)  &&
+                Math.abs(getPosition().y - pos2.y) < Math.abs(scale.y);
     }
 
     /**
@@ -260,6 +261,20 @@ public class Entity2D {
 
     public float distance(Entity2D other) {
         return position.distance(other.position);
+    }
+    public float distanceToNearestEdge(Vector2f point) {
+        if(this.model == null) return Float.MAX_VALUE;
+        // Get the bounding box of the Interactable object
+        Vector4f boundingBox = this.model.getBoundingBox();
+
+        // Calculate the distances to each edge
+        float left = Math.abs(boundingBox.x - point.x);
+        float right = Math.abs(boundingBox.x + boundingBox.z - point.x);
+        float bottom = Math.abs(boundingBox.y - point.y);
+        float top = Math.abs(boundingBox.y + boundingBox.w - point.y);
+
+        // Return the smallest distance
+        return Math.min(Math.min(left, right), Math.min(bottom, top));
     }
 
     public void accelerate(Vector2f acceleration) {

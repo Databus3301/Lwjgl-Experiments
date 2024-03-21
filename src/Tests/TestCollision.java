@@ -4,23 +4,20 @@ import Render.Entity.Entity2D;
 import Render.Vertices.Model.ObjModel;
 import Render.Vertices.Model.ObjModelParser;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL43;
-
-import static org.lwjgl.opengl.GL11.GL_POINTS;
 
 public class TestCollision extends Test{
 
     private static final int TESTS = 3;
-    Entity2D[] entities = new Entity2D[TESTS*3];
+    private final Entity2D[] entities = new Entity2D[TESTS*3];
+
     // make them switch direction when they collide
-    boolean[][] flags = new boolean[TESTS][1];
-    int[][] fcs = new int[TESTS][1];
+    private final boolean[][] flags = new boolean[TESTS][1];
+    private final int[][] fcs = new int[TESTS][1];  // frame counters
     public TestCollision() {
         super();
 
 
-        ObjModel model = ObjModelParser.parseOBJ("res/models/circle.obj");
+        ObjModel model = ObjModelParser.parseOBJ("testModel3.obj");
         entities[0] = new Entity2D(-300, +350,  model);
         entities[1] = new Entity2D(-300, +50,   model);
         entities[2] = new Entity2D(-150, 200,   model);
@@ -30,7 +27,7 @@ public class TestCollision extends Test{
         entities[5] = new Entity2D(+200, 100,   model);
 
         entities[6] = new Entity2D(-300, -100,  model);
-        entities[7] = new Entity2D(-100, -300,     model);
+        entities[7] = new Entity2D(-100, -300,  model);
         entities[8] = new Entity2D(-100, -100,  model);
 
         int indicator = 0;
@@ -59,6 +56,7 @@ public class TestCollision extends Test{
         for (Entity2D entity : entities) {
            entity.translate(entity.getVelocity().mul(dt, new Vector2f()));
         }
+        entities[4].rotate(100*dt, 2);
     }
 
 
@@ -76,6 +74,8 @@ public class TestCollision extends Test{
     private void handleEntities(Entity2D e1, Entity2D e2, Entity2D c, boolean[] flag, int[] fc) {
         renderer.drawEntity2D(e1);
         renderer.drawEntity2D(e2);
+        renderer.drawCollisionRect(e1);
+        renderer.drawCollisionRect(e2);
 
         boolean[] prevFlag = flag.clone();
         flag[0] = false;
@@ -93,7 +93,6 @@ public class TestCollision extends Test{
         }
         if(fc[0] == 0) fc[0] = 100000;
         fc[0]++;
-
     }
 
     @Override

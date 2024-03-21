@@ -48,6 +48,9 @@ public class ObjModel {
         // set the default material
         _materials.add(new ObjMaterial());
     }
+    public ObjModel(String path) {
+       ObjModelParser.parseOBJ(path, this);
+    }
 
     public ObjModel(float[][] vertexPositions, short[][] indices) { // TODO: test this
         this.positions = vertexPositions;

@@ -16,15 +16,12 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 // rewrite the pong test to use the Entity2D class
 public class TestPong extends Test {
     private final Entity2D ball, wallLeft, wallRight;
-    private final Camera camera;
-
 
     public TestPong() {
         Vector2i dim = Window.dim;
 
 
-        ObjModel model = ObjModelParser.parseOBJ("square.obj");
-        Shader shader = new Shader("res/shaders/default.shader");
+        ObjModel model = ObjModel.SQUARE;
         int SCALE = 15;
 
         ball = new Entity2D(new Vector2f(), model);
@@ -35,9 +32,7 @@ public class TestPong extends Test {
         wallLeft.scale(new Vector2f(SCALE, dim.y/4f));
         wallRight.scale(new Vector2f(SCALE, dim.y/4f));
 
-        ball.setVelocity(new Vector2f((float) (Math.random() * 600f), (float) (Math.random() * 50f)));
-
-        renderer.setCamera(camera = new Camera(new Vector2f(), shader));
+        ball.setVelocity(new Vector2f((float) (Math.random() * 1000f), (float) (Math.random() * 50f)));
     }
 
     long lastCollision = System.currentTimeMillis();
@@ -48,7 +43,7 @@ public class TestPong extends Test {
         wallLeft.translate(new Vector2f(wallLeft.getVelocity()).mul(dt));
         wallRight.translate(new Vector2f(wallRight.getVelocity()).mul(dt));
 
-        if (ball.collideRect(wallLeft) || ball.collideAABB(wallRight)) {
+        if (ball.collideRect(wallLeft) || ball.collideRect(wallRight)) {
             if (System.currentTimeMillis() - lastCollision > 100) {
                 lastCollision = System.currentTimeMillis();
                 ball.setVelocity(-ball.getVelocity().x, ball.getVelocity().y + (float) Math.random() * 100 - 50);
@@ -59,6 +54,7 @@ public class TestPong extends Test {
         }
         if (ball.getPosition().y < -Window.dim.y / 2f + ball.getScale().y || ball.getPosition().y > Window.dim.y / 2f - ball.getScale().y) {
             ball.setVelocity(ball.getVelocity().x, -ball.getVelocity().y);
+            ball.translateIn(ball.getVelocity(), 10);
         }
     }
 
@@ -89,7 +85,5 @@ public class TestPong extends Test {
     @Override
     public void OnClose() {
         super.OnClose();
-        if(camera.getShader() != null)
-            camera.getShader().delete();
     }
 }
