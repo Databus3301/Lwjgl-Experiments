@@ -88,7 +88,10 @@ public class ObjModel {
         if(vertexBufferData!=null) return vertexBufferData;
 
 
-        float[] data = new float[Vertex.SIZE * faces.length * 3]; // 9 floats per vertex, 3 vertices per face
+        int length = Vertex.SIZE * faces.length * 3; // 9 floats per vertex, 3 vertices per face
+        if(vertexBufferData==null || vertexBufferData.length != length)
+            vertexBufferData = new float[length];
+
         indices = new int[faces.length * 3]; // 3 vertices per face
         short dataIndex = 0;
         short faceIndex = 0;
@@ -96,15 +99,15 @@ public class ObjModel {
         for (short[][] face : faces) {
             for (short i = 0; i < face.length; i++) {
                 float[] position = positions[face[i][0] - 1];
-                data[dataIndex++] = position[0];
-                data[dataIndex++] = position[1];
-                data[dataIndex++] = position[2];
+                vertexBufferData[dataIndex++] = position[0];
+                vertexBufferData[dataIndex++] = position[1];
+                vertexBufferData[dataIndex++] = position[2];
 
                 if (Vertex.SIZE > 3) {
                     if (face[i].length > 1) {
                         float[] texture = textures[face[i][1] - 1];
-                        data[dataIndex++] = texture[0];
-                        data[dataIndex++] = texture[1];
+                        vertexBufferData[dataIndex++] = texture[0];
+                        vertexBufferData[dataIndex++] = texture[1];
                     } else {
                         dataIndex += 2;
                     }
@@ -113,9 +116,9 @@ public class ObjModel {
                 if(Vertex.SIZE > 5) {
                     if (face[i].length > 2) {
                         float[] normal = normals[face[i][2] - 1];
-                        data[dataIndex++] = normal[0];
-                        data[dataIndex++] = normal[1];
-                        data[dataIndex++] = normal[2];
+                        vertexBufferData[dataIndex++] = normal[0];
+                        vertexBufferData[dataIndex++] = normal[1];
+                        vertexBufferData[dataIndex++] = normal[2];
                     } else {
                         dataIndex += 3;
                     }
@@ -123,7 +126,7 @@ public class ObjModel {
 
                 if(Vertex.SIZE > 8) {
                     if (face[i].length > 3)
-                        data[dataIndex++] = materialIDs[faceIndex];
+                        vertexBufferData[dataIndex++] = materialIDs[faceIndex];
                     else
                         dataIndex++;
                 }
@@ -133,8 +136,7 @@ public class ObjModel {
             faceIndex++;
         }
 
-        vertexBufferData = data;
-        return data;
+        return vertexBufferData;
     }
     public VertexBuffer getVertexBuffer() {
         if(vertexBuffer==null) {
@@ -193,6 +195,44 @@ public class ObjModel {
         T[] array = (T[]) Array.newInstance(c, list.size());
         list.toArray(array);
         return array;
+    }
+
+    public void replaceTextureCoords(float[][] newTextures) {
+        assert newTextures.length == textures.length: "The new texture coordinates must have the same length as the old ones";
+
+        textures = newTextures;
+
+        if(Vertex.SIZE < 4) return;
+
+        int length = Vertex.SIZE * faces.length * 3; // 9 floats per vertex, 3 vertices per face
+
+        if(vertexBufferData==null)
+            vertexBufferData = getVertexBufferData();
+        if(vertexBufferData.length != length)
+            vertexBufferData = new float[length];
+
+        short dataIndex = 0;
+
+        for (short[][] face : faces) {
+            for (short i = 0; i < face.length; i++) {
+                dataIndex += 3;
+
+                if (face[i].length > 1) {
+                    float[] texture = textures[face[i][1] - 1];
+                    vertexBufferData[dataIndex++] = texture[0];
+                    vertexBufferData[dataIndex++] = texture[1];
+                }
+
+                if(Vertex.SIZE > 5)
+                    dataIndex += 3;
+                if(Vertex.SIZE > 8)
+                    dataIndex++;
+            }
+        }
+        if(vertexBuffer!=null)
+            vertexBuffer.update(vertexBufferData, 0);
+        else
+            vertexBuffer = new VertexBuffer(vertexBufferData);
     }
 
 

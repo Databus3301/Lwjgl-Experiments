@@ -3,6 +3,7 @@ package Render.Entity.Texturing;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL43.*;
 
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
@@ -60,6 +61,12 @@ public class Texture {
     }
     public int getWidth() {
         return m_Width.get(0);
+    }
+    public Vector2f getDim() {
+        return new Vector2f(getWidth(), getHeight());
+    }
+    public float getAspect() {
+        return (float)getWidth()/(float)getHeight();
     }
 
 

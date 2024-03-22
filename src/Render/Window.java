@@ -204,6 +204,9 @@ public class Window {
                 case "interactable", "i":
                     currentTest = new TestInteractable();
                     break;
+                case "textureatlas", "ta":
+                    currentTest = new TestTextureAtlas();
+                    break;
                 default:
                     currentTest = new Test();
             }

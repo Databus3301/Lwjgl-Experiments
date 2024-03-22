@@ -77,7 +77,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == '\n')
                 newLineIndices.add(i);
-            texCoordArr[i] = font.getCharTexCoords(text.charAt(i));
+            texCoordArr[i] = font.getTexCoords(text.charAt(i));
         }
 
         VertexArray va = new VertexArray();
@@ -117,7 +117,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
                     if (Vertex.SIZE > 3) {
                         if (face[k].length > 1) {
-                            float[] texture = texCoordArr[i][face[k][1]-1]; // potential optimisation:
+                            float[] texture = texCoordArr[i][face[k][1]-1];
                             data[dataIndex++] = texture[0];
                             data[dataIndex++] = texture[1];
                         } else {
@@ -469,8 +469,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     public void drawRect(Vector2f pos, Vector2f dim) {
         drawRect(pos, dim, new Vector4f(1, 1, 1, 1));
     }
-    public void drawRect(int i, int i1, int i2, int i3) {
-        drawRect(new Vector2f(i, i1), new Vector2f(i2, i3));
+    public void drawRect(float x, float y, float w, float h) {
+        drawRect(new Vector2f(x, y), new Vector2f(w, h));
     }
     public void drawRect(Vector4f rect) {
         drawRect(new Vector2f(rect.x, rect.y), new Vector2f(rect.z, rect.w));
@@ -527,7 +527,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         drawCircle(entity.getPosition(), r, new Vector4f(1, 0, 0, 1));
     }
     private final Vector4f trans = new Vector4f();
-    public <T extends Entity2D> void drawCollisionRect(T entity) {
+    public <T extends Entity2D> void drawCollisionRect(T entity) { // TODO: rotate the rect correctly
         assert entity.getModel() != null: "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
 
         ObjModel model = entity.getModel();
