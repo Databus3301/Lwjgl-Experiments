@@ -8,34 +8,42 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class TestInteractable extends Test {
 
-    Interactable interactable;
+    Interactable general;
+    Interactable button;
     public TestInteractable() {
         super();
         ObjModel model = new ObjModel("circle.obj");
-        interactable = new Interactable(new Vector2f(), model);
-        interactable.scale(70);
+        general = new Interactable(this, new Vector2f(), model);
+        general.scale(70);
+        button = new Interactable(this, new Vector2f(0, 200), model);
+        button.scale(70, 20);
 
-        interactable.setDraggedCallback((interactable) -> {
+        button.setReleasedCallback((interactable -> {
+            interactable.setColor((float)(Math.random()), (float)(Math.random()), (float)(Math.random()), 1f);
+            System.out.println("clicked");
+        }));
+
+        general.setDraggedCallback((interactable) -> {
             interactable.setPosition(renderer.screenToWorldCoords(mousePos));
         });
 
-        interactable.setDefaultCallback((interactable) -> {
+        general.setDefaultCallback((interactable) -> {
             //interactable.setColor(1, 1, 1, 1);
         });
-        interactable.setHoverCallback((interactable) -> {
+        general.setHoverCallback((interactable) -> {
             interactable.setColor(0, 1, 0, 1);
         });
 
 
-        interactable.setPressedCallback((interactable) -> { // TODO: delay till it counts as dragged to avoid accidental drags and actually show this?
+        general.setPressedCallback((interactable) -> { // TODO: delay till it counts as dragged to avoid accidental drags and actually show this?
             interactable.setColor(1, 0, 0, 1);
         });
-        interactable.setReleasedCallback((interactable) -> {
+        general.setReleasedCallback((interactable) -> {
             interactable.setColor(0, 0, 1, 1);
         });
 
-        interactable.setTriggerDistance(300);
-        interactable.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
+        general.setTriggerDistance(300);
+        general.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
             if(renderer.screenToWorldCoords(mousePos).distance(interactable.getPosition()) > interactable.getTriggerDistance())
                 return;
 
@@ -51,15 +59,16 @@ public class TestInteractable extends Test {
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        if(interactable.hasChangedState())
-            System.out.println("State: " + interactable.getState());
-        interactable.onUpdate(mousePos);
+        if(general.hasChangedState())
+            System.out.println("State: " + general.getState());
     }
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(interactable);
-        renderer.drawCollisionAABB(interactable);
+        renderer.drawEntity2D(general);
+        renderer.drawCollisionAABB(general);
+        renderer.drawEntity2D(button);
+        renderer.drawCollisionAABB(button);
     }
     @Override
     public void OnClose() {
@@ -68,7 +77,6 @@ public class TestInteractable extends Test {
     @Override
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
-        interactable.onKeyInput(key, scancode, action, mods, mousePos);
     }
 
 }

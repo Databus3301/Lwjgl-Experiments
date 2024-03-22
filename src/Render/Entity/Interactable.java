@@ -36,43 +36,42 @@ public class Interactable extends Entity2D {
     private States lastState = States.DEFAULT;
     private boolean changedState = false;
 
-    public Interactable() {
+    public <T extends Test> Interactable(T scene) {
         super();
+        init(scene);
     }
-    public Interactable(Vector2f position) {
+    public <T extends Test> Interactable(T scene, Vector2f position) {
         super(position);
+        init(scene);
     }
-    public Interactable(ObjModel model) {
+    public <T extends Test> Interactable(T scene, ObjModel model) {
         super(model);
+        init(scene);
     }
-    public Interactable(Vector2f position, ObjModel model, Texture texture, Shader shader) {
+    public <T extends Test> Interactable(T scene, Vector2f position, ObjModel model, Texture texture, Shader shader) {
         super(position, model, texture, shader);
+        init(scene);
     }
-    public Interactable(Vector2f position, ObjModel model) {
+    public <T extends Test> Interactable(T scene, Vector2f position, ObjModel model) {
         super(position, model);
+        init(scene);
+
+    }
+    public <T extends Test> void init(T scene) {
+        scene.addKeyListener(this::onKeyInput);
+        scene.addUpdateListener(this::onUpdate);
     }
 
-
-    public void onUpdate(Vector2f mousePos) {
-        updateStates(mousePos);
-
+    public void onUpdate(float dt, Vector2f mousePos) {
         switch (state) {
-            case DEFAULT:
-                defaultCallback.accept(this);
-            break;
-            case HOVER:
-                hoverCallback.accept(this);
-            break;
-            case PRESSED:
-                pressedCallback.accept(this);
-            break;
-            case RELEASED:
-                releasedCallback.accept(this);
-            break;
-            case DRAGGED:
-                draggedCallback.accept(this);
-            break;
+            case DEFAULT -> defaultCallback.accept(this);
+            case HOVER -> hoverCallback.accept(this);
+            case PRESSED -> pressedCallback.accept(this);
+            case RELEASED -> releasedCallback.accept(this);
+            case DRAGGED -> draggedCallback.accept(this);
         }
+
+        updateStates(mousePos);
 
         if(this.getState() != lastState) {
             lastState = this.getState();
