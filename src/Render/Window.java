@@ -192,10 +192,10 @@ public class Window {
                 case "mouseinput", "mouse", "mi":
                     currentTest = new TestMouseInput();
                     break;
-                case "bubblesort":
+                case "bubble", "bubblesort":
                     currentTest = new TestBubbleSortVis();
                 break;
-                case "insertion":
+                case "insertion", "insertionsort":
                     currentTest = new TestInsertionSortVis();
                     break;
                 case "audio", "a":
@@ -206,6 +206,9 @@ public class Window {
                     break;
                 case "textureatlas", "ta":
                     currentTest = new TestTextureAtlas();
+                    break;
+                case "button", "btn":
+                    currentTest = new TestButton();
                     break;
                 default:
                     currentTest = new Test();
@@ -247,8 +250,8 @@ public class Window {
 
 
             if (currentTest != null) {
-                currentTest.OnUpdate(dt);
                 currentTest.OnRender();
+                currentTest.OnUpdate(dt);
             }
 
             glfwSwapBuffers(windowPtr);

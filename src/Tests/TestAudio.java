@@ -4,15 +4,14 @@ import Audio.AudioClip;
 import Audio.AudioSource;
 
 public class TestAudio extends Test {
-    int f;
-    AudioSource audioSource = new AudioSource();
-    AudioClip audioClip;
+    private int f;
+    private AudioSource audioSource = new AudioSource();
+    private AudioClip audioClip;
 
     public TestAudio() {
         super();
         audioSource.playSound("res/audio/sample.wav");
         audioClip = audioSource.getAudioClip();
-
     }
     @Override
     public void OnUpdate(float dt) {

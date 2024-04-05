@@ -1,14 +1,13 @@
-package Render.Entity;
+package Render.Interactable;
 
+import Render.Entity.Entity2D;
 import Render.Entity.Texturing.Texture;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Tests.Test;
 import org.joml.Vector2f;
-import org.w3c.dom.Text;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static org.lwjgl.glfw.GLFW.*;
 

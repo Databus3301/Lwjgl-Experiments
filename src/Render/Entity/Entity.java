@@ -7,6 +7,7 @@ import org.joml.*;
 import java.lang.Math;
 
 /**
+ * ___________DEPRECATED___________
  * Work in Progress for possible future 3D entities
  */
 public class Entity {

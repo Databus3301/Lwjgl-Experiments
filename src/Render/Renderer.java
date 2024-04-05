@@ -5,6 +5,8 @@ import Render.Entity.Entity2D;
 import Render.Entity.Texturing.ColorReplacement;
 import Render.Entity.Texturing.Font;
 import Render.Entity.Texturing.TextPosParams;
+import Render.Interactable.Button;
+import Render.Interactable.Label;
 import Render.Shader.Shader;
 import Render.Vertices.*;
 import Render.Vertices.Model.ObjModel;
@@ -31,6 +33,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         camera = new Camera();
         glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
+
+    ////////// DRAW //////////
     public void draw(VertexArray va, IndexBuffer ib) {
         va.bind();
         ib.bind();
@@ -52,18 +56,18 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
 
 
-    public Batch drawText(String text, Vector2f pos, float size, Font font, Shader shader, Function<TextPosParams, Vector2f> layoutingFunction, ColorReplacement cR) {
+    public Batch drawText(String text, Vector2f pos, float size, Font font, Shader shader, Function<TextPosParams, Vector2f> layoutingFunction, ColorReplacement cR, Integer maxWidth) {
         if(text == null || text.isEmpty()) return null;
         if(font == null) font = Font.RETRO;
         if(shader == null) shader = Shader.TEXTURING;
-        if (size <= 0) size = 1;
+        if(size <= 0) size = 1;
         if(pos == null) pos = new Vector2f(0, 0);
         if(layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
 
         setCurrentShader(shader);
         font.getTexture().bind();
 
-        pos = layoutingFunction.apply(new TextPosParams(pos, new Vector2f(size), font, text));
+        pos = layoutingFunction.apply(new TextPosParams(pos, new Vector2f(size), font, text, null, maxWidth));
 
         Vector2f scale = new Vector2f(size);
         float characterAspect = font.getCharacterAspect();
@@ -144,11 +148,18 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         return new Batch(va, ib);
     }
+    public Batch drawText(TextPosParams tp, Shader shader, Function<TextPosParams, Vector2f> layoutingFunction, ColorReplacement cR) {
+        if(shader == null) shader = Shader.TEXTURING;
+        if(layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
+
+        tp.pos = layoutingFunction.apply(tp);
+        return drawText(tp.text, tp.pos, tp.size.x, tp.font, shader, null, cR, tp.maxWidth);
+    }
     public Batch drawText(String text, Vector2f pos, float scale, Font font) {
-        return drawText(text, pos, scale, font, null, null, null);
+        return drawText(text, pos, scale, font, null, null, null, null);
     }
     public Batch drawText(String text, Vector2f pos, float scale) {
-        return drawText(text, pos, scale, null, null, null, null);
+        return drawText(text, pos, scale, null, null, null, null, null);
     }
 
 
@@ -232,9 +243,20 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                 drawEntity2D(entity);
         }
     }
-    public void drawUI(Entity2D entity) {
+    public <T extends Entity2D> void drawUI(Entity2D entity) {
         entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
         drawEntity2D(entity);
+    }
+    public <T extends Entity2D> void drawUI(T[] entities) {
+        for (T entity : entities) {
+            if(entity != null)
+                drawUI(entity);
+        }
+    }
+    public <T extends Button> void drawButton(T button) {
+        drawEntity2D(button);
+        Label label = button.getLabel();
+        drawText(new TextPosParams(button.getPosition(), new Vector2f(label.getScale()), label.getFont(), label.getText(), null, (int)(button.getScale().x-label.getFont().getCharWidth()*3)), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, null);
     }
 
     public Batch setupBatch(Entity2D[] entities) {
@@ -504,8 +526,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }
         GL43.glEnd();
     }
+    public void drawCircle(Vector2f pos, float radius) {
+        drawCircle(pos, radius, new Vector4f(1, 1, 1, 1));
+    }
 
-    ///////////////////////
     ////////// DEBUGS //////////
     public <T extends Entity2D>void drawCollisionAABB(T entity) {
         ObjModel model = entity.getModel();
@@ -548,6 +572,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         drawRect(rect1, new Vector4f(1, 0, 0, 1));
     }
 
+    ///////// HELPERS //////////
+    public void clear() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    }
     /**
      * Choose the shader to use for rendering
      * @param entity whose shader is chosen,<br> if the <b>entity has no shader</b> the camera's shader is chosen,<br> if the <b>camera has no shader</b> the default shader is chosen
@@ -562,11 +590,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         else
             Shader.DEFAULT.bind();
     }
-
-    public void clear() {
-         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-    }
-
     public Vector2f screenToWorldCoords(Vector2f screenCoords) { // TODO: adapt to moving camera
         // copy vec
         Vector4f projectedCoords = new Vector4f(screenCoords, 0, 1);
@@ -578,6 +601,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         return new Vector2f(projectedCoords.x, projectedCoords.y).sub(camera.getPosition());
     }
 
+    ///////// GETTERS & SETTERS //////////
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
@@ -591,13 +615,13 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         this.mode = mode;
         glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
-    public Shader getCurrentShader() {
-        return currentShader;
-    }
     public Camera getCamera() {
         return camera;
     }
-
-
-
+    public Shader getCurrentShader() {
+        return currentShader;
+    }
+    public int getMode() {
+        return mode;
+    }
 }

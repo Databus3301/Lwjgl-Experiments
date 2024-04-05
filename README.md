@@ -64,6 +64,7 @@ Documenting my learning process of Open GL and LWJGL for a school project
       - [ ] shield
       - [ ] piercing
       - [ ] homing
+    - [ ] normalise invincibility frames
 - [x] …
 
 ## Resources

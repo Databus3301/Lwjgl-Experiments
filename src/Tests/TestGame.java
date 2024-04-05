@@ -72,10 +72,11 @@ public class TestGame extends Test {
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
 
+        // game over
         if (livePoints <= 0) {
             String text = "> GAME OVER <";
             float size = 20;
-            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLineUI, colorReplacement);
+            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine_UI, colorReplacement, -1);
             shouldSimulate = false;
         }
 
@@ -167,7 +168,7 @@ public class TestGame extends Test {
         renderer.drawEntity2D(target);
 
         // live points
-        float widthLP = (float) Window.dim.x / 4f;
+        float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
         renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
         renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) livePoints / maxLP), 25), new Vector4f(0, 1, 0, 1));
     }
