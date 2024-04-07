@@ -1,5 +1,6 @@
 package Render.Entity;
 
+import Render.MeshData.Texturing.Animation;
 import Render.MeshData.Texturing.ColorReplacement;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Shader.Shader;
@@ -20,6 +21,8 @@ public class Entity2D {
     protected Matrix4f modelMatrix = new Matrix4f(); // TODO: keep up to date, throughout method calls like scale() and rotate() to avoid recalculating everything every frame
     protected ObjModel model;
     protected Texture texture;
+    protected Animation animation;
+
     protected HashMap<String, Texture> textures;
     protected Shader shader;
 
@@ -81,6 +84,7 @@ public class Entity2D {
         this.isHidden = false;
         this.offset = new Vector2f(0, 0);
         this.color = new Vector4f(1, 1, 1, 1);
+        this.animation = null;
     }
 
     public Entity2D instantiate() { // TODO: test this
@@ -355,6 +359,10 @@ public class Entity2D {
         return colorReplacement;
     }
 
+    public Animation getAnimation() {
+        return animation;
+    }
+
     public void setPosition(Vector2f position) {
         this.position = position;
     }
@@ -404,6 +412,9 @@ public class Entity2D {
     }
     public void setTexture(Texture texture) {
     	this.texture = texture;
+    }
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
     }
     public void setShader(Shader shader) {
     	this.shader = shader;

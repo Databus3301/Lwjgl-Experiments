@@ -4,9 +4,7 @@ import Render.Entity.Camera.Camera;
 import Render.Entity.Enemy;
 import Render.Entity.Entity2D;
 import Render.Entity.Projectile;
-import Render.MeshData.Texturing.ColorReplacement;
-import Render.MeshData.Texturing.Font;
-import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Texturing.*;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
 import Render.Window;
@@ -18,12 +16,11 @@ import java.util.ArrayList;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.glClearColor;
 
-public class TestGame extends Test {
+public class TestGame extends Test { //TODO: move things into a player class
     private final Entity2D player;
     private int livePoints;
     private final int maxLP = 50000;
 
-    private final Shader shader;
     private final ColorReplacement colorReplacement = new ColorReplacement();
     private final Camera camera;
     private final int[] keyArr = new int[4];
@@ -46,19 +43,17 @@ public class TestGame extends Test {
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
         projectileTexture = new Texture("res/textures/fireball.png", 0);
 
-        shader = new Shader("res/shaders/texturing.shader");
-        shader.setUniform1i("u_Texture", 0);
-
         ObjModel model = ObjModel.SQUARE;
 
-        player = new Entity2D(new Vector2f(0, 0), model, entityTexture, shader);
+        player = new Entity2D(new Vector2f(0, 0), model.clone(), Shader.TEXTURING);
         player.scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
+        player.setAnimation(new Animation(this, new TextureAtlas(new Texture("LinkAnim.png", 0), 10, 8, 10, 120, 130, 0), 5-1, 0, 20, 10));
 
-        target = new Entity2D(new Vector2f(), model, entityTexture, shader);
+        target = new Entity2D(new Vector2f(), model, entityTexture, Shader.TEXTURING);
         target.scale(scale);
 
         for (int i = 0; i < numOfEnemies; i++) {
-            enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, shader, 50));
+            enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), model, entityTexture, Shader.TEXTURING, 50));
             enemies.get(i).scale(scale*i/(numOfEnemies/10f));
         }
 
@@ -93,7 +88,7 @@ public class TestGame extends Test {
             if(enemy.collideRect(target))
                 renderer.drawText("Health: " + enemy.getHealth(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
 
-            if (player.collideRect(enemy) && livePoints > 0) {
+            if (player.collideCircle(enemy) && livePoints > 0) {
                 // push away from player
                 Vector2f v1 = new Vector2f(player.getPosition());
                 Vector2f v2 = new Vector2f(enemy.getPosition());
@@ -145,7 +140,7 @@ public class TestGame extends Test {
         timeBetweenShot += dt;
         if (timeBetweenShot > .2f) { // shoot every .2f seconds
             // shoot new projectile
-            projectiles.add(new Projectile(player, 20, shader, ObjModel.SQUARE, projectileTexture));
+            projectiles.add(new Projectile(player, 20, Shader.TEXTURING, ObjModel.SQUARE, projectileTexture));
             // direction to target
             Projectile last = projectiles.get(projectiles.size()-1);
             Vector2f direction = last.translateTowards(target, 0);

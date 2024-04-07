@@ -20,7 +20,8 @@ public class TextureAtlas {
         tileAspect = (float)tileWidth/(float)tileHeight;
     }
 
-    public TextureAtlas copy() {
+    @Override
+    public TextureAtlas clone() {
         return new TextureAtlas(atlas, tilesPerRow, rows, cols, tileWidth, tileHeight, spacing);
     }
 
@@ -42,20 +43,25 @@ public class TextureAtlas {
     public float getTileAspect(){
         return tileAspect;
     }
-
     public Texture getTexture() {
         return atlas;
     }
-
     public int getTileWidth() {
         return tileWidth;
     }
-
     public int getTileHeight() {
         return tileHeight;
     }
-
     public int getCols() {
         return cols;
+    }
+    public int getSpacing() {
+        return spacing;
+    }
+    public int getRows() {
+        return rows;
+    }
+    public int getTilesPerRow() {
+        return tilesPerRow;
     }
 }

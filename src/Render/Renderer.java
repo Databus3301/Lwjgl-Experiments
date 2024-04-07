@@ -219,6 +219,12 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         // choose Texture
         if(entity.getTexture() != null)
             entity.getTexture().bind();
+        if(entity.getAnimation() != null) {
+            entity.getAnimation().getAtlas().getTexture().bind();
+            entity.getModel().replaceTextureCoords(entity.getAnimation().getTexCoords());
+        }
+
+
         // choose Model
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";

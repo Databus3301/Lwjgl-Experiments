@@ -18,7 +18,7 @@ public class TestTextureAtlas extends Test {
 
     public TestTextureAtlas() {
         super();
-        speed = 300;
+        speed = 170;
         //initFontTest();
         initTextureAtlasTest();
     }
@@ -43,7 +43,7 @@ public class TestTextureAtlas extends Test {
 
 
     public void testTextureAtlas(){
-        if(index >= 40)
+        if(index >= atlas.getCols() * atlas.getRows())
             index = 0;
         e.getModel().replaceTextureCoords(atlas.getTexCoords(index));
 
@@ -53,12 +53,13 @@ public class TestTextureAtlas extends Test {
         int col = index % columns;
 
         float x = atlasE.getPosition().x + col * atlas.getTileWidth() + atlasE.getScale().x/2f - 140 - atlas.getTileWidth()*2f - atlas.getTileWidth()/2f;
-        float y = atlasE.getPosition().y - row * atlas.getTileHeight() - atlasE.getScale().y/2f + 70 - atlas.getTileHeight()/2f;
+        float y = atlasE.getPosition().y - row * atlas.getTileHeight() - atlasE.getScale().y/2f + 70 - atlas.getTileHeight()/2f + row*atlas.getSpacing()*3;
 
         renderer.drawRect(new Vector4f(x, y, atlas.getTileWidth(), atlas.getTileHeight()));
     }
     public void initTextureAtlasTest(){
-        atlas = new TextureAtlas(new Texture("TileSet-FlowerGame.png", 0), 10, 4, 10, 32, 32, 1);
+        //atlas = new TextureAtlas(new Texture("FlowerGame.png", 0), 10, 4, 10, 32, 32, 1);
+        atlas = new TextureAtlas(new Texture("LinkAnim.png", 0), 10, 8, 10, 120, 130, 0); index=40;
         atlasE = new Entity2D(new Vector2f(-Window.dim.x/2f + 140, Window.dim.y/2f -140), ObjModel.SQUARE.clone(), atlas.getTexture(), Shader.TEXTURING);
         atlasE.scale(140, 140 / atlas.getAspect());
 

@@ -210,6 +210,9 @@ public class Window {
                 case "button", "btn":
                     currentTest = new TestButton();
                     break;
+                case "animation", "anim":
+                    currentTest = new TestAnimation();
+                    break;
                 default:
                     currentTest = new Test();
             }
