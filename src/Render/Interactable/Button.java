@@ -1,14 +1,17 @@
 package Render.Interactable;
 
 import Render.Entity.Texturing.Texture;
+import Render.Renderer;
 import Render.Shader.Shader;
 import Render.Vertices.Model.ObjModel;
 import Tests.Test;
 import org.joml.Vector2f;
 
 public class Button extends Interactable {
-    Label label = new Label();
-    Label tooltip = new Label();
+    private Label label = new Label();
+    private Label tooltip = new Label();
+    private int framesHovered = 0; // TODO: change this to system time / use delta time to make it system independent
+    private int hitTime = 300;
 
     public <T extends Test>Button(T test, Vector2f position, ObjModel model, Texture icon, Shader shader) {
         super(test, position, model, icon, shader);
@@ -30,6 +33,20 @@ public class Button extends Interactable {
     }
 
 
+    @Override
+    public void onUpdate(float dt, Vector2f mousePos) {
+        super.onUpdate(dt, mousePos);
+
+        // if hovered long enough move tooltip to mousepos
+        if(state == States.HOVER){
+            framesHovered++;
+            if(framesHovered > hitTime)
+                tooltip.setScreenPosition(mousePos);
+        } else {
+            framesHovered = 0;
+        }
+    }
+
     public Label getLabel() {
         return label;
     }
@@ -39,6 +56,13 @@ public class Button extends Interactable {
     public Texture getIcon(){
         return texture;
     }
+    public int getHitTime() {
+        return hitTime;
+    }
+    public boolean shouldDisplayTooltip(){
+        return framesHovered > hitTime;
+    }
+
     public void setLabel(Label label) {
         this.label = label;
     }
@@ -54,5 +78,7 @@ public class Button extends Interactable {
     public void setIcon(Texture texture) {
         this.texture = texture;
     }
-
+    public void setHitTime(int hitTime) {
+        this.hitTime = hitTime;
+    }
 }

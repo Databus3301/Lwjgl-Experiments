@@ -21,7 +21,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Interactable extends Entity2D {
 
-    private States state = States.DEFAULT;
+    protected States state = States.DEFAULT;
     private float triggerDistance = 1000;
 
     private Consumer<Interactable> defaultCallback = (interactable) -> {};
@@ -78,6 +78,8 @@ public class Interactable extends Entity2D {
         } else {
             changedState = false;
         }
+
+
     }
     public void onKeyInput(int key, int scancode, int action, int mods, Vector2f mousePos) {
         updateStates(key, scancode, action, mods, mousePos);

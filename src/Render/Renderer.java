@@ -6,6 +6,7 @@ import Render.Entity.Texturing.ColorReplacement;
 import Render.Entity.Texturing.Font;
 import Render.Entity.Texturing.TextPosParams;
 import Render.Interactable.Button;
+import Render.Interactable.Interactable;
 import Render.Interactable.Label;
 import Render.Shader.Shader;
 import Render.Vertices.*;
@@ -255,8 +256,33 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
     public <T extends Button> void drawButton(T button) {
         drawEntity2D(button);
+
         Label label = button.getLabel();
-        drawText(new TextPosParams(button.getPosition(), new Vector2f(label.getScale()), label.getFont(), label.getText(), null, (int)(button.getScale().x-label.getFont().getCharWidth()*3)), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, null);
+        drawText(
+            new TextPosParams(
+                    button.getPosition(),
+                    new Vector2f(label.getScale()),
+                    label.getFont(),
+                    label.getText(),
+                    null,
+                    (int)(button.getScale().x-label.getFont().getCharWidth()*3)
+            ), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, null);
+
+        if(button.getState() != Interactable.States.HOVER) return;
+        if(!button.shouldDisplayTooltip()) return;
+        if(button.getTooltip() == null) return;
+        if(button.getTooltip().getText().isEmpty()) return;
+
+        Label tooltip = button.getTooltip();
+        drawText(
+            new TextPosParams(
+                screenToWorldCoords(tooltip.getScreenPosition()),
+                new Vector2f(tooltip.getScale()),
+                tooltip.getFont(),
+                tooltip.getText(),
+                null
+            ), Shader.TEXTURING, null, null
+        );
     }
 
     public Batch setupBatch(Entity2D[] entities) {

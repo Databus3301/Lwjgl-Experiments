@@ -1,11 +1,13 @@
 package Render.Interactable;
 
 import Render.Entity.Texturing.Font;
+import org.joml.Vector2f;
 
 public class Label {
     Font font;
     String text;
     float scale;
+    final Vector2f screenPosition = new Vector2f();
 
     public Label(Font font, String text, int scale) {
         this.font = font;
@@ -32,6 +34,9 @@ public class Label {
     public float getScale() {
         return scale;
     }
+    public Vector2f getScreenPosition() {
+        return screenPosition;
+    }
 
     public void setFont(Font font) {
         this.font = font;
@@ -41,5 +46,8 @@ public class Label {
     }
     public void setScale(float scale) {
         this.scale = scale;
+    }
+    public void setScreenPosition(Vector2f position) {
+        this.screenPosition.set(position);
     }
 }
