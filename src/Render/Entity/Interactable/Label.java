@@ -1,6 +1,6 @@
-package Render.Interactable;
+package Render.Entity.Interactable;
 
-import Render.Entity.Texturing.Font;
+import Render.MeshData.Texturing.Font;
 import org.joml.Vector2f;
 
 public class Label {

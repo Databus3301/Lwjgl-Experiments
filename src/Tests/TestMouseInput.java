@@ -1,7 +1,7 @@
 package Tests;
 
 import Render.Entity.Entity2D;
-import Render.Vertices.Model.ObjModel;
+import Render.MeshData.Model.ObjModel;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;

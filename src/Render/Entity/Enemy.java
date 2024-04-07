@@ -1,9 +1,8 @@
 package Render.Entity;
 
-import Render.Entity.Texturing.Texture;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
-import Render.Window;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
 import org.joml.Vector2f;
 
 public class Enemy extends Entity2D{

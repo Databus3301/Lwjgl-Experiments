@@ -1,10 +1,7 @@
 package Tests;
 
 import Render.Entity.*;
-import Render.Entity.Camera.Camera;
-import Render.Shader.*;
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
+import Render.MeshData.Model.ObjModel;
 import Render.Window;
 import org.joml.*;
 

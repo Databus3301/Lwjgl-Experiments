@@ -1,10 +1,8 @@
 package Tests;
 
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjMaterial;
-import Render.Vertices.Model.ObjModelParser;
-
-import java.util.Arrays;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Model.ObjMaterial;
+import Render.MeshData.Model.ObjModelParser;
 
 public class TestObjModelParser extends Test {
 

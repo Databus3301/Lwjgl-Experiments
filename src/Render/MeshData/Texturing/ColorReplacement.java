@@ -1,4 +1,4 @@
-package Render.Entity.Texturing;
+package Render.MeshData.Texturing;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;

@@ -1,11 +1,8 @@
 package Render.Entity;
 
-import Render.Entity.Texturing.Texture;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
-import Render.Window;
-import org.joml.Vector2f;
-import org.joml.Vector2fc;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
 
 public class Projectile extends Entity2D {
     private Entity2D owner;

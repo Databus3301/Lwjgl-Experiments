@@ -1,9 +1,8 @@
 package Tests;
 
 import Render.Entity.Entity2D;
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
-import org.joml.Vector2f;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Model.ObjModelParser;
 
 /**
  * TestNormalisation

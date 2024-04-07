@@ -2,15 +2,15 @@ package Render;
 
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
-import Render.Entity.Texturing.ColorReplacement;
-import Render.Entity.Texturing.Font;
-import Render.Entity.Texturing.TextPosParams;
-import Render.Interactable.Button;
-import Render.Interactable.Interactable;
-import Render.Interactable.Label;
-import Render.Shader.Shader;
-import Render.Vertices.*;
-import Render.Vertices.Model.ObjModel;
+import Render.MeshData.Texturing.ColorReplacement;
+import Render.MeshData.Texturing.Font;
+import Render.MeshData.Texturing.TextPosParams;
+import Render.Entity.Interactable.Button;
+import Render.Entity.Interactable.Interactable;
+import Render.Entity.Interactable.Label;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.*;
+import Render.MeshData.Model.ObjModel;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -68,7 +68,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         setCurrentShader(shader);
         font.getTexture().bind();
 
-        pos = layoutingFunction.apply(new TextPosParams(pos, new Vector2f(size), font, text, null, maxWidth));
+        pos = layoutingFunction.apply(new TextPosParams(pos, new Vector2f(size), font, text, null, maxWidth != null ? maxWidth : Integer.MAX_VALUE));
 
         Vector2f scale = new Vector2f(size);
         float characterAspect = font.getCharacterAspect();

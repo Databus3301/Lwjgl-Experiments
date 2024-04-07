@@ -1,4 +1,4 @@
-package Render.Vertices;
+package Render.MeshData;
 
 import static org.lwjgl.opengl.GL15.*;
 

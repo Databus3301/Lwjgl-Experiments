@@ -1,6 +1,6 @@
 package Tests;
 
-import Render.Interactable.Interactable;
+import Render.Entity.Interactable.Interactable;
 import Render.Renderer;
 import org.joml.Vector2f;
 

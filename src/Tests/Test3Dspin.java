@@ -1,14 +1,11 @@
 package Tests;
 
-import Render.Batch;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
-import org.joml.Matrix3f;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Model.ObjModelParser;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;

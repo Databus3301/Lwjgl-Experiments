@@ -1,6 +1,6 @@
-package Render.Vertices.Model;
+package Render.MeshData.Model;
 
-import Render.Entity.Texturing.Texture;
+import Render.MeshData.Texturing.Texture;
 
 public class ObjMaterial {
     private String name;

@@ -2,9 +2,9 @@ package Tests;
 
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Model.ObjModelParser;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

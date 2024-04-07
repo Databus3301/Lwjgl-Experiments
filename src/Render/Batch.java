@@ -1,8 +1,7 @@
 package Render;
 
-import Render.Shader.Shader;
-import Render.Vertices.IndexBuffer;
-import Render.Vertices.VertexArray;
+import Render.MeshData.IndexBuffer;
+import Render.MeshData.VertexArray;
 public class Batch {
     VertexArray va;
     IndexBuffer ib;

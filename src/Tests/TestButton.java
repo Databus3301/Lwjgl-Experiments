@@ -1,8 +1,8 @@
 package Tests;
 
-import Render.Entity.Texturing.Texture;
-import Render.Interactable.Button;
-import Render.Shader.Shader;
+import Render.MeshData.Texturing.Texture;
+import Render.Entity.Interactable.Button;
+import Render.MeshData.Shader.Shader;
 import org.joml.Vector2f;
 
 public class TestButton extends Test {

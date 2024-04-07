@@ -1,11 +1,11 @@
 package Tests;
 
 import Render.Entity.Entity2D;
-import Render.Entity.Texturing.Font;
-import Render.Entity.Texturing.Texture;
-import Render.Entity.Texturing.TextureAtlas;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
+import Render.MeshData.Texturing.Font;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Texturing.TextureAtlas;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
 import Render.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;

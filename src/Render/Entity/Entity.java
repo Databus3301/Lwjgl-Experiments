@@ -1,7 +1,7 @@
 package Render.Entity;
 
-import Render.Entity.Texturing.Texture;
-import Render.Vertices.Model.ObjModel;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Model.ObjModel;
 import org.joml.*;
 
 import java.lang.Math;

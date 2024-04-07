@@ -1,13 +1,11 @@
 package Render.Entity;
 
-import Render.Entity.Texturing.ColorReplacement;
-import Render.Entity.Texturing.Texture;
-import Render.Renderer;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
+import Render.MeshData.Texturing.ColorReplacement;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
 import org.joml.*;
 
-import java.awt.*;
 import java.lang.Math;
 import java.util.HashMap;
 import java.util.Objects;

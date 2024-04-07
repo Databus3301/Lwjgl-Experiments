@@ -1,6 +1,5 @@
-package Render.Entity.Texturing;
+package Render.MeshData.Texturing;
 
-import Render.Shader.Shader;
 import org.joml.Vector2f;
 
 public class TextPosParams {

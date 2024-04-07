@@ -1,8 +1,8 @@
-package Render.Vertices.Model;
+package Render.MeshData.Model;
 
-import Render.Vertices.IndexBuffer;
-import Render.Vertices.Vertex;
-import Render.Vertices.VertexBuffer;
+import Render.MeshData.IndexBuffer;
+import Render.MeshData.Vertex;
+import Render.MeshData.VertexBuffer;
 import org.joml.Vector4f;
 
 import java.lang.reflect.Array;

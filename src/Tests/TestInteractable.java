@@ -1,7 +1,7 @@
 package Tests;
 
-import Render.Interactable.Interactable;
-import Render.Vertices.Model.ObjModel;
+import Render.Entity.Interactable.Interactable;
+import Render.MeshData.Model.ObjModel;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;

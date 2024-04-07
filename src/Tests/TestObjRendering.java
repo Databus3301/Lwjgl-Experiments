@@ -1,9 +1,9 @@
 package Tests;
 
 import Render.Entity.Entity2D;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Model.ObjModelParser;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL30.*;

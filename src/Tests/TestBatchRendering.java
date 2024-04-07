@@ -3,9 +3,9 @@ package Tests;
 import Render.Batch;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Model.ObjModelParser;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -20,16 +20,18 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 public class TestBatchRendering extends Test {
 
     Entity2D[] entities;
-    boolean batching, spin; // test var
     Camera camera;
     Batch b;
+
+    boolean batching, spin; // debug vars
+
 
     public TestBatchRendering() {
         super();
         // DEBUG
         batching = true;
         spin = false;
-        int DIM = 10;
+        int DIM = 200;
         //
         renderer.setCurrentShader(new Shader("batching.shader"));
         renderer.setCamera(camera = new Camera());
@@ -42,11 +44,17 @@ public class TestBatchRendering extends Test {
                 ObjModelParser.parseOBJ("testModel3.obj"),
         };
 
+        /* TODO: investigate weird 1:20 ratio of entity position between batching and non-batching
+           UPDATE:
+           TODO: The 1:20 ratio was due to the camera scaling being set to 200f/DIM, with DIM being 10 while testing resulting in a scale of 20f in turn causing this ratio,
+           TODO: which is why it works just fine at DIM=200f
+           TODO: so what should really be investigated is the camera scaling in relation to entity rendering
+        */
         // spread entities out in a grid using above models
         entities = new Entity2D[DIM*DIM];
         int index = 0;
         for(int i = 0; i < DIM; i++) {
-            for (int j = 0; j < DIM; j++) { // TODO: investigate weird 1:20 ratio of entity position between batching and non-batching
+            for (int j = 0; j < DIM; j++) {
                 entities[index] = new Entity2D(new Vector2f(2*i-DIM, 2*j-DIM).mul(1.5f), models[index % models.length]);
                 entities[index].setScale(new Vector2f(5/4f, 5/4f));
 

@@ -1,4 +1,4 @@
-package Render.Entity.Texturing;
+package Render.MeshData.Texturing;
 
 import Tests.Test;
 import org.joml.Vector2f;

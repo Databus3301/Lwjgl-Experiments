@@ -1,11 +1,10 @@
 package Tests;
 
 import Render.Entity.Entity2D;
-import Render.Entity.Texturing.Font;
-import Render.Shader.Shader;
-import Render.Entity.Texturing.Texture;
-import Render.Vertices.Model.ObjModel;
-import Render.Vertices.Model.ObjModelParser;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Model.ObjModelParser;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL11C.glClearColor;

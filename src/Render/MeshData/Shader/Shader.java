@@ -1,4 +1,4 @@
-package Render.Shader;
+package Render.MeshData.Shader;
 
 import Render.Renderer;
 import Tests.Test;

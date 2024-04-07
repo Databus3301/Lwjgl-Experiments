@@ -1,9 +1,8 @@
-package Render.Interactable;
+package Render.Entity.Interactable;
 
-import Render.Entity.Texturing.Texture;
-import Render.Renderer;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
 import Tests.Test;
 import org.joml.Vector2f;
 
@@ -16,20 +15,23 @@ public class Button extends Interactable {
     public <T extends Test>Button(T test, Vector2f position, ObjModel model, Texture icon, Shader shader) {
         super(test, position, model, icon, shader);
     }
-    //    public <T extends Test>Button(T test, Vector2f position, ObjModel model, Texture texture) {
-//        super(test, position, model, texture);
-//    }
-//    public <T extends Test>Button(T test, Vector2f position, ObjModel model, Shader shader) {
-//        super(test, position, model, shader);
-//    }
     public <T extends Test>Button(T test, Vector2f position, ObjModel model) {
         super(test, position, model);
     }
+
+    /**
+     * Create a default button, at a position <br>
+     * <sub>(with square/rect model)</sub>
+     */
     public <T extends Test>Button(T test, Vector2f position) {
         super(test, position, ObjModel.SQUARE);
     }
+    /**
+     * Create a default button, at position (0, 0)<br>
+     * <sub>(with square/rect model)</sub>
+     */
     public <T extends Test>Button(T test) {
-        super(test);
+        super(test, new Vector2f(), ObjModel.SQUARE);
     }
 
 

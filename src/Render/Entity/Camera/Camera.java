@@ -1,11 +1,10 @@
 package Render.Entity.Camera;
 
 import Render.Entity.Entity2D;
-import Render.Shader.Shader;
+import Render.MeshData.Shader.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import static Render.Window.dim;
 

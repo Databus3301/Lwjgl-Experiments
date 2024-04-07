@@ -1,4 +1,4 @@
-package Render.Shader;
+package Render.MeshData.Shader;
 
 public class ShaderProgramSource {
     public String VertexSource;

@@ -1,4 +1,4 @@
-package Render.Vertices;
+package Render.MeshData;
 
 public class Vertex {
 

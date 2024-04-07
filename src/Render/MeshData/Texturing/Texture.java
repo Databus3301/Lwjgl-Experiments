@@ -1,4 +1,4 @@
-package Render.Entity.Texturing;
+package Render.MeshData.Texturing;
 
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL43.*;

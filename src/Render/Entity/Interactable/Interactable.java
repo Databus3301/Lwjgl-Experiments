@@ -1,9 +1,9 @@
-package Render.Interactable;
+package Render.Entity.Interactable;
 
 import Render.Entity.Entity2D;
-import Render.Entity.Texturing.Texture;
-import Render.Shader.Shader;
-import Render.Vertices.Model.ObjModel;
+import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Model.ObjModel;
 import Tests.Test;
 import org.joml.Vector2f;
 
