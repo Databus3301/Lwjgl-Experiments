@@ -364,7 +364,7 @@ public class Entity2D {
     }
 
     public void setPosition(Vector2f position) {
-        this.position = position;
+        this.position.set(position);
     }
     public void setPosition(float x, float y) {
         this.position.x = x;
@@ -393,7 +393,15 @@ public class Entity2D {
     }
 
     public void setScale(Vector2f scale) {
-        this.scale = scale;
+        this.scale.set(scale);
+    }
+    public void setScale(float x, float y) {
+        this.scale.x = x;
+        this.scale.y = y;
+    }
+    public void setScale(float d) {
+        this.scale.x = d;
+        this.scale.y = d;
     }
 
     /**
@@ -401,7 +409,7 @@ public class Entity2D {
      * @param velocity the velocity to set
      */
     public void setVelocity(Vector2f velocity) {
-    	this.velocity = velocity;
+    	this.velocity.set(velocity);
     }
     public void setVelocity(float x, float y) {
         this.velocity = new Vector2f(x, y);

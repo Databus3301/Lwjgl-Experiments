@@ -22,6 +22,13 @@ public class Animation {
         this.frames = frames;
         this.atlas = atlas;
     }
+    public Animation(TextureAtlas atlas, int row, int offset, float fps, int frames) {
+        this.fps = fps;
+        this.row = row;
+        this.offset = offset;
+        this.frames = frames;
+        this.atlas = atlas;
+    }
 
     public void update(float dt){
         if(paused) return;

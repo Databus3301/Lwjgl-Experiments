@@ -6,6 +6,7 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 // TODO: rework into interface?
 

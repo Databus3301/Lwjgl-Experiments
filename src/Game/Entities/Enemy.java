@@ -1,11 +1,12 @@
-package Render.Entity;
+package Game.Entities;
 
+import Render.Entity.Entity2D;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
 import org.joml.Vector2f;
 
-public class Enemy extends Entity2D{
+public class Enemy extends Entity2D {
     private int iframes = 0;
     private float health;
 

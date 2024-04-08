@@ -1,5 +1,8 @@
 package Render;
 
+import Game.Action.Ability;
+import Game.Entities.Player;
+import Game.Entities.Projectile;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
 import Render.MeshData.Texturing.ColorReplacement;
@@ -289,6 +292,14 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                 null
             ), Shader.TEXTURING, null, null
         );
+    }
+    public <T extends Player> void drawPlayer(T player) {
+        drawEntity2D(player.getEntity());
+        for(Ability ability : player.getAbilities()) {
+            for(Projectile projectile : ability.getProjectiles()) {
+                drawEntity2D(projectile);
+            }
+        }
     }
 
     public Batch setupBatch(Entity2D[] entities) {
