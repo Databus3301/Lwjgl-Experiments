@@ -16,25 +16,15 @@ public class Living extends Entity2D {
         super(position, model, texture, shader);
         LP = 100;
         maxLP = 100;
-        iSeconds = 60;
+        iSeconds = 0.4f;
         currentIseconds = 0;
     }
     public Living(Vector2f position) {
-        super(position);
-        LP = 100;
-        maxLP = 100;
-        iSeconds = 60;
-        currentIseconds = 0;
+        this(position, ObjModel.SQUARE.clone(), new Texture("res/textures/woodCrate.png", 0), Shader.TEXTURING);
     }
     public Living() {
-        super();
-        LP = 100;
-        maxLP = 100;
-        iSeconds = 60;
-        currentIseconds = 0;
+        this(new Vector2f());
     }
-
-
 
     public boolean damage() {
         return damage(1);
@@ -55,10 +45,11 @@ public class Living extends Entity2D {
     }
 
     public void reduceISeconds() {
-        if (currentIseconds > 0) currentIseconds -= 0.001f; //reduce by 1ms
+        reduceISeconds(0.001f); //reduce by 1ms
     }
     public void reduceISeconds(float dt) {
-        if (currentIseconds > 0) currentIseconds -= dt; //reduce by dt
+        if (currentIseconds > 0f) currentIseconds -= dt; //reduce by dt
+        else currentIseconds = 0;
     }
 
     public float getLP() {
@@ -67,7 +58,7 @@ public class Living extends Entity2D {
     public int getMaxLP() {
         return maxLP;
     }
-    public float getiSeconds() {
+    public float getIseconds() {
         return iSeconds;
     }
     public float getCurrentIseconds() {

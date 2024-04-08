@@ -14,15 +14,15 @@ public class Abilities {
         projectiles[0].setDmg(100);
         projectiles[0].setScale(20f);
         projectiles[0].setTexture(new Texture("fireball.png", 0));
-        projectiles[0].setPierce(1);
-        SHOOT = new Ability(projectiles, 1f);
+        projectiles[0].setPierce(3);
+        SHOOT = new Ability(projectiles, 0.5f);
         SHOOT.setOnTrigger((ability, dt, mousePos, entity, scene) -> {
             Projectile projectile = ability.getProjectileTypes()[0].instantiate();
             projectile.setPosition(entity.getPosition());
-            projectile.accelerateTowards(Test.getRenderer().screenToWorldCoords(mousePos), 100);
+            projectile.accelerateTowards(Test.getRenderer().screenToWorldCoords(mousePos), 50);
             projectile.setOnHit((p, damaged) -> {
                 if(damaged)
-                    projectile.getScale().mul(1.2f);
+                    projectile.getScale().mul(1.3f);
             });
             ability.getProjectiles().add(projectile);
         });

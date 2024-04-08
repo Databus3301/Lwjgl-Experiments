@@ -57,7 +57,7 @@ public class TestGame extends Test { //TODO: move things into a player class
         // spawn enemies
         Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
         for (int i = 0; i < numOfEnemies; i++) {
-            enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), ObjModel.SQUARE, entityTexture, Shader.TEXTURING, 50));
+            enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), ObjModel.SQUARE, entityTexture, Shader.TEXTURING, 150));
             enemies.get(i).scale(scale*i/(numOfEnemies/10f));
         }
 //        for (int i = 0; i < 20; i++) {
@@ -107,12 +107,12 @@ public class TestGame extends Test { //TODO: move things into a player class
                     enemy.translateTowards(enemy1, -100*dt); // negated "towards" becomes "away"
             }
             // kill enemies
-            enemy.reduceISeconds(dt);
+            enemy.reduceISeconds();
             if(enemy.getLP() <= 0)
                 enemyIterator.remove();
             // print debug info if on cursor
             if(enemy.collideRect(target))
-                renderer.drawText("Health: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
+                renderer.drawText("LivePoints: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
         }
     }
 

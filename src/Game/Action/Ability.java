@@ -24,7 +24,7 @@ public class Ability {
     public Ability(Projectile[] projectileTypes, float cooldown) {
         this.projectileTypes = projectileTypes;
         this.cooldown = cooldown;
-        this.currentCooldown = 0;
+        this.currentCooldown = .5f;
     }
 
     public void update(float dt, Vector2f mousePos, Entity2D trigger) {
