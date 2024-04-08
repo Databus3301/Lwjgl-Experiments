@@ -456,4 +456,5 @@ public class Entity2D {
     public void setColorReplacement(ColorReplacement colorReplacement) {
         this.colorReplacement = colorReplacement;
     }
+
 }

@@ -287,7 +287,7 @@ public class Window {
     }
 
     static public void GlCheckError() {
-        while (glGetError() != 0) {
+        while (glGetError() != 0) { // TODO: disable this in production for a big performance boost
             System.out.println("[OpenGL error:] " + Integer.toHexString(glGetError()));
         }
     }

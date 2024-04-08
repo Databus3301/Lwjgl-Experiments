@@ -39,8 +39,6 @@ public class TestGame extends Test { //TODO: move things into a player class
         int numOfEnemies = 100;
         float scale = 3f;
 
-        Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
-        //projectileTexture = new Texture("res/textures/fireball.png", 0);
 
         // init player
         player = new Player(
@@ -55,15 +53,22 @@ public class TestGame extends Test { //TODO: move things into a player class
         player.addAnimation("walkRight",new Animation(anims, 7, 0, 20, 10));
         player.getEntity().scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
 
-        // track mouse
-        target = new Entity2D(new Vector2f(), ObjModel.SQUARE, entityTexture, Shader.TEXTURING);
-        target.scale(scale);
-
-         // spawn enemies
+        // TODO: Spawner class
+        // spawn enemies
+        Texture entityTexture = new Texture("res/textures/woodCrate.png", 0);
         for (int i = 0; i < numOfEnemies; i++) {
             enemies.add(new Enemy(new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f, (float) Math.random() * Window.dim.y - Window.dim.y / 2f), ObjModel.SQUARE, entityTexture, Shader.TEXTURING, 50));
             enemies.get(i).scale(scale*i/(numOfEnemies/10f));
         }
+//        for (int i = 0; i < 20; i++) {
+//            Enemy enemy = new Enemy(new Vector2f(-600+50*i, 0), ObjModel.SQUARE, entityTexture, Shader.TEXTURING, 100);
+//            enemy.scale(scale * 5);
+//            enemies.add(enemy);
+//        }
+
+        // track mouse
+        target = new Entity2D(new Vector2f(), ObjModel.SQUARE, entityTexture, Shader.TEXTURING);
+        target.scale(scale);
 
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 1, 1));
         colorReplacement.swap(new Vector4f(0, 0, 0, 1), new Vector4f(0, 0, 1, 1));
@@ -81,7 +86,6 @@ public class TestGame extends Test { //TODO: move things into a player class
             shouldSimulate = false;
         }
 
-
         if(!shouldSimulate) return;
         // move player
         Entity2D playerEntity = player.getEntity();
@@ -89,50 +93,28 @@ public class TestGame extends Test { //TODO: move things into a player class
         camera.centerOn(playerEntity);
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
+        // collide player and its fields
+        player.collide(enemies);
 
         for (Enemy enemy : enemies) {
-            // print debug info if on cursor
-            if(enemy.collideRect(target))
-                renderer.drawText("Health: " + enemy.getHealth(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
-
-            if (playerEntity.collideCircle(enemy) && player.getLP() > 0) {
-                // push away from player
-                Vector2f v1 = new Vector2f(playerEntity.getPosition());
-                Vector2f v2 = new Vector2f(enemy.getPosition());
-                v2.add( (float) Math.random()*20f-1f, (float) Math.random()*20f-1f); // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
-                Vector2f v3 = new Vector2f(v1.sub(v2).normalize().mul(-1));
-                enemy.translate(v3);
-                // damage player
-                player.damage();
-            }
-            // damage enemies
-            for (Projectile projectile : projectiles) {
-                if (enemy.getIframes() == 0 && projectile.collideAABB(enemy)) {
-                    enemy.setHealth(enemy.getHealth() - projectile.getDmg());
-                    enemy.setIframes(200);
-                }
-            }
-
+            // move enemy to player
+            enemy.translateTowards(playerEntity, 100*dt);
             // push away from each other
             for(Enemy enemy1 : enemies) {
-                // TODO: check the performance on the distance checks vs pure collision
                 if(enemy != enemy1 && enemy.collideCircle(enemy1))
                     enemy.translateTowards(enemy1, -100*dt); // negated "towards" becomes "away"
             }
-            // move enemy to player
-            enemy.translateTowards(playerEntity, 100*dt);
-        }
-
-        //enemies dead?
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).reduceIframes();
-            if (enemies.get(i).getHealth() <= 0) {
+            // kill enemies
+            enemy.reduceISeconds(dt);
+            if(enemy.getLP() <= 0) {
                 Enemy last = enemies.get(enemies.size()-1);
-                enemies.set(i, last);
+                enemies.set(enemies.indexOf(enemy), last);
                 enemies.remove(enemies.size()-1);
             }
+            // print debug info if on cursor
+            if(enemy.collideRect(target))
+                renderer.drawText("Health: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
         }
-
     }
 
     @Override

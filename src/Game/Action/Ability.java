@@ -1,5 +1,6 @@
 package Game.Action;
 
+import Game.Entities.Living;
 import Game.Entities.Projectile;
 import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
@@ -7,6 +8,7 @@ import Tests.Test;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Ability {
     private Test scene;
@@ -32,9 +34,11 @@ public class Ability {
             currentCooldown = cooldown*2;
             onTrigger.accept(this, dt, mousePos, trigger, scene);
         }
-        for (Projectile projectile : projectiles) {
-            projectile.update(dt);
-        }
+        projectiles.forEach(projectile -> projectile.update(dt));
+        projectiles.removeIf(projectile -> projectile.getPierce() <= 0);
+    }
+    public <T extends Living> void collide(ArrayList<T> entities) {
+        projectiles.forEach(projectile -> projectile.collide(entities));
     }
 
 

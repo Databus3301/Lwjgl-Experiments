@@ -14,10 +14,9 @@
  import java.util.Map;
 
  
- public class Player {
+ public class Player extends Living {
      private Test scene;
      private Entity2D entity;
-     private int LP, maxLP;
      private final ArrayList<Ability> abilities = new ArrayList<>();
      private final Map<String, Animation> animations = new HashMap<>();
      private Animation currentAnimation;
@@ -49,16 +48,22 @@
         }
      }
 
-     public void damage(int damage) {
-         LP -= damage;
+     public <T extends Living> void collide(ArrayList<T> entities) {
+         for (Living collider : entities) {
+             // push away from player
+             if (collider.collideCircle(this.entity)) {
+                 collider.translate(
+                         new Vector2f(entity.getPosition()).sub(collider.getPosition())
+                        .sub( (float) Math.random()*20f-1f, (float) Math.random()*20f-1f) // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
+                        .normalize().mul(-1)
+                 );
+                 damage();
+             }
+         }
+         // collide projectiles / custom ability colliders
+         abilities.forEach(ability -> ability.collide(entities));
      }
-     public void damage() {
-         LP--;
-     }
-     public void heal(int heal) {
-         LP += heal;
-     }
- 
+
      public void addAbility(Ability ability) {
          abilities.add(ability);
      }
@@ -80,12 +85,6 @@
      public Entity2D getEntity() {
          return entity;
      }
-     public int getLP() {
-         return LP;
-     }
-     public int getMaxLP() {
-         return maxLP;
-     }
      public ArrayList<Ability> getAbilities() {
          return abilities;
      }
@@ -93,9 +92,4 @@
           return animations;
      }
 
-     public void setLP(int LP) {
-         this.LP = LP;
-     }
- 
- 
  }

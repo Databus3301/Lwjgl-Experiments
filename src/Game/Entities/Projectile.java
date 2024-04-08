@@ -6,14 +6,17 @@ import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
 import org.joml.Vector2f;
 
+import java.util.ArrayList;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Projectile extends Entity2D {
     private Entity2D owner;
     private float dmg;
     private float armorPen;
+    private int pierce;
 
-    private Consumer<Projectile> onHit;
+    private BiConsumer<Projectile, Boolean> onHit;
     private Consumer<Projectile> onUpdate;
 
     public Projectile(Entity2D owner, float dmg, Shader shader, ObjModel model, Texture texture) {
@@ -21,11 +24,11 @@ public class Projectile extends Entity2D {
         this.owner = owner;
         this.dmg = dmg;
     }
-    public Projectile(Entity2D owner, float dmg) {
+    public Projectile(Entity2D owner, int dmg) {
         super(owner.getPosition());
         this.dmg = dmg;
     }
-    public Projectile(Player owner, float dmg) {
+    public Projectile(Player owner, int dmg) {
         this(owner.getEntity(), dmg);
     }
     public Projectile(Player owner) {
@@ -37,6 +40,7 @@ public class Projectile extends Entity2D {
         this.dmg = 100;
         this.model = ObjModel.SQUARE.clone();
         this.shader = Shader.TEXTURING;
+        this.pierce = 1;
     }
     public Projectile() {
         super();
@@ -44,12 +48,14 @@ public class Projectile extends Entity2D {
         this.dmg = 100;
         this.model = ObjModel.SQUARE.clone();
         this.shader = Shader.TEXTURING;
+        this.pierce = 1;
     }
 
     public Projectile instantiate() {
         Projectile projectile = new Projectile(owner, dmg, shader, model, texture);
         projectile.setScale(scale);
         projectile.setVelocity(velocity);
+        projectile.setPierce(pierce);
         // TODO: properly clone this by copying more (Entity2D) fields
         return projectile;
     }
@@ -57,11 +63,17 @@ public class Projectile extends Entity2D {
     public void update(float dt) {
         if (this.onUpdate != null)
             this.onUpdate.accept(this);
-
-        if (owner != null && this.collideCircle(owner) && this.onHit != null)
-            this.onHit.accept(this);
-
         translate(velocity.mul(dt, new Vector2f()));
+    }
+    public <T extends Living> void collide(ArrayList<T> entities) {
+        for (T collider : entities) {
+            if (collider.collideRect(this)) {
+                boolean gotDamaged = collider.damage(dmg);
+                if(gotDamaged) pierce--;
+                if(onHit != null) onHit.accept(this, gotDamaged);
+                if (pierce <= 0) return;
+            }
+        }
     }
 
 
@@ -74,6 +86,9 @@ public class Projectile extends Entity2D {
     public float getArmorPen() {
         return armorPen;
     }
+    public int getPierce() {
+        return pierce;
+    }
 
     public void setDmg(float dmg) {
         this.dmg = dmg;
@@ -84,10 +99,13 @@ public class Projectile extends Entity2D {
     public void setArmorPen(float armorPen) {
         this.armorPen = armorPen;
     }
-    public void setOnHit(Consumer<Projectile> onHit) {
+    public void setOnHit(BiConsumer<Projectile, Boolean> onHit) {
         this.onHit = onHit;
     }
     public void setOnUpdate(Consumer<Projectile> onUpdate) {
         this.onUpdate = onUpdate;
+    }
+    public void setPierce(int pierce) {
+        this.pierce = pierce;
     }
 }
