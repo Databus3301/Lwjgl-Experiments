@@ -13,6 +13,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.glClearColor;
@@ -39,12 +40,11 @@ public class TestGame extends Test { //TODO: move things into a player class
         int numOfEnemies = 100;
         float scale = 3f;
 
-
         // init player
         player = new Player(
-                this,
-                new Entity2D(new Vector2f(0, 0), ObjModel.SQUARE.clone(), Shader.TEXTURING),
-                50000
+               this,
+                      new Entity2D(new Vector2f(0, 0), ObjModel.SQUARE.clone(), Shader.TEXTURING),
+        50000
         );
         TextureAtlas anims = new TextureAtlas(new Texture("LinkAnim.png", 0), 10, 8, 10, 120, 130, 0);
         player.addAnimation("walkDown", new Animation(anims, 4, 0, 20, 10));
@@ -82,7 +82,7 @@ public class TestGame extends Test { //TODO: move things into a player class
         if (player.getLP() <= 0) {
             String text = "> GAME OVER <";
             float size = 20;
-            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine_UI, colorReplacement, -1);
+            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine_UI, colorReplacement, null);
             shouldSimulate = false;
         }
 
@@ -96,7 +96,9 @@ public class TestGame extends Test { //TODO: move things into a player class
         // collide player and its fields
         player.collide(enemies);
 
-        for (Enemy enemy : enemies) {
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while(enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
             // move enemy to player
             enemy.translateTowards(playerEntity, 100*dt);
             // push away from each other
@@ -106,11 +108,8 @@ public class TestGame extends Test { //TODO: move things into a player class
             }
             // kill enemies
             enemy.reduceISeconds(dt);
-            if(enemy.getLP() <= 0) {
-                Enemy last = enemies.get(enemies.size()-1);
-                enemies.set(enemies.indexOf(enemy), last);
-                enemies.remove(enemies.size()-1);
-            }
+            if(enemy.getLP() <= 0)
+                enemyIterator.remove();
             // print debug info if on cursor
             if(enemy.collideRect(target))
                 renderer.drawText("Health: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
