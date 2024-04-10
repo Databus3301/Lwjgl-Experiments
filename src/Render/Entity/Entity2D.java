@@ -18,8 +18,6 @@ import java.util.Objects;
  * it is used as a base class for all 2D entities
  */
 public class Entity2D {
-    public Vector4f rectangle = new Vector4f();
-
     protected Matrix4f modelMatrix = new Matrix4f(); // TODO: keep up to date, throughout method calls like scale() and rotate() to avoid recalculating everything every frame
     protected ObjModel model;
     protected Texture texture;

@@ -72,7 +72,6 @@ public class EnemySpawner {
             // if so, regenerate pos
             pos.set((float) Math.random() * Window.dim.x - Window.dim.x / 2f + tracker.getPosition().x, (float) Math.random() * Window.dim.y - Window.dim.y / 2f + tracker.getPosition().y);
         }
-        tracker.rectangle = new Vector4f(pos.x-enemy.getScale().x*2, pos.y-enemy.getScale().y*2, enemy.getScale().x*4, enemy.getScale().y*4);
         enemy.setPosition(pos);
         return enemy;
     }
