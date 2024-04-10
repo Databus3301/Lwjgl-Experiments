@@ -51,6 +51,11 @@ public class TestGame extends Test { //TODO: move things into a player class
         player.addAnimation("walkLeft", new Animation(anims, 5, 0, 20, 10));
         player.addAnimation("walkUp",   new Animation(anims, 6, 0, 20, 10));
         player.addAnimation("walkRight",new Animation(anims, 7, 0, 20, 10));
+        player.addAnimation("idleDown", new Animation(anims, 0, 0, 2,  3, 3));
+        player.addAnimation("idleLeft", new Animation(anims, 1, 0, 2,  3, 3));
+        player.addAnimation("idleUp",   new Animation(anims, 2, 0, 1,  1, 3));
+        player.addAnimation("idleRight",new Animation(anims, 3, 0, 2,  3, 3));
+        player.switchAnimation("idleDown");
         player.getEntity().scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
 
         // TODO: Spawner class
@@ -106,8 +111,8 @@ public class TestGame extends Test { //TODO: move things into a player class
                 if(enemy != enemy1 && enemy.collideCircle(enemy1))
                     enemy.translateTowards(enemy1, -100*dt); // negated "towards" becomes "away"
             }
-            // kill enemies
-            enemy.reduceISeconds();
+            // kill enemiess
+            enemy.reduceISeconds(dt);
             if(enemy.getLP() <= 0)
                 enemyIterator.remove();
             // print debug info if on cursor
@@ -138,14 +143,22 @@ public class TestGame extends Test { //TODO: move things into a player class
         super.OnKeyInput(window, key, scancode, action, mods);
 
         // release keys
-        if (key == GLFW_KEY_W && action == GLFW_RELEASE)
+        if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
             keyArr[0] = 0;
-        if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+            player.switchAnimation("idleUp");
+        }
+        if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
             keyArr[1] = 0;
-        if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+            player.switchAnimation("idleLeft");
+        }
+        if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
             keyArr[2] = 0;
-        if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+            player.switchAnimation("idleDown");
+        }
+        if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
             keyArr[3] = 0;
+            player.switchAnimation("idleRight");
+        }
 
         // register keys
         if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))

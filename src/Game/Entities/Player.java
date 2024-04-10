@@ -77,8 +77,8 @@
          animations.remove(name);
      }
      public void switchAnimation(String name) {
-         currentAnimation = animations.get(name);
-         entity.setAnimation(currentAnimation);
+        currentAnimation = animations.get(name);
+        entity.setAnimation(currentAnimation);
      }
  
  

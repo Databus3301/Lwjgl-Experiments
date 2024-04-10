@@ -9,7 +9,7 @@ import Tests.Test;
 public class Animation {
     private final TextureAtlas atlas;
     private int frame, frames, offset, row;
-    private float time, fps;
+    private float time, fps, breakTime;
 
     boolean loop = true;
     boolean paused = false;
@@ -23,11 +23,15 @@ public class Animation {
         this.atlas = atlas;
     }
     public Animation(TextureAtlas atlas, int row, int offset, float fps, int frames) {
+        this(atlas, row, offset, fps, frames, 0);
+    }
+    public Animation(TextureAtlas atlas, int row, int offset, float fps, int frames, float breakTime) {
         this.fps = fps;
         this.row = row;
         this.offset = offset;
         this.frames = frames;
         this.atlas = atlas;
+        this.breakTime = breakTime;
     }
 
     public void update(float dt){
@@ -40,6 +44,8 @@ public class Animation {
         }
 
         if(frame >= frames){
+            if(breakTime > 0)
+                time = -breakTime;
             if(loop)
                 frame = 0;
             else
@@ -102,4 +108,7 @@ public class Animation {
         this.loop = loop;
     }
 
+    public void setTime(float time) {
+        this.time = time;
+    }
 }
