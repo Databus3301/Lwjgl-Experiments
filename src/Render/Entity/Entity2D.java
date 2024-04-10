@@ -18,6 +18,8 @@ import java.util.Objects;
  * it is used as a base class for all 2D entities
  */
 public class Entity2D {
+    public Vector4f rectangle = new Vector4f();
+
     protected Matrix4f modelMatrix = new Matrix4f(); // TODO: keep up to date, throughout method calls like scale() and rotate() to avoid recalculating everything every frame
     protected ObjModel model;
     protected Texture texture;
@@ -83,7 +85,7 @@ public class Entity2D {
         this.isStatic = false;
         this.isHidden = false;
         this.offset = new Vector2f(0, 0);
-        this.color = new Vector4f(1, 1, 1, 1);
+        this.color = new Vector4f(0.976f, 0.164f, 0.976f, 1.0f);
         this.animation = null;
     }
 
@@ -255,6 +257,27 @@ public class Entity2D {
     }
     private final Vector4f trans1 = new Vector4f(); // save memory by declaring
     private final Vector4f trans2 = new Vector4f(); // them outside the method
+
+    public boolean collideRect(Vector4f rect1) {
+        if(model == null || rect1 == null) return false;
+
+        Vector4f rect2 = model.getBoundingBox();
+
+        trans2.x = rect2.x;
+        trans2.y = rect2.y;
+
+        calcModelMatrix().transform(trans2);
+        rect2.x = trans2.x;
+        rect2.y = trans2.y;
+
+        rect2.z *= scale.x;
+        rect2.w *= scale.y;
+
+        return rect1.x < rect2.x + rect2.z &&
+                rect1.x + rect1.z > rect2.x &&
+                rect1.y < rect2.y + rect2.w &&
+                rect1.y + rect1.w > rect2.y;
+    }
 
     public boolean collideCircle(Entity2D other) {
         Vector2f p2 = other.position;

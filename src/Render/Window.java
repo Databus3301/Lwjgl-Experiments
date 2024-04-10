@@ -121,7 +121,10 @@ public class Window {
         glfwMakeContextCurrent(windowPtr);
         // Enable v-sync
         glfwSwapInterval(0);
+        // show window
         glfwShowWindow(windowPtr);
+        // hide cursor
+        glfwSetInputMode(windowPtr, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
         GL.createCapabilities();
 

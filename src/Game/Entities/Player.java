@@ -51,11 +51,11 @@
      public <T extends Living> void collide(ArrayList<T> entities) {
          for (Living collider : entities) {
              // push away from player
-             if (collider.collideCircle(this.entity)) {
+             if (collider.collideRect(this.entity)) {
                  collider.translate(
                          new Vector2f(entity.getPosition()).sub(collider.getPosition())
                         .sub( (float) Math.random()*20f-1f, (float) Math.random()*20f-1f) // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
-                        .normalize().mul(-1)
+                        .normalize().mul(-5)
                  );
                  damage();
              }

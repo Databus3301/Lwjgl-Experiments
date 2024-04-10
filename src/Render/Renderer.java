@@ -220,7 +220,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         SetUniforms(currentShader, entity);
 
         // choose Texture
-        if(entity.getTexture() != null)
+        if(entity.getTexture() != null) // TODO: Draw Debug color on missing texture
             entity.getTexture().bind();
         if(entity.getAnimation() != null) {
             entity.getAnimation().getAtlas().getTexture().bind();
@@ -429,7 +429,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             if(entity != null)
                 shader.setUniform4f("uColor", entity.getColor());
             else
-                shader.setUniform4f("uColor",1 ,1 , 1, 1);
+                shader.setUniform4f("uColor",0.976f, 0.164f, 0.976f, 1.0f); // default no-texture-or-color-pink
         }
         if(shader.hasUniform("uColors")) {
             if(entity != null && entity.getColorReplacement() != null)
@@ -612,7 +612,12 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         rect1.z *= scale.x;
         rect1.w *= scale.y;
 
-        drawRect(rect1, new Vector4f(1, 0, 0, 1));
+        drawRect(new Vector4f(rect1.x, rect1.y, rect1.z, rect1.w), new Vector4f(1, 0, 0, 1));
+    }
+
+    public <T extends Entity2D>  void drawCollisionRectRotated(T entity) {
+        System.err.println("drawCollisionRectRotated not implemented yet");
+        // TODO: transform each corner seperately and use drawLinesConnected
     }
 
     ///////// HELPERS //////////

@@ -4,7 +4,9 @@ import Render.Entity.Entity2D;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
+import org.joml.Quaternionf;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 public class Living extends Entity2D {
     protected float LP;
@@ -50,6 +52,25 @@ public class Living extends Entity2D {
     public void reduceISeconds(float dt) {
         if (currentIseconds > 0f) currentIseconds -= dt; //reduce by dt
         else currentIseconds = 0;
+    }
+
+    public Living instantiate() {
+        Living l = new Living();
+
+        l.rotation = new Quaternionf(rotation);
+        l.scale = new Vector2f(scale);
+        l.velocity = new Vector2f(velocity);
+        l.isStatic = isStatic;
+        l.isHidden = isHidden;
+        l.offset = new Vector2f(offset);
+        l.color = new Vector4f(color);
+
+        l.LP = LP;
+        l.maxLP = maxLP;
+        l.iSeconds = iSeconds;
+        l.currentIseconds = currentIseconds;
+
+        return l;
     }
 
     public float getLP() {

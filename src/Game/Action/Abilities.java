@@ -11,7 +11,7 @@ public class Abilities {
     private static Ability getSHOOT() {
         Projectile[] projectiles = new Projectile[1];
         projectiles[0] = new Projectile();
-        projectiles[0].setDmg(100);
+        projectiles[0].setDmg(50);
         projectiles[0].setScale(10f);
         projectiles[0].setTexture(new Texture("fireball.png", 0));
         projectiles[0].setPierce(1);

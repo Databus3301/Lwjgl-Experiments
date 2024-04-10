@@ -22,7 +22,7 @@ void main()
 #shader fragment
 #version 300 es
 
-precision lowp float;
+precision highp float;
 
 layout (location = 0) out vec4 color;
 
@@ -30,9 +30,16 @@ in vec2 v_TexCoord;
 
 uniform sampler2D u_Texture;
 uniform mat4 uColors;
+uniform vec4 uColor;
 
 void main ()
 {
+
+    if(uColor.xyz != vec3(0.976f, 0.164f, 0.976f)) {
+        color = uColor;
+        return;
+    }
+
     vec4 texColor = texture(u_Texture, v_TexCoord);
     color = texColor;
 

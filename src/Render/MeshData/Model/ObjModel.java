@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class ObjModel {
     public static final ObjModel SQUARE = ObjModelParser.parseOBJ("square.obj");
+    public static final ObjModel CIRCLE = ObjModelParser.parseOBJ("circle.obj");
 
 
     // TODO: OPTIMISATION:: add duplicate vertex recognition through faces (cheaper comparision) and handle indices accordingly
