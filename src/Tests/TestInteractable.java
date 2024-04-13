@@ -65,9 +65,9 @@ public class TestInteractable extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(general);
+        renderer.draw(general);
         renderer.drawCollisionAABB(general);
-        renderer.drawEntity2D(button);
+        renderer.draw(button);
         renderer.drawCollisionAABB(button);
     }
     @Override

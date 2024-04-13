@@ -8,7 +8,7 @@ public class Abilities {
     public static Ability SHOOT = getSHOOT();
 
 
-    private static Ability getSHOOT() {
+    public static Ability getSHOOT() {
         Projectile[] projectiles = new Projectile[1];
         projectiles[0] = new Projectile();
         projectiles[0].setDmg(50);
@@ -17,7 +17,7 @@ public class Abilities {
         projectiles[0].setPierce(1);
         SHOOT = new Ability(projectiles, 0.25f);
         SHOOT.setOnTrigger((ability, dt, mousePos, entity, scene) -> {
-            Projectile projectile = ability.getProjectileTypes()[0].instantiate();
+            Projectile projectile = ability.getProjectileTypes()[0].clone();
             projectile.setPosition(entity.getPosition());
             projectile.accelerateTowards(Test.getRenderer().screenToWorldCoords(mousePos), 350);
             projectile.setOnHit((p, damaged) -> {

@@ -63,8 +63,8 @@ public class TestSquare extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(player);
-        renderer.drawEntities2D(entity2DS);
+        renderer.draw(player);
+        renderer.draw(entity2DS);
         glClearColor(0.435f, 0.639f, 0.271f, 1);
     }
 

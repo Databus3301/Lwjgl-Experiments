@@ -29,7 +29,7 @@ public class TestButton extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawButton(b);
+        renderer.draw(b);
         renderer.drawCollisionRect(b);
     }
     @Override

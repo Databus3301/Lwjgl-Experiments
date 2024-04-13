@@ -72,8 +72,8 @@ public class TestCollision extends Test{
     }
 
     private void handleEntities(Entity2D e1, Entity2D e2, Entity2D c, boolean[] flag, int[] fc) {
-        renderer.drawEntity2D(e1);
-        renderer.drawEntity2D(e2);
+        renderer.draw(e1);
+        renderer.draw(e2);
         renderer.drawCollisionRect(e1);
         renderer.drawCollisionRect(e2);
 
@@ -81,7 +81,7 @@ public class TestCollision extends Test{
         flag[0] = false;
 
         if(e1.collideRect(e2)) {
-            renderer.drawEntity2D(c);
+            renderer.draw(c);
             flag[0] = true;
         }
         if(prevFlag[0] && !flag[0]) {

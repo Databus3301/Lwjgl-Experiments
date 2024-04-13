@@ -54,7 +54,7 @@ public class Living extends Entity2D {
         else currentIseconds = 0;
     }
 
-    public Living instantiate() {
+    public Living clone() {
         Living l = new Living();
 
         l.rotation = new Quaternionf(rotation);

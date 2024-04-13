@@ -58,7 +58,7 @@ public class TestPong extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntities2D(new Entity2D[]{ball, wallLeft, wallRight});
+        renderer.draw(new Entity2D[]{ball, wallLeft, wallRight});
     }
 
     @Override

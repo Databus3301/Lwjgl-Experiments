@@ -46,9 +46,9 @@ public class TestAnimation extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(player);
-        renderer.drawEntity2D(player2);
-        renderer.drawEntity2D(player3);
-        renderer.drawEntity2D(player4);
+        renderer.draw(player);
+        renderer.draw(player2);
+        renderer.draw(player3);
+        renderer.draw(player4);
     }
 }

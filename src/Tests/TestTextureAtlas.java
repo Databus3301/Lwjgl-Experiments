@@ -34,8 +34,8 @@ public class TestTextureAtlas extends Test {
     @Override
     public void OnRender(){
         super.OnRender();
-        renderer.drawEntity2D(atlasE);
-        renderer.drawEntity2D(e);
+        renderer.draw(atlasE);
+        renderer.draw(e);
 
         //testFont();
         testTextureAtlas();

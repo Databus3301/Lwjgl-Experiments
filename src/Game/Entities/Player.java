@@ -14,46 +14,45 @@
  import java.util.Map;
 
  
- public class Player extends Living {
+ public class Player extends Living implements Able {
      private Test scene;
-     private Entity2D entity;
      private final ArrayList<Ability> abilities = new ArrayList<>();
      private final Map<String, Animation> animations = new HashMap<>();
-     private Animation currentAnimation;
- 
+
      public Player(Entity2D player, int maxLivePoints, Map<String, Animation> animations) {
-         this.entity = player;
+         player.clone(this);
          this.maxLP = maxLivePoints;
          this.LP = maxLivePoints;
          this.animations.putAll(animations);
      }
      public <T extends Test> Player(T scene, Entity2D player, int maxLivePoints) {
          scene.addUpdateListener(this::update);
+         player.clone(this);
          this.scene = scene;
-         this.entity = player;
          this.maxLP = maxLivePoints;
          this.LP = maxLivePoints;
 
-         // add shooting ability
+         // --TEMP-- add shooting ability as a default
          abilities.add(Abilities.SHOOT.setScene(scene));
      }
  
      public void update(float dt, Vector2f mousePos) {
-        if(currentAnimation != null)
-            currentAnimation.update(dt);
+        if(animation != null)
+            animation.update(dt);
 
         for (Ability ability : abilities) {
-            ability.update(dt, mousePos, entity);
-            ability.getProjectiles().removeIf(projectile -> projectile.getPosition().x < -Window.dim.x / 2f + entity.getPosition().x - 100 || projectile.getPosition().x > Window.dim.x / 2f + entity.getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + entity.getPosition().y - 100 || projectile.getPosition().y > Window.dim.y / 2f + entity.getPosition().y + 100);
+            ability.update(dt, mousePos, this);
+            // remove out-of-view projectiles
+            ability.getProjectiles().removeIf(projectile -> projectile.getPosition().x < -Window.dim.x / 2f + position.x - 100 || projectile.getPosition().x > Window.dim.x / 2f + position.x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + position.y - 100 || projectile.getPosition().y > Window.dim.y / 2f + position.y + 100);
         }
      }
 
      public <T extends Living> void collide(ArrayList<T> entities) {
          for (Living collider : entities) {
              // push away from player
-             if (collider.collideRect(this.entity)) {
+             if (collider.collideRect(this)) {
                  collider.translate(
-                         new Vector2f(entity.getPosition()).sub(collider.getPosition())
+                         new Vector2f(position).sub(collider.getPosition())
                         .sub( (float) Math.random()*20f-1f, (float) Math.random()*20f-1f) // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
                         .normalize().mul(-5)
                  );
@@ -64,12 +63,6 @@
          abilities.forEach(ability -> ability.collide(entities));
      }
 
-     public void addAbility(Ability ability) {
-         abilities.add(ability);
-     }
-     public void removeAbility(Ability ability) {
-         abilities.remove(ability);
-     }
      public void addAnimation(String name, Animation animation) {
          animations.put(name, animation);
      }
@@ -77,14 +70,10 @@
          animations.remove(name);
      }
      public void switchAnimation(String name) {
-        currentAnimation = animations.get(name);
-        entity.setAnimation(currentAnimation);
+        animation = animations.get(name);
      }
  
  
-     public Entity2D getEntity() {
-         return entity;
-     }
      public ArrayList<Ability> getAbilities() {
          return abilities;
      }

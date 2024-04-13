@@ -42,7 +42,7 @@ public class TestNormalisation extends Test{
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntities2D(entities);
+        renderer.draw(entities);
     }
 
     @Override

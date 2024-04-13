@@ -39,7 +39,7 @@ public class TestTextures extends Test {
         super.OnRender();
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        renderer.drawEntity2D(e);
+        renderer.draw(e);
     }
 
     @Override

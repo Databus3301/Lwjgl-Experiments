@@ -1,7 +1,7 @@
 package Render;
 
 import Game.Action.Ability;
-import Game.Entities.Player;
+import Game.Entities.Able;
 import Game.Entities.Projectile;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
@@ -212,7 +212,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         SetUniforms(currentShader, null);
         draw(b.va, b.ib);
     }
-    public <T extends Entity2D> void drawEntity2D(T entity) {
+    public <T extends Entity2D> void draw(T entity) {
         assert entity != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D is null";
         if(entity.isHidden()) return;
 
@@ -226,8 +226,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             entity.getAnimation().getAtlas().getTexture().bind();
             entity.getModel().replaceTextureCoords(entity.getAnimation().getTexCoords());
         }
-
-
         // choose Model
         ObjModel model = entity.getModel();
         assert model != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D has no model";
@@ -240,22 +238,33 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         ib.bind();
 
         glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
-    }
-    public <T extends Entity2D> void drawEntities2D(T[] entities) {
-        for (T entity : entities) {
-            if(entity != null)
-                drawEntity2D(entity);
+
+        //draw abilities
+        if (entity instanceof Able able) {
+            if(able.getAbilities() == null ) return;
+            for(Ability ability : able.getAbilities()) {
+                for(Projectile projectile : ability.getProjectiles()) {
+                    draw(projectile);
+                }
+            }
         }
     }
-    public <T extends Entity2D> void drawEntities2D(ArrayList<T> entities) {
+    public <T extends Entity2D> void draw(T[] entities) {
         for (T entity : entities) {
             if(entity != null)
-                drawEntity2D(entity);
+                draw(entity);
         }
     }
+    public <T extends Entity2D> void draw(ArrayList<T> entities) {
+        for (T entity : entities) {
+            if(entity != null)
+                draw(entity);
+        }
+    }
+
     public <T extends Entity2D> void drawUI(Entity2D entity) {
         entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
-        drawEntity2D(entity);
+        draw(entity);
     }
     public <T extends Entity2D> void drawUI(T[] entities) {
         for (T entity : entities) {
@@ -263,8 +272,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                 drawUI(entity);
         }
     }
-    public <T extends Button> void drawButton(T button) {
-        drawEntity2D(button);
+    public <T extends Button> void draw(T button) {
+        this.draw(button);
 
         Label label = button.getLabel();
         drawText(
@@ -292,14 +301,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                 null
             ), Shader.TEXTURING, null, null
         );
-    }
-    public <T extends Player> void drawPlayer(T player) {
-        drawEntity2D(player.getEntity());
-        for(Ability ability : player.getAbilities()) {
-            for(Projectile projectile : ability.getProjectiles()) {
-                drawEntity2D(projectile);
-            }
-        }
     }
 
     public Batch setupBatch(Entity2D[] entities) {

@@ -37,7 +37,7 @@ public class TestObjRendering extends Test {
         super.OnRender();
 
         glClearColor(1f, 0.0f, 0.0f, 1.0f);
-        renderer.drawEntity2D(entity);
+        renderer.draw(entity);
 
     }
 

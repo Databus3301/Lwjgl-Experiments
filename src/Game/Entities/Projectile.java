@@ -4,7 +4,9 @@ import Render.Entity.Entity2D;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
+import org.joml.Quaternionf;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -24,17 +26,11 @@ public class Projectile extends Entity2D {
         this.owner = owner;
         this.dmg = dmg;
     }
-    public Projectile(Entity2D owner, int dmg) {
+    public <T extends Entity2D> Projectile(T owner, int dmg) {
         super(owner.getPosition());
         this.dmg = dmg;
     }
-    public Projectile(Player owner, int dmg) {
-        this(owner.getEntity(), dmg);
-    }
-    public Projectile(Player owner) {
-        this(owner.getEntity());
-    }
-    public Projectile(Entity2D owner) {
+    public  <T extends Entity2D> Projectile(T owner) {
         super(owner.getPosition());
         this.owner = owner;
         this.dmg = 100;
@@ -51,12 +47,22 @@ public class Projectile extends Entity2D {
         this.pierce = 1;
     }
 
-    public Projectile instantiate() {
+    public Projectile clone() {
         Projectile projectile = new Projectile(owner, dmg, shader, model, texture);
         projectile.setScale(scale);
         projectile.setVelocity(velocity);
+        projectile.setRotation(rotation);
+        projectile.setStatic(isStatic);
+        projectile.setHidden(isHidden);
+        projectile.setOffset(offset);
+        projectile.setColor(color);
+        projectile.setAnimation(animation);
+
         projectile.setPierce(pierce);
-        // TODO: properly clone this by copying more (Entity2D) fields
+        projectile.setArmorPen(armorPen);
+        projectile.setOnHit(onHit);
+        projectile.setOnUpdate(onUpdate);
+
         return projectile;
     }
 

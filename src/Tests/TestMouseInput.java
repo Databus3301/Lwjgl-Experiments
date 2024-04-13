@@ -24,7 +24,7 @@ public class TestMouseInput extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(tracker);
+        renderer.draw(tracker);
     }
 
     @Override

@@ -47,7 +47,7 @@ public class EnemySpawner {
         }
 
         if (currentWave.isWaveOver()) {
-            currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() /2);
+            currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
         }
 
     }
@@ -64,7 +64,7 @@ public class EnemySpawner {
             }
         }
         index = Math.min(index, Enemies.enemies.size() - 1); // prevent out of bounds
-        Enemy enemy = Enemies.enemies.get(index).instantiate();
+        Enemy enemy = Enemies.enemies.get(index).clone();
         // gen pos
         Vector2f pos = new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f + tracker.getPosition().x, (float) Math.random() * Window.dim.y - Window.dim.y / 2f + tracker.getPosition().y);
         // check if pos is colliding with tracker

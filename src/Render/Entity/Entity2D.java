@@ -87,17 +87,25 @@ public class Entity2D {
         this.animation = null;
     }
 
-    public Entity2D instantiate() { // TODO: test this
-        Entity2D e = new Entity2D(new Vector2f(position), model, texture, shader);
-        e.rotation = new Quaternionf(rotation);
-        e.scale = new Vector2f(scale);
-        e.velocity = new Vector2f(velocity);
-        e.isStatic = isStatic;
-        e.isHidden = isHidden;
-        e.offset = new Vector2f(offset);
-        e.color = new Vector4f(color);
+    public Entity2D clone(Entity2D into) { // TODO: test this
+        into.position = new Vector2f(position);
+        into.model = model;
+        into.texture = texture;
+        into.shader = shader;
+        into.rotation = new Quaternionf(rotation);
+        into.scale = new Vector2f(scale);
+        into.velocity = new Vector2f(velocity);
+        into.isStatic = isStatic;
+        into.isHidden = isHidden;
+        into.offset = new Vector2f(offset);
+        into.color = new Vector4f(color);
+        into.animation = animation;
 
-        return e;
+        return into;
+    }
+    public Entity2D clone() { // TODO: test this
+        Entity2D e = new Entity2D();
+        return clone(e);
     }
 
     /**
@@ -457,7 +465,7 @@ public class Entity2D {
     public void show() {
         isHidden = false;
     }
-    public void setHidde(boolean isHidden) {
+    public void setHidden(boolean isHidden) {
         this.isHidden = isHidden;
     }
     public void setOffset(Vector2f offset) {

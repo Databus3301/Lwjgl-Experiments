@@ -89,7 +89,7 @@ public class TestBatchRendering extends Test {
         if(batching)
             renderer.drawBatch(b);
         else
-            renderer.drawEntities2D(entities);
+            renderer.draw(entities);
     }
 
     @Override

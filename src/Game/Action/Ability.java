@@ -26,6 +26,11 @@ public class Ability {
         this.cooldown = cooldown;
         this.currentCooldown = .5f;
     }
+    public Ability() {
+        this.projectileTypes = new Projectile[]{new Projectile()};
+        this.cooldown = 1f;
+        this.currentCooldown = .5f;
+    }
 
     public void update(float dt, Vector2f mousePos, Entity2D trigger) {
         if (currentCooldown > 0) {
@@ -39,6 +44,18 @@ public class Ability {
     }
     public <T extends Living> void collide(ArrayList<T> entities) {
         projectiles.forEach(projectile -> projectile.collide(entities));
+    }
+
+    public Ability clone(Ability into) {
+        into.setProjectileTypes(projectileTypes);
+        into.setCooldown(cooldown);
+        into.setOnTrigger(onTrigger);
+        into.setScene(scene);
+        return into;
+    }
+    public Ability clone() {
+        Ability a = new Ability();
+        return clone(a);
     }
 
 

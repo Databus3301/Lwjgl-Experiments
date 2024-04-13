@@ -15,7 +15,6 @@ import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.glClearColor;
@@ -58,7 +57,7 @@ public class TestGame extends Test { //TODO: move things into a player class
         player.addAnimation("idleUp",   new Animation(anims, 2, 0, 1,  1, 3));
         player.addAnimation("idleRight",new Animation(anims, 3, 0, 2,  3, 3));
         player.switchAnimation("idleDown");
-        player.getEntity().scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
+        player.scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
 
         // TODO: Spawner class
         // track mouse and indicate cursor position
@@ -72,8 +71,8 @@ public class TestGame extends Test { //TODO: move things into a player class
         colorReplacement.swap(new Vector4f(0, 0, 0, 1), new Vector4f(0, 0, 1, 1));
 
         // enemy spawning rules
-        spawner.setProbabilityDistribution(new float[]{0.7f, 0.3f});
-        spawner.setTracker(player.getEntity());
+        spawner.setProbabilityDistribution(new float[]{0.3f, 0.3f, 0.4f});
+        spawner.setTracker(player);
     }
 
     @Override
@@ -90,21 +89,21 @@ public class TestGame extends Test { //TODO: move things into a player class
 
         if(!shouldSimulate) return;
         // move player
-        Entity2D playerEntity = player.getEntity();
-        playerEntity.translate(new Vector2f(playerEntity.getVelocity()).mul(300*dt));
-        camera.centerOn(playerEntity);
+        player.translate(new Vector2f(player.getVelocity()).mul(300*dt));
+        camera.centerOn(player);
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
         // collide player and its fields
-        player.collide(enemies);
+        this.player.collide(enemies);
         // spawn enemies
         spawner.update(dt, enemies);
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while(enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
+            enemy.update(dt, mousePos);
             // move enemy to player
-            enemy.translateTowards(playerEntity, 100*dt);
+            enemy.translateTowards(player, 100*dt);
             // push away from each other
             for(Enemy enemy1 : enemies) {
                 if(enemy != enemy1 && enemy.collideCircle(enemy1))
@@ -126,10 +125,10 @@ public class TestGame extends Test { //TODO: move things into a player class
         glClearColor(0.435f, 0.639f, 0.271f, 1);
 
         // entities
-        renderer.drawEntities2D(enemies);
-        renderer.drawEntities2D(projectiles);
-        renderer.drawPlayer(player);
-        renderer.drawEntity2D(target);
+        renderer.draw(enemies);
+        renderer.draw(projectiles);
+        renderer.draw(player);
+        renderer.draw(target);
 
         // live points
         float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
@@ -170,16 +169,15 @@ public class TestGame extends Test { //TODO: move things into a player class
             keyArr[3] = GLFW_KEY_D;
 
         // apply velocity
-        Entity2D playerEntity = player.getEntity();
-        playerEntity.setVelocity(new Vector2f(0, 0));
+        player.setVelocity(new Vector2f(0, 0));
         if(keyArr[0] == GLFW_KEY_W)
-            playerEntity.accelerate(new Vector2f(0, 1));
+            player.accelerate(new Vector2f(0, 1));
         if(keyArr[1] == GLFW_KEY_A)
-            playerEntity.accelerate(new Vector2f(-1, 0));
+            player.accelerate(new Vector2f(-1, 0));
         if(keyArr[2] == GLFW_KEY_S)
-            playerEntity.accelerate(new Vector2f(0, -1));
+            player.accelerate(new Vector2f(0, -1));
         if(keyArr[3] == GLFW_KEY_D)
-            playerEntity.accelerate(new Vector2f(1, 0));
+            player.accelerate(new Vector2f(1, 0));
 
         // update animation
         if(keyArr[0] == GLFW_KEY_W)

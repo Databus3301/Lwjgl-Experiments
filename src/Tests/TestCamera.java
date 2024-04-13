@@ -35,8 +35,8 @@ public class TestCamera extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        renderer.drawEntity2D(origin);
-        renderer.drawEntity2D(offscreen);
+        renderer.draw(origin);
+        renderer.draw(offscreen);
     }
 
     @Override
