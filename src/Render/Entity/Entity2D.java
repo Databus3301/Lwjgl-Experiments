@@ -34,6 +34,7 @@ public class Entity2D {
     protected Quaternionf rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
+    protected Vector2f speed; // pixels per second
 
     protected boolean isStatic; // if the entity is static, it will not be updated every frame
     protected boolean isHidden; // if the entity is hidden, it will not be drawn
@@ -384,13 +385,14 @@ public class Entity2D {
     public Vector4f getColor() {
         return color;
     }
-
     public ColorReplacement getColorReplacement() {
         return colorReplacement;
     }
-
     public Animation getAnimation() {
         return animation;
+    }
+    public Vector2f getSpeed() {
+        return speed;
     }
 
     public void setPosition(Vector2f position) {
@@ -486,5 +488,7 @@ public class Entity2D {
     public void setColorReplacement(ColorReplacement colorReplacement) {
         this.colorReplacement = colorReplacement;
     }
-
+    public void setSpeed(Vector2f speed) {
+        this.speed = speed;
+    }
 }

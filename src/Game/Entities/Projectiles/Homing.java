@@ -11,10 +11,10 @@ import java.util.ArrayList;
 
 public class Homing extends Projectile {
 
-    private boolean homing;
+    private boolean isHoming;
     private float homingDistance;
     private float intensity;
-    private Entity2D target;
+    private Living target;
 
     public Homing(Entity2D owner, float dmg, Shader shader, ObjModel model, Texture texture) {
         super(owner, dmg, shader, model, texture);
@@ -27,8 +27,8 @@ public class Homing extends Projectile {
         this.model = ObjModel.SQUARE.clone();
         this.shader = Shader.TEXTURING;
         this.pierce = 1;
-        this.homing = true;
-        this.homingDistance = 200f;
+        this.isHoming = true;
+        this.homingDistance = 50f;
         this.intensity = 100f;
     }
 
@@ -48,7 +48,7 @@ public class Homing extends Projectile {
         p.setArmorPen(armorPen);
         p.setOnHit(onHit);
         p.setOnUpdate(onUpdate);
-        p.setHoming(this.homing);
+        p.setHoming(this.isHoming);
         p.setHomingDistance(this.homingDistance);
         p.setIntensity(this.intensity);
 
@@ -57,11 +57,10 @@ public class Homing extends Projectile {
 
     @Override
     public void update(float dt) {
+        // leave target
+        if(target != null && target.getLP() <= 0) target = null;
         // move towards target
         if(target != null) {
-            Vector2f searchSpace = new Vector2f(-velocity.y, velocity.x);
-
-
             float dist = target.getPosition().distance(this.getPosition());
             if(dist < homingDistance * homingDistance) {
                 Vector2f direction = new Vector2f(target.getPosition()).sub(this.getPosition()).normalize();
@@ -81,14 +80,15 @@ public class Homing extends Projectile {
                 if(onHit != null) onHit.accept(this, gotDamaged);
                 if (pierce <= 0) return;
             }
-            if(homing) {
+            if(isHoming) {
+                // only consider entities in front of the projectile
                 Vector2f toCollider = new Vector2f(collider.getPosition()).sub(this.getPosition());
-                if(velocity.dot(toCollider) < 0) continue; // only consider entities in front of the projectile
-
+                if(velocity.dot(toCollider) < 0) continue;
+                // find the closest target
                 if(target == null) {
                     target = collider;
                 } else {
-                    if(target.getPosition().distanceSquared(this.getPosition()) > collider.getPosition().distanceSquared(this.getPosition())) {
+                    if (target.getPosition().distanceSquared(this.getPosition()) > collider.getPosition().distanceSquared(this.getPosition())) {
                         target = collider;
                     }
                 }
@@ -97,14 +97,14 @@ public class Homing extends Projectile {
     }
 
     // projecting a onto b results in the component of a that is parallel to b (imagine a shadow of a on b)
-    // canceling out everything oparralel (i.e the projection) by subtraction leaves the orthogonal component
+    // canceling out everything parralel (i.e the projection) by subtraction leaves the orthogonal component
     private Vector2f orthogonalComponent(Vector2f a, Vector2f b) {
         Vector2f projection = new Vector2f(a).mul(b.dot(a) / a.lengthSquared());
         return new Vector2f(b).sub(projection);
     }
 
     public boolean isHoming() {
-        return homing;
+        return isHoming;
     }
     public float getHomingDistance() {
         return homingDistance;
@@ -114,7 +114,7 @@ public class Homing extends Projectile {
     }
 
     public void setHoming(boolean homing) {
-        this.homing = homing;
+        this.isHoming = homing;
     }
     public void setHomingDistance(float homingDistance) {
         this.homingDistance = homingDistance;

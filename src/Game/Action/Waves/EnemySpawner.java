@@ -66,7 +66,7 @@ public class EnemySpawner {
         index = Math.min(index, Enemies.enemies.size() - 1); // prevent out of bounds
         Enemy enemy = Enemies.enemies.get(index).clone();
         // gen pos
-        Vector2f pos = new Vector2f((float) Math.random() * Window.dim.x - Window.dim.x / 2f + tracker.getPosition().x, (float) Math.random() * Window.dim.y - Window.dim.y / 2f + tracker.getPosition().y);
+        Vector2f pos = new Vector2f((float) (Math.random() * Window.dim.x - Window.dim.x / 2f +  tracker.getPosition().x), (float) (Math.random() * Window.dim.y - Window.dim.y / 2f + tracker.getPosition().y));
         // check if pos is colliding with tracker
         while(tracker.collideRect(new Vector4f(pos.x-enemy.getScale().x*2, pos.y-enemy.getScale().y*2, enemy.getScale().x*4, enemy.getScale().y*4))) {
             // if so, regenerate pos

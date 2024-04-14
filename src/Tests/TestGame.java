@@ -130,10 +130,25 @@ public class TestGame extends Test { //TODO: move things into a player class
         renderer.draw(player);
         renderer.draw(target);
 
-        // live points
-        float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
-        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
-        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
+        // live points // TODO: fix positioning when adjusting viewport (window resizing is messed up)
+        renderer.draw(new Entity2D(new Vector2f(-100 / 2f, 100/ 2f - 25), ObjModel.SQUARE, Shader.TEXTURING) {{
+            scale(new Vector2f(100/4f, 25));
+            setColor(1, 0, 0, 1);
+            setOffset(camera.getPosition().mul(-1, new Vector2f()));
+        }});
+
+//        renderer.drawUI(new Entity2D(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25), ObjModel.SQUARE, Shader.TEXTURING) {{
+//            scale(new Vector2f(Window.dim.x/4f, 25));
+//            setColor(1, 0, 0, 1);
+//        }});
+//        renderer.drawUI(new Entity2D(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25), ObjModel.SQUARE, Shader.TEXTURING) {{
+//            scale(new Vector2f(Window.dim.x * (player.getLP() / player.getMaxLP()) / 4, 25));
+//            setColor(0, 1, 0, 1);
+//        }});
+
+        //float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
+        //renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
+        //renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
     }
 
     @Override

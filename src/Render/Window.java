@@ -27,6 +27,8 @@ public class Window {
     private long windowPtr;
     private static Window window;
     public static Vector2i dim = new Vector2i(1200, 900);
+    private float targetAspect;
+
 
     private Test currentTest;
     private String test;
@@ -73,7 +75,7 @@ public class Window {
         windowPtr = glfwCreateWindow(dim.x, dim.y, "Open Gl - Testing Enviroment", NULL, NULL);
         if (windowPtr == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
-
+        targetAspect = (float) dim.x / dim.y;
 
         // Set up a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(windowPtr, (window, key, scancode, action, mods) -> {
@@ -86,7 +88,6 @@ public class Window {
 
         // maintain starting aspect ratio of viewport on resize
         glfwSetFramebufferSizeCallback(windowPtr, (window, width, height) -> {
-            float targetAspect = (float) dim.x / dim.y;
             dim.x = width;
             dim.y = height;
             float newAspect =  (float) width / height;
@@ -96,6 +97,8 @@ public class Window {
                 dim.y = (int) (dim.x / targetAspect);
             }
             glViewport(0, 0, dim.x, dim.y);
+
+            System.out.println(targetAspect + " " + newAspect + " " + (float)dim.x / dim.y);
         });
 
         // Get the thread stack and push a new frame
@@ -248,7 +251,7 @@ public class Window {
             // FPS  ||   ms per frame
             if (lastSecond != LocalTime.now().getSecond()) {
                 lastSecond = LocalTime.now().getSecond();
-                System.out.println(fps + "fps" + "   " + 1000.f / fps + "ms per frame");
+               // System.out.println(fps + "fps" + "   " + 1000.f / fps + "ms per frame");
                 fps = 0;
             } else {
                 fps++;
