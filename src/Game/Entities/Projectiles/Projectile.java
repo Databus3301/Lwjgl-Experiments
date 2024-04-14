@@ -1,25 +1,23 @@
-package Game.Entities;
+package Game.Entities.Projectiles;
 
+import Game.Entities.Living;
 import Render.Entity.Entity2D;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
-import org.joml.Quaternionf;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Projectile extends Entity2D {
-    private Entity2D owner;
-    private float dmg;
-    private float armorPen;
-    private int pierce;
+    protected Entity2D owner;
+    protected float dmg, armorPen;
+    protected int pierce;
 
-    private BiConsumer<Projectile, Boolean> onHit;
-    private Consumer<Projectile> onUpdate;
+    protected BiConsumer<Projectile, Boolean> onHit;
+    protected Consumer<Projectile> onUpdate;
 
     public Projectile(Entity2D owner, float dmg, Shader shader, ObjModel model, Texture texture) {
         super(owner.getPosition(), model, texture, shader);
@@ -95,7 +93,7 @@ public class Projectile extends Entity2D {
     public int getPierce() {
         return pierce;
     }
-
+    
     public void setDmg(float dmg) {
         this.dmg = dmg;
     }

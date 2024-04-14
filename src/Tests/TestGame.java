@@ -5,7 +5,7 @@ import Game.Entities.Player;
 import Render.Entity.Camera.Camera;
 import Game.Entities.Enemy;
 import Render.Entity.Entity2D;
-import Game.Entities.Projectile;
+import Game.Entities.Projectiles.Projectile;
 import Render.MeshData.Texturing.*;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
@@ -94,14 +94,14 @@ public class TestGame extends Test { //TODO: move things into a player class
         // move target to mouse
         target.setPosition(renderer.screenToWorldCoords(mousePos));
         // collide player and its fields
-        this.player.collide(enemies);
+        player.collide(enemies);
         // spawn enemies
         spawner.update(dt, enemies);
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while(enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
-            enemy.update(dt, mousePos);
+            enemy.update(dt, mousePos, player.getPosition());
             // move enemy to player
             enemy.translateTowards(player, 100*dt);
             // push away from each other

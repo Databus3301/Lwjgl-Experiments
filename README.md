@@ -18,7 +18,12 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - Keyboard Input
 - Text Rendering
 - Interactables
+  - Buttons
 - Sound
+- Ability System
+- Enemy System
+- normalised invincibility frames
+- texture atlassing
 
 ## WOP
 ### Engine
@@ -29,8 +34,6 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] particles
 - [ ] frustum culling
 - [ ] scene loading/saving/parsing
-- [ ] interaction
-- [ ] texture atlas
 - [ ] preload models and textures?
 - [ ] double buffering
 - [ ] material texture loading
@@ -64,7 +67,8 @@ Documenting my learning process of Open GL and LWJGL for a school project
       - [ ] shield
       - [ ] piercing
       - [ ] homing
-    - [ ] normalise invincibility frames
+    - [ ] simulation distance
+      
 - [x] …
 
 ## Resources

@@ -1,14 +1,12 @@
 package Game.Action;
 
 import Game.Entities.Living;
-import Game.Entities.Projectile;
+import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Entity2D;
-import Render.Entity.Interactable.Interactable;
 import Tests.Test;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Ability {
     private Test scene;
@@ -20,7 +18,11 @@ public class Ability {
     private float cooldown;
     private float currentCooldown;
 
-    public Interactable.QuintConsumer<Ability, Float, Vector2f, Entity2D, Test> onTrigger;
+    private String name;
+    private String description;
+    private int level;
+
+    public HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger;
     public Ability(Projectile[] projectileTypes, float cooldown) {
         this.projectileTypes = projectileTypes;
         this.cooldown = cooldown;
@@ -33,15 +35,19 @@ public class Ability {
     }
 
     public void update(float dt, Vector2f mousePos, Entity2D trigger) {
+        update(dt, mousePos, Test.getRenderer().screenToWorldCoords(mousePos), trigger);
+    }
+    public void update(float dt, Vector2f mousePos, Vector2f target, Entity2D trigger) {
         if (currentCooldown > 0) {
             currentCooldown -= dt;
         } else {
             currentCooldown = cooldown*2;
-            onTrigger.accept(this, dt, mousePos, trigger, scene);
+            onTrigger.accept(this, dt, mousePos, target, trigger, scene);
         }
         projectiles.forEach(projectile -> projectile.update(dt));
         projectiles.removeIf(projectile -> projectile.getPierce() <= 0);
     }
+
     public <T extends Living> void collide(ArrayList<T> entities) {
         projectiles.forEach(projectile -> projectile.collide(entities));
     }
@@ -71,11 +77,25 @@ public class Ability {
     public ArrayList<Projectile> getProjectiles() {
         return projectiles;
     }
-
-    public void setCooldown(float cooldown) {
-        this.cooldown = cooldown;
+    public int getLevel() {
+        return level;
     }
-    public void setOnTrigger(Interactable.QuintConsumer<Ability, Float, Vector2f, Entity2D, Test> onTrigger) {
+    public String getDescription() {
+        return description;
+    }
+    public String getName() {
+        return name;
+    }
+    public Test getScene() {
+        return scene;
+    }
+
+
+    public Ability setCooldown(float cooldown) {
+        this.cooldown = cooldown;
+        return this;
+    }
+    public void setOnTrigger(HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger) {
         this.onTrigger = onTrigger;
     }
     public void setProjectileTypes(Projectile[] projectileTypes) {
@@ -84,6 +104,27 @@ public class Ability {
     public Ability setScene(Test scene) {
         this.scene = scene;
         return this;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setLevel(int level) {
+        this.level = level;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Ability setCurrentCooldown(float currentCooldown) {
+        this.currentCooldown = currentCooldown;
+        return this;
+    }
+    public void setProjectiles(ArrayList<Projectile> projectiles) {
+        this.projectiles = projectiles;
+    }
+
+    @FunctionalInterface
+    public interface HexConsumer<T, U, V, W, X, Y> {
+        void accept(T t, U u, V v, W w, X x, Y y);
     }
 
 }

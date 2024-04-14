@@ -28,9 +28,9 @@ public class Enemies {
         Enemy basic = new Enemy();
         basic.setMaxLP(50);
         basic.setLP(50);
-        basic.setiSeconds(0.2f);
+        basic.setiSeconds(0.02f);
         basic.setColor(new Vector4f(1, 0, 0, 1));
-        basic.setScale(40);
+        basic.setScale(10);
         return basic;
     }
     public static Enemy getTANK() {
@@ -38,7 +38,7 @@ public class Enemies {
         Enemy tank = new Enemy();
         tank.setMaxLP(200);
         tank.setLP(200);
-        tank.setiSeconds(0.2f);
+        tank.setiSeconds(0.02f);
         tank.setColor(new Vector4f(0, 1, 0, 1));
         tank.setScale(40, 80);
         return tank;
@@ -49,7 +49,7 @@ public class Enemies {
         Enemy shooter = new Enemy();
         shooter.setMaxLP(200);
         shooter.setLP(200);
-        shooter.setiSeconds(0.2f);
+        shooter.setiSeconds(0.02f);
         shooter.setColor(new Vector4f(0, 0, 1, 1));
         shooter.setScale(40, 80);
         shooter.addAbility(Abilities.getSHOOT());

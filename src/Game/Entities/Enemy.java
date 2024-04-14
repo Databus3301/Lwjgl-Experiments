@@ -31,8 +31,11 @@ public class Enemy extends Living implements Able{
     }
 
     public void update(float dt, Vector2f mousePos) {
+        update(dt, mousePos, mousePos);
+    }
+    public void update(float dt, Vector2f mousePos, Vector2f target) {
         for (Ability ability : abilities) {
-            ability.update(dt, mousePos, this);
+            ability.update(dt, mousePos, target, this);
             // remove out-of-view projectiles
             ability.getProjectiles().removeIf(projectile -> projectile.getPosition().x < -Window.dim.x / 2f + getPosition().x - 100 || projectile.getPosition().x > Window.dim.x / 2f + getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + getPosition().y - 100 || projectile.getPosition().y > Window.dim.y / 2f + getPosition().y + 100);
         }

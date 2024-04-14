@@ -2,7 +2,7 @@ package Render;
 
 import Game.Action.Ability;
 import Game.Entities.Able;
-import Game.Entities.Projectile;
+import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
 import Render.MeshData.Texturing.ColorReplacement;

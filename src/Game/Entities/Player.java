@@ -33,7 +33,8 @@
          this.LP = maxLivePoints;
 
          // --TEMP-- add shooting ability as a default
-         abilities.add(Abilities.SHOOT.setScene(scene));
+         addAbility(Abilities.getHOMING());
+
      }
  
      public void update(float dt, Vector2f mousePos) {
@@ -72,8 +73,7 @@
      public void switchAnimation(String name) {
         animation = animations.get(name);
      }
- 
- 
+
      public ArrayList<Ability> getAbilities() {
          return abilities;
      }

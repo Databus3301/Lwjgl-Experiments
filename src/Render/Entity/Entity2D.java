@@ -123,8 +123,9 @@ public class Entity2D {
         this.position.add(direction.x * by, direction.y * by);
         return direction;
     }
+    private final Vector2f direction = new Vector2f();
     public Vector2f translateTowards(Entity2D target, float by) {
-        Vector2f direction = new Vector2f(target.getPosition()).sub(position).normalize();
+        direction.set(target.getPosition()).sub(position).normalize();
         this.position.add(direction.x * by, direction.y * by);
         return direction;
     }
