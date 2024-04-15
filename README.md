@@ -66,7 +66,7 @@ Documenting my learning process of Open GL and LWJGL for a school project
       - [ ] fast small projectiles
       - [ ] shield
       - [ ] piercing
-      - [ ] homing
+      - [x] homing
     - [ ] simulation distance
       
 - [x] …
