@@ -7,6 +7,7 @@ import Render.MeshData.Texturing.Texture;
 public class Abilities {
     public static Ability SHOOT = getSHOOT();
     public static Ability HOMING = getHOMING();
+    public static Ability[] SALVE = getSALVE();
 
 
     public static Ability getSHOOT() {
@@ -47,6 +48,12 @@ public class Abilities {
         });
 
         return HOMING;
+    }
+
+
+    public static Ability[] getSALVE() {
+        return new Ability[]{getSHOOT().setCurrentCooldown(0.1f), getSHOOT().setCurrentCooldown(0.2f), getSHOOT().setCurrentCooldown(0.3f)};
+
     }
 
 }

@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL43;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL43.*;
 
 public class Renderer { // TODO: drawUI method to draw absolute positioned UI elements
@@ -650,6 +651,16 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         return new Vector2f(projectedCoords.x, projectedCoords.y).sub(camera.getPosition());
     }
 
+    public void toggleCursor() {
+        
+    }
+    public void cursorHide() {
+        glfwSetInputMode(Window.getWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
+    public void cursorShow() {
+        glfwSetInputMode(Window.getWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
     ///////// GETTERS & SETTERS //////////
     public void setCamera(Camera camera) {
         this.camera = camera;
@@ -663,6 +674,9 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     public void setMode(int mode) {
         this.mode = mode;
         glPolygonMode(GL_FRONT_AND_BACK, mode);
+    }
+    public void setCursorMode(int mode) {
+        glfwSetInputMode(Window.getWindowPtr(), GLFW_CURSOR, mode);
     }
     public Camera getCamera() {
         return camera;
