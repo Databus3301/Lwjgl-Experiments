@@ -18,6 +18,7 @@ public class Texture {
     private IntBuffer m_Height;
     private IntBuffer channels;
     private int textureSlot;
+    private String name;
 
     public Texture(String path, int slot) {
         this(path);
@@ -29,6 +30,7 @@ public class Texture {
             path = "res/textures/" + path;
         m_FilePath = path;
 
+        name = path.substring(path.lastIndexOf('/')+1, path.lastIndexOf('.'));
 
         m_Width = BufferUtils.createIntBuffer(1);
         m_Height = BufferUtils.createIntBuffer(1);
@@ -69,6 +71,9 @@ public class Texture {
         return (float)getWidth()/(float)getHeight();
     }
 
+    public String getName() {
+        return name;
+    }
 
     public void bind(int slot){
         textureSlot = slot;

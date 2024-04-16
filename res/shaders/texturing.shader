@@ -52,4 +52,5 @@ void main ()
         if (length(diff) < tolerance)
         color = vec4(uColors[3].xyz, color.a);
     }
+
 };

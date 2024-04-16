@@ -219,6 +219,9 @@ public class Window {
                 case "animation", "anim":
                     currentTest = new TestAnimation();
                     break;
+                case "startscreen", "ss":
+                    currentTest = new TestStartScreen();
+                    break;
                 default:
                     currentTest = new Test();
             }

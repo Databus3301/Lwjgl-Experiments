@@ -221,8 +221,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         SetUniforms(currentShader, entity);
 
         // choose Texture
-        if(entity.getTexture() != null) // TODO: Draw Debug color on missing texture
+        if(entity.getTexture() != null) {
+            System.out.println(entity.getTexture().getName());
             entity.getTexture().bind();
+        }
         if(entity.getAnimation() != null) {
             entity.getAnimation().getAtlas().getTexture().bind();
             entity.getModel().replaceTextureCoords(entity.getAnimation().getTexCoords());
@@ -274,7 +276,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }
     }
     public <T extends Button> void draw(T button) {
-        this.draw(button);
+        this.draw((Entity2D) button);
 
         Label label = button.getLabel();
         drawText(
@@ -285,7 +287,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                     label.getText(),
                     null,
                     (int)(button.getScale().x-label.getFont().getCharWidth()*3)
-            ), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, null);
+            ), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, button.getColorReplacement());
 
         if(button.getState() != Interactable.States.HOVER) return;
         if(!button.shouldDisplayTooltip()) return;

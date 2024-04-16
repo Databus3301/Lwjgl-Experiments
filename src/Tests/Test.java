@@ -19,6 +19,8 @@ public class Test {
     public static Renderer renderer;
     public Vector2f mousePos = new Vector2f(0, 0);
 
+    private boolean updated = false;
+
     private final ArrayList<Interactable.QuintConsumer<Integer, Integer, Integer, Integer, Vector2f>> keyCallbacks;
     private final ArrayList<BiConsumer<Float, Vector2f>> updateCallbacks;
 
@@ -27,15 +29,33 @@ public class Test {
         keyCallbacks = new ArrayList<>();
         updateCallbacks = new ArrayList<>();
     }
+
+    /**
+     * Called after Window/OpenGL/OpenAL initialization.
+     * Called on the first frame of the test.
+     */
+    public void OnStart() {
+        updated = true;
+    }
+    /**
+     * Called every frame.
+     * @param dt Delta time.
+     */
     public void OnUpdate(float dt) {
+        if(!updated) OnStart();
+
         updateCallbacks.forEach(callback -> {
             callback.accept(dt, mousePos);
         });
     }
+    /**
+     * Called every frame before OnUpdate.
+     */
     public void OnRender() {
         renderer.getCamera().onRender();
         renderer.clear();
     }
+
     public void OnClose() {
         renderer.getCurrentShader().delete();
         removeAllKeyListeners();
@@ -50,7 +70,6 @@ public class Test {
     public static Renderer getRenderer() {
         return renderer;
     }
-
     public void addKeyListener(Interactable.QuintConsumer<Integer, Integer, Integer, Integer, Vector2f> callback) {
         keyCallbacks.add(callback);
     }
