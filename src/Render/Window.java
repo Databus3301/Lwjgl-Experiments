@@ -254,7 +254,7 @@ public class Window {
             // FPS  ||   ms per frame
             if (lastSecond != LocalTime.now().getSecond()) {
                 lastSecond = LocalTime.now().getSecond();
-               // System.out.println(fps + "fps" + "   " + 1000.f / fps + "ms per frame");
+                System.out.println(fps + "fps" + "   " + 1000.f / fps + "ms per frame");
                 fps = 0;
             } else {
                 fps++;
@@ -299,6 +299,10 @@ public class Window {
 //        while (glGetError() != 0) { // TODO: disable this in production for a big performance boost
 //            System.out.println("[OpenGL error:] " + Integer.toHexString(glGetError()));
 //        }
+    }
+
+    public static void changeTest(Test test) {
+        window.currentTest = test;
     }
 
     public static Window getWindow() {

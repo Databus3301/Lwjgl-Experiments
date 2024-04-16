@@ -2,6 +2,7 @@ package Tests;
 
 import Game.Action.Waves.EnemySpawner;
 import Game.Entities.Player;
+import Game.UI;
 import Render.Entity.Camera.Camera;
 import Game.Entities.Enemy;
 import Render.Entity.Entity2D;
@@ -76,9 +77,13 @@ public class TestGame extends Test { //TODO: move things into a player class
     }
 
     @Override
-    public void OnUpdate(float dt) {
-        super.OnUpdate(dt);
+    public void OnStart() {
+        super.OnStart();
+        renderer.cursorHide();
+    }
 
+    @Override
+    public void OnUpdate(float dt) {
         // game over
         if (player.getLP() <= 0) {
             String text = "> GAME OVER <";
@@ -96,7 +101,11 @@ public class TestGame extends Test { //TODO: move things into a player class
         // collide player and its fields
         player.collide(enemies);
         // spawn enemies
-        spawner.update(dt, enemies);
+        EnemySpawner.Result r = spawner.update(dt, enemies);
+        if(r == EnemySpawner.Result.WAVE_OVER) {
+            shouldSimulate = false;
+            UI.onLvlUp.accept(this);
+        }
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while(enemyIterator.hasNext()) {
@@ -117,6 +126,8 @@ public class TestGame extends Test { //TODO: move things into a player class
             if(enemy.collideRect(target))
                 renderer.drawText("LivePoints: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
         }
+
+        super.OnUpdate(dt);
     }
 
     @Override

@@ -221,10 +221,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         SetUniforms(currentShader, entity);
 
         // choose Texture
-        if(entity.getTexture() != null) {
-            System.out.println(entity.getTexture().getName());
+        if(entity.getTexture() != null)
             entity.getTexture().bind();
-        }
         if(entity.getAnimation() != null) {
             entity.getAnimation().getAtlas().getTexture().bind();
             entity.getModel().replaceTextureCoords(entity.getAnimation().getTexCoords());

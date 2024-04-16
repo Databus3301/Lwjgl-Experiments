@@ -2,6 +2,7 @@ package Game.Action.Waves;
 
 import Game.Entities.Enemies;
 import Game.Entities.Enemy;
+import Game.UI;
 import Render.Entity.Entity2D;
 import Render.Window;
 import org.joml.Vector2f;
@@ -36,7 +37,7 @@ public class EnemySpawner {
 
         return spawned;
     }
-    public void update(float dt, ArrayList<Enemy> enemyCollection) {
+    public Result update(float dt, ArrayList<Enemy> enemyCollection) {
         int enemiesLeft = currentWave.getEnemiesLeft();
         currentWave.update(dt);
 
@@ -44,12 +45,15 @@ public class EnemySpawner {
             for(int i = 0; i < enemiesLeft - currentWave.getEnemiesLeft(); i++) {
                 enemyCollection.add(spawn());
             }
+            return Result.SPAWNED;
         }
 
         if (currentWave.isWaveOver()) {
             currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
+            return Result.WAVE_OVER;
         }
 
+        return Result.NOTHING;
     }
 
     public Enemy spawn() { // CDF function -> https://stackoverflow.com/questions/9330394/how-to-pick-an-item-by-its-probability
@@ -105,5 +109,9 @@ public class EnemySpawner {
 
     public Entity2D getTracker() {
         return tracker;
+    }
+
+    public enum Result {
+        SPAWNED, NOTHING, WAVE_OVER
     }
 }
