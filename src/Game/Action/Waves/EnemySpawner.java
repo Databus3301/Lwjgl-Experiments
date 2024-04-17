@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class EnemySpawner {
     private Wave currentWave;
     private float[] probabilityDistribution = new float[Enemies.enemies.size()]; // probability distribution
+    private Result lastResult = Result.NOTHING;
 
     private Entity2D tracker = new Entity2D();
 
@@ -45,15 +46,15 @@ public class EnemySpawner {
             for(int i = 0; i < enemiesLeft - currentWave.getEnemiesLeft(); i++) {
                 enemyCollection.add(spawn());
             }
-            return Result.SPAWNED;
+            return lastResult = Result.SPAWNED;
         }
 
         if (currentWave.isWaveOver()) {
             currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
-            return Result.WAVE_OVER;
+            return lastResult = Result.WAVE_OVER;
         }
 
-        return Result.NOTHING;
+        return lastResult = Result.NOTHING;
     }
 
     public Enemy spawn() { // CDF function -> https://stackoverflow.com/questions/9330394/how-to-pick-an-item-by-its-probability
@@ -109,6 +110,10 @@ public class EnemySpawner {
 
     public Entity2D getTracker() {
         return tracker;
+    }
+
+    public Result getLastResult() {
+        return lastResult;
     }
 
     public enum Result {

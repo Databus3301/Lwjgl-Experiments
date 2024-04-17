@@ -3,6 +3,7 @@ package Render.MeshData.Shader;
 import Render.Renderer;
 import Tests.Test;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.io.File;
@@ -43,9 +44,20 @@ public class Shader {
     public void delete() { glDeleteShader(m_RendererID); }
 
     public void setUniform1i(String name, int i) {
-        bind();
         int location = getUniformLocation(name);
         glUniform1i(location, i);
+    }
+    public void setUniform1f(String name, float f) {
+        int location = getUniformLocation(name);
+        glUniform1f(location, f);
+    }
+    public void setUniform2f(String name, float v0, float v1) {
+        int location = getUniformLocation(name);
+        glUniform2f(location, v0, v1);
+    }
+    public void setUniform2f(String name, Vector2f vec) {
+        int location = getUniformLocation(name);
+        glUniform2f(location, vec.x, vec.y);
     }
     public void setUniform4f(String name, float v0, float v1, float v2, float v3) {
         int location = getUniformLocation(name);

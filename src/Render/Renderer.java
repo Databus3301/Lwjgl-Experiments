@@ -439,6 +439,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             else
                 shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
         }
+        if(shader.hasUniform("uWindowDim"))
+            shader.setUniform2f("uWindowDim", Window.dim.x, Window.dim.y);
+        if(shader.hasUniform("uTime"))
+            shader.setUniform1f("uTime",  ((System.currentTimeMillis() % 10000) / 1000.0f));
     }
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);

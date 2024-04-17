@@ -17,6 +17,7 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static Game.Action.Waves.EnemySpawner.Result.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.glClearColor;
 
@@ -91,6 +92,11 @@ public class TestGame extends Test { //TODO: move things into a player class
             renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine_UI, colorReplacement, null);
             shouldSimulate = false;
         }
+        // wave over
+        if(spawner.getLastResult() == WAVE_OVER) {
+            shouldSimulate = false;
+            UI.onLvlUp(player);
+        }
 
         if(!shouldSimulate) return;
         // move player
@@ -101,11 +107,7 @@ public class TestGame extends Test { //TODO: move things into a player class
         // collide player and its fields
         player.collide(enemies);
         // spawn enemies
-        EnemySpawner.Result r = spawner.update(dt, enemies);
-        if(r == EnemySpawner.Result.WAVE_OVER) {
-            shouldSimulate = false;
-            UI.onLvlUp.accept(this);
-        }
+        spawner.update(dt, enemies);
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while(enemyIterator.hasNext()) {
@@ -133,7 +135,8 @@ public class TestGame extends Test { //TODO: move things into a player class
     @Override
     public void OnRender() {
         super.OnRender();
-        glClearColor(0.435f, 0.639f, 0.271f, 1);
+        //glClearColor(0.435f, 0.639f, 0.271f, 1);
+        glClearColor(0.05f, 0.05f, 0.05f, 1);
 
         // entities
         renderer.draw(enemies);
@@ -142,24 +145,9 @@ public class TestGame extends Test { //TODO: move things into a player class
         renderer.draw(target);
 
         // live points // TODO: fix positioning when adjusting viewport (window resizing is messed up)
-        renderer.draw(new Entity2D(new Vector2f(-100 / 2f, 100/ 2f - 25), ObjModel.SQUARE, Shader.TEXTURING) {{
-            scale(new Vector2f(100/4f, 25));
-            setColor(1, 0, 0, 1);
-            setOffset(camera.getPosition().mul(-1, new Vector2f()));
-        }});
-
-//        renderer.drawUI(new Entity2D(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25), ObjModel.SQUARE, Shader.TEXTURING) {{
-//            scale(new Vector2f(Window.dim.x/4f, 25));
-//            setColor(1, 0, 0, 1);
-//        }});
-//        renderer.drawUI(new Entity2D(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25), ObjModel.SQUARE, Shader.TEXTURING) {{
-//            scale(new Vector2f(Window.dim.x * (player.getLP() / player.getMaxLP()) / 4, 25));
-//            setColor(0, 1, 0, 1);
-//        }});
-
-        //float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
-        //renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
-        //renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
+        float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
+        renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
     }
 
     @Override

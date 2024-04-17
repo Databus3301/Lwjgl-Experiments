@@ -39,6 +39,7 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] material texture loading
 - [ ] compute shaders (if school supports it)
 - [ ] batch rendering with just model data and modelMatrices (no cpu calculations)
+- [ ] post processing shaders
 ### Game
 - [ ] space invaders demo
 
@@ -69,6 +70,7 @@ Documenting my learning process of Open GL and LWJGL for a school project
       - [x] homing
       - [ ] shotgun/spread
     - [ ] simulation distance
+    - [ ] room drawer
       
 - [x] …
 
