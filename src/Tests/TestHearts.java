@@ -14,7 +14,7 @@ public class TestHearts extends Test{
         super();
         bg = new Entity2D(new Vector2f(Window.dim.div(-2f, new Vector2i())), ObjModel.SQUARE, Shader.TEXTURING) {{
             scale(1000);
-            setColor(0.2f, 0.2f, 0.2f, 1);
+            setColor(0.2f, 0.2f, 0.2f, 0.1f);
         }};
     }
 

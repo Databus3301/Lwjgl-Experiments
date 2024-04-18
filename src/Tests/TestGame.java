@@ -12,6 +12,7 @@ import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
 import Render.Window;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test { //TODO: move things into a player class
     private final Player player;
     private final Entity2D target;
+    private Entity2D bg;
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
     private final Camera camera;
@@ -75,6 +77,11 @@ public class TestGame extends Test { //TODO: move things into a player class
         // enemy spawning rules
         spawner.setProbabilityDistribution(new float[]{0.3f, 0.3f, 0.4f});
         spawner.setTracker(player);
+
+        bg = new Entity2D(new Vector2f(Window.dim.div(-2f, new Vector2i())), ObjModel.SQUARE, Shader.TEXTURING) {{
+            scale(2000);
+            setColor(0.2f, 0.2f, 0.2f, 0.1f);
+        }};
     }
 
     @Override
@@ -94,7 +101,7 @@ public class TestGame extends Test { //TODO: move things into a player class
         }
         // wave over
         if(spawner.getLastResult() == WAVE_OVER) {
-            shouldSimulate = false;
+            shouldSimulate = true;
             UI.onLvlUp(player);
         }
 
@@ -145,13 +152,13 @@ public class TestGame extends Test { //TODO: move things into a player class
         renderer.draw(target);
 
         // live points // TODO: fix positioning when adjusting viewport (window resizing is messed up)
-        //float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
-        //renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
-        //renderer.fillRect(new Vector2f(-Window.dim.x / 2f, Window.dim.y / 2f - 25f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
-        renderer.drawUI(new Entity2D(new Vector2f(), ObjModel.SQUARE, Shader.TEXTURING) {{
-            scale(10000);
-            setColor(0.2f, 0.2f, 0.2f, 1);
-        }});
+        float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
+        float aspect = (float) Window.dim.x / Window.dim.y;
+        Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
+        System.out.println(differ);
+        renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
+        renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
+        renderer.drawUI(bg);
     }
 
     @Override

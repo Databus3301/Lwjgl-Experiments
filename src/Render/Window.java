@@ -27,6 +27,7 @@ public class Window {
     private long windowPtr;
     private static Window window;
     public static Vector2i dim = new Vector2i(1200, 900);
+    public static Vector2i baseDim = new Vector2i(1200, 900);
     private float targetAspect;
 
 
@@ -79,6 +80,7 @@ public class Window {
         if (windowPtr == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
         targetAspect = (float) dim.x / dim.y;
+        baseDim.set(dim.x, dim.y);
 
         // Set up a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(windowPtr, (window, key, scancode, action, mods) -> {

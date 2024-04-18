@@ -82,7 +82,7 @@ Tutorials: <br>
 [learnopengl.com | ausführliches e-Buch](https://learnopengl.com/) <br>
 [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection) <br>
 [LWJGL3-demos](https://github.com/LWJGL/lwjgl3-demos) <br>
-[Signed Distance Functions for Shaders](https://iquilezles.org/articles/distfunctions2d/)
+[Signed Distance Functions for Shaders](https://iquilezles.org/articles/distfunctions2d/) <br>
 <sub> videos </sub>
 [The Cherno - OpenGl series on YouTube](https://www.youtube.com/watch?v=W3gAzLwfIP0&list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2) <br>
 [GamesWithGabe - Making a 2D game in java](https://www.youtube.com/watch?v=VyKE7vz65rY&list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE) <br>
@@ -92,6 +92,8 @@ Tutorials: <br>
 [pikuma - Math for Game Developers: Why do we use 4x4 Matrices in 3D Graphics?](https://www.youtube.com/watch?v=Do_vEjd6gF0) <br>
 [3Blue1Brown: Linear Algebra](https://www.youtube.com/playlist?list=PL0-GT3co4r2y2YErbmuJw2L5tW4Ew2O5B) <br>
 [Coding Adventure: Simulating Fluids](https://www.youtube.com/watch?v=rSKMYc1CQHE) <br>
+[Introduction to shaders: Learn the basics! - Barney Codes](https://www.youtube.com/watch?v=3mfvZ-mdtZQ) <br>
+[An introduction to Shader Art Coding - kishimisu](https://www.youtube.com/watch?v=f4s1h2YETNY&t=1187s) <br>
 
 
 Assets: <br>

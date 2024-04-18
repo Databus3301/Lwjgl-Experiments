@@ -83,13 +83,19 @@ void main () {
     // component based dynamic (de)saturation
     //color.rb *= 0.5 / color.g; // desature red and blue on pixels with green > 0.5 and saturate them otherwise
 
-
     // HEARTS
-    vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y) + uResolution.x / uResolution.y, v_ScreenPos.y+1.)*2.; // y - HEART SIZE
-    float d = sdHeart(p);
-    float h = 0.01;
-    float alpha = smoothstep(h, -h, d); // only color pixels close/inside the heart
-    color = mix(color, vec4(1.0, 0.0, 0.0, 1.0), alpha);
+    vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y) + uResolution.x / uResolution.y - 0.185f, v_ScreenPos.y+1. - 1.85f)*10.;
+    //vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y), v_ScreenPos.y+(1.*sin(uTime*1.5)*2.+2.))*(1./((sin(uTime*1.5)*2.+2.)*2.));
+
+    float d = sdHeart(p); // heart distance
+    d = abs(d) - 0.05; // hollow heart
+
+    float h = 0.1; // tolerance for "inside"
+    //float alpha = step(-0.15, d) * (1.-step(-0.1, d)); // hard cut  between -0.15 and -0.10
+    float alpha = smoothstep(-0.2, -0.10, d) * (1.0 - smoothstep(-0.10, -0.05, d)); // smooth cut between -0.10 and -0.05
+    alpha = smoothstep(h, -h, d) * (1.-alpha); // only color pixels close/inside the heart
+    float falloff = 1. / length(p/10.) * 0.2; // falloff effect
+    color = mix(color, vec4(1.0, 0.0, 0.0, 1.- smoothstep(1.0, 0.0, falloff)), alpha);
 
 
     // SCANLINE/PIXELATION EFFECT
