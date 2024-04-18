@@ -82,6 +82,7 @@ Tutorials: <br>
 [learnopengl.com | ausführliches e-Buch](https://learnopengl.com/) <br>
 [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection) <br>
 [LWJGL3-demos](https://github.com/LWJGL/lwjgl3-demos) <br>
+[Signed Distance Functions for Shaders](https://iquilezles.org/articles/distfunctions2d/)
 <sub> videos </sub>
 [The Cherno - OpenGl series on YouTube](https://www.youtube.com/watch?v=W3gAzLwfIP0&list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2) <br>
 [GamesWithGabe - Making a 2D game in java](https://www.youtube.com/watch?v=VyKE7vz65rY&list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE) <br>

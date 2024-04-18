@@ -42,6 +42,16 @@ uniform vec4 uColor;
 uniform float uTime;
 uniform vec2 uResolution;
 
+float dot2( in vec2 v ) { return dot(v,v); }
+
+float sdHeart( in vec2 p ) { // https://www.shadertoy.com/view/3tyBzV
+    p.x = abs(p.x);
+
+    if( p.y+p.x>1.0 )
+        return sqrt(dot2(p-vec2(0.25,0.75))) - sqrt(2.0)/4.0;
+    return sqrt(min(dot2(p-vec2(0.00,1.00)), dot2(p-0.5*max(p.x+p.y,0.0)))) * sign(p.x-p.y);
+}
+
 void main () {
     vec2 uv = v_ModelPos.xy * (uResolution.x / uResolution.y);
 
@@ -69,11 +79,26 @@ void main () {
     // invert colors
     //color = vec4(1.0-color.xyz, color.a);
     // swizzle color channels
-    color = color.gbra;
+    //color = color.gbra;
+    // component based dynamic (de)saturation
+    //color.rb *= 0.5 / color.g; // desature red and blue on pixels with green > 0.5 and saturate them otherwise
+
+
+    // HEARTS
+    vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y) + uResolution.x / uResolution.y, v_ScreenPos.y+1.)*2.; // y - HEART SIZE
+    float d = sdHeart(p);
+    float h = 0.01;
+    float alpha = smoothstep(h, -h, d); // only color pixels close/inside the heart
+    color = mix(color, vec4(1.0, 0.0, 0.0, 1.0), alpha);
+
 
     // SCANLINE/PIXELATION EFFECT
     vec2 c = v_ScreenPos.xy * uResolution.xy;
-    float xs = step(1., mod(c.x*.3 + sin(uTime*.4)*8., 2.0f));
+    float xs = step(1., mod(c.x*.3 + sin(uTime*.4)*8., 2.0f)); /**/ xs = 0.0f; //*/ toggle horizontals
     float ys = step(1., mod(c.y*.3 + sin(uTime*.4)*8., 2.0f));
     color = vec4(color.rgb - xs/15. + ys/15., color.a);
+
+
 };
+
+

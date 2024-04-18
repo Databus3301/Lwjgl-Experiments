@@ -35,6 +35,8 @@ public class Window {
     private long audioDevice;
     private long ALcontext;
 
+    private final boolean doubleBuffering = true;
+
 
     public Window() {
     }
@@ -70,6 +72,7 @@ public class Window {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        if(!doubleBuffering) glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
 
         // Create the window
         windowPtr = glfwCreateWindow(dim.x, dim.y, "Open Gl - Testing Enviroment", NULL, NULL);
@@ -98,7 +101,11 @@ public class Window {
             }
             glViewport(0, 0, dim.x, dim.y);
 
-            System.out.println(targetAspect + " " + newAspect + " " + (float)dim.x / dim.y);
+            //System.out.println(targetAspect + " " + newAspect + " " + (float)dim.x / dim.y);
+        });
+
+        glfwSetErrorCallback((error, description) -> {
+            System.err.println("GLFW error [" + error + "]: " + description);
         });
 
         // Get the thread stack and push a new frame
@@ -129,6 +136,7 @@ public class Window {
         // hide cursor
         glfwSetInputMode(windowPtr, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
+        if(!doubleBuffering) glfwMakeContextCurrent(windowPtr);
         GL.createCapabilities();
 
         // OpenAL
@@ -222,6 +230,9 @@ public class Window {
                 case "startscreen", "ss":
                     currentTest = new TestStartScreen();
                     break;
+                case "hearts", "h":
+                    currentTest = new TestHearts();
+                    break;
                 default:
                     currentTest = new Test();
             }
@@ -238,11 +249,11 @@ public class Window {
 
     public void run() {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        if(!doubleBuffering) glDrawBuffer(GL_FRONT);
 
-        int lastSecond = LocalTime.now().getSecond(); //test.get(Calendar.SECOND);
-        int fps = 0;
-
+        float fps = 0;
+        float time = 0;
         long ms = System.currentTimeMillis();
 
         // rendering loop
@@ -250,26 +261,29 @@ public class Window {
             // Delta Time
             float dt = (System.currentTimeMillis() - ms) / 1000.f;
             ms = System.currentTimeMillis();
+            time += dt;
 
             // FPS  ||   ms per frame
-            if (lastSecond != LocalTime.now().getSecond()) {
-                lastSecond = LocalTime.now().getSecond();
+            if (time >= 1) {
                 System.out.println(fps + "fps" + "   " + 1000.f / fps + "ms per frame");
-                fps = 0;
+                fps = time = 0;
             } else {
                 fps++;
             }
-
 
             if (currentTest != null) {
                 currentTest.OnRender();
                 currentTest.OnUpdate(dt);
             }
 
-            glfwSwapBuffers(windowPtr);
-            glfwPollEvents();
 
-            GlCheckError();
+            if(!doubleBuffering) glFinish();
+            if( doubleBuffering) glfwSwapBuffers(windowPtr);
+            glfwPollEvents();
+            if(!doubleBuffering) glFlush();
+            if(!doubleBuffering) glfwPostEmptyEvent();
+
+            //GlCheckError();
         }
     }
 
@@ -296,9 +310,9 @@ public class Window {
     }
 
     static public void GlCheckError() {
-//        while (glGetError() != 0) { // TODO: disable this in production for a big performance boost
-//            System.out.println("[OpenGL error:] " + Integer.toHexString(glGetError()));
-//        }
+        while (glGetError() != 0) { // TODO: disable this in production for a big performance boost
+            System.out.println("[OpenGL error:] " + Integer.toHexString(glGetError()));
+        }
     }
 
     public static void changeTest(Test test) {
