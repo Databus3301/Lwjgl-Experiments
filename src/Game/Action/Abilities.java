@@ -3,12 +3,13 @@ package Game.Action;
 import Game.Entities.Projectiles.Homing;
 import Game.Entities.Projectiles.Projectile;
 import Render.MeshData.Texturing.Texture;
+import org.joml.Vector2f;
 
 public class Abilities {
     public static Ability SHOOT = getSHOOT();
     public static Ability HOMING = getHOMING();
     public static Ability[] SALVE = getSALVE();
-
+    public static Ability DASH = getDASH();
 
     public static Ability getSHOOT() {
         Projectile[] projectiles = new Projectile[1];
@@ -23,13 +24,25 @@ public class Abilities {
             projectile.setPosition(origin.getPosition());
             projectile.accelerateTowards(targetPos, 350);
             projectile.setOnHit((p, damaged) -> {
-                if(damaged)
+                if (damaged)
                     projectile.getScale().mul(1);
             });
             ability.getProjectiles().add(projectile);
         });
 
         return SHOOT;
+    }
+
+    public static Ability getDASH() {
+        Projectile[] projectiles = new Projectile[0];
+        DASH = new Ability(projectiles, 0.25f);
+        DASH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
+
+            origin.translate(new Vector2f(origin.getVelocity()).mul(200));
+
+        });
+
+        return DASH;
     }
 
     public static Ability getHOMING() {

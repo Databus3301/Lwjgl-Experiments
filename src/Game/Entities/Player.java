@@ -33,7 +33,7 @@
          this.LP = maxLivePoints;
 
          // --TEMP-- add shooting ability as a default
-         addAbilities(Abilities.getSALVE());
+         addAbilities(Abilities.getDASH());
 
      }
  

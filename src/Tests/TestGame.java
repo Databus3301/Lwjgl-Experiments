@@ -155,7 +155,6 @@ public class TestGame extends Test { //TODO: move things into a player class
         float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
         float aspect = (float) Window.dim.x / Window.dim.y;
         Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
-        System.out.println(differ);
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
         renderer.drawUI(bg);
