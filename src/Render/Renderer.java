@@ -442,7 +442,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         if(shader.hasUniform("uResolution"))
             shader.setUniform2f("uResolution", Window.dim.x, Window.dim.y);
         if(shader.hasUniform("uTime"))
-            shader.setUniform1f("uTime",  ((System.currentTimeMillis())% 1000000) / 1000f);
+            shader.setUniform1f("uTime",  ((System.currentTimeMillis())% 10000000) / 1000f);
     }
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);

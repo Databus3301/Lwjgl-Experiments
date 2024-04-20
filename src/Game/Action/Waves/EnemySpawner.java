@@ -21,7 +21,7 @@ public class EnemySpawner {
         this.currentWave = currentWave;
     }
     public EnemySpawner() {
-        this(new Wave(1, 3, 2));
+        this(new Wave(1, 300, 2));
     }
 
     public Enemy[] update(float dt) {

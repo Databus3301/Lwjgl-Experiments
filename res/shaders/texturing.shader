@@ -1,7 +1,7 @@
 #shader vertex
 #version 300 es
 
-precision highp float;
+precision mediump float;
 
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec2 texCoord;
@@ -27,7 +27,7 @@ void main()
 #shader fragment
 #version 300 es
 
-precision highp float;
+precision lowp float;
 
 layout (location = 0) out vec4 color;
 
@@ -73,13 +73,13 @@ void main () {
 
     // DEBUG COLOR || CUSTOM COLOR
     vec3 debugColor = vec3(0.976f, 0.164f, 0.976f);
-    condition = step(length(uColor.xyz - debugColor), 0.0);
+    condition = step(length(uColor.xyz - debugColor), 0.1);
     color = mix(uColor, color, condition);
 
     // invert colors
     //color = vec4(1.0-color.xyz, color.a);
     // swizzle color channels
-    //color = color.gbra;
+    color = color.gbra;
     // component based dynamic (de)saturation
     //color.rb *= 0.5 / color.g; // desature red and blue on pixels with green > 0.5 and saturate them otherwise
 

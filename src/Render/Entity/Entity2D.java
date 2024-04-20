@@ -189,13 +189,15 @@ public class Entity2D {
         modelMatrix.identity();
         modelMatrix.scale(new Vector3f(scale.x, scale.y, 1));
         modelMatrix.translate(new Vector3f(position.x/scale.x, position.y/scale.y, 0));
-        if(!rotation.equals(new Quaternionf()))
+        if(!rotation.equals(noRotation))
             modelMatrix.rotateAround(rotation, (getPosition().x-position.x)/scale.x, (getPosition().y-position.y)/scale.y, 0f);
 
         position.sub(offset);
 
         return modelMatrix;
     }
+    private final Quaternionf noRotation = new Quaternionf();
+
     public Matrix4f calcModelMatrixNoRotation() {
         if(isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
             return modelMatrix;

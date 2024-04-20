@@ -1,6 +1,7 @@
 package Game.Entities;
 
 import Game.Action.Abilities;
+import Game.Action.Ability;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class Enemies {
         tank.setLP(200);
         tank.setiSeconds(0.02f);
         tank.setColor(new Vector4f(0, 1, 0, 1));
-        tank.setScale(40, 80);
+        tank.setScale(10, 15);
         return tank;
     }
 
@@ -51,8 +52,11 @@ public class Enemies {
         shooter.setLP(200);
         shooter.setiSeconds(0.02f);
         shooter.setColor(new Vector4f(0, 0, 1, 1));
-        shooter.setScale(40, 80);
-        shooter.addAbility(Abilities.getSHOOT());
+        shooter.setScale(10, 12);
+        Ability shoot = Abilities.getSHOOT();
+        shoot.getProjectileTypes()[0].setScale(5f);
+        shooter.addAbility(shoot);
+
         return shooter;
     }
 }

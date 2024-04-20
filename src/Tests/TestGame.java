@@ -22,7 +22,7 @@ import static Game.Action.Waves.EnemySpawner.Result.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.glClearColor;
 
-public class TestGame extends Test { //TODO: move things into a player class
+public class TestGame extends Test {
     private final Player player;
     private final Entity2D target;
     private Entity2D bg;
@@ -79,7 +79,7 @@ public class TestGame extends Test { //TODO: move things into a player class
         spawner.setTracker(player);
 
         bg = new Entity2D(new Vector2f(Window.dim.div(-2f, new Vector2i())), ObjModel.SQUARE, Shader.TEXTURING) {{
-            scale(2000);
+            scale(3000);
             setColor(0.2f, 0.2f, 0.2f, 0.1f);
         }};
     }
@@ -151,9 +151,8 @@ public class TestGame extends Test { //TODO: move things into a player class
         renderer.draw(player);
         renderer.draw(target);
 
-        // live points // TODO: fix positioning when adjusting viewport (window resizing is messed up)
-        float widthLP = (float) Window.dim.x / 4f; // TODO: fix positioning when adjusting viewport || maybe use drawUI instead
-        float aspect = (float) Window.dim.x / Window.dim.y;
+        // live points
+        float widthLP = (float) Window.dim.x / 4f;
         Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
