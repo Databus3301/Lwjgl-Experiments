@@ -18,7 +18,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
  */
 
 public class TestBatchRendering extends Test {
-
     Entity2D[] entities;
     Camera camera;
     Batch b;
@@ -31,7 +30,7 @@ public class TestBatchRendering extends Test {
         // DEBUG
         batching = true;
         spin = false;
-        int DIM = 200;
+        int DIM = 10;
         //
         renderer.setCurrentShader(new Shader("batching.shader"));
         renderer.setCamera(camera = new Camera());
@@ -70,6 +69,7 @@ public class TestBatchRendering extends Test {
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
+
         Vector2f effectiveVelocity = new Vector2f(camera.getVelocity());
         camera.translate(effectiveVelocity.mul(dt));
 

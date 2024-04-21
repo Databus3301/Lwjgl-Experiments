@@ -3,6 +3,7 @@ package Tests;
 import Render.Batch;
 import Render.Window;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 public class TestFont extends Test{
 
@@ -19,6 +20,7 @@ public class TestFont extends Test{
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
     }
+
     public void OnRender() {
         super.OnRender();
         renderer.drawBatch(b);

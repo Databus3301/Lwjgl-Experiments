@@ -6,6 +6,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import static Render.Window.baseDim;
 import static Render.Window.dim;
 
 public class Camera extends Entity2D {

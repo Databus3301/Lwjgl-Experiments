@@ -15,8 +15,11 @@ import Render.MeshData.Shader.Shader;
 import Render.MeshData.*;
 import Render.MeshData.Model.ObjModel;
 
+import Render.MeshData.Texturing.Texture;
+import Tests.Test;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL43;
 
@@ -33,7 +36,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     private Camera camera;
 
     public Renderer() {
-        currentShader = new Shader("res/shaders/default.shader");
+        currentShader = new Shader("default.shader");
         Shader.DEFAULT.forceBind();
         camera = new Camera();
         glPolygonMode(GL_FRONT_AND_BACK, mode);
@@ -217,6 +220,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         assert entity != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D is null";
         if(entity.isHidden()) return;
 
+        offset(entity);
+
         chooseShader(entity);
         SetUniforms(currentShader, entity);
 
@@ -264,7 +269,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
 
     public <T extends Entity2D> void drawUI(Entity2D entity) {
-        entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
+        Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
+        entity.setOffset(camera.getPosition().mul(-1, new Vector2f()).add(differ.x/2f, differ.y/2f));
         draw(entity);
     }
     public <T extends Entity2D> void drawUI(T[] entities) {
@@ -425,7 +431,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         shader.setUniformMat4f("uModel", modelMatrix);
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
-        shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
+        shader.setUniformMat4f("uProj", camera.calcProjectionMatrix());
 
         if(shader.hasUniform("uColor")) {
             if(entity != null)
@@ -442,7 +448,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         if(shader.hasUniform("uResolution"))
             shader.setUniform2f("uResolution", Window.dim.x, Window.dim.y);
         if(shader.hasUniform("uTime"))
-            shader.setUniform1f("uTime",  ((System.currentTimeMillis())% 10000000) / 1000f);
+            shader.setUniform1f("uTime",  ((System.currentTimeMillis())% 10000) / 1000f);
     }
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);
@@ -651,8 +657,21 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         projectedCoords.x = (projectedCoords.x / Window.dim.x) * 2 - 1;
         projectedCoords.y = (projectedCoords.y / Window.dim.y) * -2 + 1;
         // "3D to 2D" (inverse of projection matrix "2D to 3D")
-        projectedCoords.mul(camera.getProjectionMatrix().invert(new Matrix4f()));
+        projectedCoords.mul(camera.calcProjectionMatrix().invert(new Matrix4f()));
+        // account for window resizing
+        Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
+        Vector2f differPercent = new Vector2f((float) differ.x / Window.baseDim.x, (float) differ.y / Window.baseDim.y);
+        projectedCoords.mul(new Vector4f(differPercent.x/2+1, differPercent.y/2+1, 1, 1));
+
         return new Vector2f(projectedCoords.x, projectedCoords.y).sub(camera.getPosition());
+    }
+    public void offset(Entity2D entity) {
+        offset(entity.getOffset());
+    }
+    public void offset(Vector2f offset) {
+        Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
+        Vector2f differPercent = new Vector2f((float) differ.x / Window.baseDim.x, (float) differ.y / Window.baseDim.y);
+        offset.set(Window.baseDim.x * differPercent.x / 2f, Window.baseDim.y * differPercent.y / 2f);
     }
 
     public void toggleCursor() {
@@ -690,5 +709,65 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
     public int getMode() {
         return mode;
+    }
+
+
+    public static class DynamicResolutionFrameBuffer {
+        private final int frameBuffer;
+        private final Texture texture;
+
+        private final Entity2D entity;
+
+        public DynamicResolutionFrameBuffer(int width, int height) {
+            frameBuffer = glGenFramebuffers();
+            glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+            texture = new Texture();
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getID(), 0);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            entity = new Entity2D(0, 0, ObjModel.SQUARE);
+            entity.setShader(new Shader("simple_texturing.shader")); // TODO: potential post processing shader
+            entity.setTexture(texture);
+            entity.scale(width/2f, height/2f);
+        }
+
+        public void bind() {
+            glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+        }
+
+        public void unbind() {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        public void render() {
+            entity.setOffset(Test.renderer.camera.getPosition().mul(-1f, new Vector2f()));
+
+            Test.renderer.chooseShader(entity);
+            Test.renderer.SetUniforms(Test.renderer.getCurrentShader(), entity);
+
+            entity.getTexture().bind();
+            // choose Model
+            ObjModel model = entity.getModel();
+            // choose VertexArray and IndexBuffer
+            VertexArray va = new VertexArray();
+            va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
+            IndexBuffer ib = model.getIndexBuffer();
+
+            va.bind();
+            ib.bind();
+
+            glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
+        }
+
+        public Texture getTexture() {
+            return texture;
+        }
+
+        public Entity2D getEntity() {
+            return entity;
+        }
     }
 }

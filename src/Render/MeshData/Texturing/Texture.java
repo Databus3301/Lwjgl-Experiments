@@ -26,12 +26,28 @@ public class Texture {
     }
 
     public Texture(String path) {
+        this();
+
         if(!path.startsWith("res/textures"))
             path = "res/textures/" + path;
         m_FilePath = path;
 
         name = path.substring(path.lastIndexOf('/')+1, path.lastIndexOf('.'));
 
+        STBImage.stbi_set_flip_vertically_on_load(true);
+        ByteBuffer image = STBImage.stbi_load(path, m_Width, m_Height, channels, 4);
+
+        if(image != null) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            STBImage.stbi_image_free(image);
+        } else {
+            assert false : "[STBI Error:] (Render.Entity.Camera.Camera.Texturing.Texture) Could not load image '" + path + "'";
+        }
+    }
+
+    public Texture() {
         m_Width = BufferUtils.createIntBuffer(1);
         m_Height = BufferUtils.createIntBuffer(1);
         channels = BufferUtils.createIntBuffer(1);
@@ -43,19 +59,6 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // GL_CLAMP_TO_EDGE
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // GL_CLAMP_TO_EDGE
-
-        STBImage.stbi_set_flip_vertically_on_load(true);
-        ByteBuffer image = STBImage.stbi_load(path, m_Width, m_Height, channels, 4);
-
-
-        if(image != null) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-            glBindTexture(GL_TEXTURE_2D, 0);
-
-            STBImage.stbi_image_free(image);
-        } else {
-            assert false : "[STBI Error:] (Render.Entity.Camera.Camera.Texturing.Texture) Could not load image '" + path + "'";
-        }
     }
 
     public int getHeight(){
@@ -69,6 +72,9 @@ public class Texture {
     }
     public float getAspect() {
         return (float)getWidth()/(float)getHeight();
+    }
+    public int getID() {
+        return m_RendererID;
     }
 
     public String getName() {

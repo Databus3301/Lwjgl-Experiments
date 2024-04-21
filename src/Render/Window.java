@@ -1,6 +1,7 @@
 package Render;
 
 import Tests.*;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -37,6 +38,7 @@ public class Window {
     private long ALcontext;
 
     private final boolean doubleBuffering = true;
+    public Renderer.DynamicResolutionFrameBuffer drfb;
 
 
     public Window() {
@@ -91,6 +93,13 @@ public class Window {
             if (currentTest != null) currentTest.OnKeyInput(window, key, scancode, action, mods);
         });
 
+        // Enable GL functionality
+        glfwMakeContextCurrent(windowPtr);
+        GL.createCapabilities();
+
+        // make available to resize callback
+        drfb = new Renderer.DynamicResolutionFrameBuffer(baseDim.x, baseDim.y);
+
         // maintain starting aspect ratio of viewport on resize
         glfwSetFramebufferSizeCallback(windowPtr, (window, width, height) -> {
             dim.x = width;
@@ -104,7 +113,10 @@ public class Window {
             glViewport(0, 0, dim.x, dim.y);
 
             //System.out.println(targetAspect + " " + newAspect + " " + (float)dim.x / dim.y);
+            float div = 1f;
+            drfb.getEntity().setScale((float)dim.x / 2  / div, (float)dim.y / 2 / div);
         });
+
 
         glfwSetErrorCallback((error, description) -> {
             System.err.println("GLFW error [" + error + "]: " + description);
@@ -130,7 +142,6 @@ public class Window {
 
         } // the stack frame is popped automatically
 
-        glfwMakeContextCurrent(windowPtr);
         // Enable v-sync
         glfwSwapInterval(0);
         // show window
@@ -138,8 +149,6 @@ public class Window {
         // hide cursor
         glfwSetInputMode(windowPtr, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-        if(!doubleBuffering) glfwMakeContextCurrent(windowPtr);
-        GL.createCapabilities();
 
         // OpenAL
         audioDevice = alcOpenDevice((ByteBuffer) null);
@@ -258,6 +267,8 @@ public class Window {
         float time = 0;
         long ms = System.currentTimeMillis();
 
+        if (currentTest != null) currentTest.OnStart();
+
         // rendering loop
         while (!glfwWindowShouldClose(windowPtr)) {
             // Delta Time
@@ -273,10 +284,15 @@ public class Window {
                 fps++;
             }
 
+
             if (currentTest != null) {
+                drfb.bind();
                 currentTest.OnRender();
                 currentTest.OnUpdate(dt);
+                drfb.unbind();
+                drfb.render();
             }
+
 
 
             if(!doubleBuffering) glFinish();
@@ -326,5 +342,8 @@ public class Window {
     }
     public static long getWindowPtr() {
         return window.windowPtr;
+    }
+    public static float getAspect() {
+        return (float) dim.x / dim.y;
     }
 }

@@ -5,7 +5,9 @@ import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Model.ObjModelParser;
+import Render.Window;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import static org.lwjgl.opengl.GL11C.glClearColor;
 
@@ -17,12 +19,12 @@ public class TestTextures extends Test {
     public TestTextures() {
         super();
 
-        shader = new Shader("res/shaders/texturing.shader");
+        shader = Shader.TEXTURING;
         shader.bind();
 
-        Texture texture = new Texture("res/textures/cam2.jpg", 0);
+        Texture texture = new Texture("Steinmauer_1.png", 0);
 
-        ObjModel model = ObjModelParser.parseOBJ("res/models/square.obj");
+        ObjModel model = ObjModel.SQUARE;
         e = new Entity2D(new Vector2f(0, 0), model, texture, shader);
         e.scale(300);
 
@@ -31,7 +33,8 @@ public class TestTextures extends Test {
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        e.rotate(10f * dt, 1);
+        //e.rotate(10f * dt, 1);
+
     }
 
     @Override
@@ -40,6 +43,7 @@ public class TestTextures extends Test {
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         renderer.draw(e);
+
     }
 
     @Override

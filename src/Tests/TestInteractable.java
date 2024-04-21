@@ -56,6 +56,13 @@ public class TestInteractable extends Test {
         });
 
     }
+
+    @Override
+    public void OnStart() {
+        super.OnStart();
+        renderer.cursorShow();
+    }
+
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
