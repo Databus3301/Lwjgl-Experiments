@@ -1,7 +1,10 @@
 package Tests;
 
 import Game.Action.Waves.EnemySpawner;
+import Game.Entities.Dungeon.Door;
+import Game.Entities.Dungeon.Dungeon;
 import Game.Entities.Player;
+import Game.Entities.Dungeon.Room;
 import Game.UI;
 import Render.Entity.Camera.Camera;
 import Game.Entities.Enemy;
@@ -24,14 +27,16 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 
 public class TestGame extends Test {
     private final Player player;
-    private final Entity2D target;
+    private Room room;
+    private final Entity2D cursor;
     private Entity2D bg;
-    private final ArrayList<Enemy> enemies = new ArrayList<>();
-    private final ArrayList<Projectile> projectiles = new ArrayList<>();
-    private final Camera camera;
 
 
     private final EnemySpawner spawner = new EnemySpawner();
+    private final ArrayList<Enemy> enemies = new ArrayList<>();
+    private final ArrayList<Projectile> projectiles = new ArrayList<>();
+
+    private final Camera camera;
     private final ColorReplacement colorReplacement = new ColorReplacement();
     private final int[] keyArr = new int[4];
     private boolean shouldSimulate = true;
@@ -63,12 +68,11 @@ public class TestGame extends Test {
         player.switchAnimation("idleDown");
         player.scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
 
-        // TODO: Spawner class
         // track mouse and indicate cursor position
         Texture cursor = new Texture("woodCrate.png", 0);
-        target = new Entity2D(new Vector2f(), ObjModel.SQUARE, cursor, Shader.TEXTURING);
-        target.scale(scale);
-        target.setColor(1, 0, 0,1);
+        this.cursor = new Entity2D(new Vector2f(), ObjModel.SQUARE, cursor, Shader.TEXTURING);
+        this.cursor.scale(32);
+        this.cursor.setColor(1, 0, 0,1);
 
         // define text colors
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 1, 1));
@@ -82,6 +86,14 @@ public class TestGame extends Test {
             scale(3000);
             setColor(0.2f, 0.2f, 0.2f, 0.1f);
         }};
+
+        // init room
+        Door[] doors = new Door[2];
+        doors[0] = new Door(this,  new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
+        doors[1] = new Door(this,  new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
+
+        room = new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", doors);
+
     }
 
     @Override
@@ -110,11 +122,11 @@ public class TestGame extends Test {
         player.translate(new Vector2f(player.getVelocity()).mul(300*dt));
         camera.centerOn(player);
         // move target to mouse
-        target.setPosition(renderer.screenToWorldCoords(mousePos));
+        cursor.setPosition(renderer.screenToWorldCoords(mousePos));
         // collide player and its fields
         player.collide(enemies);
         // spawn enemies
-        spawner.update(dt, enemies);
+        //spawner.update(dt, enemies);
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while(enemyIterator.hasNext()) {
@@ -132,7 +144,7 @@ public class TestGame extends Test {
             if(enemy.getLP() <= 0)
                 enemyIterator.remove();
             // print debug info if on cursor
-            if(enemy.collideRect(target))
+            if(enemy.collideRect(cursor))
                 renderer.drawText("LivePoints: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
         }
 
@@ -149,7 +161,9 @@ public class TestGame extends Test {
         renderer.draw(enemies);
         renderer.draw(projectiles);
         renderer.draw(player);
-        renderer.draw(target);
+        renderer.draw(cursor);
+        renderer.draw(room.getWalls());
+        renderer.draw(room.getDoors());
 
         // live points
         float widthLP = (float) Window.dim.x / 4f;

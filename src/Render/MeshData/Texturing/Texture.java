@@ -9,6 +9,7 @@ import org.lwjgl.stb.STBImage;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
 
 public class Texture {
 
@@ -20,6 +21,8 @@ public class Texture {
     private int textureSlot;
     private String name;
 
+    public static HashMap<String, Texture> textures = new HashMap<>();
+
     public Texture(String path, int slot) {
         this(path);
         bind(slot);
@@ -29,6 +32,8 @@ public class Texture {
         if(!path.startsWith("res/textures"))
             path = "res/textures/" + path;
         m_FilePath = path;
+
+
 
         name = path.substring(path.lastIndexOf('/')+1, path.lastIndexOf('.'));
 
@@ -56,6 +61,8 @@ public class Texture {
         } else {
             assert false : "[STBI Error:] (Render.Entity.Camera.Camera.Texturing.Texture) Could not load image '" + path + "'";
         }
+
+        textures.put(path, this);
     }
 
     public int getHeight(){

@@ -2,6 +2,7 @@ package Render;
 
 import Game.Action.Ability;
 import Game.Entities.Able;
+import Game.Entities.Dungeon.Door;
 import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
@@ -244,7 +245,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         if (entity instanceof Able able) {
             if(able.getAbilities() == null ) return;
             for(Ability ability : able.getAbilities()) {
-                for(Projectile projectile : ability.getProjectiles()) {
+                for (Projectile projectile : ability.getProjectiles()) {
                     draw(projectile);
                 }
             }
@@ -262,7 +263,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                 draw(entity);
         }
     }
-
     public <T extends Entity2D> void drawUI(Entity2D entity) {
         entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
         draw(entity);
@@ -302,6 +302,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
                 null
             ), Shader.TEXTURING, null, null
         );
+    }
+    public <T extends Door> void draw(T door) {
+        draw((Interactable) door);
+        draw(door.typeSign);
     }
 
     public Batch setupBatch(Entity2D[] entities) {
