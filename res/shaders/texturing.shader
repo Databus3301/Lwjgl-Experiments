@@ -84,8 +84,8 @@ void main () {
     //color.rb *= 0.5 / color.g; // desature red and blue on pixels with green > 0.5 and saturate them otherwise
 
     // HEARTS
-    //vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y) + uResolution.x / uResolution.y - 0.185f, v_ScreenPos.y+1. - 1.85f)*10.;
-    vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y), v_ScreenPos.y+(1.*sin(uTime*1.5)*2.+2.))*(1./((sin(uTime*1.5)*2.+2.)*2.));
+    vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y) + uResolution.x / uResolution.y - 0.185f, v_ScreenPos.y+1. - 1.85f)*10.;
+    //vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y), v_ScreenPos.y+(1.*sin(uTime*1.5)*2.+2.))*(1./((sin(uTime*1.5)*2.+2.)*2.));
 
     float d = sdHeart(p); // heart distance
     d = abs(d) - 0.05; // hollow heart

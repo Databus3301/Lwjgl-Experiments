@@ -43,7 +43,7 @@ public class TestGame extends Test {
         renderer.setCamera(camera = new Camera());
 
         int numOfEnemies = 100;
-        float scale = 3f;
+        float scale = 1f;
 
         // init player
         player = new Player(
@@ -61,7 +61,7 @@ public class TestGame extends Test {
         player.addAnimation("idleUp",   new Animation(anims, 2, 0, 1,  1, 3));
         player.addAnimation("idleRight",new Animation(anims, 3, 0, 2,  3, 3));
         player.switchAnimation("idleDown");
-        player.scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
+        player.scale(scale*15f);
 
         // TODO: Spawner class
         // track mouse and indicate cursor position

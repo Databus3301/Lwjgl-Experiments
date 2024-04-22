@@ -10,7 +10,7 @@ import static Render.Window.baseDim;
 import static Render.Window.dim;
 
 public class Camera extends Entity2D {
-    private Matrix4f viewMatrix, projectionMatrix;
+    private Matrix4f viewMatrix, projectionMatrix, projectionMatrixBaseDim;
     private boolean calculatedModelMatrixForThisFrame = false;
 
     public Camera(Vector2f position, Shader shader) {
@@ -68,10 +68,15 @@ public class Camera extends Entity2D {
     public Matrix4f calcProjectionMatrix() {
         projectionMatrix.identity();
         projectionMatrix.ortho(-dim.x/2f, dim.x/2f, -dim.y/2f, dim.y/2f, -10000f, 10000f);
+        if(projectionMatrixBaseDim == null) projectionMatrixBaseDim = new Matrix4f(projectionMatrix);
         return projectionMatrix;
     }
     public Matrix4f getProjectionMatrix() {
         return this.projectionMatrix;
+    }
+
+    public Matrix4f getProjectionMatrixBaseDim() {
+        return this.projectionMatrixBaseDim;
     }
 
 

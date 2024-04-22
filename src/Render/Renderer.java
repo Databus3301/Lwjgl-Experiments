@@ -213,7 +213,10 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
 
     public void drawBatch(Batch b) {
-        SetUniforms(currentShader, null);
+        Entity2D offset = new Entity2D();
+        offset(offset);
+        offset.setOffset(1000, 1000);
+        SetUniforms(currentShader, offset);
         draw(b.va, b.ib);
     }
     public <T extends Entity2D> void draw(T entity) {
@@ -657,11 +660,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         projectedCoords.x = (projectedCoords.x / Window.dim.x) * 2 - 1;
         projectedCoords.y = (projectedCoords.y / Window.dim.y) * -2 + 1;
         // "3D to 2D" (inverse of projection matrix "2D to 3D")
-        projectedCoords.mul(camera.calcProjectionMatrix().invert(new Matrix4f()));
-        // account for window resizing
-        Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
-        Vector2f differPercent = new Vector2f((float) differ.x / Window.baseDim.x, (float) differ.y / Window.baseDim.y);
-        projectedCoords.mul(new Vector4f(differPercent.x/2+1, differPercent.y/2+1, 1, 1));
+        projectedCoords.mul(camera.getProjectionMatrixBaseDim().invert(new Matrix4f()));
 
         return new Vector2f(projectedCoords.x, projectedCoords.y).sub(camera.getPosition());
     }

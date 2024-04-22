@@ -23,6 +23,7 @@ public class TestFont extends Test{
 
     public void OnRender() {
         super.OnRender();
+        b = renderer.drawText(s, new Vector2f(-Window.dim.x/2f+scale, Window.dim.y/2f+scale),  scale);
         renderer.drawBatch(b);
     }
     public void OnClose() {
