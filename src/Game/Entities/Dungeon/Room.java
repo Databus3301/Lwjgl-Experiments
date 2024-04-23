@@ -39,7 +39,7 @@ public class Room {
         walls = new ArrayList<>((int) (dimensions.x + dimensions.y)*2+5);
         float scale = 32 * Dungeon.SCALE;
 
-        // equally spread out the doors along the x-axis (indices where not to draw normal walls, but doors instead)
+        // equally spread out the doors along the x-axis
         int[] doorIndices = new int[doors == null ? 0 : doors.length];
         int doorIndex = 0;
         float spacing = dimensions.x / (doorIndices.length + 1f);
@@ -142,6 +142,9 @@ public class Room {
         this.dimensions = dimensions;
     }
     public void setPosition(Vector2f position) {
+        for(Entity2D wall : walls)
+            wall.translate(new Vector2f(position).sub(this.position));
+
         this.position = position;
     }
     public void setDesign(Dungeon.RoomDesign design) {

@@ -36,8 +36,6 @@ public class Window {
     private long audioDevice;
     private long ALcontext;
 
-    private final boolean doubleBuffering = true;
-
 
     public Window() {
     }
@@ -73,7 +71,6 @@ public class Window {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        if(!doubleBuffering) glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
 
         // Create the window
         windowPtr = glfwCreateWindow(dim.x, dim.y, "Open Gl - Testing Enviroment", NULL, NULL);
@@ -138,7 +135,6 @@ public class Window {
         // hide cursor
         glfwSetInputMode(windowPtr, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-        if(!doubleBuffering) glfwMakeContextCurrent(windowPtr);
         GL.createCapabilities();
 
         // OpenAL
@@ -252,11 +248,12 @@ public class Window {
     public void run() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if(!doubleBuffering) glDrawBuffer(GL_FRONT);
 
         float fps = 0;
         float time = 0;
         long ms = System.currentTimeMillis();
+
+        if (currentTest != null) currentTest.OnStart();
 
         // rendering loop
         while (!glfwWindowShouldClose(windowPtr)) {
@@ -279,12 +276,8 @@ public class Window {
             }
 
 
-            if(!doubleBuffering) glFinish();
-            if( doubleBuffering) glfwSwapBuffers(windowPtr);
+            glfwSwapBuffers(windowPtr);
             glfwPollEvents();
-            if(!doubleBuffering) glFlush();
-            if(!doubleBuffering) glfwPostEmptyEvent();
-
             //GlCheckError();
         }
     }

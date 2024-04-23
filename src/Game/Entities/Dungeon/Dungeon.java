@@ -1,7 +1,7 @@
 package Game.Entities.Dungeon;
 
 public class Dungeon {
-    public static final float SCALE = 0.7f;
+    public static final float SCALE = 1.2f;
 
 
 
@@ -28,7 +28,7 @@ public class Dungeon {
 
     public enum RoomDesign {
         STONE("Stone"),
-        WATER("Water"),;
+        WATER("Water");
 
 
         private final String design;

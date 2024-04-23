@@ -93,6 +93,7 @@ public class TestGame extends Test {
         doors[1] = new Door(this,  new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
 
         room = new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", doors);
+        room.setPosition(new Vector2f(-100));
 
     }
 
@@ -125,6 +126,7 @@ public class TestGame extends Test {
         cursor.setPosition(renderer.screenToWorldCoords(mousePos));
         // collide player and its fields
         player.collide(enemies);
+        player.collide(room);
         // spawn enemies
         //spawner.update(dt, enemies);
 
@@ -158,12 +160,13 @@ public class TestGame extends Test {
         glClearColor(0.05f, 0.05f, 0.05f, 1);
 
         // entities
-        renderer.draw(enemies);
         renderer.draw(projectiles);
-        renderer.draw(player);
         renderer.draw(cursor);
         renderer.draw(room.getWalls());
         renderer.draw(room.getDoors());
+        renderer.draw(enemies);
+        renderer.draw(player);
+
 
         // live points
         float widthLP = (float) Window.dim.x / 4f;
@@ -227,5 +230,8 @@ public class TestGame extends Test {
             player.switchAnimation("walkRight");
     }
 
+    public Player getPlayer() {
+        return player;
+    }
 }
 

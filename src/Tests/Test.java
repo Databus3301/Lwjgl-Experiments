@@ -19,7 +19,6 @@ public class Test {
     public static Renderer renderer;
     public Vector2f mousePos = new Vector2f(0, 0);
 
-    private boolean updated = false;
 
     private final ArrayList<Interactable.QuintConsumer<Integer, Integer, Integer, Integer, Vector2f>> keyCallbacks;
     private final ArrayList<BiConsumer<Float, Vector2f>> updateCallbacks;
@@ -35,14 +34,13 @@ public class Test {
      * Called on the first frame of the test.
      */
     public void OnStart() {
-        updated = true;
+
     }
     /**
      * Called every frame.
      * @param dt Delta time.
      */
     public void OnUpdate(float dt) {
-        if(!updated) OnStart();
 
         updateCallbacks.forEach(callback -> {
             callback.accept(dt, mousePos);

@@ -55,8 +55,13 @@ float sdHeart( in vec2 p ) { // https://www.shadertoy.com/view/3tyBzV
 void main () {
     vec2 uv = v_ModelPos.xy * (uResolution.x / uResolution.y);
 
+    vec2 uv2 = v_TexCoord;
+    // offset the uv2.x so that there is a horizontal shift in a range of 10 pixels traveling vertically down the screen only do it in one line and make it hard
+    if(v_ScreenPos.y > sin(uTime*0.5) && v_ScreenPos.y < 0.05 + sin(uTime*0.5)){
+        uv2.x = uv2.x + uv2.x * 0.1;
+    }
     // SAMPLE TEXTURE
-    vec4 texColor = texture(u_Texture, v_TexCoord);
+    vec4 texColor = texture(u_Texture, uv2);
     color = texColor;
 
     // COLOR REPLACEMENT
@@ -82,6 +87,10 @@ void main () {
     color = color.gbra;
     // component based dynamic (de)saturation
     //color.rb *= 0.5 / color.g; // desature red and blue on pixels with green > 0.5 and saturate them otherwise
+
+    // wabern
+    //vec2 uv2 = v_TexCoord;
+    //uv2.x = uv2.x + sin(uv2.y * 10.0 + uTime * 2.0) * 0.01;
 
     // HEARTS
     vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y) + uResolution.x / uResolution.y - 0.185f, v_ScreenPos.y+1. - 1.85f)*10.;

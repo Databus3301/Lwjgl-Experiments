@@ -2,7 +2,9 @@
         
  import Game.Action.Abilities;
  import Game.Action.Ability;
+ import Game.Entities.Dungeon.Room;
  import Render.Entity.Entity2D;
+ import Render.MeshData.Model.ObjModel;
  import Render.MeshData.Texturing.Animation;
 
  import Render.Window;
@@ -13,11 +15,14 @@
  import java.util.HashMap;
  import java.util.Map;
 
- 
+ import static Tests.Test.renderer;
+
+
  public class Player extends Living implements Able {
      private Test scene;
      private final ArrayList<Ability> abilities = new ArrayList<>();
      private final Map<String, Animation> animations = new HashMap<>();
+     private final Entity2D collider = new Entity2D(ObjModel.SQUARE);
 
      public Player(Entity2D player, int maxLivePoints, Map<String, Animation> animations) {
          player.clone(this);
@@ -63,6 +68,19 @@
          }
          // collide projectiles / custom ability colliders
          abilities.forEach(ability -> ability.collide(entities));
+     }
+
+     public <T extends Room> void collide(T room) {
+         this.collider.setScale(this.scale.x/1.5f, this.scale.y/2f);
+         this.collider.setPosition(this.position.x, this.position.y - this.scale.y/2f);
+         renderer.drawCollisionRect(collider);
+
+         for(Entity2D wall : room.getWalls()) {
+             renderer.drawCollisionRect(wall);
+             if(collider.collideRect(wall)) {
+                 translate(new Vector2f(collider.getPosition()).sub(wall.getPosition()).normalize().mul(2));
+             }
+         }
      }
 
      public void addAnimation(String name, Animation animation) {
