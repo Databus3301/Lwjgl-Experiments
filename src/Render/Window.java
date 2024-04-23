@@ -26,6 +26,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
     private long windowPtr;
     private static Window window;
+    private Renderer.FrameBuffer frameBuffer;
+
+
     public static Vector2i dim = new Vector2i(1200, 900);
     public static Vector2i baseDim = new Vector2i(1200, 900);
     private float targetAspect;
@@ -88,6 +91,10 @@ public class Window {
             if (currentTest != null) currentTest.OnKeyInput(window, key, scancode, action, mods);
         });
 
+        glfwMakeContextCurrent(windowPtr);
+        GL.createCapabilities();
+        frameBuffer = new Renderer.FrameBuffer(dim.x, dim.y);
+
         // maintain starting aspect ratio of viewport on resize
         glfwSetFramebufferSizeCallback(windowPtr, (window, width, height) -> {
             dim.x = width;
@@ -101,6 +108,9 @@ public class Window {
             glViewport(0, 0, dim.x, dim.y);
 
             //System.out.println(targetAspect + " " + newAspect + " " + (float)dim.x / dim.y);
+            //float div = 2f;
+            //drfb.getEntity().setScale((float)dim.x / div, (float)dim.y/ div);
+            frameBuffer.resize(dim.x, dim.y);
         });
 
         glfwSetErrorCallback((error, description) -> {
@@ -127,7 +137,6 @@ public class Window {
 
         } // the stack frame is popped automatically
 
-        glfwMakeContextCurrent(windowPtr);
         // Enable v-sync
         glfwSwapInterval(0);
         // show window
@@ -135,7 +144,6 @@ public class Window {
         // hide cursor
         glfwSetInputMode(windowPtr, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-        GL.createCapabilities();
 
         // OpenAL
         audioDevice = alcOpenDevice((ByteBuffer) null);
@@ -253,6 +261,8 @@ public class Window {
         float time = 0;
         long ms = System.currentTimeMillis();
 
+
+
         if (currentTest != null) currentTest.OnStart();
 
         // rendering loop
@@ -271,8 +281,11 @@ public class Window {
             }
 
             if (currentTest != null) {
+                frameBuffer.bind();
                 currentTest.OnRender();
                 currentTest.OnUpdate(dt);
+                frameBuffer.unbind();
+                frameBuffer.render();
             }
 
 

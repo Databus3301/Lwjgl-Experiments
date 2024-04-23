@@ -16,6 +16,7 @@ import Render.MeshData.Shader.Shader;
 import Render.MeshData.*;
 import Render.MeshData.Model.ObjModel;
 
+import Render.MeshData.Texturing.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -24,6 +25,7 @@ import org.lwjgl.opengl.GL43;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+import static Tests.Test.renderer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL43.*;
 
@@ -694,5 +696,77 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
     public int getMode() {
         return mode;
+    }
+
+    static class FrameBuffer {
+        private final int frameBuffer;
+        private final Texture texture;
+        private final Entity2D entity;
+
+
+        public FrameBuffer(int width, int height) {
+            frameBuffer = glGenFramebuffers();
+            bind();
+
+            texture = new Texture();
+            // comment this out to have pretty borders but repeating textures (unnatural)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getID(), 0);
+
+            unbind();
+
+            entity = new Entity2D(0, 0, ObjModel.SQUARE);
+            entity.setShader(new Shader("post_processing.shader")); // TODO: potential post processing shader
+            entity.setTexture(texture);
+            entity.scale(width/2f, height/2f);
+        }
+
+        public void bind() {
+            glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+        }
+
+        public void unbind() {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        public void render() {
+            entity.setOffset(renderer.camera.getPosition().mul(-1f, new Vector2f()));
+
+            renderer.drawCollisionRect(entity);
+
+            renderer.chooseShader(entity);
+            renderer.SetUniforms(renderer.getCurrentShader(), entity);
+
+            entity.getTexture().bind();
+            // choose Model
+            ObjModel model = entity.getModel();
+            // choose VertexArray and IndexBuffer
+            VertexArray va = new VertexArray();
+            va.addBuffer(model.getVertexBuffer(), Vertex.getLayout());
+            IndexBuffer ib = model.getIndexBuffer();
+
+            va.bind();
+            ib.bind();
+
+            glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
+        }
+
+        public void resize(int width, int height) {
+            bind();
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getID(), 0);
+            unbind();
+        }
+
+        public Texture getTexture() {
+            return texture;
+        }
+
+        public Entity2D getEntity() {
+            return entity;
+        }
     }
 }

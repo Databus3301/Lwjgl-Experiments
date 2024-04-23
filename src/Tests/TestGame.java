@@ -84,7 +84,7 @@ public class TestGame extends Test {
 
         bg = new Entity2D(new Vector2f(Window.dim.div(-2f, new Vector2i())), ObjModel.SQUARE, Shader.TEXTURING) {{
             scale(3000);
-            setColor(0.2f, 0.2f, 0.2f, 0.1f);
+            setColor(0.1f, 0.1f, 0.1f, 0.1f);
         }};
 
         // init room
