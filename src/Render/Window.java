@@ -253,6 +253,9 @@ public class Window {
                 case "hearts", "h":
                     currentTest = new TestHearts();
                     break;
+                case "sat", "separatedaxis":
+                    currentTest = new TestSAT();
+                    break;
                 default:
                     currentTest = new Test();
             }

@@ -22,7 +22,7 @@ public class Test3Dspin extends Test {
 
     public Test3Dspin() {
         super();
-        renderer.setMode(GL_LINE); // wireframe mode
+        //renderer.setMode(GL_LINE); // wireframe mode
 
         renderer.setCamera(camera = new Camera(new Vector2f()));
 

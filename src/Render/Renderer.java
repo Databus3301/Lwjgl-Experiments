@@ -745,6 +745,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
             entity = new Entity2D(0, 0, ObjModel.SQUARE);
             entity.setShader(new Shader("post_processing.shader")); // TODO: potential post processing shader
+            entity.setShader(new Shader("texturing_plain.shader")); // TODO: potential post processing shader
             entity.setTexture(texture);
             entity.scale(width/2f, height/2f);
         }
