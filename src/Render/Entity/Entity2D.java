@@ -289,6 +289,76 @@ public class Entity2D {
                 rect1.y + rect1.w > rect2.y;
     }
 
+
+    /**
+     * By transforming each corner of the bound box seperately we can account for rotation <br>
+     * then, using the separating axis theorem, we can check if the two entities are colliding.
+     * @param other
+     * @return
+     */
+    public boolean collideRectRotated(Entity2D other) {
+        if (other == null || other.model == null || model == null)
+            assert false : "[ERROR] (Render.Entity.Entity2D.collideRectRotated) Entity2D has no model";
+
+
+        Vector4f bb = model.getBoundingBox();
+        Matrix4f modelMatrix = calcModelMatrix();
+
+        Vector4f[] corners = new Vector4f[]{
+                new Vector4f(bb.x, bb.y, 0, 1),
+                new Vector4f(bb.x + bb.z, bb.y, 0, 1),
+                new Vector4f(bb.x + bb.z, bb.y + bb.w, 0, 1),
+                new Vector4f(bb.x, bb.y + bb.w, 0, 1)
+        };
+
+        for (Vector4f corner : corners) {
+            modelMatrix.transform(corner);
+        }
+
+        Vector4f bb2 = other.model.getBoundingBox();
+        Matrix4f modelMatrix2 = other.calcModelMatrix();
+
+        Vector4f[] corners2 = new Vector4f[]{
+                new Vector4f(bb2.x, bb2.y, 0, 1),
+                new Vector4f(bb2.x + bb2.z, bb2.y, 0, 1),
+                new Vector4f(bb2.x + bb2.z, bb2.y + bb2.w, 0, 1),
+                new Vector4f(bb2.x, bb2.y + bb2.w, 0, 1)
+        };
+
+        for (Vector4f corner : corners2) {
+            modelMatrix2.transform(corner);
+        }
+
+        // separating axis theorem (NOT REVIEWED YET)
+        for (int i = 0; i < 4; i++) {
+            Vector4f edge = new Vector4f(corners[(i + 1) % 4]).sub(corners[i]);
+            Vector4f normal = new Vector4f(edge.y, -edge.x, 0, 1).normalize();
+
+            float min1 = Float.MAX_VALUE;
+            float max1 = -Float.MAX_VALUE;
+            float min2 = Float.MAX_VALUE;
+            float max2 = -Float.MAX_VALUE;
+
+            for (Vector4f corner : corners) {
+                float dot = corner.dot(normal);
+                min1 = Math.min(min1, dot);
+                max1 = Math.max(max1, dot);
+            }
+
+            for (Vector4f corner : corners2) {
+                float dot = corner.dot(normal);
+                min2 = Math.min(min2, dot);
+                max2 = Math.max(max2, dot);
+            }
+
+            if (max1 < min2 || max2 < min1) return false;
+        }
+
+
+
+        return false;
+    }
+
     public boolean collideCircle(Entity2D other) {
         Vector2f p2 = other.position;
         return position.distanceSquared(p2.x, p2.y) < (scale.x + other.scale.x) * (scale.x + other.scale.x);

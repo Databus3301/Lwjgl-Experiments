@@ -39,7 +39,7 @@ public class Door extends Interactable {
         typeSign.getScale().mul(Dungeon.SCALE);
         typeSign.setTexture(new Texture("rooms/door/signs/" + type.getTextureName()));
 
-        setTriggerDistance(50);
+        setTriggerDistance(80);
         setKeyCallback((interactable, key, scancode, action, mousePos) -> {
             Vector2f pos = scene.getPlayer().getPosition();
             if(pos.distance(interactable.getPosition()) > interactable.getTriggerDistance())

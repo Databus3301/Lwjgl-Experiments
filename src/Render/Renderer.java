@@ -626,10 +626,34 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         drawRect(new Vector4f(rect1.x, rect1.y, rect1.z, rect1.w), new Vector4f(1, 0, 0, 1));
     }
-
     public <T extends Entity2D>  void drawCollisionRectRotated(T entity) {
-        System.err.println("drawCollisionRectRotated not implemented yet");
-        // TODO: transform each corner seperately and use drawLinesConnected
+        assert entity.getModel() != null: "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
+
+        Vector4f bb = entity.getModel().getBoundingBox();
+        Matrix4f modelMatrix = entity.calcModelMatrix();
+
+        Vector4f[] corners = new Vector4f[] {
+            new Vector4f(bb.x, bb.y, 0, 1),
+            new Vector4f(bb.x + bb.z, bb.y, 0, 1),
+            new Vector4f(bb.x + bb.z, bb.y + bb.w, 0, 1),
+            new Vector4f(bb.x, bb.y + bb.w, 0, 1)
+        };
+
+        for (Vector4f corner : corners) {
+            modelMatrix.transform(corner);
+        }
+
+        drawLinesConnected(new Vector2f[] {
+            new Vector2f(corners[0].x, corners[0].y),
+            new Vector2f(corners[1].x, corners[1].y),
+            new Vector2f(corners[2].x, corners[2].y),
+            new Vector2f(corners[3].x, corners[3].y)
+        }, 2, true, new Vector4f(1, 0, 0, 1));
+
+    }
+
+    public <T extends Interactable> void drawTriggerDistance(T entity) {
+        drawCircle(entity.getPosition(), entity.getTriggerDistance(), new Vector4f(0, 1, 0, 1));
     }
 
     ///////// HELPERS //////////
@@ -698,6 +722,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         return mode;
     }
 
+    // Framebuffer rendered to in order to apply post-processing effects
     static class FrameBuffer {
         private final int frameBuffer;
         private final Texture texture;

@@ -43,6 +43,13 @@ Documenting my learning process of Open GL and LWJGL for a school project
 ### Game
 - [ ] space invaders demo
 
+- [ ] first launch
+  - spawn in a room
+    - post processing shader
+      - wobbly fading out
+      - pixelated
+      - color channel swizzleing
+
 - [ ] Lobby
   - [ ] Item-Stash
   - [ ] Character Selection
@@ -94,6 +101,8 @@ Tutorials: <br>
 [Coding Adventure: Simulating Fluids](https://www.youtube.com/watch?v=rSKMYc1CQHE) <br>
 [Introduction to shaders: Learn the basics! - Barney Codes](https://www.youtube.com/watch?v=3mfvZ-mdtZQ) <br>
 [An introduction to Shader Art Coding - kishimisu](https://www.youtube.com/watch?v=f4s1h2YETNY&t=1187s) <br>
+[I Added Realistic Physics to Minecraft -- 3D Rigid Body Physics Engine Datapack […]](https://www.youtube.com/watch?v=DhCBCudKJTs)<br>
+[How 2D Game Collision Works (Separating Axis Theorem)](https://youtu.be/dn0hUgsok9M?si=RC3326ZOYTs-CUk3)
 
 
 Assets: <br>

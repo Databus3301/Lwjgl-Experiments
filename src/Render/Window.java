@@ -75,8 +75,22 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
+
+        // get resolution
+        long primary = dim == null ? glfwGetPrimaryMonitor() : NULL;
+        if(dim == null) {
+            GLFWVidMode.Buffer vidmodes = glfwGetVideoModes(primary);
+            if (vidmodes != null) {
+                GLFWVidMode vidmode = vidmodes.get(vidmodes.capacity()-1);
+                dim = new Vector2i(vidmode.width(), vidmode.height());
+            } else {
+                dim = new Vector2i(1280, 720);
+            }
+        }
+
+
         // Create the window
-        windowPtr = glfwCreateWindow(dim.x, dim.y, "Open Gl - Testing Enviroment", NULL, NULL);
+        windowPtr = glfwCreateWindow(dim.x, dim.y, "Open Gl - Testing Enviroment", primary  , NULL);
         if (windowPtr == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
         targetAspect = (float) dim.x / dim.y;

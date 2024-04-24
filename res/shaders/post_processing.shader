@@ -51,8 +51,8 @@ void main () {
 
     // offset the uv2.x so that there is a horizontal shift in a range of 10 pixels traveling vertically down the screen only do it in one line and make it hard
     float sinValue = sin(uTime*0.5);
-    if(v_ScreenPos.y > sinValue && v_ScreenPos.y < 0.05 + sinValue){
-    uv2.x += uv2.x * 0.01;
+    if(v_ScreenPos.y > sinValue && v_ScreenPos.y < 0.05 + sinValue){ // 0.05 determines line thickness
+        uv2.x += uv2.x * 0.01;
     }
 
     // SAMPLE TEXTURE
@@ -64,7 +64,7 @@ void main () {
     // invert colors
     //color = vec4(1.0-color.xyz, color.a);
     // swizzle color channels
-    color = color.gbra;
+    //color = color.gbra;
     // component based dynamic (de)saturation
     //color.rb *= 0.5 / color.g; // desature red and blue on pixels with green > 0.5 and saturate them otherwise
 

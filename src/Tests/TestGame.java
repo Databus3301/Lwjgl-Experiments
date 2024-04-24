@@ -167,6 +167,7 @@ public class TestGame extends Test {
         renderer.draw(enemies);
         renderer.draw(player);
 
+        // DEBUG in Player collide()
 
         // live points
         float widthLP = (float) Window.dim.x / 4f;

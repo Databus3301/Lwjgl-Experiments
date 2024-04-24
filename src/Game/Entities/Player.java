@@ -2,6 +2,7 @@
         
  import Game.Action.Abilities;
  import Game.Action.Ability;
+ import Game.Entities.Dungeon.Door;
  import Game.Entities.Dungeon.Room;
  import Render.Entity.Entity2D;
  import Render.MeshData.Model.ObjModel;
@@ -76,9 +77,14 @@
          renderer.drawCollisionRect(collider);
 
          for(Entity2D wall : room.getWalls()) {
-             renderer.drawCollisionRect(wall);
              if(collider.collideRect(wall)) {
                  translate(new Vector2f(collider.getPosition()).sub(wall.getPosition()).normalize().mul(2));
+             }
+
+             renderer.drawCollisionRectRotated(wall);
+             if(wall instanceof Door) {
+                 Door d = (Door) wall;
+                 renderer.drawTriggerDistance(d);
              }
          }
      }
