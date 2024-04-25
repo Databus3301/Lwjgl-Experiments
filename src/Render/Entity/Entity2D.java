@@ -310,83 +310,48 @@ public class Entity2D {
         corners1 = sortCorners(corners1);
         corners2 = sortCorners(corners2);
 
-        for(Vector4f corner : corners1) {
-            renderer.drawPoint(new Vector2f(corner.x, corner.y), 10, new Vector4f(1, 1, 1, 1));
-        }
-        for(Vector4f corner : corners2) {
-            renderer.drawPoint(new Vector2f(corner.x, corner.y), 10, new Vector4f(1, 1, 1, 1));
-        }
-
-        Vector4f edge = corners1[TOP].sub(corners1[RIGHT]);
+        Vector4f edge = corners1[TOP].sub(corners1[RIGHT], new Vector4f());
         Vector4f axisX = new Vector4f(edge.y, -edge.x, 0 , 0).normalize();
         Vector4f axisY = new Vector4f(edge.x, edge.y , 0 , 0).normalize();
 
-        // visualise the axes (the following function takes 2 arguments one Vector4f indicating from where to draw and another Vector4f indicating the direction + magnitude)
-        renderer.drawLine(new Vector2f(axisX.x * -1000, axisX.y * -1000), new Vector2f(axisX.x * 1000, axisX.y * 1000), 2, new Vector4f(0, 0, 1, 1));
-        renderer.drawLine(new Vector2f(axisY.x * -1000, axisY.y * -1000), new Vector2f(axisY.x * 1000, axisY.y * 1000), 2, new Vector4f(0, 1, 1, 1));
+        float thisMaxX = maxDot(corners1, axisX);
+        float thisMinX = minDot(corners1, axisX);
+        float thisMaxY = maxDot(corners1, axisY);
+        float thisMinY = minDot(corners1, axisY);
 
-        float thisMaxX = corners1[RIGHT].dot(axisX);
-        float thisMinX = corners1[LEFT].dot(axisX);
-        float thisMaxY = corners1[TOP].dot(axisY);
-        float thisMinY = corners1[BOTTOM].dot(axisY);
+        float otherMaxX = maxDot(corners2, axisX);
+        float otherMinX = minDot(corners2, axisX);
+        float otherMaxY = maxDot(corners2, axisY);
+        float otherMinY = minDot(corners2, axisY);
 
-        renderer.drawPoint(new Vector2f(thisMaxX * axisX.x,  thisMaxX * axisX.y), 10, new Vector4f(1, 0, 0, 0.7f));
-        renderer.drawPoint(new Vector2f(thisMinX * axisX.x,  thisMinY * axisX.y), 10, new Vector4f(1, 0, 0, 0.7f));
-        renderer.drawPoint(new Vector2f(thisMaxY * axisY.x,  thisMaxY * axisY.y), 10, new Vector4f(1, 0, 0, 0.7f));
-        renderer.drawPoint(new Vector2f(thisMinY * axisY.x,  thisMinY * axisY.y), 10, new Vector4f(1, 0, 0, 0.7f));
+        boolean intersect1 = (Math.min(thisMaxX, otherMaxX) - Math.max(thisMinX, otherMinX) < 0);
+        boolean intersect2 = (Math.min(thisMaxY, otherMaxY) - Math.max(thisMinY, otherMinY) < 0);
 
+        edge = corners2[TOP].sub(corners2[RIGHT], new Vector4f());
+        axisX = new Vector4f(edge.y, -edge.x, 0 , 0).normalize();
+        axisY = new Vector4f(edge.x, edge.y , 0 , 0).normalize();
 
-        float otherMaxX = corners2[RIGHT].dot(axisX);
-        float otherMinX = corners2[LEFT].dot(axisX);
-        float otherMaxY = corners2[TOP].dot(axisY);
-        float otherMinY = corners2[BOTTOM].dot(axisY);
+        thisMaxX = maxDot(corners1, axisX);
+        thisMinX = minDot(corners1, axisX);
+        thisMaxY = maxDot(corners1, axisY);
+        thisMinY = minDot(corners1, axisY);
 
-        renderer.drawPoint(new Vector2f(otherMaxX * axisX.x,  otherMaxX * axisX.y), 10, new Vector4f(0, 1, 0, 0.7f));
-        renderer.drawPoint(new Vector2f(otherMinX * axisX.x,  otherMinY * axisX.y), 10, new Vector4f(0, 1, 0, 0.7f));
-        renderer.drawPoint(new Vector2f(otherMaxY * axisY.x,  otherMaxY * axisY.y), 10, new Vector4f(0, 1, 0, 0.7f));
-        renderer.drawPoint(new Vector2f(otherMinY * axisY.x,  otherMinY * axisY.y), 10, new Vector4f(0, 1, 0, 0.7f));
+        otherMaxX = maxDot(corners2, axisX);
+        otherMinX = minDot(corners2, axisX);
+        otherMaxY = maxDot(corners2, axisY);
+        otherMinY = minDot(corners2, axisY);
 
+        boolean intersect3 = (Math.min(thisMaxX, otherMaxX) - Math.max(thisMinX, otherMinX) < 0);
+        boolean intersect4 = (Math.min(thisMaxY, otherMaxY) - Math.max(thisMinY, otherMinY) < 0);
 
-        boolean intersectX1 = thisMinX < otherMaxX && thisMaxX > otherMinX;
-        boolean intersectY1 = thisMinY < otherMaxY && thisMaxY > otherMinY;
-
-        edge = corners2[RIGHT].sub(corners2[BOTTOM]);
-        axisY = new Vector4f(edge.y, -edge.x, 0 , 0).normalize();
-        axisX = new Vector4f(edge.x, +edge.y , 0 , 0).normalize();
-
-        renderer.drawLine(new Vector2f(axisX.x * -1000, axisX.y * -1000), new Vector2f(axisX.x * 1000, axisX.y * 1000), 2, new Vector4f(1, 0, 0, 1));
-        renderer.drawLine(new Vector2f(axisY.x * -1000, axisY.y * -1000), new Vector2f(axisY.x * 1000, axisY.y * 1000), 2, new Vector4f(0, 1, 0, 1));
-
-        thisMaxX = corners1[RIGHT].dot(axisX);
-        thisMinX = corners1[LEFT].dot(axisX);
-        thisMaxY = corners1[TOP].dot(axisY);
-        thisMinY = corners1[BOTTOM].dot(axisY);
-
-
-        renderer.drawPoint(new Vector2f(thisMaxX * axisX.x,  thisMaxX * axisX.y), 10, new Vector4f(1, 0, 1, 0.7f));
-        renderer.drawPoint(new Vector2f(thisMinX * axisX.x,  thisMinY * axisX.y), 10, new Vector4f(1, 0, 1, 0.7f));
-        renderer.drawPoint(new Vector2f(thisMaxY * axisY.x,  thisMaxY * axisY.y), 10, new Vector4f(1, 0, 1, 0.7f));
-        renderer.drawPoint(new Vector2f(thisMinY * axisY.x,  thisMinY * axisY.y), 10, new Vector4f(1, 0, 1, 0.7f));
-
-        otherMaxX = corners2[RIGHT].dot(axisX);
-        otherMinX = corners2[LEFT].dot(axisX);
-        otherMaxY = corners2[TOP].dot(axisY);
-        otherMinY = corners2[BOTTOM].dot(axisY);
-
-        renderer.drawPoint(new Vector2f(otherMaxX * axisX.x,  otherMaxX * axisX.y), 10, new Vector4f(0, 1, 1, 0.7f));
-        renderer.drawPoint(new Vector2f(otherMinX * axisX.x,  otherMinY * axisX.y), 10, new Vector4f(0, 1, 1, 0.7f));
-        renderer.drawPoint(new Vector2f(otherMaxY * axisY.x,  otherMaxY * axisY.y), 10, new Vector4f(0, 1, 1, 0.7f));
-        renderer.drawPoint(new Vector2f(otherMinY * axisY.x,  otherMinY * axisY.y), 10, new Vector4f(0, 1, 1, 0.7f));
-
-        boolean intersectX2 = thisMinX < otherMaxX && thisMaxX > otherMinX;
-        boolean intersectY2 = thisMinY < otherMaxY && thisMaxY > otherMinY;
-
-
-        return intersectX1 && intersectY1 && intersectX2 && intersectY2;
+        return !(intersect1 || intersect2 || intersect3 || intersect4);
     }
+
+
 
     private Vector4f[] calcCorners(Entity2D entity) {
         Vector4f bb = entity.model.getBoundingBox();
+        entity.rotate(0.0001f, 2);
         Matrix4f modelMatrix = entity.calcModelMatrix();
 
         Vector4f[] corners = new Vector4f[]{
@@ -399,11 +364,11 @@ public class Entity2D {
         for (Vector4f corner : corners) {
             modelMatrix.transform(corner);
         }
+        entity.rotate(-0.0001f, 2);
 
         return corners;
     }
 
-    // TODO: fix corner sorting literally consuming it's arg
     private Vector4f[] sortCorners(Vector4f[] corners) {
         Vector4f top    = new Vector4f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, 0, 0);
         Vector4f right  = new Vector4f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, 0, 0);
@@ -415,11 +380,11 @@ public class Entity2D {
             if(corner.y > top.y) {
                 top = corner;
             }
-            if(corner.x > right.x) {
-                right = corner;
-            }
             if(corner.y < bottom.y) {
                 bottom = corner;
+            }
+            if(corner.x > right.x) {
+                right = corner;
             }
             if(corner.x < left.x) {
                 left = corner;
@@ -428,6 +393,24 @@ public class Entity2D {
 
         return new Vector4f[] {new Vector4f(top), new Vector4f(right), new Vector4f(bottom), new Vector4f(left)};
     }
+
+    private float maxDot(Vector4f[] corners, Vector4f axis) {
+        float max = corners[0].dot(axis);
+        for (int i = 1; i < 4; i++) {
+            float dot = corners[i].dot(axis);
+            if(dot > max) max = dot;
+        }
+        return max;
+    }
+    private float minDot(Vector4f[] corners, Vector4f axis) {
+        float min = corners[0].dot(axis);
+        for (int i = 1; i < 4; i++) {
+            float dot = corners[i].dot(axis);
+            if(dot < min) min = dot;
+        }
+        return min;
+    }
+
 
     public boolean collideCircle(Entity2D other) {
         Vector2f p2 = other.position;

@@ -77,7 +77,7 @@
          renderer.drawCollisionRect(collider);
 
          for(Entity2D wall : room.getWalls()) {
-             if(collider.collideRect(wall)) {
+             if(collider.collideRectRotated(wall)) {
                  translate(new Vector2f(collider.getPosition()).sub(wall.getPosition()).normalize().mul(2));
              }
 

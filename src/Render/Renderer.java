@@ -651,7 +651,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }, 2, true, new Vector4f(1, 0, 0, 1));
 
     }
-
     public <T extends Interactable> void drawTriggerDistance(T entity) {
         drawCircle(entity.getPosition(), entity.getTriggerDistance(), new Vector4f(0, 1, 0, 1));
     }
