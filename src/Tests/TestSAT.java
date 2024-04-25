@@ -2,6 +2,7 @@ package Tests;
 
 import Render.Entity.Entity2D;
 import Render.MeshData.Model.ObjModel;
+import Render.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -10,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class TestSAT extends Test {
 
-    Entity2D square1, square2;
+    Entity2D square1, square2, indicator;
 
 
     public TestSAT() {
@@ -25,17 +26,18 @@ public class TestSAT extends Test {
         square2.scale(75);
         square2.setColor(1, 0, 0, 0.3f);
 
+        indicator = new Entity2D(new Vector2f(0, Window.dim.y/2f - 40), ObjModel.SQUARE);
+        indicator.scale(100, 40);
+        indicator.setColor(1, 1, 1, 1f);
     }
-    boolean lastCollision = true;
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
 
         boolean c = collideRectRotatedVis(square1, square2);
-        if(c != lastCollision) {
-            System.out.println("Collision: " + c);
-            lastCollision = c;
-        }
+        if(c) indicator.show();
+        else indicator.hide();
+
     }
     @Override
     public void OnRender() {
@@ -43,26 +45,67 @@ public class TestSAT extends Test {
 
         renderer.draw(square1);
         renderer.draw(square2);
+        renderer.draw(indicator);
+        if(!indicator.isHidden()) {
+            renderer.drawText("COLLISION", new Vector2f(indicator.getPosition().x - 60, indicator.getPosition().y+25), 10);
+        }
     }
     @Override
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
-        if(key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        if(key == GLFW_KEY_Q && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             square1.rotate(1, 2);
         }
-        // move square1 based on WASD
+        if(key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+            square1.rotate(-1, 2);
+        }
 
-        if(key == GLFW_KEY_W && action == GLFW_PRESS) {
+        if(key == GLFW_KEY_TAB && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+            square2.rotate(1, 2);
+        }
+        if(key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+            square2.rotate(-1, 2);
+        }
+
+
+        // move square1 based on WASD
+        if(key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             square1.translate(0, 10);
         }
-        if(key == GLFW_KEY_S && action == GLFW_PRESS) {
+        if(key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             square1.translate(0, -10);
         }
-        if(key == GLFW_KEY_A && action == GLFW_PRESS) {
+        if(key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             square1.translate(-10, 0);
         }
-        if(key == GLFW_KEY_D && action == GLFW_PRESS) {
+        if(key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             square1.translate(10, 0);
+        }
+        // move square2 based on arrow keys
+        if(key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+            square2.translate(0, 10);
+        }
+        if(key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+            square2.translate(0, -10);
+        }
+        if(key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+            square2.translate(-10, 0);
+        }
+        if(key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+            square2.translate(10, 0);
+        }
+
+
+        // if r the reset
+        if(key == GLFW_KEY_R && action == GLFW_PRESS) {
+            square1 = new Entity2D(new Vector2f(-150, 0), ObjModel.SQUARE);
+            square1.rotate(0, 2);
+            square1.scale(75);
+            square1.setColor(1, 0, 0, 0.3f);
+            square2 = new Entity2D(new Vector2f(+150, -0), ObjModel.SQUARE);
+            square2.rotate(180, 2);
+            square2.scale(75);
+            square2.setColor(1, 0, 0, 0.3f);
         }
 
     }
@@ -150,7 +193,6 @@ public class TestSAT extends Test {
 
         return !(intersect1 || intersect2 || intersect3 || intersect4);
     }
-
 
     private Vector4f[] calcCorners(Entity2D entity) {
         Vector4f bb = entity.getModel().getBoundingBox();
