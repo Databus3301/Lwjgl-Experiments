@@ -6,10 +6,8 @@ import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
 import Tests.Test;
-import Tests.TestGame;
 import org.joml.Vector2f;
 
-import static Tests.Test.renderer;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Door extends Interactable {
@@ -36,25 +34,23 @@ public class Door extends Interactable {
         typeSign.setTexture(new Texture("rooms/door/signs/" + type.getTextureName()));
 
         setTriggerDistance(80);
-        setKeyCallback((interactable, key, scancode, action, mousePos) -> {
-            Vector2f pos = scene.getPlayer().getPosition();
-            if(pos.distance(interactable.getPosition()) > interactable.getTriggerDistance())
-                return;
+        setKeyCallback((door, key, scancode, action, mousePos) -> {
+
 
             if(key == GLFW_KEY_E && action == GLFW_PRESS) {
-                if(locked) {
-                    interactable.setColor(1, 0, 0, 1);
-                    return;
+                float smallestDist;
+                // use triggerPos to determine the closest point to the door
+                smallestDist = triggerPos.stream().map(pos -> pos.distanceSquared(getPosition())).min(Float::compareTo).orElse(0f);
+                
+                if(smallestDist < getTriggerDistanceSquared()) {
+                    if (locked)
+                        open();
+                    else
+                        lock();
                 }
-            }
-            if(key == GLFW_KEY_E && action == GLFW_RELEASE) {
-                interactable.setColor(1, 1, 1, 1);
             }
         });
     }
-
-
-
 
 
     public void lock() {

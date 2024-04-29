@@ -434,7 +434,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         return new Batch(va, ib);
     } // delete eventually? texture-attlassing
 
-    // TODO: investigate performance gain of CPU side MVP calculation
+    Matrix4f buffer = new Matrix4f();
     public void SetUniforms(Shader shader, Entity2D entity) {
         Matrix4f modelMatrix;
         if (entity == null || entity.equals(camera))
@@ -442,9 +442,14 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         else
             modelMatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
 
-        shader.setUniformMat4f("uModel", modelMatrix);
-        shader.setUniformMat4f("uView", camera.calcViewMatrix());
-        shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
+        // 30% to 48% of total frame time, CPU side MVP calculation could be a performance gain
+        if(shader.hasUniform("uMVP")) {
+            shader.setUniformMat4f("uMVP", camera.getProjectionMatrix().mul(camera.calcViewMatrix(), buffer).mul(modelMatrix));
+        } else {
+            shader.setUniformMat4f("uModel", modelMatrix);
+            shader.setUniformMat4f("uView", camera.calcViewMatrix());
+            shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
+        }
 
         if (shader.hasUniform("uColor")) {
             if (entity != null)

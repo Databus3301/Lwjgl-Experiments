@@ -7,6 +7,7 @@ import Render.MeshData.Model.ObjModel;
 import Tests.Test;
 import org.joml.Vector2f;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -23,6 +24,8 @@ public class Interactable extends Entity2D {
 
     protected States state = States.DEFAULT;
     private float triggerDistance = 1000;
+    private float triggerDistanceSquared = triggerDistance * triggerDistance;
+    protected final ArrayList<Vector2f> triggerPos = new ArrayList<>();
 
     private Consumer<Interactable> defaultCallback = (interactable) -> {};
     private Consumer<Interactable> hoverCallback = (interactable) -> {};
@@ -141,17 +144,34 @@ public class Interactable extends Entity2D {
     public void setKeyCallback(QuintConsumer<Interactable, Integer, Integer, Integer, Vector2f> callback) {
         this.keyCallback = callback;
     }
-
     public void setTriggerDistance(float triggerDistance) {
         this.triggerDistance = triggerDistance;
+        this.triggerDistanceSquared = triggerDistance * triggerDistance;
+    }
+    public void addTriggerPos(Vector2f pos) {
+        triggerPos.add(pos);
+    }
+    public void addTriggerPos(float x, float y) {
+        triggerPos.add(new Vector2f(x, y));
+    }
+    public void clearTriggerPos() {
+        triggerPos.clear();
     }
 
+
+    public ArrayList<Vector2f> getTriggerPos() {
+        return triggerPos;
+    }
     public boolean hasChangedState() {
         return changedState;
     }
     public float getTriggerDistance() {
         return triggerDistance;
     }
+    public float getTriggerDistanceSquared() {
+        return triggerDistanceSquared;
+    }
+
     public States getState() {
         return state;
     }

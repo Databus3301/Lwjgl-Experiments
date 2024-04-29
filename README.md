@@ -76,6 +76,16 @@ Documenting my learning process of Open GL and LWJGL for a school project
       - [ ] piercing
       - [x] homing
       - [ ] shotgun/spread
+    - Enemies
+      - [ ] basic
+          - takes the direct route to the player
+          - has no special abilities
+          - basic HP
+      - [ ] fast
+      - [ ] tanky
+      - [ ] ranged
+      - [ ] flying
+      - [ ] boss
     - [ ] simulation distance
     - [ ] room drawer
       

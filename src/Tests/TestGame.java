@@ -88,11 +88,14 @@ public class TestGame extends Test {
         }};
 
         // init room
-        //doors[0] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
-        //doors[1] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
 
-        room = new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", 2, new Room[]{null, null});
+        room = new Room(this, Dungeon.RoomType.NORMAL, "TestRoom", 2);
         room.setPosition(new Vector2f(-100));
+
+        Door[] doors = new Door[2];
+        doors[0] = new Door(this, room.getType());
+        doors[1] = new Door(this, room.getType());
+        room.setDoors(doors);
 
     }
 
@@ -166,14 +169,25 @@ public class TestGame extends Test {
         renderer.draw(enemies);
         renderer.draw(player);
 
-        // DEBUG in Player collide()
-
         // live points
         float widthLP = (float) Window.dim.x / 4f;
         Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
         renderer.drawUI(bg);
+
+        // DEBUG COLLIDERS
+        /*
+        for (Entity2D wall : room.getWalls()) {
+            renderer.drawCollisionRectRotated(wall);
+            if (wall instanceof Door) {
+                Door d = (Door) wall;
+                renderer.drawTriggerDistance(d);
+            }
+        }
+        renderer.drawCollisionRect(collider);
+        renderer.drawCollisionRect(room.getCollisionRect());
+        */
     }
 
     @Override

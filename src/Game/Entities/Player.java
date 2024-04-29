@@ -74,19 +74,15 @@ public class Player extends Living implements Able {
     public <T extends Room> void collide(T room) {
         this.collider.setScale(this.scale.x / 1.5f, this.scale.y / 2f);
         this.collider.setPosition(this.position.x, this.position.y - this.scale.y / 2f);
-        renderer.drawCollisionRect(collider);
 
-        for (Entity2D wall : room.getWalls()) {
-            if (collider.collideRectRotated(wall)) {
-                translate(new Vector2f(collider.getPosition()).sub(wall.getPosition()).normalize().mul(2));
-            }
 
-            renderer.drawCollisionRectRotated(wall);
-            if (wall instanceof Door) {
-                Door d = (Door) wall;
-                renderer.drawTriggerDistance(d);
-            }
+        // collide the player with the room.getCollisionRect()
+        if (!collider.containedByRect(room.getCollisionRect())) {
+            translate(new Vector2f(collider.getPosition()).sub(room.getPosition()).normalize().mul(-2));
         }
+
+
+
     }
 
     public void addAnimation(String name, Animation animation) {

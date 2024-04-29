@@ -200,7 +200,7 @@ public class Entity2D {
      * @return
      */
     public Matrix4f calcModelMatrix() {
-        if (isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
+        if (isStatic && !Objects.equals(modelMatrix, defaultMatrix))
             return modelMatrix;
 
         position.add(offset);
@@ -215,8 +215,8 @@ public class Entity2D {
 
         return modelMatrix;
     }
-
     private final Quaternionf noRotation = new Quaternionf();
+    private final Matrix4f defaultMatrix = new Matrix4f();
 
     public Matrix4f calcModelMatrixNoRotation() {
         if (isStatic && !Objects.equals(modelMatrix, new Matrix4f()))
@@ -245,6 +245,37 @@ public class Entity2D {
         return Math.abs(getPosition().x - pos2.x) < Math.abs(scale.x) &&
                 Math.abs(getPosition().y - pos2.y) < Math.abs(scale.y);
     }
+
+    /**
+     * <b>UNTESTED</b>
+     * <br>
+     * Checks if the rect vec4(x, y, width, height) is fully contained by this entity <br>
+     * only works on entities with no rotation
+     * @param rect2
+     * @return containsRect
+     */
+    public boolean containsRect(Vector4f rect2) {
+        // fully contained x, y, w, h
+        return rect2.x > position.x - scale.x &&
+                rect2.y > position.y - scale.y &&
+                rect2.x + rect2.z < position.x + scale.x &&
+                rect2.y + rect2.w < position.y + scale.y;
+    }
+
+    /**
+     * Checks if the entity is fully contained by the  rect vec4(x, y, width, height) <br>
+     * only works on entities with no rotation
+     * @param rect2
+     * @return isContained
+     */
+    public boolean containedByRect(Vector4f rect2) {
+        // is this entity contained fully in the rect
+        return position.x - scale.x > rect2.x &&
+                position.y - scale.y > rect2.y &&
+                position.x + scale.x < rect2.x + rect2.z &&
+                position.y + scale.y < rect2.y + rect2.w;
+    }
+
 
     /**
      * This method checks for collision between this entity and another entity using their bounding rectangles.
