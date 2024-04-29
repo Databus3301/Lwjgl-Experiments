@@ -78,8 +78,10 @@ public class Player extends Living implements Able {
 
         // collide the player with the room.getCollisionRect()
         if (!collider.containedByRect(room.getCollisionRect())) {
-            translate(new Vector2f(collider.getPosition()).sub(room.getPosition()).normalize().mul(-2));
+            translate(new Vector2f(position).sub(room.getPosition()).normalize().mul(-2));
         }
+
+        // TODO: handle collision independently for each direction, don't make it depend on the room's center (vertical rooms are fucked)
 
 
 

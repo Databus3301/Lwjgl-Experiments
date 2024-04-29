@@ -35,6 +35,17 @@ public class Texture {
             path = "res/textures/" + path;
         m_FilePath = path;
 
+        // save on texture creation if it's already cached
+        if(textures.containsKey(path)) {
+            Texture tex = textures.get(path);
+            m_RendererID = tex.m_RendererID;
+            m_Width = tex.m_Width;
+            m_Height = tex.m_Height;
+            channels = tex.channels;
+            name = tex.name;
+            return;
+        }
+
         name = path.substring(path.lastIndexOf('/')+1, path.lastIndexOf('.'));
 
         STBImage.stbi_set_flip_vertically_on_load(true);

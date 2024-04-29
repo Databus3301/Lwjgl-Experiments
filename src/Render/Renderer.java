@@ -319,7 +319,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
     public <T extends Door> void draw(T door) {
         draw((Interactable) door);
-        draw(door.typeSign);
+        draw(door.getConnectedRoomDisplay());
     }
 
     public Batch setupBatch(Entity2D[] entities) {

@@ -6,20 +6,17 @@ import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
 import Tests.Test;
-import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Door extends Interactable {
 
-    private Dungeon.RoomType type;
-    public final Entity2D typeSign;
+    private Entity2D connectedRoomDisplay;
     private final Texture lockedT, unlockedT;
-    boolean locked = false;
+    private boolean isLocked = false;
 
-    public <T extends Test> Door(T scene, Dungeon.RoomType type) {
+    public <T extends Test> Door(T scene) {
         super(scene);
-        this.type = type;
         setModel(ObjModel.SQUARE.clone());
         scale(32, 48);
         scale.mul(Dungeon.SCALE);
@@ -27,11 +24,11 @@ public class Door extends Interactable {
         unlockedT = new Texture("rooms/door/unlocked.png");
         setShader(Shader.TEXTURING);
 
-        typeSign = new Entity2D();
-        typeSign.setModel(ObjModel.SQUARE.clone());
-        typeSign.scale(32, 32);
-        typeSign.getScale().mul(Dungeon.SCALE);
-        typeSign.setTexture(new Texture("rooms/door/signs/" + type.getTextureName()));
+        connectedRoomDisplay = new Entity2D();
+        connectedRoomDisplay.setModel(ObjModel.SQUARE.clone());
+        connectedRoomDisplay.scale(32, 32);
+        connectedRoomDisplay.getScale().mul(Dungeon.SCALE);
+        connectedRoomDisplay.setTexture(new Texture("rooms/door/signs/" + Dungeon.RoomType.NORMAL.getTextureName()));
 
         setTriggerDistance(80);
         setKeyCallback((door, key, scancode, action, mousePos) -> {
@@ -40,10 +37,10 @@ public class Door extends Interactable {
             if(key == GLFW_KEY_E && action == GLFW_PRESS) {
                 float smallestDist;
                 // use triggerPos to determine the closest point to the door
-                smallestDist = triggerPos.stream().map(pos -> pos.distanceSquared(getPosition())).min(Float::compareTo).orElse(0f);
-                
+                smallestDist = triggerPos.stream().map(pos -> pos.distanceSquared(getPosition())).min(Float::compareTo).orElse(Float.MAX_VALUE);
+
                 if(smallestDist < getTriggerDistanceSquared()) {
-                    if (locked)
+                    if (isLocked)
                         open();
                     else
                         lock();
@@ -55,10 +52,25 @@ public class Door extends Interactable {
 
     public void lock() {
         setTexture(lockedT);
-        locked = true;
+        isLocked = true;
     }
     public void open() {
         setTexture(unlockedT);
-        locked = false;
+        isLocked = false;
+    }
+
+
+    public Entity2D getConnectedRoomDisplay() {
+        return connectedRoomDisplay;
+    }
+    public void setConnectedRoomDisplay(Dungeon.RoomType connectedRoomDisplay) {
+        this.connectedRoomDisplay = new Entity2D();
+        this.connectedRoomDisplay.setModel(ObjModel.SQUARE.clone());
+        this.connectedRoomDisplay.scale(32, 32);
+        this.connectedRoomDisplay.getScale().mul(Dungeon.SCALE);
+        this.connectedRoomDisplay.setTexture(new Texture("rooms/door/signs/" + connectedRoomDisplay.getTextureName()));
+    }
+    public void setConnectedRoomDisplay(Entity2D connectedRoomDisplay) {
+        this.connectedRoomDisplay = connectedRoomDisplay;
     }
 }

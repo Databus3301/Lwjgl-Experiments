@@ -86,23 +86,16 @@ public class TestGame extends Test {
             scale(3000);
             setColor(0.1f, 0.1f, 0.1f, 0.1f);
         }};
-
-        // init room
-
-        room = new Room(this, Dungeon.RoomType.NORMAL, "TestRoom", 2);
-        room.setPosition(new Vector2f(-100));
-
-        Door[] doors = new Door[2];
-        doors[0] = new Door(this, room.getType());
-        doors[1] = new Door(this, room.getType());
-        room.setDoors(doors);
-
     }
 
     @Override
     public void OnStart() {
         super.OnStart();
         renderer.cursorHide();
+
+        // init dungeon
+        Dungeon dungeon = new Dungeon(player);
+        room = dungeon.getStart();
     }
 
     @Override
@@ -158,7 +151,6 @@ public class TestGame extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        //glClearColor(0.435f, 0.639f, 0.271f, 1);
         glClearColor(0.05f, 0.05f, 0.05f, 1);
 
         // entities
@@ -177,7 +169,7 @@ public class TestGame extends Test {
         renderer.drawUI(bg);
 
         // DEBUG COLLIDERS
-        /*
+        ///*
         for (Entity2D wall : room.getWalls()) {
             renderer.drawCollisionRectRotated(wall);
             if (wall instanceof Door) {
@@ -185,9 +177,9 @@ public class TestGame extends Test {
                 renderer.drawTriggerDistance(d);
             }
         }
-        renderer.drawCollisionRect(collider);
-        renderer.drawCollisionRect(room.getCollisionRect());
-        */
+        //renderer.drawCollisionRect(collider);
+        renderer.drawRect(room.getCollisionRect());
+        //*/
     }
 
     @Override

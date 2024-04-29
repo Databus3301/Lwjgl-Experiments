@@ -1,9 +1,11 @@
 package Game.Entities.Dungeon;
 
+import Game.Entities.Player;
 import Render.Entity.Entity2D;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
+import Render.Window;
 import Tests.Test;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -16,14 +18,13 @@ import java.util.ArrayList;
  * It is managed by a Dungeon object providing Wave definitions, Routes to other rooms and a reference to the player + scene.
  */
 public class Room {
-    private final Test scene;
     private final Dungeon.RoomType type;
     private Dungeon.RoomDesign design;
     private final String title;
 
     private Vector2f position = new Vector2f();
     private Vector2f dimensions;
-    private Vector4f collisionRect;
+    private final Vector4f collisionRect;
 
 
     private final ArrayList<Entity2D> walls;
@@ -31,12 +32,11 @@ public class Room {
     private Door[] doors;
     private Room[] connectedRooms;
 
-    public Room(Test scene, Dungeon.RoomType type, String title, int numOfDoors) {
+    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors) {
         assert numOfDoors >= 0 : "A room can't have a negative number of doors";
 
         this.type = type;
         this.title = title;
-        this.scene = scene;
         this.numOfDoors = numOfDoors;
         this.design = Dungeon.RoomDesign.WATER;
         this.dimensions = new Vector2f(10, 10);
@@ -44,16 +44,17 @@ public class Room {
         walls = new ArrayList<>((int) (dimensions.x + dimensions.y) * 2 + numOfDoors + 3);
         float scale = 32 * Dungeon.SCALE;
 
-        // calc offset for <position> to be centered
-        Vector2f offset = new Vector2f((dimensions.x - 1) * scale, (dimensions.y - 1) * scale);
-
-        collisionRect = new Vector4f(position.x - scale/Dungeon.SCALE*2 - offset.x, position.y - scale/Dungeon.SCALE*2 - offset.y, (dimensions.x-2) * scale * 2, (dimensions.y-2) * scale * 2);
+        // calc offset -> to have <position> be centered
+        Vector2f offset = new Vector2f((dimensions.x) * scale, (dimensions.y) * scale);
+        // create collision rect -> safe on individual wall collisions
+        collisionRect = new Vector4f(position.x + scale - offset.x, position.y + scale - offset.y, (dimensions.x-2) * scale * 2, (dimensions.y-2) * scale * 2);
 
         //create doors
         this.doors = new Door[numOfDoors];
         for (int i = 0; i < numOfDoors; i++) {
-            doors[i] = new Door(scene, type);
+            doors[i] = new Door(Window.getWindow().getCurrentTest()); // TODO: this is dodgy
         }
+        addDoorTrigger(player);
         // equally spread out the doors along the x-axis
         int[] doorIndices = new int[doors.length];
         int doorIndex = 0;
@@ -135,6 +136,8 @@ public class Room {
 
     }
 
+
+
     public ArrayList<Entity2D> getWalls() {
         return walls;
     }
@@ -174,6 +177,20 @@ public class Room {
         this.design = design;
     }
     public void setDoors(Door[] doors) {
+        assert doors.length == numOfDoors : "The number of doors must match the number of doors set in the constructor";
         this.doors = doors;
+    }
+    public void addDoorTrigger(Entity2D trigger) {
+        for(Door door : doors) {
+            door.addTriggerPos(trigger.getPosition());
+        }
+    }
+    public void setConnectedRooms(Room[] connectedRooms) {
+        //assert connectedRooms.length == numOfDoors : "The number of connected rooms must match the number of doors set in the constructor";
+        this.connectedRooms = connectedRooms;
+
+        for (int i = 0; i < doors.length; i++) {
+            doors[i].setConnectedRoomDisplay(connectedRooms[i].getType());
+        }
     }
 }
