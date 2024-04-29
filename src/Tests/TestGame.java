@@ -3,16 +3,16 @@ package Tests;
 import Game.Action.Waves.EnemySpawner;
 import Game.Entities.Dungeon.Door;
 import Game.Entities.Dungeon.Dungeon;
-import Game.Entities.Player;
 import Game.Entities.Dungeon.Room;
+import Game.Entities.Enemy;
+import Game.Entities.Player;
+import Game.Entities.Projectiles.Projectile;
 import Game.UI;
 import Render.Entity.Camera.Camera;
-import Game.Entities.Enemy;
 import Render.Entity.Entity2D;
-import Game.Entities.Projectiles.Projectile;
-import Render.MeshData.Texturing.*;
-import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Texturing.*;
 import Render.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -21,7 +21,7 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static Game.Action.Waves.EnemySpawner.Result.*;
+import static Game.Action.Waves.EnemySpawner.Result.WAVE_OVER;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.glClearColor;
 
@@ -52,27 +52,27 @@ public class TestGame extends Test {
 
         // init player
         player = new Player(
-               this,
-                      new Entity2D(new Vector2f(0, 0), ObjModel.SQUARE.clone(), Shader.TEXTURING),
-        50000
+                this,
+                new Entity2D(new Vector2f(0, 0), ObjModel.SQUARE.clone(), Shader.TEXTURING),
+                50000
         );
         TextureAtlas anims = new TextureAtlas(new Texture("LinkAnim.png", 0), 10, 8, 10, 120, 130, 0);
         player.addAnimation("walkDown", new Animation(anims, 4, 0, 20, 10));
         player.addAnimation("walkLeft", new Animation(anims, 5, 0, 20, 10));
-        player.addAnimation("walkUp",   new Animation(anims, 6, 0, 20, 10));
-        player.addAnimation("walkRight",new Animation(anims, 7, 0, 20, 10));
-        player.addAnimation("idleDown", new Animation(anims, 0, 0, 2,  3, 3));
-        player.addAnimation("idleLeft", new Animation(anims, 1, 0, 2,  3, 3));
-        player.addAnimation("idleUp",   new Animation(anims, 2, 0, 1,  1, 3));
-        player.addAnimation("idleRight",new Animation(anims, 3, 0, 2,  3, 3));
+        player.addAnimation("walkUp", new Animation(anims, 6, 0, 20, 10));
+        player.addAnimation("walkRight", new Animation(anims, 7, 0, 20, 10));
+        player.addAnimation("idleDown", new Animation(anims, 0, 0, 2, 3, 3));
+        player.addAnimation("idleLeft", new Animation(anims, 1, 0, 2, 3, 3));
+        player.addAnimation("idleUp", new Animation(anims, 2, 0, 1, 1, 3));
+        player.addAnimation("idleRight", new Animation(anims, 3, 0, 2, 3, 3));
         player.switchAnimation("idleDown");
-        player.scale(scale*(4+numOfEnemies/(numOfEnemies/10f)));
+        player.scale(scale * (4 + numOfEnemies / (numOfEnemies / 10f)));
 
         // track mouse and indicate cursor position
         Texture cursor = new Texture("woodCrate.png", 0);
         this.cursor = new Entity2D(new Vector2f(), ObjModel.SQUARE, cursor, Shader.TEXTURING);
         this.cursor.scale(32);
-        this.cursor.setColor(1, 0, 0,1);
+        this.cursor.setColor(1, 0, 0, 1);
 
         // define text colors
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 1, 1));
@@ -89,8 +89,8 @@ public class TestGame extends Test {
 
         // init room
         Door[] doors = new Door[2];
-        doors[0] = new Door(this,  new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
-        doors[1] = new Door(this,  new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
+        doors[0] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
+        doors[1] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
 
         room = new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", doors);
         room.setPosition(new Vector2f(-100));
@@ -113,14 +113,14 @@ public class TestGame extends Test {
             shouldSimulate = false;
         }
         // wave over
-        if(spawner.getLastResult() == WAVE_OVER) {
+        if (spawner.getLastResult() == WAVE_OVER) {
             shouldSimulate = true;
             UI.onLvlUp(player);
         }
 
-        if(!shouldSimulate) return;
+        if (!shouldSimulate) return;
         // move player
-        player.translate(new Vector2f(player.getVelocity()).mul(300*dt));
+        player.translate(new Vector2f(player.getVelocity()).mul(300 * dt));
         camera.centerOn(player);
         // move target to mouse
         cursor.setPosition(renderer.screenToWorldCoords(mousePos));
@@ -131,23 +131,23 @@ public class TestGame extends Test {
         //spawner.update(dt, enemies);
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
-        while(enemyIterator.hasNext()) {
+        while (enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
             enemy.update(dt, mousePos, player.getPosition());
             // move enemy to player
-            enemy.translateTowards(player, 100*dt);
+            enemy.translateTowards(player, 100 * dt);
             // push away from each other
-            for(Enemy enemy1 : enemies) {
-                if(enemy != enemy1 && enemy.collideCircle(enemy1))
-                    enemy.translateTowards(enemy1, -100*dt); // negated "towards" becomes "away"
+            for (Enemy enemy1 : enemies) {
+                if (enemy != enemy1 && enemy.collideCircle(enemy1))
+                    enemy.translateTowards(enemy1, -100 * dt); // negated "towards" becomes "away"
             }
             // kill enemiess
             enemy.reduceISeconds(dt);
-            if(enemy.getLP() <= 0)
+            if (enemy.getLP() <= 0)
                 enemyIterator.remove();
             // print debug info if on cursor
-            if(enemy.collideRect(cursor))
-                renderer.drawText("LivePoints: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x/2f, enemy.getPosition().y + 15), 5);
+            if (enemy.collideRect(cursor))
+                renderer.drawText("LivePoints: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x / 2f, enemy.getPosition().y + 15), 5);
         }
 
         super.OnUpdate(dt);
@@ -172,8 +172,8 @@ public class TestGame extends Test {
         // live points
         float widthLP = (float) Window.dim.x / 4f;
         Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
-        renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
-        renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x/2f, Window.dim.y / 2f - 25f + differ.y/2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
+        renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
+        renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
         renderer.drawUI(bg);
     }
 
@@ -211,24 +211,30 @@ public class TestGame extends Test {
 
         // apply velocity
         player.setVelocity(new Vector2f(0, 0));
-        if(keyArr[0] == GLFW_KEY_W)
+        if (keyArr[0] == GLFW_KEY_W)
             player.accelerate(new Vector2f(0, 1));
-        if(keyArr[1] == GLFW_KEY_A)
+        if (keyArr[1] == GLFW_KEY_A)
             player.accelerate(new Vector2f(-1, 0));
-        if(keyArr[2] == GLFW_KEY_S)
+        if (keyArr[2] == GLFW_KEY_S)
             player.accelerate(new Vector2f(0, -1));
-        if(keyArr[3] == GLFW_KEY_D)
+        if (keyArr[3] == GLFW_KEY_D)
             player.accelerate(new Vector2f(1, 0));
 
         // update animation
-        if(keyArr[0] == GLFW_KEY_W)
+        if (keyArr[0] == GLFW_KEY_W)
             player.switchAnimation("walkUp");
-        if(keyArr[1] == GLFW_KEY_A)
+        if (keyArr[1] == GLFW_KEY_A)
             player.switchAnimation("walkLeft");
-        if(keyArr[2] == GLFW_KEY_S)
+        if (keyArr[2] == GLFW_KEY_S)
             player.switchAnimation("walkDown");
-        if(keyArr[3] == GLFW_KEY_D)
+        if (keyArr[3] == GLFW_KEY_D)
             player.switchAnimation("walkRight");
+
+        // Dash
+        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+            player.getAbilities().get(0).setCurrentCooldown(0);
+
+
     }
 
     public Player getPlayer() {

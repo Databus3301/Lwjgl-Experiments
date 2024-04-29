@@ -1,15 +1,20 @@
 package Game.Action;
 
+import Game.Entities.Player;
 import Game.Entities.Projectiles.Homing;
 import Game.Entities.Projectiles.Projectile;
+import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
 import org.joml.Vector2f;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Abilities {
     public static Ability SHOOT = getSHOOT();
     public static Ability HOMING = getHOMING();
     public static Ability[] SALVE = getSALVE();
     public static Ability DASH = getDASH();
+    public static Ability SHIELD = getSHIELD();
 
     public static Ability getSHOOT() {
         Projectile[] projectiles = new Projectile[1];
@@ -35,7 +40,7 @@ public class Abilities {
 
     public static Ability getDASH() {
         Projectile[] projectiles = new Projectile[0];
-        DASH = new Ability(projectiles, 0.25f);
+        DASH = new Ability(projectiles, Float.MAX_VALUE - 2);
         DASH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
 
             origin.translate(new Vector2f(origin.getVelocity()).mul(200));
@@ -44,7 +49,24 @@ public class Abilities {
 
         return DASH;
     }
+    public static Ability getSHIELD() {
+        Projectile[] projectiles = new Projectile[0];
+        SHIELD = new Ability(projectiles, 2f);
+        AtomicBoolean shielded = new AtomicBoolean(true);
+        SHIELD.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
+            ((Player) origin).setiSeconds(2);
+            origin.setShader(new Shader("texturing.player.shader"));
+            if(!shielded.get()) {
+                origin.setColor(0, 0, 1f, 0);
+                shielded.set(true);
+            } else {
+                origin.setColor(0, 0, 0, 0);
+                shielded.set(false);
+            }
+        });
 
+        return SHIELD;
+    }
     public static Ability getHOMING() {
         Projectile[] projectiles = new Homing[1];
         projectiles[0] = new Homing();

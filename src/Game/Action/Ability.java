@@ -12,6 +12,7 @@ public class Ability {
     private Test scene;
     private Projectile[] projectileTypes;
     private ArrayList<Projectile> projectiles = new ArrayList<>();
+
     /**
      * Cooldown in seconds
      */
@@ -23,11 +24,13 @@ public class Ability {
     private int level;
 
     public HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger;
+
     public Ability(Projectile[] projectileTypes, float cooldown) {
         this.projectileTypes = projectileTypes;
         this.cooldown = cooldown;
         this.currentCooldown = .5f;
     }
+
     public Ability() {
         this.projectileTypes = new Projectile[]{new Projectile()};
         this.cooldown = 1f;
@@ -37,11 +40,12 @@ public class Ability {
     public void update(float dt, Vector2f mousePos, Entity2D trigger) {
         update(dt, mousePos, Test.getRenderer().screenToWorldCoords(mousePos), trigger);
     }
+
     public void update(float dt, Vector2f mousePos, Vector2f target, Entity2D trigger) {
         if (currentCooldown > 0) {
             currentCooldown -= dt;
         } else {
-            currentCooldown = cooldown*2;
+            currentCooldown = cooldown * 2;
             onTrigger.accept(this, dt, mousePos, target, trigger, scene);
         }
         projectiles.forEach(projectile -> projectile.update(dt));
@@ -59,6 +63,7 @@ public class Ability {
         into.setScene(scene);
         return into;
     }
+
     public Ability clone() {
         Ability a = new Ability();
         return clone(a);
@@ -68,24 +73,31 @@ public class Ability {
     public float getCooldown() {
         return cooldown;
     }
+
     public float getCurrentCooldown() {
         return currentCooldown;
     }
+
     public Projectile[] getProjectileTypes() {
         return projectileTypes;
     }
+
     public ArrayList<Projectile> getProjectiles() {
         return projectiles;
     }
+
     public int getLevel() {
         return level;
     }
+
     public String getDescription() {
         return description;
     }
+
     public String getName() {
         return name;
     }
+
     public Test getScene() {
         return scene;
     }
@@ -95,32 +107,41 @@ public class Ability {
         this.cooldown = cooldown;
         return this;
     }
+
     public void setOnTrigger(HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger) {
         this.onTrigger = onTrigger;
     }
+
     public void setProjectileTypes(Projectile[] projectileTypes) {
         this.projectileTypes = projectileTypes;
     }
+
     public Ability setScene(Test scene) {
         this.scene = scene;
         return this;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
     public void setLevel(int level) {
         this.level = level;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public Ability setCurrentCooldown(float currentCooldown) {
         this.currentCooldown = currentCooldown;
         return this;
     }
+
     public void setProjectiles(ArrayList<Projectile> projectiles) {
         this.projectiles = projectiles;
     }
+
 
     @FunctionalInterface
     public interface HexConsumer<T, U, V, W, X, Y> {

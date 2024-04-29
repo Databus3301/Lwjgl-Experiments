@@ -34,6 +34,7 @@ public class Enemies {
         basic.setScale(10);
         return basic;
     }
+
     public static Enemy getTANK() {
         // BASIC ENEMY 2
         Enemy tank = new Enemy();

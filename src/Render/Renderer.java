@@ -6,16 +6,15 @@ import Game.Entities.Dungeon.Door;
 import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
-import Render.MeshData.Texturing.ColorReplacement;
-import Render.MeshData.Texturing.Font;
-import Render.MeshData.Texturing.TextPosParams;
 import Render.Entity.Interactable.Button;
 import Render.Entity.Interactable.Interactable;
 import Render.Entity.Interactable.Label;
-import Render.MeshData.Shader.Shader;
 import Render.MeshData.*;
 import Render.MeshData.Model.ObjModel;
-
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Texturing.ColorReplacement;
+import Render.MeshData.Texturing.Font;
+import Render.MeshData.Texturing.TextPosParams;
 import Render.MeshData.Texturing.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -49,14 +48,17 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
+
     public void draw(VertexArray va, IndexBuffer ib, Vector4f color) {
         SetUniforms(currentShader, null, color);
         draw(va, ib);
     }
+
     public void draw(VertexArray va, IndexBuffer ib, Matrix4f colorSwaps) {
         SetUniforms(currentShader, null, colorSwaps);
         draw(va, ib);
     }
+
     public void draw(VertexArray va, IndexBuffer ib, Shader shader) {
         shader.bind();
         SetUniforms(shader, null);
@@ -65,12 +67,12 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
 
     public Batch drawText(String text, Vector2f pos, float size, Font font, Shader shader, Function<TextPosParams, Vector2f> layoutingFunction, ColorReplacement cR, Integer maxWidth) {
-        if(text == null || text.isEmpty()) return null;
-        if(font == null) font = Font.RETRO;
-        if(shader == null) shader = Shader.TEXTURING;
-        if(size <= 0) size = 1;
-        if(pos == null) pos = new Vector2f(0, 0);
-        if(layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
+        if (text == null || text.isEmpty()) return null;
+        if (font == null) font = Font.RETRO;
+        if (shader == null) shader = Shader.TEXTURING;
+        if (size <= 0) size = 1;
+        if (pos == null) pos = new Vector2f(0, 0);
+        if (layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
 
         setCurrentShader(shader);
         font.getTexture().bind();
@@ -94,7 +96,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         VertexArray va = new VertexArray();
         int totalVertices = model.getVertexCount() * texCoordArr.length * Vertex.SIZE;
-        int totalIndices  = model.getIndexCount()  * texCoordArr.length;
+        int totalIndices = model.getIndexCount() * texCoordArr.length;
 
         // Create combined vertex and index buffers
         VertexBuffer vb = new VertexBuffer(totalVertices);
@@ -109,7 +111,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         int xOffset = 0;
 
         for (int i = 0; i < texCoordArr.length; i++) {
-            float[] data = new float[model.getVertexCount()*Vertex.SIZE];
+            float[] data = new float[model.getVertexCount() * Vertex.SIZE];
             int[] indices = new int[model.getIndexCount()];
 
             if (newLineIndices.contains(i)) {
@@ -123,20 +125,20 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             for (short[][] face : faces) {
                 for (short k = 0; k < face.length; k++) {
                     float[] position = positions[face[k][0] - 1];
-                    data[dataIndex++] = position[0] * scale.x  + pos.x + scale.x * 2 * i;
-                    data[dataIndex++] = position[1] * scale.y  + pos.y +  - scale.y / characterAspect * 2; // offset.y * i
+                    data[dataIndex++] = position[0] * scale.x + pos.x + scale.x * 2 * i;
+                    data[dataIndex++] = position[1] * scale.y + pos.y + -scale.y / characterAspect * 2; // offset.y * i
                     data[dataIndex++] = position[2];
 
                     if (Vertex.SIZE > 3) {
                         if (face[k].length > 1) {
-                            float[] texture = texCoordArr[i][face[k][1]-1];
+                            float[] texture = texCoordArr[i][face[k][1] - 1];
                             data[dataIndex++] = texture[0];
                             data[dataIndex++] = texture[1];
                         } else {
                             dataIndex += 2;
                         }
                     }
-                    indices[dataIndex / Vertex.SIZE -1] = (short) (dataIndex / Vertex.SIZE  - 1) + (int)indexOffset/4;
+                    indices[dataIndex / Vertex.SIZE - 1] = (short) (dataIndex / Vertex.SIZE - 1) + (int) indexOffset / 4;
                 }
             }
             xOffset++;
@@ -144,28 +146,31 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             vb.update(data, vertexOffset);
             ib.update(indices, indexOffset);
 
-            vertexOffset += data.length    * 4L;
-            indexOffset += indices.length  * 4L;
+            vertexOffset += data.length * 4L;
+            indexOffset += indices.length * 4L;
         }
 
         va.addBuffer(vb, Vertex.getLayout());
-        if(cR != null)
+        if (cR != null)
             draw(va, ib, cR.getSwappingMatrix());
         else
             draw(va, ib, currentShader);
 
         return new Batch(va, ib);
     }
+
     public Batch drawText(TextPosParams tp, Shader shader, Function<TextPosParams, Vector2f> layoutingFunction, ColorReplacement cR) {
-        if(shader == null) shader = Shader.TEXTURING;
-        if(layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
+        if (shader == null) shader = Shader.TEXTURING;
+        if (layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
 
         tp.pos = layoutingFunction.apply(tp);
         return drawText(tp.text, tp.pos, tp.size.x, tp.font, shader, null, cR, tp.maxWidth);
     }
+
     public Batch drawText(String text, Vector2f pos, float scale, Font font) {
         return drawText(text, pos, scale, font, null, null, null, null);
     }
+
     public Batch drawText(String text, Vector2f pos, float scale) {
         return drawText(text, pos, scale, null, null, null, null, null);
     }
@@ -177,7 +182,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         SetUniforms(currentShader, entity);
 
         // choose Texture
-        if(entity.getTexture() != null)
+        if (entity.getTexture() != null)
             entity.getTexture().bind();
         // choose Model
         ObjModel model = entity.getModel();
@@ -216,17 +221,18 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         SetUniforms(currentShader, null);
         draw(b.va, b.ib);
     }
+
     public <T extends Entity2D> void draw(T entity) {
         assert entity != null : "[ERROR] (Render.Renderer.DrawEntity2D) Entity2D is null";
-        if(entity.isHidden()) return;
+        if (entity.isHidden()) return;
 
         chooseShader(entity);
         SetUniforms(currentShader, entity);
 
         // choose Texture
-        if(entity.getTexture() != null)
+        if (entity.getTexture() != null)
             entity.getTexture().bind();
-        if(entity.getAnimation() != null) {
+        if (entity.getAnimation() != null) {
             entity.getAnimation().getAtlas().getTexture().bind();
             entity.getModel().replaceTextureCoords(entity.getAnimation().getTexCoords());
         }
@@ -245,66 +251,72 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         //draw abilities
         if (entity instanceof Able able) {
-            if(able.getAbilities() == null ) return;
-            for(Ability ability : able.getAbilities()) {
+            if (able.getAbilities() == null) return;
+            for (Ability ability : able.getAbilities()) {
                 for (Projectile projectile : ability.getProjectiles()) {
                     draw(projectile);
                 }
             }
         }
     }
+
     public <T extends Entity2D> void draw(T[] entities) {
         for (T entity : entities) {
-            if(entity != null)
+            if (entity != null)
                 draw(entity);
         }
     }
+
     public <T extends Entity2D> void draw(ArrayList<T> entities) {
         for (T entity : entities) {
-            if(entity != null)
+            if (entity != null)
                 draw(entity);
         }
     }
+
     public <T extends Entity2D> void drawUI(Entity2D entity) {
         entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
         draw(entity);
     }
+
     public <T extends Entity2D> void drawUI(T[] entities) {
         for (T entity : entities) {
-            if(entity != null)
+            if (entity != null)
                 drawUI(entity);
         }
     }
+
     public <T extends Button> void draw(T button) {
         this.draw((Entity2D) button);
 
         Label label = button.getLabel();
         drawText(
-            new TextPosParams(
-                    button.getPosition(),
-                    new Vector2f(label.getScale()),
-                    label.getFont(),
-                    label.getText(),
-                    null,
-                    (int)(button.getScale().x-label.getFont().getCharWidth()*3)
-            ), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, button.getColorReplacement());
+                new TextPosParams(
+                        button.getPosition(),
+                        new Vector2f(label.getScale()),
+                        label.getFont(),
+                        label.getText(),
+                        null,
+                        (int) (button.getScale().x - label.getFont().getCharWidth() * 3)
+                ), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, button.getColorReplacement());
 
-        if(button.getState() != Interactable.States.HOVER) return;
-        if(!button.shouldDisplayTooltip()) return;
-        if(button.getTooltip() == null) return;
-        if(button.getTooltip().getText().isEmpty()) return;
+        if (button.getState() != Interactable.States.HOVER) return;
+        if (!button.shouldDisplayTooltip()) return;
+        if (button.getTooltip() == null) return;
+        if (button.getTooltip().getText().isEmpty()) return;
 
         Label tooltip = button.getTooltip();
         drawText(
-            new TextPosParams(
-                screenToWorldCoords(tooltip.getScreenPosition()),
-                new Vector2f(tooltip.getScale()),
-                tooltip.getFont(),
-                tooltip.getText(),
-                null
-            ), Shader.TEXTURING, null, null
+                new TextPosParams(
+                        screenToWorldCoords(tooltip.getScreenPosition()),
+                        new Vector2f(tooltip.getScale()),
+                        tooltip.getFont(),
+                        tooltip.getText(),
+                        null
+                ), Shader.TEXTURING, null, null
         );
     }
+
     public <T extends Door> void draw(T door) {
         draw((Interactable) door);
         draw(door.typeSign);
@@ -323,7 +335,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }
 
         // Create combined vertex and index buffers
-        VertexBuffer vb = new VertexBuffer(totalVertices*Vertex.SIZE);
+        VertexBuffer vb = new VertexBuffer(totalVertices * Vertex.SIZE);
         IndexBuffer ib = new IndexBuffer(totalIndices);
 
         long vertexOffset = 0;
@@ -340,23 +352,24 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             // calculate actual positions of vertices through model matrices
             int dataIndex = 0;
             for (int j = 0; j < indices.length; j++) { // TODO: apply rotation
-                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x + entity.getOffset().x ;
+                data[dataIndex++] = data[dataIndex - 1] * entity.getScale().x + entity.getPosition().x + entity.getOffset().x;
                 data[dataIndex++] = data[dataIndex - 1] * entity.getScale().y + entity.getPosition().y + entity.getOffset().y;
                 dataIndex += Vertex.SIZE - 2;
 
-                indices[j] += (int)indexOffset/4;
+                indices[j] += (int) indexOffset / 4;
             }
 
             vb.update(data, vertexOffset);
             ib.update(indices, indexOffset);
 
-            vertexOffset += data.length    * 4L;
-            indexOffset += indices.length  * 4L;
+            vertexOffset += data.length * 4L;
+            indexOffset += indices.length * 4L;
         }
 
         va.addBuffer(vb, Vertex.getLayout());
         return new Batch(va, ib);
     }
+
     private Batch _setupBatch(float[][][] texCoordArr, Entity2D base, Vector2f offset) {
         assert base != null : "[ERROR] (Render.Renderer.setupBatch) base entity is null";
         assert base.getModel() != null : "[ERROR] (Render.Renderer.setupBatch) base entity has no model";
@@ -370,7 +383,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         VertexArray va = new VertexArray();
         int totalVertices = model.getVertexCount() * texCoordArr.length * Vertex.SIZE;
-        int totalIndices  = model.getIndexCount()  * texCoordArr.length;
+        int totalIndices = model.getIndexCount() * texCoordArr.length;
 
         // Create combined vertex and index buffers
         VertexBuffer vb = new VertexBuffer(totalVertices);
@@ -385,27 +398,27 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         int xOffset = 0;
 
         for (int i = 0; i < texCoordArr.length; i++) {
-            float[] data = new float[model.getVertexCount()*Vertex.SIZE];
+            float[] data = new float[model.getVertexCount() * Vertex.SIZE];
             int[] indices = new int[model.getIndexCount()];
 
             short dataIndex = 0;
             for (short[][] face : faces) {
                 for (short k = 0; k < face.length; k++) {
                     float[] position = positions[face[k][0] - 1];
-                    data[dataIndex++] = position[0] * base.getScale().x  + base.getPosition().x + offset.x * i - (((xOffset + 1f) * base.getScale().x * 2));
-                    data[dataIndex++] = position[1] * base.getScale().y  + base.getPosition().y + offset.y * i - base.getScale().y /* / characterAspect */ * 2; //TODO: sum up drawText and this into one???
+                    data[dataIndex++] = position[0] * base.getScale().x + base.getPosition().x + offset.x * i - (((xOffset + 1f) * base.getScale().x * 2));
+                    data[dataIndex++] = position[1] * base.getScale().y + base.getPosition().y + offset.y * i - base.getScale().y /* / characterAspect */ * 2; //TODO: sum up drawText and this into one???
                     data[dataIndex++] = position[2];
 
                     if (Vertex.SIZE > 3) {
                         if (face[k].length > 1) {
-                            float[] texture = texCoordArr[i][face[k][1]-1]; // potential optimisation:
+                            float[] texture = texCoordArr[i][face[k][1] - 1]; // potential optimisation:
                             data[dataIndex++] = texture[0];
                             data[dataIndex++] = texture[1];
                         } else {
                             dataIndex += 2;
                         }
                     }
-                    indices[dataIndex / Vertex.SIZE -1] = (short) (dataIndex / Vertex.SIZE  - 1) + (int)indexOffset/4;
+                    indices[dataIndex / Vertex.SIZE - 1] = (short) (dataIndex / Vertex.SIZE - 1) + (int) indexOffset / 4;
                 }
             }
             xOffset++;
@@ -413,8 +426,8 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             vb.update(data, vertexOffset);
             ib.update(indices, indexOffset);
 
-            vertexOffset += data.length    * 4L;
-            indexOffset += indices.length  * 4L;
+            vertexOffset += data.length * 4L;
+            indexOffset += indices.length * 4L;
         }
 
         va.addBuffer(vb, Vertex.getLayout());
@@ -424,7 +437,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     // TODO: investigate performance gain of CPU side MVP calculation
     public void SetUniforms(Shader shader, Entity2D entity) {
         Matrix4f modelMatrix;
-        if(entity == null || entity.equals(camera))
+        if (entity == null || entity.equals(camera))
             modelMatrix = camera.calcModelMatrix();
         else
             modelMatrix = entity.calcModelMatrix().mul(camera.calcModelMatrix());
@@ -433,32 +446,34 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         shader.setUniformMat4f("uView", camera.calcViewMatrix());
         shader.setUniformMat4f("uProj", camera.getProjectionMatrix());
 
-        if(shader.hasUniform("uColor")) {
-            if(entity != null)
+        if (shader.hasUniform("uColor")) {
+            if (entity != null)
                 shader.setUniform4f("uColor", entity.getColor());
             else
-                shader.setUniform4f("uColor",0.976f, 0.164f, 0.976f, 1.0f); // default no-texture-or-color-pink
+                shader.setUniform4f("uColor", 0.976f, 0.164f, 0.976f, 1.0f); // default no-texture-or-color-pink
         }
-        if(shader.hasUniform("uColors")) {
-            if(entity != null && entity.getColorReplacement() != null)
+        if (shader.hasUniform("uColors")) {
+            if (entity != null && entity.getColorReplacement() != null)
                 shader.setUniformMat4f("uColors", entity.getColorReplacement().getSwappingMatrix());
             else
                 shader.setUniformMat4f("uColors", ColorReplacement.NO_SWAP_MATRIX);
         }
-        if(shader.hasUniform("uResolution"))
+        if (shader.hasUniform("uResolution"))
             shader.setUniform2f("uResolution", Window.dim.x, Window.dim.y);
-        if(shader.hasUniform("uTime"))
-            shader.setUniform1f("uTime",  ((System.currentTimeMillis())% 100000) / 1000f);
+        if (shader.hasUniform("uTime"))
+            shader.setUniform1f("uTime", ((System.currentTimeMillis()) % 100000) / 1000f);
     }
+
     public void SetUniforms(Shader shader, Entity2D entity, Vector4f color) {
         SetUniforms(shader, entity);
-        if(shader.hasUniform("uColor")) {
+        if (shader.hasUniform("uColor")) {
             shader.setUniform4f("uColor", color.x, color.y, color.z, color.w);
         }
     }
+
     public void SetUniforms(Shader shader, Entity2D entity, Matrix4f colors) {
         SetUniforms(shader, entity);
-        if(shader.hasUniform("uColors"))
+        if (shader.hasUniform("uColors"))
             shader.setUniformMat4f("uColors", colors);
     }
 
@@ -472,9 +487,11 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         GL43.glVertex2f(pos.x, pos.y);
         GL43.glEnd();
     }
+
     public void drawPoint(Vector2f pos, float size) {
         drawPoint(pos, size, new Vector4f(1, 1, 1, 1));
     }
+
     public void drawPoint(Vector2f pos) {
         drawPoint(pos, 2);
     }
@@ -490,6 +507,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }
         GL43.glEnd();
     }
+
     public void drawPoints(Vector2f[] positions, float size) {
         drawPoints(positions, size, new Vector4f(1, 1, 1, 1));
     }
@@ -500,13 +518,15 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         GL43.glLineWidth(size);
         GL43.glBegin(GL_LINES);
-        GL43.glVertex2f(from.x , from.y);
-        GL43.glVertex2f(to.x , to.y);
+        GL43.glVertex2f(from.x, from.y);
+        GL43.glVertex2f(to.x, to.y);
         GL43.glEnd();
     }
+
     public void drawLine(Vector2f from, Vector2f to, float size) {
         drawLine(from, to, size, new Vector4f(1, 1, 1, 1));
     }
+
     public void drawLine(Vector2f from, Vector2f to) {
         drawLine(from, to, 2);
     }
@@ -522,12 +542,15 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }
         GL43.glEnd();
     }
+
     public void drawLinesConnected(Vector2f[] positions, float size, boolean loop) {
         drawLinesConnected(positions, size, loop, new Vector4f(1, 1, 1, 1));
     }
+
     public void drawLinesConnected(Vector2f[] positions, float size) {
         drawLinesConnected(positions, size, false);
     }
+
     public void drawLinesConnected(Vector2f[] positions) {
         drawLinesConnected(positions, 2);
     }
@@ -536,22 +559,26 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         Shader.DEFAULT.bind();
         SetUniforms(Shader.DEFAULT, null, color);
 
-        drawLinesConnected(new Vector2f[] {
+        drawLinesConnected(new Vector2f[]{
                 new Vector2f(pos.x, pos.y),
                 new Vector2f(pos.x + dim.x, pos.y),
                 new Vector2f(pos.x + dim.x, pos.y + dim.y),
                 new Vector2f(pos.x, pos.y + dim.y)
         }, 2, true, color);
     }
+
     public void drawRect(Vector2f pos, Vector2f dim) {
         drawRect(pos, dim, new Vector4f(1, 1, 1, 1));
     }
+
     public void drawRect(float x, float y, float w, float h) {
         drawRect(new Vector2f(x, y), new Vector2f(w, h));
     }
+
     public void drawRect(Vector4f rect) {
         drawRect(new Vector2f(rect.x, rect.y), new Vector2f(rect.z, rect.w));
     }
+
     public void drawRect(Vector4f rect, Vector4f color) {
         drawRect(new Vector2f(rect.x, rect.y), new Vector2f(rect.z, rect.w), color);
     }
@@ -567,9 +594,11 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         GL43.glVertex2f(pos.x, pos.y + dim.y);
         GL43.glEnd();
     }
+
     public void fillRect(Vector2f pos, Vector2f dim) {
         fillRect(pos, dim, new Vector4f(1, 1, 1, 1));
     }
+
     public void drawCircle(Vector2f pos, float radius, Vector4f color) {
         Shader.DEFAULT.bind();
         SetUniforms(Shader.DEFAULT, null, color);
@@ -581,15 +610,16 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         }
         GL43.glEnd();
     }
+
     public void drawCircle(Vector2f pos, float radius) {
         drawCircle(pos, radius, new Vector4f(1, 1, 1, 1));
     }
 
     ////////// DEBUGS //////////
-    public <T extends Entity2D>void drawCollisionAABB(T entity) {
+    public <T extends Entity2D> void drawCollisionAABB(T entity) {
         ObjModel model = entity.getModel();
         Vector2f scale = entity.getScale();
-        if(model == null) return;
+        if (model == null) return;
         Vector4f rect = model.getBoundingBox();
         Vector2f pos = entity.getPosition();
         float x = pos.x + rect.x * scale.x;
@@ -598,16 +628,19 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         float h = rect.w * scale.y;
         drawRect(new Vector4f(x, y, w, h), new Vector4f(1, 0, 0, 1));
     }
-    public <T extends Entity2D>void drawCollisionCircle(T entity) {
+
+    public <T extends Entity2D> void drawCollisionCircle(T entity) {
         ObjModel model = entity.getModel();
         Vector2f scale = entity.getScale();
-        if(model == null) return;
+        if (model == null) return;
         float r = scale.x;
         drawCircle(entity.getPosition(), r, new Vector4f(1, 0, 0, 1));
     }
+
     private final Vector4f trans = new Vector4f();
+
     public <T extends Entity2D> void drawCollisionRect(T entity) { // TODO: rotate the rect correctly
-        assert entity.getModel() != null: "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
+        assert entity.getModel() != null : "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
 
         ObjModel model = entity.getModel();
         Vector2f scale = entity.getScale();
@@ -626,31 +659,33 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         drawRect(new Vector4f(rect1.x, rect1.y, rect1.z, rect1.w), new Vector4f(1, 0, 0, 1));
     }
-    public <T extends Entity2D>  void drawCollisionRectRotated(T entity) {
-        assert entity.getModel() != null: "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
+
+    public <T extends Entity2D> void drawCollisionRectRotated(T entity) {
+        assert entity.getModel() != null : "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
 
         Vector4f bb = entity.getModel().getBoundingBox();
         Matrix4f modelMatrix = entity.calcModelMatrix();
 
-        Vector4f[] corners = new Vector4f[] {
-            new Vector4f(bb.x, bb.y, 0, 1),
-            new Vector4f(bb.x + bb.z, bb.y, 0, 1),
-            new Vector4f(bb.x + bb.z, bb.y + bb.w, 0, 1),
-            new Vector4f(bb.x, bb.y + bb.w, 0, 1)
+        Vector4f[] corners = new Vector4f[]{
+                new Vector4f(bb.x, bb.y, 0, 1),
+                new Vector4f(bb.x + bb.z, bb.y, 0, 1),
+                new Vector4f(bb.x + bb.z, bb.y + bb.w, 0, 1),
+                new Vector4f(bb.x, bb.y + bb.w, 0, 1)
         };
 
         for (Vector4f corner : corners) {
             modelMatrix.transform(corner);
         }
 
-        drawLinesConnected(new Vector2f[] {
-            new Vector2f(corners[0].x, corners[0].y),
-            new Vector2f(corners[1].x, corners[1].y),
-            new Vector2f(corners[2].x, corners[2].y),
-            new Vector2f(corners[3].x, corners[3].y)
+        drawLinesConnected(new Vector2f[]{
+                new Vector2f(corners[0].x, corners[0].y),
+                new Vector2f(corners[1].x, corners[1].y),
+                new Vector2f(corners[2].x, corners[2].y),
+                new Vector2f(corners[3].x, corners[3].y)
         }, 2, true, new Vector4f(1, 0, 0, 1));
 
     }
+
     public <T extends Interactable> void drawTriggerDistance(T entity) {
         drawCircle(entity.getPosition(), entity.getTriggerDistance(), new Vector4f(0, 1, 0, 1));
     }
@@ -659,11 +694,13 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
     }
+
     /**
      * Choose the shader to use for rendering
+     *
      * @param entity whose shader is chosen,<br> if the <b>entity has no shader</b> the camera's shader is chosen,<br> if the <b>camera has no shader</b> the default shader is chosen
      */
-    public void chooseShader(Entity2D entity){
+    public void chooseShader(Entity2D entity) {
         assert entity != null && camera != null : "[ERROR] (Render.Renderer.chooseShader) No entity to choose shader from (null)";
 
         if /**/ (entity.getShader() != null)
@@ -673,6 +710,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         else
             Shader.DEFAULT.bind();
     }
+
     public Vector2f screenToWorldCoords(Vector2f screenCoords) { // TODO: adapt to moving camera
         // copy vec
         Vector4f projectedCoords = new Vector4f(screenCoords, 0, 1);
@@ -685,11 +723,13 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
 
     public void toggleCursor() {
-        
+
     }
+
     public void cursorHide() {
         glfwSetInputMode(Window.getWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }
+
     public void cursorShow() {
         glfwSetInputMode(Window.getWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
@@ -698,25 +738,31 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
+
     public void setCurrentShader(Shader currentShader) {
-        if(!this.currentShader.equals(currentShader)) {
+        if (!this.currentShader.equals(currentShader)) {
             this.currentShader = currentShader;
             currentShader.forceBind();
         }
     }
+
     public void setMode(int mode) {
         this.mode = mode;
         glPolygonMode(GL_FRONT_AND_BACK, mode);
     }
+
     public void setCursorMode(int mode) {
         glfwSetInputMode(Window.getWindowPtr(), GLFW_CURSOR, mode);
     }
+
     public Camera getCamera() {
         return camera;
     }
+
     public Shader getCurrentShader() {
         return currentShader;
     }
+
     public int getMode() {
         return mode;
     }
@@ -746,7 +792,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             entity.setShader(new Shader("post_processing.shader")); // TODO: potential post processing shader
             entity.setShader(new Shader("texturing_plain.shader")); // TODO: potential post processing shader
             entity.setTexture(texture);
-            entity.scale(width/2f, height/2f);
+            entity.scale(width / 2f, height / 2f);
         }
 
         public void bind() {

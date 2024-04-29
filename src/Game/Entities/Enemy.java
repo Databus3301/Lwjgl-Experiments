@@ -1,10 +1,9 @@
 package Game.Entities;
 
 import Game.Action.Ability;
-import Render.Entity.Entity2D;
-import Render.MeshData.Texturing.Texture;
-import Render.MeshData.Shader.Shader;
 import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Shader.Shader;
+import Render.MeshData.Texturing.Texture;
 import Render.Window;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
@@ -12,17 +11,17 @@ import org.joml.Vector4f;
 
 import java.util.ArrayList;
 
-public class Enemy extends Living implements Able{
+public class Enemy extends Living implements Able {
 
     private final ArrayList<Ability> abilities = new ArrayList<>();
 
-    public Enemy (Vector2f position, ObjModel model, Texture texture, Shader shader, float LP) {
+    public Enemy(Vector2f position, ObjModel model, Texture texture, Shader shader, float LP) {
         super(position, model, texture, shader);
-        this.maxLP = (int)LP;
+        this.maxLP = (int) LP;
         this.LP = LP;
     }
 
-    public Enemy (Vector2f position, ObjModel model, Texture texture, Shader shader) {
+    public Enemy(Vector2f position, ObjModel model, Texture texture, Shader shader) {
         this(position, model, texture, shader, 100);
     }
 
@@ -33,6 +32,7 @@ public class Enemy extends Living implements Able{
     public void update(float dt, Vector2f mousePos) {
         update(dt, mousePos, mousePos);
     }
+
     public void update(float dt, Vector2f mousePos, Vector2f target) {
         for (Ability ability : abilities) {
             ability.update(dt, mousePos, target, this);

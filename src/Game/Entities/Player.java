@@ -1,51 +1,51 @@
- package Game.Entities;
-        
- import Game.Action.Abilities;
- import Game.Action.Ability;
- import Game.Entities.Dungeon.Door;
- import Game.Entities.Dungeon.Room;
- import Render.Entity.Entity2D;
- import Render.MeshData.Model.ObjModel;
- import Render.MeshData.Texturing.Animation;
+package Game.Entities;
 
- import Render.Window;
- import Tests.Test;
- import org.joml.Vector2f;
+import Game.Action.Abilities;
+import Game.Action.Ability;
+import Game.Entities.Dungeon.Door;
+import Game.Entities.Dungeon.Room;
+import Render.Entity.Entity2D;
+import Render.MeshData.Model.ObjModel;
+import Render.MeshData.Texturing.Animation;
+import Render.Window;
+import Tests.Test;
+import org.joml.Vector2f;
 
- import java.util.ArrayList;
- import java.util.HashMap;
- import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
- import static Tests.Test.renderer;
+import static Tests.Test.renderer;
 
 
- public class Player extends Living implements Able {
-     private Test scene;
-     private final ArrayList<Ability> abilities = new ArrayList<>();
-     private final Map<String, Animation> animations = new HashMap<>();
-     private final Entity2D collider = new Entity2D(ObjModel.SQUARE);
+public class Player extends Living implements Able {
+    private Test scene;
+    private final ArrayList<Ability> abilities = new ArrayList<>();
+    private final Map<String, Animation> animations = new HashMap<>();
+    private final Entity2D collider = new Entity2D(ObjModel.SQUARE);
 
-     public Player(Entity2D player, int maxLivePoints, Map<String, Animation> animations) {
-         player.clone(this);
-         this.maxLP = maxLivePoints;
-         this.LP = maxLivePoints;
-         this.animations.putAll(animations);
-     }
-     public <T extends Test> Player(T scene, Entity2D player, int maxLivePoints) {
-         scene.addUpdateListener(this::update);
-         player.clone(this);
-         this.scene = scene;
-         this.maxLP = maxLivePoints;
-         this.LP = maxLivePoints;
+    public Player(Entity2D player, int maxLivePoints, Map<String, Animation> animations) {
+        player.clone(this);
+        this.maxLP = maxLivePoints;
+        this.LP = maxLivePoints;
+        this.animations.putAll(animations);
+    }
 
-         // --TEMP-- add shooting ability as a default
-         //addAbilities(Abilities.getDASH());
-         addAbilities(Abilities.getHOMING());
+    public <T extends Test> Player(T scene, Entity2D player, int maxLivePoints) {
+        scene.addUpdateListener(this::update);
+        player.clone(this);
+        this.scene = scene;
+        this.maxLP = maxLivePoints;
+        this.LP = maxLivePoints;
 
-     }
- 
-     public void update(float dt, Vector2f mousePos) {
-        if(animation != null)
+        // --TEMP-- add shooting ability as a default
+        //addAbilities(Abilities.getDASH());
+        addAbilities(Abilities.getHOMING());
+        addAbilities(Abilities.getSHIELD());
+    }
+
+    public void update(float dt, Vector2f mousePos) {
+        if (animation != null)
             animation.update(dt);
 
         for (Ability ability : abilities) {
@@ -53,57 +53,60 @@
             // remove out-of-view projectiles
             ability.getProjectiles().removeIf(projectile -> projectile.getPosition().x < -Window.dim.x / 2f + position.x - 100 || projectile.getPosition().x > Window.dim.x / 2f + position.x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + position.y - 100 || projectile.getPosition().y > Window.dim.y / 2f + position.y + 100);
         }
-     }
+    }
 
-     public <T extends Living> void collide(ArrayList<T> entities) {
-         for (Living collider : entities) {
-             // push away from player
-             if (collider.collideRect(this)) {
-                 collider.translate(
-                         new Vector2f(position).sub(collider.getPosition())
-                        .sub( (float) Math.random()*20f-1f, (float) Math.random()*20f-1f) // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
-                        .normalize().mul(-5)
-                 );
-                 damage();
-             }
-         }
-         // collide projectiles / custom ability colliders
-         abilities.forEach(ability -> ability.collide(entities));
-     }
+    public <T extends Living> void collide(ArrayList<T> entities) {
+        for (Living collider : entities) {
+            // push away from player
+            if (collider.collideRect(this)) {
+                collider.translate(
+                        new Vector2f(position).sub(collider.getPosition())
+                                .sub((float) Math.random() * 20f - 1f, (float) Math.random() * 20f - 1f) // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
+                                .normalize().mul(-5)
+                );
+                damage();
+            }
+        }
+        // collide projectiles / custom ability colliders
+        abilities.forEach(ability -> ability.collide(entities));
+    }
 
-     public <T extends Room> void collide(T room) {
-         this.collider.setScale(this.scale.x/1.5f, this.scale.y/2f);
-         this.collider.setPosition(this.position.x, this.position.y - this.scale.y/2f);
-         renderer.drawCollisionRect(collider);
+    public <T extends Room> void collide(T room) {
+        this.collider.setScale(this.scale.x / 1.5f, this.scale.y / 2f);
+        this.collider.setPosition(this.position.x, this.position.y - this.scale.y / 2f);
+        renderer.drawCollisionRect(collider);
 
-         for(Entity2D wall : room.getWalls()) {
-             if(collider.collideRectRotated(wall)) {
-                 translate(new Vector2f(collider.getPosition()).sub(wall.getPosition()).normalize().mul(2));
-             }
+        for (Entity2D wall : room.getWalls()) {
+            if (collider.collideRectRotated(wall)) {
+                translate(new Vector2f(collider.getPosition()).sub(wall.getPosition()).normalize().mul(2));
+            }
 
-             renderer.drawCollisionRectRotated(wall);
-             if(wall instanceof Door) {
-                 Door d = (Door) wall;
-                 renderer.drawTriggerDistance(d);
-             }
-         }
-     }
+            renderer.drawCollisionRectRotated(wall);
+            if (wall instanceof Door) {
+                Door d = (Door) wall;
+                renderer.drawTriggerDistance(d);
+            }
+        }
+    }
 
-     public void addAnimation(String name, Animation animation) {
-         animations.put(name, animation);
-     }
-     public void removeAnimation(String name) {
-         animations.remove(name);
-     }
-     public void switchAnimation(String name) {
+    public void addAnimation(String name, Animation animation) {
+        animations.put(name, animation);
+    }
+
+    public void removeAnimation(String name) {
+        animations.remove(name);
+    }
+
+    public void switchAnimation(String name) {
         animation = animations.get(name);
-     }
+    }
 
-     public ArrayList<Ability> getAbilities() {
-         return abilities;
-     }
-     public Map<String, Animation> getAnimations() {
-          return animations;
-     }
+    public ArrayList<Ability> getAbilities() {
+        return abilities;
+    }
 
- }
+    public Map<String, Animation> getAnimations() {
+        return animations;
+    }
+
+}
