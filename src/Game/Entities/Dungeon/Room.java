@@ -25,65 +25,71 @@ public class Room {
 
     private Vector2f dimensions;
     private final ArrayList<Entity2D> walls;
+    private final int numOfDoors;
     private final Door[] doors;
+    private final Room[] connectedRooms;
 
-    public Room(Test scene, Dungeon dungeon, Dungeon.RoomType type, String title, Door[] doors) {
+    public Room(Test scene, Dungeon dungeon, Dungeon.RoomType type, String title, int numOfDoors, Room[] connectedRooms) {
         this.dungeon = dungeon;
         this.type = type;
         this.title = title;
         this.scene = scene;
-        this.doors = doors;
+        this.numOfDoors = numOfDoors;
         this.design = Dungeon.RoomDesign.WATER;
         this.dimensions = new Vector2f(10, 10);
-
-        walls = new ArrayList<>((int) (dimensions.x + dimensions.y)*2+5);
+        this.connectedRooms = connectedRooms;
+        walls = new ArrayList<>((int) (dimensions.x + dimensions.y) * 2 + 5);
         float scale = 32 * Dungeon.SCALE;
-
+        //create doors
+        this.doors = new Door[numOfDoors];
+        for (int i = 0; i < numOfDoors; i++) {
+            doors[i] = new Door(scene, type);
+        }
         // equally spread out the doors along the x-axis
         int[] doorIndices = new int[doors == null ? 0 : doors.length];
         int doorIndex = 0;
         float spacing = dimensions.x / (doorIndices.length + 1f);
-        for (int i = 1; i < doorIndices.length+1; i++) {
-            doorIndices[i-1] = (int) (spacing * i);
+        for (int i = 1; i < doorIndices.length + 1; i++) {
+            doorIndices[i - 1] = (int) (spacing * i);
         }
 
-        for(int i = 1; i < dimensions.x-1; i++) {
+        for (int i = 1; i < dimensions.x - 1; i++) {
             Entity2D wall = new Entity2D();
             wall.setModel(ObjModel.SQUARE.clone());
             wall.setShader(Shader.TEXTURING);
             wall.scale(scale);
             wall.rotate(-90, 2);
             wall.setTexture(new Texture("rooms/" + design.getDesign() + "Wall" + (i % 2 == 0 ? 1 : 2) + ".png"));
-            wall.setPosition(new Vector2f(i * scale*2 + position.x, position.y));
+            wall.setPosition(new Vector2f(i * scale * 2 + position.x, position.y));
             walls.add(wall);
 
             Entity2D wall2 = wall.clone();
-            wall2.translate(0, (dimensions.y-1)*scale*2);
+            wall2.translate(0, (dimensions.y - 1) * scale * 2);
             wall2.rotate(180, 2);
             walls.add(wall2);
 
             boolean door;
-            door = (doorIndices.length > 0 &&  doorIndex < doorIndices.length && i == doorIndices[doorIndex]);
-            if(door) {
-                doors[doorIndex].setPosition(new Vector2f(i*scale*2 + position.x, position.y + (dimensions.y-1)*scale*2));
+            door = (doorIndices.length > 0 && doorIndex < doorIndices.length && i == doorIndices[doorIndex]);
+            if (door) {
+                doors[doorIndex].setPosition(new Vector2f(i * scale * 2 + position.x, position.y + (dimensions.y - 1) * scale * 2));
                 doors[doorIndex].lock();
                 //walls.remove(walls.size()-1);
                 walls.add(doors[doorIndex++]);
             }
         }
 
-        for(int i = 1; i < dimensions.y-1; i++) {
+        for (int i = 1; i < dimensions.y - 1; i++) {
             Entity2D wall = new Entity2D();
             wall.setModel(ObjModel.SQUARE.clone());
             wall.setShader(Shader.TEXTURING);
             wall.scale(scale);
-            wall.setTexture(new Texture("rooms/" + design.getDesign() + "Wall" + (i%2 == 0 ? 1 : 2) + ".png"));
-            wall.setPosition(new Vector2f(position.x, i*scale*2 + position.y));
+            wall.setTexture(new Texture("rooms/" + design.getDesign() + "Wall" + (i % 2 == 0 ? 1 : 2) + ".png"));
+            wall.setPosition(new Vector2f(position.x, i * scale * 2 + position.y));
             wall.rotate(180, 2);
             walls.add(wall);
 
             Entity2D wall2 = wall.clone();
-            wall2.translate((dimensions.x-1)*scale*2, 0);
+            wall2.translate((dimensions.x - 1) * scale * 2, 0);
             wall2.rotate(180, 2);
             walls.add(wall2);
         }
@@ -99,17 +105,17 @@ public class Room {
         walls.add(corner);
 
         corner = corner.clone();
-        corner.translate((dimensions.x-1)*scale*2, 0);
+        corner.translate((dimensions.x - 1) * scale * 2, 0);
         corner.rotate(90, 2);
         walls.add(corner);
 
         corner = corner.clone();
-        corner.translate(0, (dimensions.y-1)*scale*2);
+        corner.translate(0, (dimensions.y - 1) * scale * 2);
         corner.rotate(90, 2);
         walls.add(corner);
 
         corner = corner.clone();
-        corner.translate(-(dimensions.x-1)*scale*2, 0);
+        corner.translate(-(dimensions.x - 1) * scale * 2, 0);
         corner.rotate(90, 2);
         walls.add(corner);
 
@@ -122,18 +128,23 @@ public class Room {
     public ArrayList<Entity2D> getWalls() {
         return walls;
     }
+
     public Door[] getDoors() {
         return doors;
     }
+
     public Vector2f getDimensions() {
         return dimensions;
     }
+
     public String getTitle() {
         return title;
     }
+
     public Vector2f getPosition() {
         return position;
     }
+
     public Dungeon.RoomType getType() {
         return type;
     }
@@ -141,12 +152,14 @@ public class Room {
     public void setDimensions(Vector2f dimensions) {
         this.dimensions = dimensions;
     }
+
     public void setPosition(Vector2f position) {
-        for(Entity2D wall : walls)
+        for (Entity2D wall : walls)
             wall.translate(new Vector2f(position).sub(this.position));
 
         this.position = position;
     }
+
     public void setDesign(Dungeon.RoomDesign design) {
         this.design = design;
     }

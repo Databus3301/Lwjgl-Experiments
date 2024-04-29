@@ -5,6 +5,7 @@ import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
+import Tests.Test;
 import Tests.TestGame;
 import org.joml.Vector2f;
 
@@ -15,17 +16,12 @@ public class Door extends Interactable {
 
     private Dungeon.RoomType type;
     public final Entity2D typeSign;
-
-    public final Room connectedRoom;
-
     private final Texture lockedT, unlockedT;
     boolean locked = false;
 
-    public <T extends TestGame> Door(T scene, Room connectedRoom) {
+    public <T extends Test> Door(T scene, Dungeon.RoomType type) {
         super(scene);
-        this.type = connectedRoom.getType();
-        this.connectedRoom = connectedRoom;
-
+        this.type = type;
         setModel(ObjModel.SQUARE.clone());
         scale(32, 48);
         scale.mul(Dungeon.SCALE);
@@ -46,7 +42,10 @@ public class Door extends Interactable {
                 return;
 
             if(key == GLFW_KEY_E && action == GLFW_PRESS) {
-                interactable.setColor(1, 0, 1, 1);
+                if(locked) {
+                    interactable.setColor(1, 0, 0, 1);
+                    return;
+                }
             }
             if(key == GLFW_KEY_E && action == GLFW_RELEASE) {
                 interactable.setColor(1, 1, 1, 1);

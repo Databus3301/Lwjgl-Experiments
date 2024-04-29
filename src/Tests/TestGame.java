@@ -88,11 +88,10 @@ public class TestGame extends Test {
         }};
 
         // init room
-        Door[] doors = new Door[2];
-        doors[0] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
-        doors[1] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
+        //doors[0] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
+        //doors[1] = new Door(this, new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", null));
 
-        room = new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", doors);
+        room = new Room(this, null, Dungeon.RoomType.NORMAL, "TestRoom", 2, new Room[]{null, null});
         room.setPosition(new Vector2f(-100));
 
     }
@@ -236,6 +235,15 @@ public class TestGame extends Test {
 
 
     }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
 
     public Player getPlayer() {
         return player;
