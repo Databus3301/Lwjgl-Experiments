@@ -12,6 +12,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Door extends Interactable {
 
     private Entity2D connectedRoomDisplay;
+    private Room connectedRoom;
     private final Texture lockedT, unlockedT;
     private boolean isLocked = false;
 
@@ -32,7 +33,6 @@ public class Door extends Interactable {
 
         setTriggerDistance(80);
         setKeyCallback((door, key, scancode, action, mousePos) -> {
-
 
             if(key == GLFW_KEY_E && action == GLFW_PRESS) {
                 float smallestDist;
@@ -63,6 +63,13 @@ public class Door extends Interactable {
     public Entity2D getConnectedRoomDisplay() {
         return connectedRoomDisplay;
     }
+    public Room getConnectedRoom() {
+        return connectedRoom;
+    }
+    public boolean isLocked() {
+        return isLocked;
+    }
+
     public void setConnectedRoomDisplay(Dungeon.RoomType connectedRoomDisplay) {
         this.connectedRoomDisplay = new Entity2D();
         this.connectedRoomDisplay.setModel(ObjModel.SQUARE.clone());
@@ -72,5 +79,8 @@ public class Door extends Interactable {
     }
     public void setConnectedRoomDisplay(Entity2D connectedRoomDisplay) {
         this.connectedRoomDisplay = connectedRoomDisplay;
+    }
+    public void setConnectedRoom(Room connectedRoom) {
+        this.connectedRoom = connectedRoom;
     }
 }

@@ -1,28 +1,26 @@
 package Game.Entities.Dungeon;
 
 import Game.Entities.Player;
-import Render.Entity.Entity2D;
-
-import java.util.List;
+import Tests.Test;
 
 public class Dungeon {
     public static final float SCALE = 1.2f;
+    private final Test scene;
 
     Player player;
     private Room start;
 
-    public Dungeon(Player player) {
+    public Dungeon(Player player, Test scene) {
+        this.scene = scene;
         this.player = player;
-        start = new Room(player, RoomType.START, "Start", 2);
-        start.setConnectedRooms(generate(3, 2, 2));
 
+        start = new Room(player, RoomType.START, "Start", 2, RoomDesign.STONE, scene);
+        start.setConnectedRooms(generate(5, 2, 2));
     }
 
     private Room[] generate(int depth, int maxDoors, int connections) {
-        if(depth <= 0) return new Room[] {new Room(player, RoomType.END, "End", 0)};
-
-
-        System.out.println("Depth: " + "*".repeat(depth));
+        if(depth <= 0) return new Room[] {new Room(player, RoomType.END, "End", 0, RoomDesign.STONE, scene)};
+        //System.out.println("Depth: " + "*".repeat(depth));
 
         int newDoors = (int) (Math.random() * maxDoors + 1);
         if(depth == 1)
@@ -30,7 +28,14 @@ public class Dungeon {
 
         Room[] rooms = new Room[connections];
         for (int j = 0; j < connections; j++) {
-            rooms[j] = new Room(player, RoomType.NORMAL, "Room " + j, newDoors);
+            // generate random design
+            RoomDesign design = RoomDesign.values()[(int) (Math.random() * RoomDesign.values().length)];
+            // generate random type
+            //RoomType type = RoomType.values()[(int) (Math.random() * RoomType.values().length)];
+            RoomType type = RoomType.NORMAL;
+            String name = "Room " + depth + "-" + j;
+
+            rooms[j] = new Room(player, type, name, newDoors, design, scene);
         }
 
         for (Room room : rooms) {
@@ -41,7 +46,7 @@ public class Dungeon {
     }
 
     public Room generate() {
-        start = new Room(player, RoomType.START, "Start", 1);
+        start = new Room(player, RoomType.START, "Start", 1, RoomDesign.STONE, scene);
         start.setConnectedRooms(generate(5, 4, 1));
         return start;
     }

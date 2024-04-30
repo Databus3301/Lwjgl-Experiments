@@ -19,6 +19,7 @@ import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import static Game.Action.Waves.EnemySpawner.Result.WAVE_OVER;
@@ -84,7 +85,7 @@ public class TestGame extends Test {
 
         bg = new Entity2D(new Vector2f(Window.dim.div(-2f, new Vector2i())), ObjModel.SQUARE, Shader.TEXTURING) {{
             scale(3000);
-            setColor(0.1f, 0.1f, 0.1f, 0.1f);
+            setColor(0.15f, 0.15f, 0.15f, 0.1f);
         }};
     }
 
@@ -94,7 +95,7 @@ public class TestGame extends Test {
         renderer.cursorHide();
 
         // init dungeon
-        Dungeon dungeon = new Dungeon(player);
+        Dungeon dungeon = new Dungeon(player, this);
         room = dungeon.getStart();
     }
 
@@ -125,6 +126,21 @@ public class TestGame extends Test {
         // spawn enemies
         //spawner.update(dt, enemies);
 
+        // change room
+        Door[] doors = room.getDoors();
+        for(int i = 0; i< doors.length; i++) {
+            if(doors[i].collideRect(player)) {
+                room = doors[i].getConnectedRoom();
+                player.setPosition(doors[i].getConnectedRoom().getPosition());
+                // clean up scene
+                projectiles.clear();
+                enemies.clear();
+                // init new room
+                room.onSwitch(player, enemies); // TODO: IMPLEMENT THIS
+                break;
+            }
+        }
+
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
@@ -136,7 +152,7 @@ public class TestGame extends Test {
                 if (enemy != enemy1 && enemy.collideCircle(enemy1))
                     enemy.translateTowards(enemy1, -100 * dt); // negated "towards" becomes "away"
             }
-            // kill enemiess
+            // kill enemies
             enemy.reduceISeconds(dt);
             if (enemy.getLP() <= 0)
                 enemyIterator.remove();
@@ -151,7 +167,7 @@ public class TestGame extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
-        glClearColor(0.05f, 0.05f, 0.05f, 1);
+        glClearColor(0.04f, 0.04f, 0.03f, 1);
 
         // entities
         renderer.draw(projectiles);
@@ -169,7 +185,7 @@ public class TestGame extends Test {
         renderer.drawUI(bg);
 
         // DEBUG COLLIDERS
-        ///*
+        /*
         for (Entity2D wall : room.getWalls()) {
             renderer.drawCollisionRectRotated(wall);
             if (wall instanceof Door) {
@@ -240,6 +256,11 @@ public class TestGame extends Test {
             player.getAbilities().get(0).setCurrentCooldown(0);
 
 
+
+        if(key == GLFW_KEY_Z && action == GLFW_PRESS) {
+            System.out.println("Player: " + player.getPosition());
+            room.setDimensions(room.getDimensions().add(1, 1, new Vector2f()));
+        }
     }
 
     public Room getRoom() {

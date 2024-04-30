@@ -1,7 +1,10 @@
 package Game.Entities.Dungeon;
 
+import Game.Entities.Enemies;
+import Game.Entities.Enemy;
 import Game.Entities.Player;
 import Render.Entity.Entity2D;
+import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
@@ -11,6 +14,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 /**
  * A room manages the entities and the logic of a game level.
@@ -18,29 +22,37 @@ import java.util.ArrayList;
  * It is managed by a Dungeon object providing Wave definitions, Routes to other rooms and a reference to the player + scene.
  */
 public class Room {
+
+    private final Test scene;
+    private BiConsumer<Player, ArrayList<Enemy>> onSwitch;
+
+    private final String title;
     private final Dungeon.RoomType type;
     private Dungeon.RoomDesign design;
-    private final String title;
 
     private Vector2f position = new Vector2f();
     private Vector2f dimensions;
     private final Vector4f collisionRect;
 
 
-    private final ArrayList<Entity2D> walls;
     private final int numOfDoors;
     private Door[] doors;
     private Room[] connectedRooms;
+    private final ArrayList<Entity2D> walls;
+    private final ArrayList<Interactable> contents;
 
-    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors) {
+    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Test scene) {
         assert numOfDoors >= 0 : "A room can't have a negative number of doors";
 
+        this.scene = scene;
         this.type = type;
         this.title = title;
         this.numOfDoors = numOfDoors;
-        this.design = Dungeon.RoomDesign.WATER;
+        this.design = design;
         this.dimensions = new Vector2f(10, 10);
+        this.onSwitch = (p, e) -> {};
 
+        contents = new ArrayList<>();
         walls = new ArrayList<>((int) (dimensions.x + dimensions.y) * 2 + numOfDoors + 3);
         float scale = 32 * Dungeon.SCALE;
 
@@ -52,7 +64,7 @@ public class Room {
         //create doors
         this.doors = new Door[numOfDoors];
         for (int i = 0; i < numOfDoors; i++) {
-            doors[i] = new Door(Window.getWindow().getCurrentTest()); // TODO: this is dodgy
+            doors[i] = new Door(scene);
         }
         addDoorTrigger(player);
         // equally spread out the doors along the x-axis
@@ -132,6 +144,12 @@ public class Room {
 
     }
 
+    public void onSwitch(Player player, ArrayList<Enemy> enemies) {
+        // change contents to inlcude interactables like blacksmith, shop, etc.
+        // call specific room callback
+        onSwitch.accept(player, enemies);
+    }
+
     public void update(float dt) {
 
     }
@@ -175,10 +193,19 @@ public class Room {
     }
     public void setDesign(Dungeon.RoomDesign design) {
         this.design = design;
+
+        // update wall textures
+        for (Entity2D wall : walls) {
+            wall.setTexture(new Texture("rooms/" + design.getDesign() + "Wall" + (wall.getPosition().x % 2 == 0 ? 1 : 2) + ".png"));
+        }
+
     }
     public void setDoors(Door[] doors) {
         assert doors.length == numOfDoors : "The number of doors must match the number of doors set in the constructor";
         this.doors = doors;
+    }
+    public void setOnSwitch(BiConsumer<Player, ArrayList<Enemy>> onSwitch) {
+        this.onSwitch = onSwitch;
     }
     public void addDoorTrigger(Entity2D trigger) {
         for(Door door : doors) {
@@ -191,6 +218,7 @@ public class Room {
 
         for (int i = 0; i < doors.length; i++) {
             doors[i].setConnectedRoomDisplay(connectedRooms[i].getType());
+            doors[i].setConnectedRoom(connectedRooms[i]);
         }
     }
 }
