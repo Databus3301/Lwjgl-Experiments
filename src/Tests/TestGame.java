@@ -97,6 +97,7 @@ public class TestGame extends Test {
         // init dungeon
         Dungeon dungeon = new Dungeon(player, this);
         room = dungeon.getStart();
+        room.onSwitch(player, enemies, spawner);
     }
 
     @Override
@@ -124,22 +125,10 @@ public class TestGame extends Test {
         player.collide(enemies);
         player.collide(room);
         // spawn enemies
-        //spawner.update(dt, enemies);
-
+        spawner.update(dt, enemies);
         // change room
-        Door[] doors = room.getDoors();
-        for(int i = 0; i< doors.length; i++) {
-            if(doors[i].collideRect(player)) {
-                room = doors[i].getConnectedRoom();
-                player.setPosition(doors[i].getConnectedRoom().getPosition());
-                // clean up scene
-                projectiles.clear();
-                enemies.clear();
-                // init new room
-                room.onSwitch(player, enemies); // TODO: IMPLEMENT THIS
-                break;
-            }
-        }
+        room = room.update(dt, spawner, player, enemies, projectiles);
+
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
@@ -188,8 +177,7 @@ public class TestGame extends Test {
         /*
         for (Entity2D wall : room.getWalls()) {
             renderer.drawCollisionRectRotated(wall);
-            if (wall instanceof Door) {
-                Door d = (Door) wall;
+            if (wall instanceof Door d) {
                 renderer.drawTriggerDistance(d);
             }
         }

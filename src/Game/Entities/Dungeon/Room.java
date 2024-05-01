@@ -1,13 +1,17 @@
 package Game.Entities.Dungeon;
 
+import Game.Action.Waves.EnemySpawner;
+import Game.Action.Waves.Wave;
 import Game.Entities.Enemies;
 import Game.Entities.Enemy;
 import Game.Entities.Player;
+import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
+import Render.Renderer;
 import Render.Window;
 import Tests.Test;
 import org.joml.Vector2f;
@@ -16,6 +20,9 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
+import static Game.Action.Waves.EnemySpawner.Result.*;
+import static Tests.Test.renderer;
+
 /**
  * A room manages the entities and the logic of a game level.
  * It is the parent class for all room types the player might encounter in the dungeon.
@@ -23,12 +30,14 @@ import java.util.function.BiConsumer;
  */
 public class Room {
 
-    private final Test scene;
+    private final Dungeon dungeon;
     private BiConsumer<Player, ArrayList<Enemy>> onSwitch;
 
     private final String title;
     private final Dungeon.RoomType type;
     private Dungeon.RoomDesign design;
+    private int depth;
+
 
     private Vector2f position = new Vector2f();
     private Vector2f dimensions;
@@ -41,16 +50,18 @@ public class Room {
     private final ArrayList<Entity2D> walls;
     private final ArrayList<Interactable> contents;
 
-    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Test scene) {
+    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Dungeon dungeon) {
         assert numOfDoors >= 0 : "A room can't have a negative number of doors";
 
-        this.scene = scene;
+        this.dungeon = dungeon;
         this.type = type;
         this.title = title;
         this.numOfDoors = numOfDoors;
         this.design = design;
         this.dimensions = new Vector2f(10, 10);
-        this.onSwitch = (p, e) -> {};
+        this.onSwitch = (p, e) -> {
+            System.out.println("Switched to room: " + title);
+        };
 
         contents = new ArrayList<>();
         walls = new ArrayList<>((int) (dimensions.x + dimensions.y) * 2 + numOfDoors + 3);
@@ -64,7 +75,7 @@ public class Room {
         //create doors
         this.doors = new Door[numOfDoors];
         for (int i = 0; i < numOfDoors; i++) {
-            doors[i] = new Door(scene);
+            doors[i] = new Door(dungeon.getScene());
         }
         addDoorTrigger(player);
         // equally spread out the doors along the x-axis
@@ -144,14 +155,67 @@ public class Room {
 
     }
 
-    public void onSwitch(Player player, ArrayList<Enemy> enemies) {
+    public void onSwitch(Player player, ArrayList<Enemy> enemies, EnemySpawner spawner) {
         // change contents to inlcude interactables like blacksmith, shop, etc.
         // call specific room callback
+        switch (type) {
+            case START -> {
+                renderer.setPostProcessingShader(new Shader("post_processing.shader"));
+
+                for(Door d : doors) {
+                    d.open();
+                }
+            }
+            case END -> {
+            }
+            case BOSS -> {
+                // add boss to room
+            }
+            case SHOP -> {
+                // add shop to room
+            }
+            case SMITH -> {
+                // add blacksmith to room
+            }
+            case NORMAL -> {
+                // init enemy Spawner to appropriate wave
+                //spawner.setProbabilityDistribution(new float[]{0.5f, 0.5f});
+
+                System.out.println((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()); // TODO: better wave generation
+                Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
+                spawner.setCurrentWave(w);
+            }
+        }
         onSwitch.accept(player, enemies);
     }
 
-    public void update(float dt) {
+    public Room update(float dt, EnemySpawner spawner, Player player, ArrayList<Enemy> enemies, ArrayList<Projectile> projectiles) {
 
+        if (spawner.getLastResult() == WAVE_OVER) { // TODO: update WAVE_OVER status to signal when all enemies are killed not spawned
+            for (Door door : doors) {
+                door.open();
+            }
+        }
+
+        Room room = this;
+        for(int i = 0; i< doors.length; i++) {
+            if(!doors[i].isOpen()) continue;
+
+            if(doors[i].collideRect(player.getCollider())) {
+                room = doors[i].getConnectedRoom();
+                player.setPosition(doors[i].getConnectedRoom().getPosition());
+                // clean up scene
+                projectiles.clear();
+                enemies.clear();
+                spawner.getCurrentWave().setWaveOver(false);
+                renderer.setPostProcessingShader(new Shader("texturing_plain.shader"));
+
+                // init new room
+                room.onSwitch(player, enemies, spawner); // TODO: IMPLEMENT THIS
+                break;
+            }
+        }
+        return room;
     }
 
 
@@ -179,6 +243,9 @@ public class Room {
     }
     public Vector4f getCollisionRect() {
         return collisionRect;
+    }
+    public int getDepth() {
+        return depth;
     }
 
 
@@ -220,5 +287,8 @@ public class Room {
             doors[i].setConnectedRoomDisplay(connectedRooms[i].getType());
             doors[i].setConnectedRoom(connectedRooms[i]);
         }
+    }
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 }

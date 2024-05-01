@@ -13,23 +13,29 @@ public class Door extends Interactable {
 
     private Entity2D connectedRoomDisplay;
     private Room connectedRoom;
+
     private final Texture lockedT, unlockedT;
-    private boolean isLocked = false;
+    private boolean isLocked, isOpen = false;
 
     public <T extends Test> Door(T scene) {
         super(scene);
         setModel(ObjModel.SQUARE.clone());
-        scale(32, 48);
-        scale.mul(Dungeon.SCALE);
+
         setTexture(lockedT = new Texture("rooms/door/locked.png"));
         unlockedT = new Texture("rooms/door/unlocked.png");
         setShader(Shader.TEXTURING);
+
+        scale(32 * Dungeon.SCALE);
+        float aspect = texture.getAspect();
+        scale.y = scale.x * aspect;
 
         connectedRoomDisplay = new Entity2D();
         connectedRoomDisplay.setModel(ObjModel.SQUARE.clone());
         connectedRoomDisplay.scale(32, 32);
         connectedRoomDisplay.getScale().mul(Dungeon.SCALE);
         connectedRoomDisplay.setTexture(new Texture("rooms/door/signs/" + Dungeon.RoomType.NORMAL.getTextureName()));
+
+
 
         setTriggerDistance(80);
         setKeyCallback((door, key, scancode, action, mousePos) -> {
@@ -41,7 +47,7 @@ public class Door extends Interactable {
 
                 if(smallestDist < getTriggerDistanceSquared()) {
                     if (isLocked)
-                        open();
+                        unlock();
                     else
                         lock();
                 }
@@ -53,10 +59,20 @@ public class Door extends Interactable {
     public void lock() {
         setTexture(lockedT);
         isLocked = true;
+        isOpen = false;
     }
-    public void open() {
+    public void unlock() {
         setTexture(unlockedT);
         isLocked = false;
+    }
+
+    // TODO: visual indicators
+    public void open() {
+        isOpen = true;
+    }
+    public void close() {
+
+        isOpen = false;
     }
 
 
@@ -68,6 +84,9 @@ public class Door extends Interactable {
     }
     public boolean isLocked() {
         return isLocked;
+    }
+    public boolean isOpen() {
+        return isOpen;
     }
 
     public void setConnectedRoomDisplay(Dungeon.RoomType connectedRoomDisplay) {

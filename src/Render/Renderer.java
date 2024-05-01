@@ -773,7 +773,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
     }
 
     // Framebuffer rendered to in order to apply post-processing effects
-    static class FrameBuffer {
+    public static class FrameBuffer {
         private final int frameBuffer;
         private final Texture texture;
         private final Entity2D entity;
@@ -844,5 +844,13 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         public Entity2D getEntity() {
             return entity;
         }
+
+        public void setPostProcessingShader(Shader shader) {
+            entity.setShader(shader);
+        }
+    }
+
+    public void setPostProcessingShader(Shader shader) {
+        Window.getWindow().getFrameBuffer().setPostProcessingShader(shader);
     }
 }

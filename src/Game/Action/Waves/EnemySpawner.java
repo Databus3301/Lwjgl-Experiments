@@ -21,7 +21,7 @@ public class EnemySpawner {
         this.currentWave = currentWave;
     }
     public EnemySpawner() {
-        this(new Wave(1, 300, 2));
+        this(new Wave(1, 0, Float.MAX_VALUE));
     }
 
     public Enemy[] update(float dt) {
@@ -50,7 +50,7 @@ public class EnemySpawner {
         }
 
         if (currentWave.isWaveOver()) {
-            currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
+            //currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
             return lastResult = Result.WAVE_OVER;
         }
 
@@ -72,7 +72,7 @@ public class EnemySpawner {
         Enemy enemy = Enemies.enemies.get(index).clone();
         // gen pos
         Vector2f pos = new Vector2f((float) (Math.random() * Window.dim.x - Window.dim.x / 2f +  tracker.getPosition().x), (float) (Math.random() * Window.dim.y - Window.dim.y / 2f + tracker.getPosition().y));
-        // check if pos is colliding with tracker
+        // check if pos is colliding with tracker/player
         while(tracker.collideRect(new Vector4f(pos.x-enemy.getScale().x*2, pos.y-enemy.getScale().y*2, enemy.getScale().x*4, enemy.getScale().y*4))) {
             // if so, regenerate pos
             pos.set((float) Math.random() * Window.dim.x - Window.dim.x / 2f + tracker.getPosition().x, (float) Math.random() * Window.dim.y - Window.dim.y / 2f + tracker.getPosition().y);

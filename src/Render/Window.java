@@ -350,8 +350,10 @@ public class Window {
     public static long getWindowPtr() {
         return window.windowPtr;
     }
-
     public Test getCurrentTest() {
         return currentTest;
+    }
+    public Renderer.FrameBuffer getFrameBuffer() {
+        return frameBuffer;
     }
 }

@@ -7,19 +7,30 @@ public class Dungeon {
     public static final float SCALE = 1.2f;
     private final Test scene;
 
-    Player player;
+    private Player player;
     private Room start;
+
+    private final int depth;
 
     public Dungeon(Player player, Test scene) {
         this.scene = scene;
         this.player = player;
+        this.depth = 5;
 
-        start = new Room(player, RoomType.START, "Start", 2, RoomDesign.STONE, scene);
-        start.setConnectedRooms(generate(5, 2, 2));
+        start = new Room(player, RoomType.START, "Start", 2, RoomDesign.STONE, this);
+        start.setConnectedRooms(generate(depth, 2, 2));
+    }
+    public Dungeon(Player player, Test scene, int depth) {
+        this.scene = scene;
+        this.player = player;
+        this.depth = depth;
+
+        start = new Room(player, RoomType.START, "Start", 2, RoomDesign.STONE, this);
+        start.setConnectedRooms(generate(depth, 2, 2));
     }
 
     private Room[] generate(int depth, int maxDoors, int connections) {
-        if(depth <= 0) return new Room[] {new Room(player, RoomType.END, "End", 0, RoomDesign.STONE, scene)};
+        if(depth <= 0) return new Room[] {new Room(player, RoomType.END, "End", 0, RoomDesign.STONE, this)};
         //System.out.println("Depth: " + "*".repeat(depth));
 
         int newDoors = (int) (Math.random() * maxDoors + 1);
@@ -35,7 +46,8 @@ public class Dungeon {
             RoomType type = RoomType.NORMAL;
             String name = "Room " + depth + "-" + j;
 
-            rooms[j] = new Room(player, type, name, newDoors, design, scene);
+            rooms[j] = new Room(player, type, name, newDoors, design, this);
+            rooms[j].setDepth(depth);
         }
 
         for (Room room : rooms) {
@@ -44,15 +56,20 @@ public class Dungeon {
 
         return rooms;
     }
-
     public Room generate() {
-        start = new Room(player, RoomType.START, "Start", 1, RoomDesign.STONE, scene);
+        start = new Room(player, RoomType.START, "Start", 1, RoomDesign.STONE, this);
         start.setConnectedRooms(generate(5, 4, 1));
         return start;
     }
 
     public Room getStart() {
         return start;
+    }
+    public int getDepth() {
+        return depth;
+    }
+    public Test getScene() {
+        return scene;
     }
 
     public enum RoomType {

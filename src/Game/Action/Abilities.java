@@ -42,9 +42,7 @@ public class Abilities {
         Projectile[] projectiles = new Projectile[0];
         DASH = new Ability(projectiles, Float.MAX_VALUE - 2);
         DASH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
-
             origin.translate(new Vector2f(origin.getVelocity()).mul(200));
-
         });
 
         return DASH;
@@ -88,7 +86,6 @@ public class Abilities {
 
     public static Ability[] getSALVE() {
         return new Ability[]{getSHOOT().setCurrentCooldown(0.1f), getSHOOT().setCurrentCooldown(0.2f), getSHOOT().setCurrentCooldown(0.3f)};
-
     }
 
 }

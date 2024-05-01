@@ -65,4 +65,8 @@ public class Wave {
     public boolean isWaveOver() {
         return waveOver;
     }
+
+    public void setWaveOver(boolean b) {
+        waveOver = b;
+    }
 }

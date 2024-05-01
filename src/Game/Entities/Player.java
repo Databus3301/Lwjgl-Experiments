@@ -39,9 +39,9 @@ public class Player extends Living implements Able {
         this.LP = maxLivePoints;
 
         // --TEMP-- add shooting ability as a default
-        //addAbilities(Abilities.getDASH());
-        addAbilities(Abilities.getHOMING());
-        addAbilities(Abilities.getSHIELD());
+        addAbility(Abilities.getDASH());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getSHOOT());
     }
 
     public void update(float dt, Vector2f mousePos) {
@@ -102,9 +102,10 @@ public class Player extends Living implements Able {
     public ArrayList<Ability> getAbilities() {
         return abilities;
     }
-
     public Map<String, Animation> getAnimations() {
         return animations;
     }
-
+    public Entity2D getCollider() {
+        return collider;
+    }
 }
