@@ -12,13 +12,10 @@ public class Dungeon {
 
     private final int depth;
 
-    public Dungeon(Player player, Test scene) {
-        this.scene = scene;
-        this.player = player;
-        this.depth = 5;
+    private int rc = 1;
 
-        start = new Room(player, RoomType.START, "Start", 2, RoomDesign.STONE, this);
-        start.setConnectedRooms(generate(depth, 2, 2));
+    public Dungeon(Player player, Test scene) {
+        this(player, scene, 5);
     }
     public Dungeon(Player player, Test scene, int depth) {
         this.scene = scene;
@@ -26,32 +23,39 @@ public class Dungeon {
         this.depth = depth;
 
         start = new Room(player, RoomType.START, "Start", 2, RoomDesign.STONE, this);
-        start.setConnectedRooms(generate(depth, 2, 2));
+        start.setConnectedRooms(generate(depth, 4, 2));
+        System.out.println("Room count: " + rc);
     }
 
     private Room[] generate(int depth, int maxDoors, int connections) {
-        if(depth <= 0) return new Room[] {new Room(player, RoomType.END, "End", 0, RoomDesign.STONE, this)};
-        //System.out.println("Depth: " + "*".repeat(depth));
+        if(depth <= 0) {
+            rc++;
+            return new Room[]{new Room(player, RoomType.END, "End", 0, RoomDesign.STONE, this)};
+        }
 
-        int newDoors = (int) (Math.random() * maxDoors + 1);
+        int newDoors = (int) (Math.random() * (maxDoors-1) + 2);
         if(depth == 1)
             newDoors = 1;
+
+        System.out.println("Depth: " + "*".repeat(depth) + "\t\tnewDoors: " + newDoors + "  connections: " + connections);
+
 
         Room[] rooms = new Room[connections];
         for (int j = 0; j < connections; j++) {
             // generate random design
             RoomDesign design = RoomDesign.values()[(int) (Math.random() * RoomDesign.values().length)];
             // generate random type
-            //RoomType type = RoomType.values()[(int) (Math.random() * RoomType.values().length)];
+            //RoomType type = RoomType.values()[(int) (Math.random() * (RoomType.values().length-1)+1)];
             RoomType type = RoomType.NORMAL;
             String name = "Room " + depth + "-" + j;
 
             rooms[j] = new Room(player, type, name, newDoors, design, this);
             rooms[j].setDepth(depth);
+            rc++;
         }
 
         for (Room room : rooms) {
-            room.setConnectedRooms(generate(depth - 1, maxDoors, connections));
+            room.setConnectedRooms(generate(depth - 1, maxDoors, newDoors));
         }
 
         return rooms;

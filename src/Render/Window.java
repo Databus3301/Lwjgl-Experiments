@@ -342,6 +342,7 @@ public class Window {
 
     public static void changeTest(Test test) {
         window.currentTest = test;
+        test.OnStart();
     }
 
     public static Window getWindow() {

@@ -1,5 +1,6 @@
 package Game.Entities.Dungeon;
 
+import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
 import Game.Entities.Enemies;
@@ -58,7 +59,7 @@ public class Room {
         this.title = title;
         this.numOfDoors = numOfDoors;
         this.design = design;
-        this.dimensions = new Vector2f(10, 10);
+        this.dimensions = new Vector2f(20, 10);
         this.onSwitch = (p, e) -> {
             System.out.println("Switched to room: " + title);
         };
@@ -184,6 +185,7 @@ public class Room {
                 System.out.println((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()); // TODO: better wave generation
                 Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
                 spawner.setCurrentWave(w);
+
             }
         }
         onSwitch.accept(player, enemies);
@@ -205,6 +207,9 @@ public class Room {
                 room = doors[i].getConnectedRoom();
                 player.setPosition(doors[i].getConnectedRoom().getPosition());
                 // clean up scene
+                for(Ability ability : player.getAbilities()) {
+                    ability.getProjectiles().clear();
+                }
                 projectiles.clear();
                 enemies.clear();
                 spawner.getCurrentWave().setWaveOver(false);
@@ -280,7 +285,7 @@ public class Room {
         }
     }
     public void setConnectedRooms(Room[] connectedRooms) {
-        //assert connectedRooms.length == numOfDoors : "The number of connected rooms must match the number of doors set in the constructor";
+        assert connectedRooms.length == numOfDoors : "The number of connected rooms must match the number of doors set in the constructor → " + numOfDoors + " != " + connectedRooms.length;
         this.connectedRooms = connectedRooms;
 
         for (int i = 0; i < doors.length; i++) {
