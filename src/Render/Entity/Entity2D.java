@@ -237,13 +237,14 @@ public class Entity2D {
      * @return hasCollided
      */
     public boolean collideAABB(Entity2D other) {
-        return Math.abs(getPosition().x - other.getPosition().x) < Math.abs(scale.x + other.scale.x) &&
-                Math.abs(getPosition().y - other.getPosition().y) < Math.abs(scale.y + other.scale.y);
+        Vector2f pos2 = other.getPosition();
+        return Math.abs(position.x - pos2.x) < Math.abs(scale.x + other.scale.x) &&
+                Math.abs(position.y - pos2.y) < Math.abs(scale.y + other.scale.y);
     }
 
     public boolean collideAABB(Vector2f pos2) {
-        return Math.abs(getPosition().x - pos2.x) < Math.abs(scale.x) &&
-                Math.abs(getPosition().y - pos2.y) < Math.abs(scale.y);
+        return Math.abs(position.x - pos2.x) < Math.abs(scale.x) &&
+                Math.abs(position.y - pos2.y) < Math.abs(scale.y);
     }
 
     /**

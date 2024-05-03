@@ -35,8 +35,15 @@ public class Interactable extends Entity2D {
     private QuintConsumer<Interactable, Integer, Integer, Integer, Vector2f>
                                     keyCallback = (interactable, key, scancode, action, mousePos) -> {};
 
+    /**
+     * performance optimization: check if the entity is hovered only every n-th frame
+     * reduces accuracy but increases performance (the higher the faster)
+     */
+    private int checkHover = 30;
     private States lastState = States.DEFAULT;
     private boolean changedState = false;
+
+
 
     public <T extends Test> Interactable(T scene) {
         super();
@@ -100,14 +107,22 @@ public class Interactable extends Entity2D {
             state = States.DEFAULT;
         }
     }
+
+    private int hoverCheck = 0;
+    private boolean isHovered = false;
     public void updateStates(Vector2f mousePos) {
-        if ((state == States.DEFAULT || state == States.RELEASED) && isHovered(mousePos)) {
+        if(hoverCheck++ > checkHover) {
+            isHovered = isHovered(mousePos);
+            hoverCheck = 0;
+        }
+
+        if ((state == States.DEFAULT || state == States.RELEASED) && isHovered) {
             state = States.HOVER;
         }
-        else if (state == States.PRESSED && isHovered(mousePos)) {
+        else if (state == States.PRESSED && isHovered) {
             state = States.DRAGGED;
         }
-        else if (state == States.HOVER && !isHovered(mousePos)) {
+        else if (state == States.HOVER && !isHovered) {
             state = States.DEFAULT;
         }
     }
@@ -174,6 +189,10 @@ public class Interactable extends Entity2D {
 
     public States getState() {
         return state;
+    }
+
+    public void setCheckHover(int checkHover) {
+        this.checkHover = checkHover;
     }
 
     @FunctionalInterface

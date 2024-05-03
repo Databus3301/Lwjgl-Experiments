@@ -41,10 +41,9 @@ public class Test {
      * @param dt Delta time.
      */
     public void OnUpdate(float dt) {
-
-        updateCallbacks.forEach(callback -> {
-            callback.accept(dt, mousePos);
-        });
+        for(int i = 0; i < updateCallbacks.size(); i++) {
+            updateCallbacks.get(i).accept(dt, mousePos);
+        }
     }
     /**
      * Called every frame before OnUpdate.

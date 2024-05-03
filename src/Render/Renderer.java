@@ -716,6 +716,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
             Shader.DEFAULT.bind();
     }
 
+    private final Matrix4f invertedProj = new Matrix4f();
     public Vector2f screenToWorldCoords(Vector2f screenCoords) { // TODO: adapt to moving camera
         // copy vec
         Vector4f projectedCoords = new Vector4f(screenCoords, 0, 1);
@@ -723,7 +724,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
         projectedCoords.x = (projectedCoords.x / Window.dim.x) * 2 - 1;
         projectedCoords.y = (projectedCoords.y / Window.dim.y) * -2 + 1;
         // "3D to 2D" (inverse of projection matrix "2D to 3D")
-        projectedCoords.mul(camera.getProjectionMatrix().invert(new Matrix4f()));
+        projectedCoords.mul(camera.getProjectionMatrix().invert(invertedProj));
         return new Vector2f(projectedCoords.x, projectedCoords.y).sub(camera.getPosition());
     }
 
@@ -810,8 +811,6 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
         public void render() {
             entity.setOffset(renderer.camera.getPosition().mul(-1f, new Vector2f()));
-
-            renderer.drawCollisionRect(entity);
 
             renderer.chooseShader(entity);
             renderer.SetUniforms(renderer.getCurrentShader(), entity);

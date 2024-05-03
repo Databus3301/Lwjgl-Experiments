@@ -10,6 +10,7 @@ import Render.MeshData.Texturing.Animation;
 import Render.Window;
 import Tests.Test;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +79,15 @@ public class Player extends Living implements Able {
 
         // collide the player with the room.getCollisionRect()
         if (!collider.containedByRect(room.getCollisionRect())) {
-            translate(new Vector2f(position).sub(room.getPosition()).normalize().mul(-2));
+            // get each axis and reset to closest axis intercept
+            Vector4f rect = room.getCollisionRect();
+            Vector2f scale = collider.getScale();
+            if (collider.getPosition().x - scale.x / 2f < rect.x) position.x = rect.x + scale.x / 2f;
+            if (collider.getPosition().x + scale.x / 2f > rect.z) position.x = rect.z - scale.x / 2f;
+            if (collider.getPosition().y - scale.y / 2f < rect.y) position.y = rect.y + scale.y / 2f;
+            if (collider.getPosition().y + scale.y / 2f > rect.w) position.y = rect.w - scale.y / 2f;
+
+            //translate(new Vector2f(position).sub(room.getPosition()).normalize().mul(-2));
         }
 
         // TODO: handle collision independently for each direction, don't make it depend on the room's center (vertical rooms are fucked)

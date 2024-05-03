@@ -13,7 +13,7 @@ public class UI {
         Test.renderer.cursorShow();
         ArrayList<Button> buttons = new ArrayList<>();
         for (int i = 0; i < numButtons; i++) {
-            buttons.add(new Button(test, new Vector2f(room.getWitdh()/numButtons*i-room.getWitdh()/2, 0)));
+            buttons.add(new Button(test, new Vector2f(room.getWitdh()/numButtons*i-room.getWitdh()/2+room.getWitdh()/10, 0)));
             buttons.get(i).scale(room.getWitdh()/10, room.getHeight()/10);
             buttons.get(i).getLabel().setText("Button " + i);
             buttons.get(i).setColor(0.5f, 0.5f, 0.5f, 1);

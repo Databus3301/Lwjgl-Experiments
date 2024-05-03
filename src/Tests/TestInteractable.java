@@ -15,6 +15,7 @@ public class TestInteractable extends Test {
         ObjModel model = new ObjModel("circle.obj");
         general = new Interactable(this, new Vector2f(), model);
         general.scale(70);
+        general.setCheckHover(100);
         button = new Interactable(this, new Vector2f(0, 200), model);
         button.scale(70, 20);
 
@@ -47,7 +48,7 @@ public class TestInteractable extends Test {
             if(renderer.screenToWorldCoords(mousePos).distance(interactable.getPosition()) > interactable.getTriggerDistance())
                 return;
 
-            if(key == GLFW_KEY_E && action == GLFW_PRESS) {
+            if(key == GLFW_KEY_E && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
                 interactable.setColor(1, 0, 1, 1);
             }
             if(key == GLFW_KEY_E && action == GLFW_RELEASE) {
@@ -56,6 +57,13 @@ public class TestInteractable extends Test {
         });
 
     }
+
+    @Override
+    public void OnStart() {
+        super.OnStart();
+        renderer.cursorShow();
+    }
+
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
