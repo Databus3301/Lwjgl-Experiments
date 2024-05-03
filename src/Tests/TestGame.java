@@ -112,7 +112,7 @@ public class TestGame extends Test {
         // wave over
         if (spawner.getLastResult() == WAVE_OVER) {
             shouldSimulate = true;
-            UI.onLvlUp(player);
+            UI.onLvlUp(player, this, room, 3);
         }
 
         if (!shouldSimulate) return;

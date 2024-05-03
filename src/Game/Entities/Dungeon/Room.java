@@ -296,4 +296,10 @@ public class Room {
     public void setDepth(int depth) {
         this.depth = depth;
     }
+    public float getWitdh() {
+        return dimensions.x*32*Dungeon.SCALE;
+    }
+    public float getHeight() {
+        return dimensions.y*32*Dungeon.SCALE;
+    }
 }
