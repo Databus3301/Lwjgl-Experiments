@@ -7,7 +7,7 @@ public class Dungeon {
     public static final float SCALE = 1.2f;
     // DEFAULTS
     public static final int DEFAULT_DEPTH = 5;
-    public static final int DEFAULT_MAX_DOORS = 2;
+    public static final int DEFAULT_MAX_DOORS = 4;
     public static final int DEFAULT_START_CONNECTIONS = 2;
     public static final int DEFAULT_MIN_DOORS = 2;
 

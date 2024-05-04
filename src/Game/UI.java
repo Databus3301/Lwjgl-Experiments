@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class UI {
     public static void onLvlUp(Player player, Test test, Room room, int numButtons) {
-        Test.renderer.cursorShow();
         ArrayList<Button> buttons = new ArrayList<>();
         for (int i = 0; i < numButtons; i++) {
             buttons.add(new Button(test, new Vector2f(room.getWitdh()/numButtons*i-room.getWitdh()/2+room.getWitdh()/10, 0)));

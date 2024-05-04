@@ -174,7 +174,7 @@ public class TestGame extends Test {
         renderer.drawUI(bg);
 
         // DEBUG COLLIDERS
-        //*
+        /*
         for (Entity2D wall : room.getWalls()) {
             renderer.drawCollisionRectRotated(wall);
             if (wall instanceof Door d) {

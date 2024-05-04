@@ -48,8 +48,6 @@ public class EnemySpawner {
             return lastResult = Result.SPAWNED;
         }
 
-        System.out.println(currentWave.getEnemiesLeft());
-        System.out.println(enemyCollection.size());
         if (currentWave.isFinishedSpawning() && enemyCollection.isEmpty()) {
             return lastResult = Result.WAVE_OVER;
         }
