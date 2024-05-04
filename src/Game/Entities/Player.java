@@ -79,15 +79,14 @@ public class Player extends Living implements Able {
 
         // collide the player with the room.getCollisionRect()
         if (!collider.containedByRect(room.getCollisionRect())) {
-            // get each axis and reset to closest axis intercept
             Vector4f rect = room.getCollisionRect();
             Vector2f scale = collider.getScale();
-            if (collider.getPosition().x - scale.x / 2f < rect.x) position.x = rect.x + scale.x / 2f;
-            if (collider.getPosition().x + scale.x / 2f > rect.z) position.x = rect.z - scale.x / 2f;
-            if (collider.getPosition().y - scale.y / 2f < rect.y) position.y = rect.y + scale.y / 2f;
-            if (collider.getPosition().y + scale.y / 2f > rect.w) position.y = rect.w - scale.y / 2f;
+            Vector2f pos = collider.getPosition();
 
-            //translate(new Vector2f(position).sub(room.getPosition()).normalize().mul(-2));
+            if (pos.x - scale.x / 2f < rect.x)          position.x = rect.x + scale.x / 2f;
+            if (pos.x + scale.x / 2f > rect.z + rect.x) position.x = rect.z + rect.x - scale.x / 2f;
+            if (pos.y - scale.y / 2f < rect.y)          position.y = rect.y + scale.y / 2f + (position.y - pos.y);
+            if (pos.y + scale.y / 2f > rect.w + rect.y) position.y = rect.w + rect.y - scale.y / 2f + (position.y - pos.y);
         }
 
         // TODO: handle collision independently for each direction, don't make it depend on the room's center (vertical rooms are fucked)
