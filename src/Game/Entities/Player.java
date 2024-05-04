@@ -89,10 +89,6 @@ public class Player extends Living implements Able {
             if (pos.y + scale.y / 2f > rect.w + rect.y) position.y = rect.w + rect.y - scale.y / 2f + (position.y - pos.y);
         }
 
-        // TODO: handle collision independently for each direction, don't make it depend on the room's center (vertical rooms are fucked)
-
-
-
     }
 
     public void addAnimation(String name, Animation animation) {

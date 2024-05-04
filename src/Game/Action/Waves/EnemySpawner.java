@@ -2,7 +2,6 @@ package Game.Action.Waves;
 
 import Game.Entities.Enemies;
 import Game.Entities.Enemy;
-import Game.UI;
 import Render.Entity.Entity2D;
 import Render.Window;
 import org.joml.Vector2f;
@@ -49,10 +48,19 @@ public class EnemySpawner {
             return lastResult = Result.SPAWNED;
         }
 
-        if (currentWave.isWaveOver()) {
-            //currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
+        System.out.println(currentWave.getEnemiesLeft());
+        System.out.println(enemyCollection.size());
+        if (currentWave.isFinishedSpawning() && enemyCollection.isEmpty()) {
             return lastResult = Result.WAVE_OVER;
         }
+
+        if (currentWave.isFinishedSpawning()) {
+            //currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
+            return lastResult = Result.FINISHED_SPAWNING;
+        }
+
+
+
 
         return lastResult = Result.NOTHING;
     }
@@ -117,6 +125,6 @@ public class EnemySpawner {
     }
 
     public enum Result {
-        SPAWNED, NOTHING, WAVE_OVER
+        SPAWNED, NOTHING, WAVE_OVER, FINISHED_SPAWNING
     }
 }

@@ -3,7 +3,6 @@ package Game.Entities.Dungeon;
 import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
-import Game.Entities.Enemies;
 import Game.Entities.Enemy;
 import Game.Entities.Player;
 import Game.Entities.Projectiles.Projectile;
@@ -12,9 +11,6 @@ import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
-import Render.Renderer;
-import Render.Window;
-import Tests.Test;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -212,7 +208,7 @@ public class Room {
                 }
                 projectiles.clear();
                 enemies.clear();
-                spawner.getCurrentWave().setWaveOver(false);
+                spawner.getCurrentWave().setFinishedSpawning(false);
                 renderer.setPostProcessingShader(new Shader("texturing_plain.shader"));
 
                 // init new room

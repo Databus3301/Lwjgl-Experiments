@@ -5,6 +5,13 @@ import Tests.Test;
 
 public class Dungeon {
     public static final float SCALE = 1.2f;
+    // DEFAULTS
+    public static final int DEFAULT_DEPTH = 5;
+    public static final int DEFAULT_MAX_DOORS = 2;
+    public static final int DEFAULT_START_CONNECTIONS = 2;
+    public static final int DEFAULT_MIN_DOORS = 2;
+
+
     private final Test scene;
 
     private Player player;
@@ -15,15 +22,15 @@ public class Dungeon {
     private int rc = 1;
 
     public Dungeon(Player player, Test scene) {
-        this(player, scene, 5);
+        this(player, scene, DEFAULT_DEPTH);
     }
     public Dungeon(Player player, Test scene, int depth) {
         this.scene = scene;
         this.player = player;
         this.depth = depth;
 
-        start = new Room(player, RoomType.START, "Start", 2, RoomDesign.STONE, this);
-        start.setConnectedRooms(generate(depth, 4, 2));
+        start = new Room(player, RoomType.START, "Start", DEFAULT_START_CONNECTIONS, RoomDesign.STONE, this);
+        start.setConnectedRooms(generate(depth, DEFAULT_MAX_DOORS, DEFAULT_START_CONNECTIONS));
         System.out.println("Room count: " + rc);
     }
 
@@ -33,7 +40,7 @@ public class Dungeon {
             return new Room[]{new Room(player, RoomType.END, "End", 0, RoomDesign.STONE, this)};
         }
 
-        int newDoors = (int) (Math.random() * (maxDoors-1) + 2);
+        int newDoors = (int) (Math.random() * (maxDoors-(DEFAULT_MIN_DOORS-1)) + DEFAULT_MIN_DOORS);
         if(depth == 1)
             newDoors = 1;
 

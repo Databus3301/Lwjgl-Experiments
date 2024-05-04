@@ -8,7 +8,7 @@ public class Wave {
     private int enemiesKilled;
     private float spawnRate; // enemies per second
     private float spawnTimer;
-    private boolean waveOver;
+    private boolean finishedSpawning;
 
     public Wave(int waveNumber, int enemies, float spawnRate) {
         this.waveNumber = waveNumber;
@@ -18,7 +18,7 @@ public class Wave {
         this.enemiesKilled = 0;
         this.spawnRate = spawnRate <= 0.01 ? 0.1f : spawnRate;
         this.spawnTimer = 0;
-        this.waveOver = false;
+        this.finishedSpawning = false;
     }
 
     public void update(float dt) {
@@ -30,7 +30,7 @@ public class Wave {
                 spawnTimer = 0;
             }
         } else {
-            waveOver = true;
+            finishedSpawning = true;
         }
     }
 
@@ -62,11 +62,14 @@ public class Wave {
         return spawnTimer;
     }
 
-    public boolean isWaveOver() {
-        return waveOver;
+    public boolean isFinishedSpawning() {
+        return finishedSpawning;
     }
 
-    public void setWaveOver(boolean b) {
-        waveOver = b;
+    public void setFinishedSpawning(boolean b) {
+        finishedSpawning = b;
+    }
+    public void addEnemiesKilled(int i) {
+        enemiesKilled += i;
     }
 }
