@@ -48,7 +48,7 @@ public class Room {
     private final ArrayList<Entity2D> walls;
     private final ArrayList<Interactable> contents;
 
-    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Dungeon dungeon) {
+    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Dungeon dungeon, Vector2f dimensions) {
         assert numOfDoors >= 0 : "A room can't have a negative number of doors";
 
         this.dungeon = dungeon;
@@ -56,7 +56,7 @@ public class Room {
         this.title = title;
         this.numOfDoors = numOfDoors;
         this.design = design;
-        this.dimensions = new Vector2f(20, 10);
+        this.dimensions = dimensions;
         this.onSwitch = (p, e) -> {
             System.out.println("Switched to room: " + title);
         };
