@@ -102,19 +102,12 @@ public class Abilities {
         CIRCLESHOOT = new Ability(projectiles, 2f);
 
         CIRCLESHOOT.stats.put("projectileCount", 6f);
-        // TODO: more upgrades
-        // TODO: on level up screen
-        // TODO: backwards implement upgrads
-        // TODO: show upgrades in lvl up screen
-
-        Upgrade projectileCount = new Upgrade("Projectile Count", "Doubles the amount of projectiles shot", 0);
-        projectileCount.setOnApply((ability, upgrade) -> {
-            ability.stats.put("projectileCount", ability.stats.get("projectileCount") * 2);
-        });
-        CIRCLESHOOT.upgrades.add(projectileCount);
+        CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
 
         CIRCLESHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             float pc = ability.stats.get("projectileCount");
+
+
             Projectile[] circle = new Projectile[(int) pc];
             for (int i = 0; i < circle.length; i++) {
                 circle[i] = ability.getProjectileTypes()[0].clone();

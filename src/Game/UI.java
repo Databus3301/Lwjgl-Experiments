@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Action.Ability;
+import Game.Action.Upgrade;
 import Game.Entities.Dungeon.Room;
 import Game.Entities.Player;
 import Render.Entity.Interactable.Button;
@@ -19,10 +20,29 @@ public class UI {
                 upgradeButtons[i].getLabel().setText("Button " + i);
                 upgradeButtons[i].setColor(0.5f, 0.5f, 0.5f, 1);
                 upgradeButtons[i].setReleasedCallback((button) -> {
-                    Ability circle_shoot = player.getAbilities().get(1);
-                    circle_shoot.upgrades.get(0).applyTo(circle_shoot);
+                    //TODO: field design
+                    /*
+                    - white rect-border with text inside
+                    - possibly one icon
+
+                    - Upgrades
+                        - large ability name plus colon
+                        - small upgrade description
+                    - Abilities
+                        - large ability name
+                        - small ability description
+
+                    - on hover: border color darkens
+                    - on click: border color lightens
+                    - on release: upgrade is applied
+
+                     */
+
+                    Ability cs = player.getAbilities().get(1);
+                    Upgrade u = cs.getRndmUpgrade();
+                    u.applyTo(cs);
+
                     upgradeButtons = null;
-                    System.out.println("Button " + " pressed");
                 });
             }
         }

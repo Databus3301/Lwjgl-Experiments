@@ -25,7 +25,7 @@ public class Ability {
     private String description;
     private UUID uuid;
 
-    public ArrayList<Upgrade> upgrades = new ArrayList<>();
+    private ArrayList<Upgrade> upgrades = new ArrayList<>();
     public HashMap<String, Float> stats = new HashMap<>();
     private int level;
 
@@ -73,7 +73,7 @@ public class Ability {
         into.setLevel(level);
         into.setName(name);
         into.setUUID();
-        into.upgrades = new ArrayList<>(upgrades);
+        into.setUpgrades(new ArrayList<>(upgrades));
         into.stats = new HashMap<>(stats);
 
         return into;
@@ -114,6 +114,9 @@ public class Ability {
     }
     public ArrayList<Upgrade> getUpgrades() {
         return upgrades;
+    }
+    public Upgrade getRndmUpgrade() {
+        return upgrades.get((int) (Math.random() * upgrades.size()));
     }
 
 
@@ -156,7 +159,9 @@ public class Ability {
     public void addUpgrade(Upgrade upgrade) {
         upgrades.add(upgrade);
     }
-
+    public void setUpgrades(ArrayList<Upgrade> upgrades) {
+        this.upgrades = upgrades;
+    }
 
     @FunctionalInterface
     public interface HexConsumer<T, U, V, W, X, Y> {
