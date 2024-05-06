@@ -10,16 +10,17 @@ public class Enemies {
     public static final Enemy BASIC = getBASIC();
     public static final Enemy TANK = getTANK();
     public static final Enemy SHOOTER = getSHOOTER();
+    public static final Enemy BOSS = getBOSS();
 
     public static final ArrayList<Enemy> enemies = defineEnemies();
 
 
     public static ArrayList<Enemy> defineEnemies() {
         ArrayList<Enemy> enemies = new ArrayList<>();
-        enemies.add(BASIC);
-        enemies.add(TANK);
-        enemies.add(SHOOTER);
-
+        //enemies.add(BASIC);
+        //enemies.add(TANK);
+        //enemies.add(SHOOTER);
+        enemies.add(BOSS);
         return enemies;
     }
 
@@ -59,5 +60,23 @@ public class Enemies {
         shooter.addAbility(shoot);
 
         return shooter;
+    }
+
+    public static Enemy getBOSS() {
+        // BASIC ENEMY 2
+        Enemy boss = new Enemy();
+        boss.setMaxLP(2000);
+        boss.setLP(200);
+        boss.setiSeconds(0.02f);
+        boss.setColor(new Vector4f(0, 1, 1, 1));
+        boss.setScale(10 * 5, 12 * 5);
+        Ability shoot = Abilities.getSHOOT();
+        Ability shoot2 = Abilities.getSHOOTINALLDIRECTIONS();
+        shoot.getProjectileTypes()[0].setScale(20f);
+        shoot2.getProjectileTypes()[0].setScale(20f);
+        boss.addAbility(shoot);
+        boss.addAbility(shoot2);
+
+        return boss;
     }
 }

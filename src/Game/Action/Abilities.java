@@ -5,6 +5,7 @@ import Game.Entities.Projectiles.Homing;
 import Game.Entities.Projectiles.Projectile;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
+import com.sun.source.tree.BinaryTree;
 import org.joml.Vector2f;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,6 +16,7 @@ public class Abilities {
     public static Ability[] SALVE = getSALVE();
     public static Ability DASH = getDASH();
     public static Ability SHIELD = getSHIELD();
+    public static Ability SHOOTINALLDIRECTIONS = getSHOOTINALLDIRECTIONS();
 
     public static Ability getSHOOT() {
         Projectile[] projectiles = new Projectile[1];
@@ -47,6 +49,7 @@ public class Abilities {
 
         return DASH;
     }
+
     public static Ability getSHIELD() {
         Projectile[] projectiles = new Projectile[0];
         SHIELD = new Ability(projectiles, 2f);
@@ -54,7 +57,7 @@ public class Abilities {
         SHIELD.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             ((Player) origin).setiSeconds(2);
             origin.setShader(new Shader("texturing.player.shader"));
-            if(!shielded.get()) {
+            if (!shielded.get()) {
                 origin.setColor(0, 0, 1f, 0);
                 shielded.set(true);
             } else {
@@ -65,6 +68,7 @@ public class Abilities {
 
         return SHIELD;
     }
+
     public static Ability getHOMING() {
         Projectile[] projectiles = new Homing[1];
         projectiles[0] = new Homing();
@@ -86,6 +90,32 @@ public class Abilities {
 
     public static Ability[] getSALVE() {
         return new Ability[]{getSHOOT().setCurrentCooldown(0.1f), getSHOOT().setCurrentCooldown(0.2f), getSHOOT().setCurrentCooldown(0.3f)};
+    }
+
+    public static Ability getSHOOTINALLDIRECTIONS() {
+        Projectile[] projectiles = new Projectile[1];
+        projectiles[0] = new Projectile();
+        projectiles[0].setDmg(50);
+        projectiles[0].setScale(10f);
+        projectiles[0].setTexture(new Texture("fireball.png", 0));
+        projectiles[0].setPierce(40);
+        SHOOTINALLDIRECTIONS = new Ability(projectiles, 2f);
+        SHOOTINALLDIRECTIONS.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
+            Projectile[] projectilesInAllDirections = new Projectile[6];
+            for (int i = 0; i < projectilesInAllDirections.length; i++) {
+                projectilesInAllDirections[i] = ability.getProjectileTypes()[0].clone();
+                projectilesInAllDirections[i].setPosition(origin.getPosition());
+                Vector2f vector = new Vector2f((float) Math.cos(i * Math.PI / 3), (float) Math.sin(i * Math.PI / 3)).mul(350);
+                projectilesInAllDirections[i].accelerateTowards(vector.add(origin.getPosition()), 200);
+                projectilesInAllDirections[i].setOnHit((p, damaged) -> {
+                    if (damaged)
+                        p.getScale().mul(1);
+                });
+                ability.getProjectiles().add(projectilesInAllDirections[i]);
+            }
+        });
+
+        return SHOOTINALLDIRECTIONS;
     }
 
 }

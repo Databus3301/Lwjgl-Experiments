@@ -3,6 +3,7 @@ package Game.Entities.Dungeon;
 import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
+import Game.Entities.Enemies;
 import Game.Entities.Enemy;
 import Game.Entities.Player;
 import Game.Entities.Projectiles.Projectile;
@@ -167,6 +168,7 @@ public class Room {
             }
             case BOSS -> {
                 // add boss to room
+                enemies.add(Enemies.getBOSS());
             }
             case SHOP -> {
                 // add shop to room

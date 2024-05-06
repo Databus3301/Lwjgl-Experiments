@@ -69,10 +69,11 @@ Documenting my learning process of Open GL and LWJGL for a school project
         - [ ] items / healing 
     - Abilities
       - [x] dash
-      - [ ] projectile salve (getting bigger with each bullet/hit?)
+      - [x] projectile salve (getting bigger with each bullet/hit?)
       - [ ] slow big projectiles
       - [ ] fast small projectiles
-      - [ ] shield
+      - [x] shield
+      - [x] shooting in all directions
       - [ ] piercing
       - [x] homing
       - [ ] shotgun/spread
