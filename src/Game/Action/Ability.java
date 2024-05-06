@@ -7,6 +7,8 @@ import Tests.Test;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Ability {
     private Test scene;
@@ -21,6 +23,10 @@ public class Ability {
 
     private String name;
     private String description;
+    private UUID uuid;
+
+    public ArrayList<Upgrade> upgrades = new ArrayList<>();
+    public HashMap<String, Float> stats = new HashMap<>();
     private int level;
 
     public HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger;
@@ -29,12 +35,14 @@ public class Ability {
         this.projectileTypes = projectileTypes;
         this.cooldown = cooldown;
         this.currentCooldown = .5f;
+        uuid = UUID.randomUUID();
     }
 
     public Ability() {
         this.projectileTypes = new Projectile[]{new Projectile()};
         this.cooldown = 1f;
         this.currentCooldown = .5f;
+        uuid = UUID.randomUUID();
     }
 
     public void update(float dt, Vector2f mousePos, Entity2D trigger) {
@@ -61,6 +69,13 @@ public class Ability {
         into.setCooldown(cooldown);
         into.setOnTrigger(onTrigger);
         into.setScene(scene);
+        into.setDescription(description);
+        into.setLevel(level);
+        into.setName(name);
+        into.setUUID();
+        into.upgrades = new ArrayList<>(upgrades);
+        into.stats = new HashMap<>(stats);
+
         return into;
     }
 
@@ -73,33 +88,32 @@ public class Ability {
     public float getCooldown() {
         return cooldown;
     }
-
     public float getCurrentCooldown() {
         return currentCooldown;
     }
-
     public Projectile[] getProjectileTypes() {
         return projectileTypes;
     }
-
     public ArrayList<Projectile> getProjectiles() {
         return projectiles;
     }
-
     public int getLevel() {
         return level;
     }
-
     public String getDescription() {
         return description;
     }
-
     public String getName() {
         return name;
     }
-
     public Test getScene() {
         return scene;
+    }
+    public UUID getUUID() {
+        return uuid;
+    }
+    public ArrayList<Upgrade> getUpgrades() {
+        return upgrades;
     }
 
 
@@ -107,39 +121,40 @@ public class Ability {
         this.cooldown = cooldown;
         return this;
     }
-
     public void setOnTrigger(HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger) {
         this.onTrigger = onTrigger;
     }
-
     public void setProjectileTypes(Projectile[] projectileTypes) {
         this.projectileTypes = projectileTypes;
     }
-
     public Ability setScene(Test scene) {
         this.scene = scene;
         return this;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
-
     public void setLevel(int level) {
         this.level = level;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public Ability setCurrentCooldown(float currentCooldown) {
         this.currentCooldown = currentCooldown;
         return this;
     }
-
     public void setProjectiles(ArrayList<Projectile> projectiles) {
         this.projectiles = projectiles;
+    }
+    public void setUUID() {
+        this.uuid = UUID.randomUUID();
+    }
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+    public void addUpgrade(Upgrade upgrade) {
+        upgrades.add(upgrade);
     }
 
 

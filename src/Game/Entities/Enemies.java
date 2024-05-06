@@ -71,7 +71,7 @@ public class Enemies {
         boss.setColor(new Vector4f(0, 1, 1, 1));
         boss.setScale(10 * 5, 12 * 5);
         Ability shoot = Abilities.getSHOOT();
-        Ability shoot2 = Abilities.getSHOOTINALLDIRECTIONS();
+        Ability shoot2 = Abilities.getCIRCLESHOOT();
         shoot.getProjectileTypes()[0].setScale(20f);
         shoot2.getProjectileTypes()[0].setScale(20f);
         boss.addAbility(shoot);

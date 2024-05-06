@@ -28,7 +28,7 @@ import static Tests.Test.renderer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL43.*;
 
-public class Renderer { // TODO: drawUI method to draw absolute positioned UI elements
+public class Renderer {
 
     private Shader currentShader;
     private int mode = GL_FILL;
@@ -644,7 +644,7 @@ public class Renderer { // TODO: drawUI method to draw absolute positioned UI el
 
     private final Vector4f trans = new Vector4f();
 
-    public <T extends Entity2D> void drawCollisionRect(T entity) { // TODO: rotate the rect correctly
+    public <T extends Entity2D> void drawCollisionRect(T entity) {
         assert entity.getModel() != null : "[ERROR] (Render.Renderer.drawCollisionRect) Entity2D has no model";
 
         ObjModel model = entity.getModel();

@@ -12,13 +12,28 @@ public class TestButton extends Test {
         Texture icon = new Texture("woodCrate.png", 0);
         b = new Button(this, new Vector2f());
 
-        b.scale(500); // TODO: Make label scaling more consistent with different button sizes
+        b.scale(600, 400); // TODO: Make label scaling more consistent with different button sizes
         b.setLabel("This is a button\nwith a label");
         b.getLabel().setScale(10000);
         b.setTooltip("This is a tooltip");
         b.setIcon(icon);
         b.setShader(Shader.TEXTURING);
         b.setHitTime(1000);
+
+        b.setReleasedCallback((button) -> {
+            System.out.println("Button released");
+        });
+        b.setPressedCallback((button) -> {
+            System.out.println("Button pressed");
+        });
+
+
+    }
+
+    @Override
+    public void OnStart() {
+        super.OnStart();
+        Test.renderer.cursorShow();
     }
 
     @Override

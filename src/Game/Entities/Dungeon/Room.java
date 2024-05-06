@@ -191,7 +191,7 @@ public class Room {
 
     public Room update(float dt, EnemySpawner spawner, Player player, ArrayList<Enemy> enemies, ArrayList<Projectile> projectiles) {
 
-        if (spawner.getLastResult() == WAVE_OVER) { // TODO: update WAVE_OVER status to signal when all enemies are killed not spawned
+        if (spawner.getLastResult() == WAVE_OVER) {
             for (Door door : doors) {
                 door.open();
             }

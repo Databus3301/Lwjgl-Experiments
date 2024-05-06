@@ -3,6 +3,7 @@ package Game.Entities;
 import Game.Action.Ability;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public interface Able {
 
@@ -19,4 +20,11 @@ public interface Able {
     default void removeAbility(Ability ability) {
         getAbilities().remove(ability);
     }
+    default void removeAbility(int index) {
+        getAbilities().remove(index);
+    }
+    default void removeAbility(UUID index) {
+        getAbilities().removeIf(a -> a.getUUID().equals(index));
+    }
+
 }

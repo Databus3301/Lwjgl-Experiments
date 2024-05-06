@@ -166,12 +166,16 @@ public class TestGame extends Test {
         renderer.draw(enemies);
         renderer.draw(player);
 
+        // UI
         // live points
         float widthLP = (float) Window.dim.x / 4f;
         Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
+
         renderer.drawUI(bg);
+        UI.draw();
+
 
         // DEBUG COLLIDERS
         /*
@@ -241,14 +245,11 @@ public class TestGame extends Test {
 
         // Dash
         if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-            player.getAbilities().get(0).setCurrentCooldown(0);
-
-
-
-        if(key == GLFW_KEY_Z && action == GLFW_PRESS) {
-            System.out.println("Player: " + player.getPosition());
-            room.setDimensions(room.getDimensions().add(1, 1, new Vector2f()));
-        }
+            // get ability with name="dash"
+            player.getAbilities().stream().filter(ability -> ability.getName().equals("dash")).findFirst().ifPresent(ability -> {
+                // set cooldown to 0
+                ability.setCurrentCooldown(0);
+            });
     }
 
     public Room getRoom() {

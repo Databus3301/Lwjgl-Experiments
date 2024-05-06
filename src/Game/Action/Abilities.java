@@ -5,7 +5,6 @@ import Game.Entities.Projectiles.Homing;
 import Game.Entities.Projectiles.Projectile;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
-import com.sun.source.tree.BinaryTree;
 import org.joml.Vector2f;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +15,7 @@ public class Abilities {
     public static Ability[] SALVE = getSALVE();
     public static Ability DASH = getDASH();
     public static Ability SHIELD = getSHIELD();
-    public static Ability SHOOTINALLDIRECTIONS = getSHOOTINALLDIRECTIONS();
+    public static Ability CIRCLESHOOT = getCIRCLESHOOT();
 
     public static Ability getSHOOT() {
         Projectile[] projectiles = new Projectile[1];
@@ -43,10 +42,11 @@ public class Abilities {
     public static Ability getDASH() {
         Projectile[] projectiles = new Projectile[0];
         DASH = new Ability(projectiles, Float.MAX_VALUE - 2);
+        DASH.setName("dash");
+
         DASH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             origin.translate(new Vector2f(origin.getVelocity()).mul(200));
         });
-
         return DASH;
     }
 
@@ -92,30 +92,42 @@ public class Abilities {
         return new Ability[]{getSHOOT().setCurrentCooldown(0.1f), getSHOOT().setCurrentCooldown(0.2f), getSHOOT().setCurrentCooldown(0.3f)};
     }
 
-    public static Ability getSHOOTINALLDIRECTIONS() {
+    public static Ability getCIRCLESHOOT() {
         Projectile[] projectiles = new Projectile[1];
         projectiles[0] = new Projectile();
         projectiles[0].setDmg(50);
         projectiles[0].setScale(10f);
         projectiles[0].setTexture(new Texture("fireball.png", 0));
-        projectiles[0].setPierce(40);
-        SHOOTINALLDIRECTIONS = new Ability(projectiles, 2f);
-        SHOOTINALLDIRECTIONS.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
-            Projectile[] projectilesInAllDirections = new Projectile[6];
-            for (int i = 0; i < projectilesInAllDirections.length; i++) {
-                projectilesInAllDirections[i] = ability.getProjectileTypes()[0].clone();
-                projectilesInAllDirections[i].setPosition(origin.getPosition());
-                Vector2f vector = new Vector2f((float) Math.cos(i * Math.PI / 3), (float) Math.sin(i * Math.PI / 3)).mul(350);
-                projectilesInAllDirections[i].accelerateTowards(vector.add(origin.getPosition()), 200);
-                projectilesInAllDirections[i].setOnHit((p, damaged) -> {
-                    if (damaged)
-                        p.getScale().mul(1);
-                });
-                ability.getProjectiles().add(projectilesInAllDirections[i]);
+        projectiles[0].setPierce(1);
+        CIRCLESHOOT = new Ability(projectiles, 2f);
+
+        CIRCLESHOOT.stats.put("projectileCount", 6f);
+        // TODO: more upgrades
+        // TODO: on level up screen
+        // TODO: backwards implement upgrads
+        // TODO: show upgrades in lvl up screen
+
+        Upgrade projectileCount = new Upgrade("Projectile Count", "Doubles the amount of projectiles shot", 0);
+        projectileCount.setOnApply((ability, upgrade) -> {
+            ability.stats.put("projectileCount", ability.stats.get("projectileCount") * 2);
+        });
+        CIRCLESHOOT.upgrades.add(projectileCount);
+
+        CIRCLESHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
+            float pc = ability.stats.get("projectileCount");
+            Projectile[] circle = new Projectile[(int) pc];
+            for (int i = 0; i < circle.length; i++) {
+                circle[i] = ability.getProjectileTypes()[0].clone();
+                circle[i].setPosition(origin.getPosition());
+
+                Vector2f vector = new Vector2f((float) Math.cos(i * Math.PI / (circle.length/2f)), (float) Math.sin(i * Math.PI / (circle.length/2f))).mul(350);
+                circle[i].accelerateTowards(vector.add(origin.getPosition()), 200);
+
+                ability.getProjectiles().add(circle[i]);
             }
         });
 
-        return SHOOTINALLDIRECTIONS;
+        return CIRCLESHOOT;
     }
 
 }

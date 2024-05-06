@@ -21,7 +21,7 @@ public class TestInteractable extends Test {
 
         button.setReleasedCallback((interactable -> {
             interactable.setColor((float)(Math.random()), (float)(Math.random()), (float)(Math.random()), 1f);
-            System.out.println("clicked");
+            System.out.println("released");
         }));
 
         general.setDraggedCallback((interactable) -> {
@@ -33,14 +33,17 @@ public class TestInteractable extends Test {
         });
         general.setHoverCallback((interactable) -> {
             interactable.setColor(0, 1, 0, 1);
+            
         });
 
 
         general.setPressedCallback((interactable) -> { // TODO: delay till it counts as dragged to avoid accidental drags and actually show this?
             interactable.setColor(1, 0, 0, 1);
+            System.out.println("pressed");
         });
         general.setReleasedCallback((interactable) -> {
             interactable.setColor(0, 0, 1, 1);
+            System.out.println("released");
         });
 
         general.setTriggerDistance(300);

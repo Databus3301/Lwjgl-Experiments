@@ -2,7 +2,6 @@ package Game.Entities;
 
 import Game.Action.Abilities;
 import Game.Action.Ability;
-import Game.Entities.Dungeon.Door;
 import Game.Entities.Dungeon.Room;
 import Render.Entity.Entity2D;
 import Render.MeshData.Model.ObjModel;
@@ -15,8 +14,6 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static Tests.Test.renderer;
 
 
 public class Player extends Living implements Able {
@@ -41,9 +38,8 @@ public class Player extends Living implements Able {
 
         // --TEMP-- add shooting ability as a default
         addAbility(Abilities.getDASH());
+        addAbility(Abilities.getCIRCLESHOOT());
         //addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getSHOOT());
-        addAbility(Abilities.getSHOOTINALLDIRECTIONS());
     }
 
     public void update(float dt, Vector2f mousePos) {
