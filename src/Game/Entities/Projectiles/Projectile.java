@@ -55,6 +55,7 @@ public class Projectile extends Entity2D {
         projectile.setOffset(offset);
         projectile.setColor(color);
         projectile.setAnimation(animation);
+        projectile.setSpeed(speed);
 
         projectile.setPierce(pierce);
         projectile.setArmorPen(armorPen);

@@ -164,7 +164,10 @@ public class Renderer {
         if (layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
 
         tp.pos = layoutingFunction.apply(tp);
-        return drawText(tp.text, tp.pos, tp.size.x, tp.font, shader, null, cR, tp.maxWidth);
+        System.out.println("Pos1: " + tp.pos);
+        tp.pos.set(tp.pos.x + tp.offset.x, tp.pos.y + tp.offset.y);
+        System.out.println("Pos2: " + tp.pos);
+        return drawText(tp.text, tp.pos, tp.size.x, tp.font, shader, TextPosParams::getPos, cR, tp.maxWidth);
     }
 
     public Batch drawText(String text, Vector2f pos, float scale, Font font) {
@@ -296,7 +299,7 @@ public class Renderer {
                         new Vector2f(label.getScale()),
                         label.getFont(),
                         label.getText(),
-                        null,
+                        camera.getPosition().mul(-1, new Vector2f()),
                         (int) (button.getScale().x - label.getFont().getCharWidth() * 3)
                 ), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, button.getColorReplacement());
 

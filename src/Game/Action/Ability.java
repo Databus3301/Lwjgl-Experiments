@@ -134,8 +134,8 @@ public class Ability {
         this.scene = scene;
         return this;
     }
-    public void setDescription(String description) {
-        this.description = description;
+    public String setDescription(String description) {
+        return this.description = description;
     }
     public void setLevel(int level) {
         this.level = level;
@@ -158,6 +158,11 @@ public class Ability {
     }
     public void addUpgrade(Upgrade upgrade) {
         upgrades.add(upgrade);
+    }
+    public void addUpgrades(Upgrade... upgrades) {
+        for (Upgrade upgrade : upgrades) {
+            addUpgrade(upgrade);
+        }
     }
     public void setUpgrades(ArrayList<Upgrade> upgrades) {
         this.upgrades = upgrades;

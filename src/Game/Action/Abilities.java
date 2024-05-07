@@ -24,7 +24,9 @@ public class Abilities {
         projectiles[0].setScale(10f);
         projectiles[0].setTexture(new Texture("fireball.png", 0));
         projectiles[0].setPierce(40);
+
         SHOOT = new Ability(projectiles, 0.25f);
+        SHOOT.addUpgrades(Upgrades.getDefaults());
         SHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Projectile projectile = ability.getProjectileTypes()[0].clone();
             projectile.setPosition(origin.getPosition());
@@ -76,7 +78,9 @@ public class Abilities {
         projectiles[0].setScale(5);
         projectiles[0].setTexture(new Texture("fireball.png", 0));
         projectiles[0].setPierce(1);
+
         HOMING = new Ability(projectiles, 0.5f);
+        HOMING.addUpgrades(Upgrades.getDefaults());
         HOMING.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Homing projectile = (Homing) ability.getProjectileTypes()[0].clone();
             projectile.setPosition(origin.getPosition());
@@ -89,6 +93,7 @@ public class Abilities {
 
 
     public static Ability[] getSALVE() {
+        // TODO: rework this to use the UUID system to collectively upgrade things
         return new Ability[]{getSHOOT().setCurrentCooldown(0.1f), getSHOOT().setCurrentCooldown(0.2f), getSHOOT().setCurrentCooldown(0.3f)};
     }
 
@@ -99,10 +104,13 @@ public class Abilities {
         projectiles[0].setScale(10f);
         projectiles[0].setTexture(new Texture("fireball.png", 0));
         projectiles[0].setPierce(1);
+        projectiles[0].setSpeed(200f);
         CIRCLESHOOT = new Ability(projectiles, 2f);
 
         CIRCLESHOOT.stats.put("projectileCount", 6f);
         CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
+        CIRCLESHOOT.addUpgrade(Upgrades.getFlatProjectiles());
+        CIRCLESHOOT.addUpgrades(Upgrades.getDefaults());
 
         CIRCLESHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             float pc = ability.stats.get("projectileCount");
@@ -114,7 +122,7 @@ public class Abilities {
                 circle[i].setPosition(origin.getPosition());
 
                 Vector2f vector = new Vector2f((float) Math.cos(i * Math.PI / (circle.length/2f)), (float) Math.sin(i * Math.PI / (circle.length/2f))).mul(350);
-                circle[i].accelerateTowards(vector.add(origin.getPosition()), 200);
+                circle[i].accelerateTowards(vector.add(origin.getPosition()), circle[i].getSpeed());
 
                 ability.getProjectiles().add(circle[i]);
             }

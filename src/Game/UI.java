@@ -17,8 +17,23 @@ public class UI {
             for (int i = 0; i < numButtons; i++) {
                 upgradeButtons[i] = new Button(scene, new Vector2f(room.getWitdh() / numButtons * i - room.getWitdh() / 2 + room.getWitdh() / 10, 0));
                 upgradeButtons[i].scale(room.getWitdh() / 10, room.getHeight() / 10);
-                upgradeButtons[i].getLabel().setText("Button " + i);
                 upgradeButtons[i].setColor(0.5f, 0.5f, 0.5f, 1);
+
+                // rndm ability that has upgrades
+                if(player.getAbilities().isEmpty())
+                    return;
+
+                int l = player.getAbilities().size();
+                Ability rA = player.getAbilities().get((int) (Math.random() * l));
+                while(rA.getUpgrades().isEmpty())
+                    rA = player.getAbilities().get((int) (Math.random() * l));
+
+                Upgrade rU = rA.getRndmUpgrade();
+                String d = rU.genDescription(rA);
+                upgradeButtons[i].setLabel(rU.getName() + ": " + d);
+                upgradeButtons[i].setTooltip(rU.getName() + ": " + d);
+
+                Ability finalRA = rA;
                 upgradeButtons[i].setReleasedCallback((button) -> {
                     //TODO: field design
                     /*
@@ -37,10 +52,7 @@ public class UI {
                     - on release: upgrade is applied
 
                      */
-
-                    Ability cs = player.getAbilities().get(1);
-                    Upgrade u = cs.getRndmUpgrade();
-                    u.applyTo(cs);
+                    rU.applyTo(finalRA);
 
                     upgradeButtons = null;
                 });
@@ -52,7 +64,9 @@ public class UI {
 
     public static void draw() {
         if(upgradeButtons != null)
-            Test.renderer.draw(upgradeButtons);
+            for (int i = 0; i < upgradeButtons.length; i++) {
+                Test.renderer.draw(upgradeButtons[i]);
+            }
     }
 
 }
