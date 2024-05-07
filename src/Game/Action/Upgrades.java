@@ -4,6 +4,8 @@ import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Entity2D;
 import org.joml.Vector2f;
 
+import java.util.Arrays;
+
 public class Upgrades {
     // TODO: lvl system for upgrades (diff rarities/levels → diff power)
 
@@ -16,8 +18,7 @@ public class Upgrades {
         int inc = pc.getLevel();
 
         pc.setGenerateDescription(ability -> {
-            return ability.setDescription
-("Increases the projectile count of the ability from " + ability.stats.get("projectileCount") + " to " + (ability.stats.get("projectileCount") + inc));
+            return ability.setDescription("Increases the projectile count of the ability from\n" + ability.stats.get("projectileCount") + " to " + (ability.stats.get("projectileCount") + inc));
         });
         pc.setOnApply((ability, upgrade) -> {
             ability.stats.put("projectileCount", ability.stats.get("projectileCount") + inc);
@@ -32,10 +33,10 @@ public class Upgrades {
         int inc = dmg.getLevel() * 10;
 
         dmg.setGenerateDescription(ability -> {
-            return ability.setDescription("Increases each projectiles damage by " + inc + " , previously " + ability.getProjectiles().stream().mapToInt(projectile -> (int) projectile.getDmg()).sum() + " (total)");
+            return ability.setDescription("Increases each projectiles damage by " + inc + ",\npreviously " + Arrays.stream(ability.getProjectileTypes()).mapToInt(projectile -> (int) projectile.getDmg()).sum() + " (total)");
         });
         dmg.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.setDmg(projectile.getDmg() + inc));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setDmg(projectile.getDmg() + inc));
         });
         return dmg;
     }
@@ -47,10 +48,10 @@ public class Upgrades {
         int inc = scale.getLevel() * 5;
 
         scale.setGenerateDescription(ability -> {
-            return ability.setDescription("Increases the scale of each projectile by " + inc + " , previously " + ability.getProjectiles().stream().mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0) + " (average)");
+            return ability.setDescription("Increases the scale of each projectile by " + inc + ",\npreviously " + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0))*100)/100f + " (average)");
         });
         scale.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.getScale().add(inc, inc));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.getScale().add(inc, inc));
         });
         return scale;
     }
@@ -62,10 +63,10 @@ public class Upgrades {
         int inc = pierce.getLevel();
 
         pierce.setGenerateDescription(ability -> {
-            return ability.setDescription("Increases each projectiles pierce by " + inc + " , previously " + ability.getProjectiles().stream().mapToDouble(Projectile::getPierce).average().orElse(0) + " (average)");
+            return ability.setDescription("Increases each projectiles pierce by " + inc + ",\npreviously " + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Projectile::getPierce).average().orElse(0))*100)/100f + " (average)");
         });
         pierce.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.setPierce(projectile.getPierce() + inc));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setPierce(projectile.getPierce() + inc));
         });
         return pierce;
     }
@@ -77,10 +78,10 @@ public class Upgrades {
         int inc =  20 * speed.getLevel();
 
         speed.setGenerateDescription(ability -> {
-            return ability.setDescription("Increases the speed of each projectile by " + inc + " pixels per second, previously " + ability.getProjectiles().stream().mapToDouble(Entity2D::getSpeed).average().orElse(0) + " (average)");
+            return ability.setDescription("Increases the speed of each projectile by " + inc + " pixels per second,\npreviously " + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Entity2D::getSpeed).average().orElse(0))*100)/100f + " (average)");
         });
         speed.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.setSpeed(projectile.getSpeed() + inc));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setSpeed(projectile.getSpeed() + inc));
         });
         return speed;
     }
@@ -106,7 +107,7 @@ public class Upgrades {
         pc.setRarity(0.05f);
 
         pc.setGenerateDescription(ability -> {
-            return ability.setDescription("Doubles the projectile count of the ability from " + ability.stats.get("projectileCount") + " to " + ability.stats.get("projectileCount") * 2);
+            return ability.setDescription("Doubles the projectile count of the ability\nfrom " + ability.stats.get("projectileCount") + " to " + ability.stats.get("projectileCount") * 2);
         });
         pc.setOnApply((ability, upgrade) -> {
             ability.stats.put("projectileCount", ability.stats.get("projectileCount") * 2);
@@ -118,10 +119,10 @@ public class Upgrades {
         dmg.setRarity(0.05f);
 
         dmg.setGenerateDescription(ability -> {
-            return ability.setDescription("Doubles each projectiles damage from a collective " + ability.getProjectiles().stream().mapToInt(projectile -> (int) projectile.getDmg()).sum() + " to " + ability.getProjectiles().stream().mapToInt(projectile -> (int) projectile.getDmg()).sum() * 2);
+            return ability.setDescription("Doubles each projectiles damage from a collective\n" + Arrays.stream(ability.getProjectileTypes()).mapToInt(projectile -> (int) projectile.getDmg()).sum() + " to " + Arrays.stream(ability.getProjectileTypes()).mapToInt(projectile -> (int) projectile.getDmg()).sum() * 2);
         });
         dmg.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.setDmg(projectile.getDmg() * 2));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setDmg(projectile.getDmg() * 2));
         });
         return dmg;
     }
@@ -131,10 +132,10 @@ public class Upgrades {
         scale.setRarity(0.05f);
 
         scale.setGenerateDescription(ability -> {
-            return ability.setDescription("Doubles the scale of each projectile from " + ability.getProjectiles().stream().mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0) + "~ to " + ability.getProjectiles().stream().mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0) * 2);
+            return ability.setDescription("Doubles the scale of each projectile from\n" + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0))*100)/100f + "~ to " + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0) * 2)*100)/100f);
         });
         scale.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.setScale(projectile.getScale().mul(2, new Vector2f())));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setScale(projectile.getScale().mul(2, new Vector2f())));
         });
         return scale;
     }
@@ -144,10 +145,10 @@ public class Upgrades {
         pierce.setRarity(0.05f);
 
         pierce.setGenerateDescription(ability -> {
-            return ability.setDescription("Doubles each projectiles pierce from " + ability.getProjectiles().stream().mapToDouble(Projectile::getPierce).average().orElse(0) + "~ to " + ability.getProjectiles().stream().mapToDouble(Projectile::getPierce).average().orElse(0) * 2);
+            return ability.setDescription("Doubles each projectiles pierce from\n" + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Projectile::getPierce).average().orElse(0)*100)/100f + "~ to " + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Projectile::getPierce).average().orElse(0) * 2)*100)/100f));
         });
         pierce.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.setPierce(projectile.getPierce() * 2));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setPierce(projectile.getPierce() * 2));
         });
         return pierce;
     }
@@ -157,10 +158,10 @@ public class Upgrades {
         speed.setRarity(0.05f);
 
         speed.setGenerateDescription(ability -> {
-            return ability.setDescription("Doubles the speed of each projectile from " + ability.getProjectiles().stream().mapToDouble(Entity2D::getSpeed).average().orElse(0) + "~ to " + ability.getProjectiles().stream().mapToDouble(Entity2D::getSpeed).average().orElse(0) * 2);
+            return ability.setDescription("Doubles the speed of each projectile from\n" + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Entity2D::getSpeed).average().orElse(0)*100)/100f + "~ to " + ((int)(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Entity2D::getSpeed).average().orElse(0) * 2)*100)/100f));
         });
         speed.setOnApply((ability, upgrade) -> {
-            ability.getProjectiles().forEach(projectile -> projectile.setSpeed(projectile.getSpeed() * 2));
+            Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setSpeed(projectile.getSpeed() * 2));
         });
         return speed;
     }
@@ -170,7 +171,7 @@ public class Upgrades {
         cd.setRarity(0.05f);
 
         cd.setGenerateDescription(ability -> {
-            return ability.setDescription("Halves the cooldown of the ability from " + ability.getCooldown() + " to " + ability.getCooldown() / 2);
+            return ability.setDescription("Halves the cooldown of the ability from\n" + ability.getCooldown() + " to " + ability.getCooldown() / 2);
         });
         cd.setOnApply((ability, upgrade) -> {
             ability.setCooldown(ability.getCooldown() / 2);

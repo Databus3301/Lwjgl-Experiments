@@ -18,6 +18,7 @@ public class UI {
                 upgradeButtons[i] = new Button(scene, new Vector2f(room.getWitdh() / numButtons * i - room.getWitdh() / 2 + room.getWitdh() / 10, 0));
                 upgradeButtons[i].scale(room.getWitdh() / 10, room.getHeight() / 10);
                 upgradeButtons[i].setColor(0.5f, 0.5f, 0.5f, 1);
+                upgradeButtons[i].setHitTime(0);
 
                 // rndm ability that has upgrades
                 if(player.getAbilities().isEmpty())
