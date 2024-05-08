@@ -119,6 +119,8 @@ public class Upgrades {
         dmg.setRarity(0.05f);
 
         dmg.setGenerateDescription(ability -> {
+            Float pc = ability.stats.getOrDefault("projectileCount", 1f);
+            // TODO correctly attribute dmg by taking into account the types
             return ability.setDescription("Doubles each projectiles damage from a collective\n" + Arrays.stream(ability.getProjectileTypes()).mapToInt(projectile -> (int) projectile.getDmg()).sum() + " to " + Arrays.stream(ability.getProjectileTypes()).mapToInt(projectile -> (int) projectile.getDmg()).sum() * 2);
         });
         dmg.setOnApply((ability, upgrade) -> {

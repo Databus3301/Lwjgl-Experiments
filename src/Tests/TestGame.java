@@ -1,6 +1,7 @@
 package Tests;
 
 import Game.Action.Waves.EnemySpawner;
+import Game.Action.Waves.Wave;
 import Game.Entities.Dungeon.Door;
 import Game.Entities.Dungeon.Dungeon;
 import Game.Entities.Dungeon.Room;
@@ -113,6 +114,8 @@ public class TestGame extends Test {
         if (spawner.getLastResult() == WAVE_OVER) {
             shouldSimulate = true;
             UI.onLvlUp(player, this, room, 3);
+            spawner.setCurrentWave(Wave.getEmptyWave());
+
         }
 
         if (!shouldSimulate) return;

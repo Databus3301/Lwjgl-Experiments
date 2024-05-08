@@ -20,7 +20,7 @@ public class EnemySpawner {
         this.currentWave = currentWave;
     }
     public EnemySpawner() {
-        this(new Wave(1, 0, Float.MAX_VALUE));
+        this(Wave.getEmptyWave());
     }
 
     public Enemy[] update(float dt) {
@@ -48,17 +48,11 @@ public class EnemySpawner {
             return lastResult = Result.SPAWNED;
         }
 
-        if (currentWave.isFinishedSpawning() && enemyCollection.isEmpty()) {
-            return lastResult = Result.WAVE_OVER;
-        }
-
         if (currentWave.isFinishedSpawning()) {
-            //currentWave = new Wave(currentWave.getWaveNumber() + 1, currentWave.getWaveNumber() + 5, currentWave.getSpawnRate() / (1+0.3f*currentWave.getWaveNumber()));
+            if(enemyCollection.isEmpty()) // if there are no enemies left alive
+                return lastResult = Result.WAVE_OVER;
             return lastResult = Result.FINISHED_SPAWNING;
         }
-
-
-
 
         return lastResult = Result.NOTHING;
     }

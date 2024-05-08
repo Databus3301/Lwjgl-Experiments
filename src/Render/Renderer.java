@@ -164,9 +164,7 @@ public class Renderer {
         if (layoutingFunction == null) layoutingFunction = TextPosParams::getPos;
 
         tp.pos = layoutingFunction.apply(tp);
-        System.out.println("Pos1: " + tp.pos);
         tp.pos.set(tp.pos.x + tp.offset.x, tp.pos.y + tp.offset.y);
-        System.out.println("Pos2: " + tp.pos);
         return drawText(tp.text, tp.pos, tp.size.x, tp.font, shader, TextPosParams::getPos, cR, tp.maxWidth);
     }
 

@@ -34,6 +34,10 @@ public class Wave {
         }
     }
 
+    public static Wave getEmptyWave() {
+        return new Wave(-1, 1, Float.MAX_VALUE);
+    }
+
     public int getWaveNumber() {
         return waveNumber;
     }
