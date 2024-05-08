@@ -1,7 +1,6 @@
 package Game.Action;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * Upgrade for an Ability able to be obtained by anything Able. <br>
@@ -18,6 +17,12 @@ public class Upgrade {
     private String name;
     private String description;
     private int level;
+    /**
+     * The lower, the rarer. <br>
+     * Ideally between 0 and 1. <br>
+     * but the true rarity is determined by the relation to the rarity of the other upgrades.
+     *
+     */
     private float rarity;
 
     private BiConsumer<Ability, Upgrade> onApply = (ability, upgrade) -> {};

@@ -81,7 +81,7 @@ public class TestGame extends Test {
         colorReplacement.swap(new Vector4f(0, 0, 0, 1), new Vector4f(0, 0, 1, 1));
 
         // enemy spawning rules
-        spawner.setProbabilityDistribution(new float[]{0.3f, 0.3f, 0.4f});
+        spawner.setProbabilityDistribution(new float[]{0.3f, 0.3f, 0.4f, 0.1f});
         spawner.setTracker(player);
 
         bg = new Entity2D(new Vector2f(Window.dim.div(-2f, new Vector2i())), ObjModel.SQUARE, Shader.TEXTURING) {{

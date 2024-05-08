@@ -116,7 +116,21 @@ public class Ability {
         return upgrades;
     }
     public Upgrade getRndmUpgrade() {
-        return upgrades.get((int) (Math.random() * upgrades.size()));
+        float[] probabilityDistribution = new float[upgrades.size()];
+        float sum = 0;
+        for (int i = 0; i < upgrades.size(); i++) {
+            sum += upgrades.get(i).getRarity();
+            probabilityDistribution[i] = sum;
+        }
+        float rand = (float) Math.random() * sum;
+        int index = 0;
+        for (int i = 0; i < probabilityDistribution.length; i++) {
+            if (rand < probabilityDistribution[i]) {
+                index = i;
+                break;
+            }
+        }
+        return upgrades.get(index);
     }
 
 

@@ -30,19 +30,17 @@ Documenting my learning process of Open GL and LWJGL for a school project
 - [ ] OBJ/3D texture loading
 - [ ] shading / lighting / dithering shader
 - [ ] 3D camera
-- [ ] animations
+- [x] animations
 - [ ] particles
 - [ ] frustum culling
 - [ ] scene loading/saving/parsing
 - [ ] preload models and textures?
-- [ ] double buffering
+- [x] double buffering
 - [ ] material texture loading
 - [ ] compute shaders (if school supports it)
 - [ ] batch rendering with just model data and modelMatrices (no cpu calculations)
-- [ ] post processing shaders
+- [x] post processing shaders
 ### Game
-- [ ] space invaders demo
-
 - [ ] first launch
   - spawn in a room
     - post processing shader
@@ -54,9 +52,6 @@ Documenting my learning process of Open GL and LWJGL for a school project
   - [ ] Item-Stash
   - [ ] Character Selection
 - [ ] Map
-  - [ ] Graphics
-    - [ ] fantasy forest
-    - [ ] layered
   - [ ] Gameplay
     - [ ] enemy waves
       - [ ] possible interlacing if cleared to slow
@@ -88,9 +83,19 @@ Documenting my learning process of Open GL and LWJGL for a school project
       - [ ] flying
       - [ ] boss
     - [ ] simulation distance
-    - [ ] room drawer
+    - Rooms
+      - [x] drawing
+      - [x] generation
+      - [ ] room types
+        - [x] normal
+        - [ ] boss
+        - [ ] shop
+        - [ ] event
+        - [ ] start
+        - [ ] end
       
-- [x] …
+  - get ability on room completion
+  - get upgrade on lvl up
 
 ## Resources
 Tutorials: <br>

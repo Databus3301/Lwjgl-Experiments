@@ -17,9 +17,9 @@ public class Enemies {
 
     public static ArrayList<Enemy> defineEnemies() {
         ArrayList<Enemy> enemies = new ArrayList<>();
-        //enemies.add(BASIC);
-        //enemies.add(TANK);
-        //enemies.add(SHOOTER);
+        enemies.add(BASIC);
+        enemies.add(TANK);
+        enemies.add(SHOOTER);
         enemies.add(BOSS);
         return enemies;
     }
