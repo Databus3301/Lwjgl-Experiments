@@ -122,9 +122,6 @@ public class Window {
             }
             glViewport(0, 0, dim.x, dim.y);
 
-            //System.out.println(targetAspect + " " + newAspect + " " + (float)dim.x / dim.y);
-            //float div = 2f;
-            //drfb.getEntity().setScale((float)dim.x / div, (float)dim.y/ div);
             frameBuffer.resize(dim.x, dim.y);
         });
 
@@ -256,6 +253,9 @@ public class Window {
                     break;
                 case "sat", "separatedaxis":
                     currentTest = new TestSAT();
+                    break;
+                case "collectible", "col":
+                    currentTest = new TestCollectible();
                     break;
                 default:
                     currentTest = new Test();

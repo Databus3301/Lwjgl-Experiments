@@ -64,7 +64,6 @@ public class Interactable extends Entity2D {
     public <T extends Test> Interactable(T scene, Vector2f position, ObjModel model) {
         super(position, model);
         init(scene);
-
     }
     public <T extends Test> void init(T scene) {
         scene.addKeyListener(this::onKeyInput);

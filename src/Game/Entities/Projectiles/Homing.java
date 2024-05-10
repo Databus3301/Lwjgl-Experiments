@@ -98,7 +98,7 @@ public class Homing extends Projectile {
 
     // projecting a onto b results in the component of a that is parallel to b (imagine a shadow of a on b)
     // canceling out everything parralel (i.e the projection) by subtraction leaves the orthogonal component
-    private Vector2f orthogonalComponent(Vector2f a, Vector2f b) {
+    public static Vector2f orthogonalComponent(Vector2f a, Vector2f b) {
         Vector2f projection = new Vector2f(a).mul(b.dot(a) / a.lengthSquared());
         return new Vector2f(b).sub(projection);
     }
