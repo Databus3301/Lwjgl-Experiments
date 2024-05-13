@@ -4,21 +4,19 @@ import Tests.*;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.openal.*;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.system.MemoryStack;
-
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
-
-import static org.lwjgl.openal.ALC11.*;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.time.LocalTime;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC11.*;
 import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -79,10 +77,10 @@ public class Window {
 
         // get resolution
         long primary = dim == null ? glfwGetPrimaryMonitor() : NULL;
-        if(dim == null) {
+        if (dim == null) {
             GLFWVidMode.Buffer vidmodes = glfwGetVideoModes(primary);
             if (vidmodes != null) {
-                GLFWVidMode vidmode = vidmodes.get(vidmodes.capacity()-1);
+                GLFWVidMode vidmode = vidmodes.get(vidmodes.capacity() - 1);
                 dim = new Vector2i(vidmode.width(), vidmode.height());
             } else {
                 dim = new Vector2i(1280, 720);
@@ -91,7 +89,7 @@ public class Window {
 
 
         // Create the window
-        windowPtr = glfwCreateWindow(dim.x, dim.y, "Open Gl - Testing Enviroment", primary  , NULL);
+        windowPtr = glfwCreateWindow(dim.x, dim.y, "Open Gl - Testing Enviroment", primary, NULL);
         if (windowPtr == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
         targetAspect = (float) dim.x / dim.y;
@@ -114,7 +112,7 @@ public class Window {
         glfwSetFramebufferSizeCallback(windowPtr, (window, width, height) -> {
             dim.x = width;
             dim.y = height;
-            float newAspect =  (float) width / height;
+            float newAspect = (float) width / height;
             if (newAspect > targetAspect) {
                 dim.x = (int) (dim.y * targetAspect);
             } else {
@@ -226,7 +224,7 @@ public class Window {
                     break;
                 case "bubble", "bubblesort":
                     currentTest = new TestBubbleSortVis();
-                break;
+                    break;
                 case "insertion", "insertionsort":
                     currentTest = new TestInsertionSortVis();
                     break;
@@ -257,6 +255,9 @@ public class Window {
                 case "collectible", "col":
                     currentTest = new TestCollectible();
                     break;
+                case "abilityscreen", "as":
+                    currentTest = new TestAbillityScreen();
+                    break;
                 default:
                     currentTest = new Test();
             }
@@ -278,7 +279,6 @@ public class Window {
         float fps = 0;
         float time = 0;
         long ms = System.currentTimeMillis();
-
 
 
         if (currentTest != null) currentTest.OnStart();
@@ -349,12 +349,15 @@ public class Window {
     public static Window getWindow() {
         return window;
     }
+
     public static long getWindowPtr() {
         return window.windowPtr;
     }
+
     public Test getCurrentTest() {
         return currentTest;
     }
+
     public Renderer.FrameBuffer getFrameBuffer() {
         return frameBuffer;
     }

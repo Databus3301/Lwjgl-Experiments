@@ -26,6 +26,7 @@ public class Abilities {
         projectiles[0].setPierce(40);
 
         SHOOT = new Ability(projectiles, 0.25f);
+        SHOOT.setDescription("Shoots a projectile in direction of cursor");
         SHOOT.addUpgrades(Upgrades.getDefaults());
         SHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Projectile projectile = ability.getProjectileTypes()[0].clone();
@@ -80,6 +81,7 @@ public class Abilities {
         projectiles[0].setPierce(1);
 
         HOMING = new Ability(projectiles, 0.5f);
+        HOMING.setDescription("Shoots a homing projectile");
         HOMING.addUpgrades(Upgrades.getDefaults());
         HOMING.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Homing projectile = (Homing) ability.getProjectileTypes()[0].clone();
@@ -106,7 +108,7 @@ public class Abilities {
         projectiles[0].setPierce(1);
         projectiles[0].setSpeed(200f);
         CIRCLESHOOT = new Ability(projectiles, 2f);
-
+CIRCLESHOOT.setDescription("Shoots projectiles in all directions");
         CIRCLESHOOT.stats.put("projectileCount", 6f);
         CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
         CIRCLESHOOT.addUpgrade(Upgrades.getFlatProjectiles());
