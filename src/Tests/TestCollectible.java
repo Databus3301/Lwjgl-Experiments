@@ -11,8 +11,6 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 
@@ -49,8 +47,6 @@ public class TestCollectible extends Test {
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        collectibles.forEach(c -> c.update(dt));
-
         player.translate(player.getVelocity().mul(dt*player.getSpeed(), new Vector2f()));
 
         collectibles.removeIf(c -> c.collideCircle(player));

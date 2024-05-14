@@ -4,6 +4,7 @@ import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Entities.Dungeon.Room;
 import Render.Entity.Entity2D;
+import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Texturing.Animation;
 import Render.Window;
@@ -13,6 +14,7 @@ import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -21,6 +23,7 @@ public class Player extends Living implements Able {
     private final ArrayList<Ability> abilities = new ArrayList<>();
     private final Map<String, Animation> animations = new HashMap<>();
     private final Entity2D collider = new Entity2D(ObjModel.SQUARE);
+    private int xp = 0;
 
     public Player(Entity2D player, int maxLivePoints, Map<String, Animation> animations) {
         player.clone(this);
@@ -39,7 +42,10 @@ public class Player extends Living implements Able {
         // --TEMP-- add shooting ability as a default
         addAbility(Abilities.getDASH());
         addAbility(Abilities.getCIRCLESHOOT());
-        //addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
+        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
+        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
     }
 
     public void update(float dt, Vector2f mousePos) {
@@ -88,6 +94,20 @@ public class Player extends Living implements Able {
 
     }
 
+    public <T extends Interactable> void collıde(ArrayList<T> props) {
+        Iterator<T> iterator = props.iterator();
+        while(iterator.hasNext()) {
+            Entity2D prop = iterator.next();
+            if(prop instanceof Collectible collectible) {
+                if(collider.collideCircle(collectible)) {
+                    ((Collectible) prop).onCollect.accept((Collectible) prop, this);
+                    iterator.remove();
+                    System.out.println("Player xp: " + xp);
+                }
+            }
+        }
+    }
+
     public void addAnimation(String name, Animation animation) {
         animations.put(name, animation);
     }
@@ -100,6 +120,11 @@ public class Player extends Living implements Able {
         animation = animations.get(name);
     }
 
+    public void addXP(int xp) {
+        this.xp += xp;
+    }
+
+
     public ArrayList<Ability> getAbilities() {
         return abilities;
     }
@@ -108,5 +133,8 @@ public class Player extends Living implements Able {
     }
     public Entity2D getCollider() {
         return collider;
+    }
+    public int getXP() {
+        return xp;
     }
 }

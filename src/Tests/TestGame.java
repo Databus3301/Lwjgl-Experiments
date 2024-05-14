@@ -2,6 +2,7 @@ package Tests;
 
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
+import Game.Entities.Collectible;
 import Game.Entities.Dungeon.Door;
 import Game.Entities.Dungeon.Dungeon;
 import Game.Entities.Dungeon.Room;
@@ -11,6 +12,7 @@ import Game.Entities.Projectiles.Projectile;
 import Game.UI;
 import Render.Entity.Camera.Camera;
 import Render.Entity.Entity2D;
+import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.*;
@@ -37,6 +39,7 @@ public class TestGame extends Test {
     private final EnemySpawner spawner = new EnemySpawner();
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
+    private final ArrayList<Interactable> props = new ArrayList<>();
 
     private final Camera camera;
     private final ColorReplacement colorReplacement = new ColorReplacement();
@@ -127,6 +130,7 @@ public class TestGame extends Test {
         // collide player and its fields
         player.collide(enemies);
         player.collide(room);
+        player.collıde(props);
         // spawn enemies
         spawner.update(dt, enemies);
         // change room
@@ -138,16 +142,18 @@ public class TestGame extends Test {
             Enemy enemy = enemyIterator.next();
             enemy.update(dt, mousePos, player.getPosition());
             // move enemy to player
-            enemy.translateTowards(player, 100 * dt);
+            enemy.translateTowards(player, enemy.getSpeed() * dt);
             // push away from each other
             for (Enemy enemy1 : enemies) {
                 if (enemy != enemy1 && enemy.collideCircle(enemy1))
-                    enemy.translateTowards(enemy1, -100 * dt); // negated "towards" becomes "away"
+                    enemy.translateTowards(enemy1, -enemy.getSpeed() * dt); // negated "towards" becomes "away"
             }
             // kill enemies
             enemy.reduceISeconds(dt);
-            if (enemy.getLP() <= 0)
+            if (enemy.getLP() <= 0) {
+                enemy.spawnXp(this, props, player, room);
                 enemyIterator.remove();
+            }
             // print debug info if on cursor
             if (enemy.collideRect(cursor))
                 renderer.drawText("LivePoints: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x / 2f, enemy.getPosition().y + 15), 5);
@@ -167,6 +173,7 @@ public class TestGame extends Test {
         renderer.draw(room.getWalls());
         renderer.draw(room.getDoors());
         renderer.draw(enemies);
+        renderer.draw(props);
         renderer.draw(player);
 
         // UI

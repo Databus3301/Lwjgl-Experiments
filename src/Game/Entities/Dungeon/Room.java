@@ -91,7 +91,7 @@ public class Room {
             wall.scale(scale);
             wall.rotate(-90, 2);
             wall.setTexture(new Texture("rooms/" + design.getDesign() + "Wall" + (i % 2 == 0 ? 1 : 2) + ".png"));
-            wall.setPosition(new Vector2f(i * scale * 2 + position.x  -offset.x, position.y -offset.y));
+            wall.setPosition(new Vector2f(i * scale * 2 + position.x - offset.x, position.y - offset.y));
             walls.add(wall);
 
             Entity2D wall2 = wall.clone();
@@ -183,7 +183,6 @@ public class Room {
                 System.out.println((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()); // TODO: better wave generation
                 Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
                 spawner.setCurrentWave(w);
-
             }
         }
         onSwitch.accept(player, enemies);

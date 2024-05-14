@@ -180,6 +180,7 @@ public class Upgrades {
         return cd;
     }
 
+
     // ideas
 //    public static Upgrade getDoubleDuration() {
 //        Upgrade dur = new Upgrade("Duration", "Doubles the duration of the ability", 0);

@@ -44,6 +44,8 @@ public class Enemies {
         tank.setiSeconds(0.02f);
         tank.setColor(new Vector4f(0, 1, 0, 1));
         tank.setScale(10, 15);
+        tank.setMinXP(2);
+        tank.setMaxXP(4);
         return tank;
     }
 
@@ -55,6 +57,9 @@ public class Enemies {
         shooter.setiSeconds(0.02f);
         shooter.setColor(new Vector4f(0, 0, 1, 1));
         shooter.setScale(10, 12);
+        shooter.setMinXP(2);
+        shooter.setMaxXP(6);
+
         Ability shoot = Abilities.getSHOOT();
         shoot.getProjectileTypes()[0].setScale(5f);
         shooter.addAbility(shoot);
@@ -69,7 +74,9 @@ public class Enemies {
         boss.setLP(200);
         boss.setiSeconds(0.02f);
         boss.setColor(new Vector4f(0, 1, 1, 1));
-        boss.setScale(10 * 5, 12 * 5);
+        boss.setScale(10 * 4, 12 * 4);
+        boss.setMinXP(10);
+        boss.setMaxXP(30);
         Ability shoot = Abilities.getSHOOT();
         Ability shoot2 = Abilities.getCIRCLESHOOT();
         shoot.getProjectileTypes()[0].setScale(20f);

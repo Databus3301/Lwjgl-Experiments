@@ -11,8 +11,8 @@ public class Dungeon {
     public static final int DEFAULT_MAX_DOORS = 4;
     public static final int DEFAULT_START_CONNECTIONS = 2;
     public static final int DEFAULT_MIN_DOORS = 2;
-    public static final Vector2f MIN_ROOM_SIZE = new Vector2f(6, 6);
-    public static final Vector2f MAX_ROOM_SIZE = new Vector2f(10, 10);
+    public static final Vector2f MIN_ROOM_SIZE = new Vector2f(8, 8);
+    public static final Vector2f MAX_ROOM_SIZE = new Vector2f(16, 16);
 
 
     private final Test scene;
@@ -38,7 +38,7 @@ public class Dungeon {
     }
 
     private Room[] generate(int depth, int maxDoors, int connections) {
-        Vector2f dim = new Vector2f((float) (Math.random() * (MAX_ROOM_SIZE.x - MIN_ROOM_SIZE.x) + MIN_ROOM_SIZE.x), (float) (Math.random() * (MAX_ROOM_SIZE.y - MIN_ROOM_SIZE.y) + MIN_ROOM_SIZE.y));
+        Vector2f dim = new Vector2f((int) (Math.random() * (MAX_ROOM_SIZE.x - MIN_ROOM_SIZE.x) + MIN_ROOM_SIZE.x), (int) (Math.random() * (MAX_ROOM_SIZE.y - MIN_ROOM_SIZE.y) + MIN_ROOM_SIZE.y));
 
         if(depth <= 0) {
             rc++;
