@@ -100,6 +100,20 @@ public class Upgrades {
         });
         return cd;
     }
+    public static Upgrade getFlatCooldownStats() {
+        Upgrade cd = new Upgrade("Cooldown");
+        cd.setRarity(0.25f);
+
+        float dec = (2f - (1f / cd.getLevel())) / 10f;
+
+        cd.setGenerateDescription(ability -> {
+            return ability.setDescription("Decreases the cooldown of the ability\n by " + dec + " from " + ability.stats.get("cooldown") + " seconds");
+        });
+        cd.setOnApply((ability, upgrade) -> {
+            ability.stats.put("cooldown", ability.stats.get("cooldown") - dec);
+        });
+        return cd;
+    }
 
     // DOUBLES
     public static Upgrade getDoubleProjectiles() {
@@ -176,6 +190,20 @@ public class Upgrades {
         });
         cd.setOnApply((ability, upgrade) -> {
             ability.setCooldown(ability.getCooldown() / 2);
+        });
+        return cd;
+    }
+    public static Upgrade getHalfCooldownStats() {
+        Upgrade cd = new Upgrade("Cooldown");
+        cd.setRarity(0.25f);
+
+        float dec = (2f - (1f / cd.getLevel())) / 10f;
+
+        cd.setGenerateDescription(ability -> {
+            return ability.setDescription("Halves the cooldown of the ability\n by " + dec + " from " + ability.stats.get("cooldown") + " seconds");
+        });
+        cd.setOnApply((ability, upgrade) -> {
+            ability.stats.put("cooldown", ability.stats.get("cooldown") / 2f);
         });
         return cd;
     }

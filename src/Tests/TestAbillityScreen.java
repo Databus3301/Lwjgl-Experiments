@@ -13,19 +13,19 @@ import org.joml.Vector4f;
 
 import java.util.ArrayList;
 
+import static Game.Action.Abilities.abilities;
+
 
 public class TestAbillityScreen extends Test {
     Button[] abilityButtons;
     public TestAbillityScreen(){
         super();
-        ArrayList<Ability> abilities = new ArrayList<>();
-        abilities.add(Game.Action.Abilities.SHOOT);
-        abilities.add(Game.Action.Abilities.HOMING);
-        abilities.add(Game.Action.Abilities.CIRCLESHOOT);
-        abilityButtons = new Button[abilities.size()];
+
+        abilityButtons = new Button[abilities.length];
         for (int i = 0; i < abilityButtons.length; i++) {
             abilityButtons[i] = new Button(this, new Vector2f((float) Window.dim.x / abilityButtons.length * i - (float) Window.dim.x / 2 + (float) Window.dim.x / 10 + 100, 0));
-            Ability ability = abilities.get(i);
+            Ability ability = abilities[i];
+
             Label l = new Label(Font.RETRO_TRANSPARENT_WHITE, ability.getName());
             l.setScale(1f);
             abilityButtons[i].setLabel(l);

@@ -154,7 +154,7 @@ public class Room {
     }
 
     public void onSwitch(Player player, ArrayList<Enemy> enemies, EnemySpawner spawner) {
-        // change contents to inlcude interactables like blacksmith, shop, etc.
+        // change contents to include interactables like blacksmith, shop, etc.
         // call specific room callback
         switch (type) {
             case START -> {

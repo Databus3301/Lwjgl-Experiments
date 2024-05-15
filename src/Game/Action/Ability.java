@@ -22,7 +22,7 @@ public class Ability {
     private float cooldown;
     private float currentCooldown;
 
-    private String name;
+    private String name = "NO NAME";
     private String description;
     private UUID uuid;
 

@@ -17,6 +17,11 @@ public class Abilities {
     public static Ability SHIELD = getSHIELD();
     public static Ability CIRCLESHOOT = getCIRCLESHOOT();
 
+    public static Ability[] abilities = defineAbilities();
+    public static Ability[] defineAbilities() {
+        return new Ability[]{SHOOT, HOMING, DASH, SHIELD, CIRCLESHOOT};
+    }
+
     public static Ability getSHOOT() {
         Projectile[] projectiles = new Projectile[1];
         projectiles[0] = new Projectile();
@@ -44,8 +49,12 @@ public class Abilities {
 
     public static Ability getDASH() {
         Projectile[] projectiles = new Projectile[0];
-        DASH = new Ability(projectiles, Float.MAX_VALUE - 2);
+        DASH = new Ability(projectiles, 1000); // Float.MAX_VALUE /3f - 2
         DASH.setName("dash");
+
+        DASH.stats.put("cooldown", 2f);
+        DASH.addUpgrade(Upgrades.getFlatCooldownStats());
+        DASH.addUpgrade(Upgrades.getHalfCooldownStats());
 
         DASH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             origin.translate(new Vector2f(origin.getVelocity()).mul(200));
@@ -108,7 +117,7 @@ public class Abilities {
         projectiles[0].setPierce(1);
         projectiles[0].setSpeed(200f);
         CIRCLESHOOT = new Ability(projectiles, 2f);
-CIRCLESHOOT.setDescription("Shoots projectiles in all directions");
+        CIRCLESHOOT.setDescription("Shoots projectiles in all directions");
         CIRCLESHOOT.stats.put("projectileCount", 6f);
         CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
         CIRCLESHOOT.addUpgrade(Upgrades.getFlatProjectiles());

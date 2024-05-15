@@ -1,5 +1,6 @@
 package Tests;
 
+import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
 import Game.Entities.Collectible;
@@ -24,6 +25,7 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import static Game.Action.Waves.EnemySpawner.Result.WAVE_OVER;
 import static org.lwjgl.glfw.GLFW.*;
@@ -257,12 +259,22 @@ public class TestGame extends Test {
             player.switchAnimation("walkRight");
 
         // Dash
-        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
             // get ability with name="dash"
-            player.getAbilities().stream().filter(ability -> ability.getName().equals("dash")).findFirst().ifPresent(ability -> {
-                // set cooldown to 0
-                ability.setCurrentCooldown(0);
-            });
+            ArrayList<Ability> abilities = player.getAbilities();
+            for (int i = 0; i < abilities.size(); i++) {
+                Ability a = abilities.get(i);
+                if (a.getName().equals("dash")) {
+                    System.out.println(a.getCurrentCooldown());
+                    System.out.println((a.getCooldown() - a.stats.get("cooldown")));
+
+                    if(a.getCurrentCooldown() <= (a.getCooldown()*2 - a.stats.get("cooldown"))) {
+                        a.setCurrentCooldown(0);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public Room getRoom() {
