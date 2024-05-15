@@ -275,9 +275,13 @@ public class Renderer {
         }
     }
 
-    public <T extends Entity2D> void drawUI(Entity2D entity) {
+    public <T extends Entity2D> void drawUI(T entity) {
         entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
         draw(entity);
+    }
+    public <T extends Button> void drawUI(T button) {
+        button.setOffset(camera.getPosition().mul(-1, new Vector2f()));
+        draw(button);
     }
 
     public <T extends Entity2D> void drawUI(T[] entities) {

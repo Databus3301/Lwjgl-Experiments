@@ -9,7 +9,7 @@ import org.joml.Vector2f;
 public class Button extends Interactable {
     private Label label = new Label();
     private Label tooltip = new Label();
-    private int framesHovered = 0; // TODO: change this to system time / use delta time to make it system independent
+    private int framesHovered = 0; // TODO: change this to system.time / use delta time to make it system independent
     private int hitTime = 300;
 
     public <T extends Test>Button(T test, Vector2f position, ObjModel model, Texture icon, Shader shader) {

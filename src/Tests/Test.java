@@ -17,7 +17,7 @@ Tests are used to test the functionality of the engine.
 public class Test {
 
     public static Renderer renderer;
-    public Vector2f mousePos = new Vector2f(0, 0);
+    public static Vector2f mousePos = new Vector2f(0, 0);
 
 
     private final ArrayList<Interactable.QuintConsumer<Integer, Integer, Integer, Integer, Vector2f>> keyCallbacks;

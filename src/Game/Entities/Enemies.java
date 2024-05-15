@@ -26,7 +26,6 @@ public class Enemies {
         return enemies;
     }
 
-    //TODO: IMPLEMENT basic.setSpeed(1);
     public static Enemy getBASIC() {
         // BASIC ENEMY
         Enemy basic = new Enemy();
@@ -53,7 +52,6 @@ public class Enemies {
     }
 
     public static Enemy getTANK() {
-        // BASIC ENEMY 2
         Enemy tank = new Enemy();
         tank.setMaxLP(200);
         tank.setLP(300);
@@ -68,7 +66,6 @@ public class Enemies {
     }
 
     public static Enemy getSHOOTER() {
-        // BASIC ENEMY 2
         Enemy shooter = new Enemy();
         shooter.setMaxLP(200);
         shooter.setLP(200);
@@ -87,21 +84,25 @@ public class Enemies {
     }
 
     public static Enemy getBOSS() {
-        // BASIC ENEMY 2
         Enemy boss = new Enemy();
+        boss.setScale(10 * 4, 12 * 4);
+        boss.setColor(new Vector4f(0, 1, 1, 1));
+
+        boss.setiSeconds(0.02f);
         boss.setMaxLP(2000);
         boss.setLP(200);
-        boss.setiSeconds(0.02f);
-        boss.setColor(new Vector4f(0, 1, 1, 1));
-        boss.setScale(10 * 4, 12 * 4);
+
         boss.setMinXP(10);
         boss.setMaxXP(30);
+
         Ability shoot = Abilities.getSHOOT();
         Ability shoot2 = Abilities.getCIRCLESHOOT();
-        shoot.getProjectileTypes()[0].setScale(20f);
+        shoot2.setCooldown(4f);
+        shoot .getProjectileTypes()[0].setScale(20f);
         shoot2.getProjectileTypes()[0].setScale(20f);
         boss.addAbility(shoot);
         boss.addAbility(shoot2);
+
         boss.setSpeed(90f);
 
         return boss;

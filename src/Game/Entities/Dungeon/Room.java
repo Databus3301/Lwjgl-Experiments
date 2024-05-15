@@ -184,8 +184,8 @@ public class Room {
                 // init enemy Spawner to appropriate wave
                 //spawner.setProbabilityDistribution(new float[]{0.5f, 0.5f});
 
-                System.out.println((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()); // TODO: better wave generation
-                Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
+                // TODO: better wave generation
+                Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
                 spawner.setCurrentWave(w);
 
                 player.setAutoshooting(true);

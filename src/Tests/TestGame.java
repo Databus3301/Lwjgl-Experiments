@@ -119,8 +119,6 @@ public class TestGame extends Test {
         if (spawner.getLastResult() == WAVE_OVER) {
             shouldSimulate = true;
             UI.onLvlUp(player, this, room, 3);
-            spawner.setCurrentWave(Wave.getEmptyWave());
-
         }
 
         if (!shouldSimulate) return;
@@ -264,7 +262,6 @@ public class TestGame extends Test {
             ArrayList<Ability> abilities = player.getAbilities();
             for (int i = 0; i < abilities.size(); i++) {
                 Ability a = abilities.get(i);
-                System.out.println("ability: " + a.getName());
                 // get the first dash ability
                 if (a.getName().equals("Dash")) {
                     // that's off cooldown
@@ -281,14 +278,19 @@ public class TestGame extends Test {
     public Room getRoom() {
         return room;
     }
+    public EnemySpawner getSpawner() {
+        return spawner;
+    }
+
 
     public void setRoom(Room room) {
         this.room = room;
     }
-
-
     public Player getPlayer() {
         return player;
+    }
+    public void setShouldSimulate(boolean shouldSimulate) {
+        this.shouldSimulate = shouldSimulate;
     }
 }
 

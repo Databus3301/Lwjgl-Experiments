@@ -21,7 +21,7 @@ public class TestAbillityScreen extends Test {
     public TestAbillityScreen(){
         super();
 
-        int bc = abilities.length-2; // button count
+        int bc = abilities.length; // button count
         int bw = Window.dim.x / bc; // button width
         abilityButtons = new Button[bc];
 
@@ -39,6 +39,7 @@ public class TestAbillityScreen extends Test {
             abilityButtons[i].setTexture(new Texture("input.png", 0));
             abilityButtons[i].setShader(Shader.TEXTURING);
 
+            // change text colors
 //            ColorReplacement cr = new ColorReplacement();
 //            cr.swap(new Vector4f(1, 1, 1, 1), new Vector4f(1f, 1f, 0.2f, 1));
 //            abilityButtons[i].setColorReplacement(cr);

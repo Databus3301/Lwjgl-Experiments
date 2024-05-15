@@ -2,23 +2,34 @@ package Game;
 
 import Game.Action.Ability;
 import Game.Action.Upgrade;
+import Game.Action.Waves.EnemySpawner;
+import Game.Action.Waves.Wave;
 import Game.Entities.Dungeon.Room;
 import Game.Entities.Player;
 import Render.Entity.Interactable.Button;
+import Render.Entity.Interactable.Interactable;
+import Render.Window;
 import Tests.Test;
+import Tests.TestGame;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
+
+import static Render.Entity.Interactable.Interactable.States.HOVER;
 
 public class UI {
     private static Button[] upgradeButtons;
 
-    public static void onLvlUp(Player player, Test scene, Room room, int numButtons) {
+    public static void onLvlUp(Player player, TestGame scene, Room room, int bcnt) {
+        float bw = (float) Window.dim.x / bcnt;
+        float bh = Window.dim.y / (bcnt+1f);
+
         if(upgradeButtons == null) {
-            upgradeButtons = new Button[numButtons];
-            for (int i = 0; i < numButtons; i++) {
-                upgradeButtons[i] = new Button(scene, new Vector2f(room.getWitdh() / numButtons * i - room.getWitdh() / 2 + room.getWitdh() / 10, 0));
-                upgradeButtons[i].scale(room.getWitdh() / 10, room.getHeight() / 10);
-                upgradeButtons[i].setColor(0.5f, 0.5f, 0.5f, 1);
-                upgradeButtons[i].setHitTime(0);
+            upgradeButtons = new Button[bcnt];
+            for (int i = 0; i < bcnt; i++) {
+                upgradeButtons[i] = new Button(scene, new Vector2f(0, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f)));
+                upgradeButtons[i].scale(bw/2f, bh/2f);
+                upgradeButtons[i].setColor(0.6f, 0.6f, 0.6f, 0.25f);
+                upgradeButtons[i].setHitTime(100000);
 
                 // rndm ability that has upgrades
                 if(player.getAbilities().isEmpty())
@@ -52,21 +63,47 @@ public class UI {
                     - on click: border color lightens
                     - on release: upgrade is applied
 
+                    stop simulation
+
                      */
                     rU.applyTo(finalRA);
 
+                    EnemySpawner sp = scene.getSpawner();
+                    sp.setCurrentWave(Wave.getEmptyWave());
+                    sp.setLastResult();
+
+                    scene.setShouldSimulate(true);
                     upgradeButtons = null;
                 });
             }
         }
+        if(upgradeButtons == null)
+            return;
+        for (int i = 0; i < upgradeButtons.length; i++) {
+            Vector2f cp = Test.renderer.getCamera().getPosition();
+            pos.set(-cp.x, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f) + -cp.y);
+            upgradeButtons[i].setPosition(pos);
+        }
     }
 
 
-
+    private static final Vector2f pos = new Vector2f(0, 0);
+    private static final Vector2f scale = new Vector2f(0, 0);
     public static void draw() {
         if(upgradeButtons != null)
             for (int i = 0; i < upgradeButtons.length; i++) {
                 Test.renderer.draw(upgradeButtons[i]);
+
+                Vector4f color;
+                if(upgradeButtons[i].getState() == HOVER)
+                    color = new Vector4f(.1f, .7f, .1f, 1);
+                else
+                if(upgradeButtons[i].getState() == Interactable.States.DRAGGED)
+                    color = new Vector4f(.5f, 1f, .5f, 1);
+                else
+                    color = new Vector4f(.6f, .6f, .6f, 1);
+
+                Test.renderer.drawRect(upgradeButtons[i].getPosition().sub(upgradeButtons[i].getScale(), pos), upgradeButtons[i].getScale().mul(2, scale), color);
             }
     }
 

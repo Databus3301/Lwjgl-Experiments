@@ -116,6 +116,14 @@ public class EnemySpawner {
         return lastResult;
     }
 
+    /**
+     * Only use if you know what you are doing! <br>
+     * It's the spawners job to set results via < update >
+     */
+    public void setLastResult() {
+        this.lastResult = Result.NOTHING;
+    }
+
     public enum Result {
         SPAWNED, NOTHING, WAVE_OVER, FINISHED_SPAWNING
     }
