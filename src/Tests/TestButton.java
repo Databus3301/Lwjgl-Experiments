@@ -14,11 +14,12 @@ public class TestButton extends Test {
 
         b.scale(600, 400); // TODO: Make label scaling more consistent with different button sizes
         b.setLabel("This is a button\nwith a label");
-        b.getLabel().setScale(10000);
+        b.getLabel().setScale(10);
         b.setTooltip("This is a tooltip");
         b.setIcon(icon);
         b.setShader(Shader.TEXTURING);
-        b.setHitTime(1000);
+        b.setHitTime(200);
+        b.translate(500, 100);
 
         b.setReleasedCallback((button) -> {
             System.out.println("Button released");

@@ -21,20 +21,27 @@ public class TestAbillityScreen extends Test {
     public TestAbillityScreen(){
         super();
 
-        int bc = abilities.length; // button count
+        int bc = abilities.length-2; // button count
         int bw = Window.dim.x / bc; // button width
         abilityButtons = new Button[bc];
 
 
         for (int i = 0; i < abilityButtons.length; i++) {
-            abilityButtons[i] = new Button(this, new Vector2f(bw * i - bw * (bc/2f), 0));
+            // create and spread out buttons
+            abilityButtons[i] = new Button(this, new Vector2f(bw * i - bw * (bc/2f - 0.5f), 0));
             Ability ability = abilities[i];
 
-            abilityButtons[i].scale(bw, 85);
+            abilityButtons[i].scale(bw/2f, 85);
             abilityButtons[i].setTooltip(ability.getDescription());
             abilityButtons[i].setLabel(ability.getName());
+            abilityButtons[i].getLabel().setFont(Font.RETRO_TRANSPARENT_WHITE);
+            abilityButtons[i].getLabel().setScale(15f);
             abilityButtons[i].setTexture(new Texture("input.png", 0));
             abilityButtons[i].setShader(Shader.TEXTURING);
+
+//            ColorReplacement cr = new ColorReplacement();
+//            cr.swap(new Vector4f(1, 1, 1, 1), new Vector4f(1f, 1f, 0.2f, 1));
+//            abilityButtons[i].setColorReplacement(cr);
 
             abilityButtons[i].setPressedCallback((button) -> {
                 TestGame tg = new TestGame();
@@ -42,9 +49,7 @@ public class TestAbillityScreen extends Test {
                 tg.getPlayer().addAbility(ability);
             });
         }
-        
 
-        
     }
 
     @Override

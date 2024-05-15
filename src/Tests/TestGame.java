@@ -264,8 +264,9 @@ public class TestGame extends Test {
             ArrayList<Ability> abilities = player.getAbilities();
             for (int i = 0; i < abilities.size(); i++) {
                 Ability a = abilities.get(i);
+                System.out.println("ability: " + a.getName());
                 // get the first dash ability
-                if (a.getName().equals("dash")) {
+                if (a.getName().equals("Dash")) {
                     // that's off cooldown
                     if(a.getCurrentCooldown() <= (a.getCooldown()*2 - a.stats.get("cooldown"))) {
                         // and trigger it

@@ -52,7 +52,7 @@ public class Font extends TextureAtlas {
         if(sizedWidth > p.maxWidth)
             p.size.set(p.size.x * p.maxWidth / sizedWidth);
 
-        float xComponent = -getSizedWidth(lineLength, p.font, p.size) + p.pos.x / 2 - p.offset.x;
+        float xComponent = -getSizedWidth(lineLength, p.font, p.size) + p.pos.x - p.offset.x;
         float yComponent = p.font.getCharHeight() * p.size.y / ((p.font.getCharWidth() + 1) / 2f) + p.pos.y + p.font.getCharWidth() - p.offset.y ;
 
         return new Vector2f(xComponent, yComponent);

@@ -293,7 +293,7 @@ public class Renderer {
         Label label = button.getLabel();
         drawText(
                 new TextPosParams(
-                        button.getPosition(),
+                        new Vector2f(button.getPosition()),
                         new Vector2f(label.getScale()),
                         label.getFont(),
                         label.getText(),

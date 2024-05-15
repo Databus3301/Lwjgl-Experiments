@@ -30,6 +30,7 @@ public class Abilities {
         projectiles[0].setTexture(new Texture("fireball.png", 0));
 
         SHOOT = new Ability(projectiles, 0.25f);
+        SHOOT.setName("Shoot");
         SHOOT.setDescription("Shoots a projectile in direction of cursor}\n every 0.25 seconds dealing 50 damage");
         SHOOT.addUpgrades(Upgrades.getDefaults());
         SHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
@@ -49,7 +50,7 @@ public class Abilities {
     public static Ability getDASH() {
         Projectile[] projectiles = new Projectile[0];
         DASH = new Ability(projectiles, 1000); // Float.MAX_VALUE /3f - 2
-        DASH.setName("dash");
+        DASH.setName("Dash");
         DASH.setDescription("Dashes in the current walking direction\n with a cooldown of 2 seconds\n (can be stacked)");
 
         DASH.stats.put("cooldown", 2f);
@@ -65,9 +66,10 @@ public class Abilities {
     public static Ability getSHIELD() {
         Projectile[] projectiles = new Projectile[0];
         SHIELD = new Ability(projectiles, 2f);
-        AtomicBoolean shielded = new AtomicBoolean(true);
+        SHIELD.setName("Shield");
         SHIELD.setDescription("Gives the player a shield for 2 seconds\n that blocks all incoming damage");
 
+        AtomicBoolean shielded = new AtomicBoolean(true);
         SHIELD.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             ((Player) origin).setiSeconds(2);
             origin.setShader(new Shader("texturing.player.shader"));
@@ -92,8 +94,10 @@ public class Abilities {
         projectiles[0].setPierce(1);
 
         HOMING = new Ability(projectiles, 0.5f);
+        HOMING.setName("Homing");
         HOMING.setDescription("Shoots a homing projectile\n following the closest enemy in front of it\n every 0.5 seconds dealing 100 damage");
         HOMING.addUpgrades(Upgrades.getDefaults());
+
         HOMING.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Homing projectile = (Homing) ability.getProjectileTypes()[0].clone();
             projectile.setPosition(origin.getPosition());
@@ -118,9 +122,12 @@ public class Abilities {
         projectiles[0].setTexture(new Texture("fireball.png", 0));
         projectiles[0].setPierce(1);
         projectiles[0].setSpeed(200f);
+
         CIRCLESHOOT = new Ability(projectiles, 2f);
         CIRCLESHOOT.stats.put("projectileCount", 6f);
+        CIRCLESHOOT.setName("Circle-Shoot");
         CIRCLESHOOT.setDescription("Shoots " + CIRCLESHOOT.stats.get("projectileCount") + "projectiles in all directions\n every 2 seconds dealing 50 damage each");
+
         CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
         CIRCLESHOOT.addUpgrade(Upgrades.getFlatProjectiles());
         CIRCLESHOOT.addUpgrades(Upgrades.getDefaults());
