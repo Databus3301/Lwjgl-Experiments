@@ -1,6 +1,7 @@
 package Game.Action;
 
 import Game.Entities.Living;
+import Game.Entities.Player;
 import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Entity2D;
 import Tests.Test;
@@ -50,11 +51,13 @@ public class Ability {
     }
 
     public void update(float dt, Vector2f mousePos, Vector2f target, Entity2D trigger) {
-        if (currentCooldown > 0) {
-            currentCooldown -= dt;
-        } else {
-            currentCooldown = cooldown * 2;
-            onTrigger.accept(this, dt, mousePos, target, trigger, scene);
+        if(trigger instanceof Player p && p.getAutoshooting()) {
+            if (currentCooldown > 0) {
+                currentCooldown -= dt;
+            } else {
+                currentCooldown = cooldown * 2;
+                onTrigger.accept(this, dt, mousePos, target, trigger, scene);
+            }
         }
         projectiles.forEach(projectile -> projectile.update(dt));
         projectiles.removeIf(projectile -> projectile.getPierce() <= 0);
@@ -181,6 +184,8 @@ public class Ability {
     public void setUpgrades(ArrayList<Upgrade> upgrades) {
         this.upgrades = upgrades;
     }
+
+
 
     @FunctionalInterface
     public interface HexConsumer<T, U, V, W, X, Y> {

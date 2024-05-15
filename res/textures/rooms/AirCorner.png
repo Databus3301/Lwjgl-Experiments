@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="de">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>1blu Webmail :: Willkommen bei 1blu Webmail</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0"><meta name="theme-color" content="#f4f4f4"><meta name="msapplication-navbutton-color" content="#f4f4f4">
+	<link rel="shortcut icon" href="skins/1blu-elastic/images/1blu-logo.png?s=1663763364">
+	<link rel="stylesheet" href="skins/elastic/deps/bootstrap.min.css?s=1705745714">
+	
+		<link rel="stylesheet" href="skins/elastic/styles/styles.min.css?s=1705745704">
+		
+	
+	
+		<script>
+		try {
+			if (document.cookie.indexOf('colorMode=dark') > -1
+				|| (document.cookie.indexOf('colorMode=light') === -1 && window.matchMedia('(prefers-color-scheme: dark)').matches)
+			) {
+				document.documentElement.className += ' dark-mode';
+			}
+		} catch (e) { }
+		</script>
+	
+	<link rel="stylesheet" href="skins/1blu-elastic/styles/1blu.css?s=1663763422">
+<link rel="stylesheet" type="text/css" href="plugins/jqueryui/themes/elastic/jquery-ui.min.css?s=1705745704"><script src="program/js/jquery.min.js?s=1705745709"></script><script src="program/js/common.min.js?s=1705745704"></script><script src="program/js/app.min.js?s=1705745704"></script><script src="program/js/jstz.min.js?s=1705745709"></script><script>
+/*
+        @licstart  The following is the entire license notice for the 
+        JavaScript code in this page.
+
+        Copyright (C) The Roundcube Dev Team
+
+        The JavaScript code in this page is free software: you can redistribute
+        it and/or modify it under the terms of the GNU General Public License
+        as published by the Free Software Foundation, either version 3 of
+        the License, or (at your option) any later version.
+
+        The code is distributed WITHOUT ANY WARRANTY; without even the implied
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+        See the GNU GPL for more details.
+
+        @licend  The above is the entire license notice
+        for the JavaScript code in this page.
+*/
+var rcmail = new rcube_webmail();
+rcmail.set_env({"task":"login","standard_windows":true,"locale":"de_DE","devel_mode":null,"rcversion":10606,"cookie_domain":"","cookie_path":"/","cookie_secure":true,"dark_mode_support":true,"skin":"1blu-elastic","blankpage":"skins/1blu-elastic/watermark.html","refresh_interval":60,"session_lifetime":5400,"action":"get","comm_path":"/?_task=login","compose_extwin":false,"date_format":"dd.mm.yy","date_format_localized":"TT.MM.JJJJ","request_token":"xqHtGANXauPyIHC371XkAz7gZXkrABha"});
+rcmail.add_label({"loading":"Wird geladen …","servererror":"Serverfehler!","connerror":"Verbindungsfehler (Fehler beim Erreichen des Servers)!","requesttimedout":"Zeitüberschreitung der Anforderung","refreshing":"Aktualisierung läuft …","windowopenerror":"Das Popup-Fenster wurde blockiert!","uploadingmany":"Dateien werden hochgeladen …","uploading":"Datei wird hochgeladen …","close":"Schließen","save":"Speichern","cancel":"Abbrechen","alerttitle":"Achtung","confirmationtitle":"Sind Sie sich sicher...","delete":"Löschen","continue":"Weiter","ok":"OK","back":"Zurück","errortitle":"Ein Fehler ist aufgetreten!","options":"Optionen","plaintoggle":"Einfacher Text","htmltoggle":"HTML","previous":"Vorherige(r)","next":"Nächste(r)","select":"Auswahl","browse":"Durchsuchen","choosefile":"Datei auswählen…","choosefiles":"Dateien auswählen…"});
+rcmail.display_message("Ihre Sitzung ist ungültig oder abgelaufen.","error",-1000);
+rcmail.gui_container("loginfooter","login-footer");rcmail.gui_object('loginform', 'login-form');
+rcmail.gui_object('message', 'messagestack');
+</script>
+
+<script src="plugins/jqueryui/js/jquery-ui.min.js?s=1705745704"></script><script src="plugins/jqueryui/js/i18n/datepicker-de.js?s=1705745704"></script>
+</head>
+<body class="task-login action-get">
+	
+		<div id="layout">
+	
+
+
+<h1 class="voice">1blu Webmail Anmelden</h1>
+
+<div id="layout-content" class="selected no-navbar" role="main">
+	<div id="loginPanel">
+		<img src="skins/1blu-elastic/images/logo.png?s=1663763374" id="logo" alt="1blu Logo" />
+		<div id="loginPanelText">Willkommen bei 1blu Webmail</div>
+		<form id="login-form" name="login-form" method="post" class="propform" action="/?_task=login">
+<input type="hidden" name="_token" value="xqHtGANXauPyIHC371XkAz7gZXkrABha">
+		<input type="hidden" name="_task" value="login"><input type="hidden" name="_action" value="login"><input type="hidden" name="_timezone" id="rcmlogintz" value="_default_"><input type="hidden" name="_url" id="rcmloginurl" value="_task=mail&amp;_action=get&amp;_mbox=INBOX&amp;_uid=6181&amp;_token=8N8MKORecWrSawWl15M4eWRy7gHVcQi1&amp;_part=2"><table><tbody><tr><td class="title"><label for="rcmloginuser">Benutzername</label></td><td class="input"><input name="_user" id="rcmloginuser" required size="40" class="form-control" autocapitalize="off" value="" type="text"></td></tr><tr><td class="title"><label for="rcmloginpwd">Passwort</label></td><td class="input"><input name="_pass" id="rcmloginpwd" required size="40" class="form-control" autocapitalize="off" type="password"></td></tr></tbody></table><p class="formbuttons"><button type="submit" id="rcmloginsubmit" class="button mainaction submit">Anmelden</button></p>
+			<div id="login-footer" role="contentinfo">
+				
+			</div>
+		</form>
+	</div>
+	<div id="loginPanelFooter">
+		<span class="loginPanelFooterLink"><a href="https://www.1blu.de/impressum/" target="_blank">Impressum</a></span>
+		<span class="loginPanelFooterLink"><a href="https://www.1blu.de/agb/" target="_blank">AGB</a></span>
+		<span class="loginPanelFooterLink"><a href="https://www.1blu.de/datenschutz/" target="_blank">Datenschutz</a></span>
+	</div>
+</div>
+
+<noscript>
+	<p class="noscriptwarning">Warnung: Dieser Webmail-Service erfordert Javascript. Um ihn zu benutzten aktivieren Sie Javascript in ihren Browser-Einstellungen.</p>
+</noscript>
+
+
+</div>
+
+<a href="http://faq.1blu.de/" target="_blank" id="supportlink" class="hidden">Support</a>
+
+
+
+<div id="messagestack"></div>
+<script>
+$(function() {
+rcmail.init();
+});
+</script>
+
+
+
+<script src="skins/elastic/deps/bootstrap.bundle.min.js?s=1705745714"></script>
+<script src="skins/elastic/ui.min.js?s=1705745704"></script>
+
+</body>
+</html>

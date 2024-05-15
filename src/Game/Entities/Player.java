@@ -25,6 +25,8 @@ public class Player extends Living implements Able {
     private final Entity2D collider = new Entity2D(ObjModel.SQUARE);
     private int xp = 0;
 
+    private boolean isAutoshooting = false;
+
     public Player(Entity2D player, int maxLivePoints, Map<String, Animation> animations) {
         player.clone(this);
         this.maxLP = maxLivePoints;
@@ -125,6 +127,14 @@ public class Player extends Living implements Able {
     }
 
 
+    public void setAutoshooting(boolean autoshooting) {
+        this.isAutoshooting = autoshooting;
+    }
+    public void toggleAutoshooting() {
+        this.isAutoshooting = !isAutoshooting;
+    }
+
+
     public ArrayList<Ability> getAbilities() {
         return abilities;
     }
@@ -136,5 +146,9 @@ public class Player extends Living implements Able {
     }
     public int getXP() {
         return xp;
+    }
+
+    public boolean getAutoshooting() {
+        return isAutoshooting;
     }
 }

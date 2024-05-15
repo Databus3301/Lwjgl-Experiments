@@ -159,12 +159,14 @@ public class Room {
         switch (type) {
             case START -> {
                 renderer.setPostProcessingShader(new Shader("post_processing.shader"));
+                player.setAutoshooting(false);
 
                 for(Door d : doors) {
                     d.open();
                 }
             }
             case END -> {
+                player.setAutoshooting(true);
             }
             case BOSS -> {
                 // add boss to room
@@ -172,9 +174,11 @@ public class Room {
             }
             case SHOP -> {
                 // add shop to room
+                player.setAutoshooting(false);
             }
             case SMITH -> {
                 // add blacksmith to room
+                player.setAutoshooting(false);
             }
             case NORMAL -> {
                 // init enemy Spawner to appropriate wave
@@ -183,6 +187,8 @@ public class Room {
                 System.out.println((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()); // TODO: better wave generation
                 Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
                 spawner.setCurrentWave(w);
+
+                player.setAutoshooting(true);
             }
         }
         onSwitch.accept(player, enemies);

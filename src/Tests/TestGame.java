@@ -232,6 +232,9 @@ public class TestGame extends Test {
         if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
             keyArr[3] = GLFW_KEY_D;
 
+        if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+            player.toggleAutoshooting();
+
         // apply velocity
         player.setVelocity(new Vector2f(0, 0));
         if (keyArr[0] == GLFW_KEY_W)
