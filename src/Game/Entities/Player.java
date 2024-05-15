@@ -43,12 +43,12 @@ public class Player extends Living implements Able {
 
         // --TEMP-- add shooting ability as a default
         addAbility(Abilities.getDASH());
-        addAbility(Abilities.getDASH());
-        addAbility(Abilities.getCIRCLESHOOT());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
-        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
-        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
+//        addAbility(Abilities.getDASH());
+//        addAbility(Abilities.getCIRCLESHOOT());
+//        addAbility(Abilities.getHOMING());
+//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
+//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
+//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
     }
 
     public void update(float dt, Vector2f mousePos) {

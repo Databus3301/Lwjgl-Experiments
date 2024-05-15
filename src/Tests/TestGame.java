@@ -260,15 +260,15 @@ public class TestGame extends Test {
 
         // Dash
         if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-            // get ability with name="dash"
+            // iterate over all abilities
             ArrayList<Ability> abilities = player.getAbilities();
             for (int i = 0; i < abilities.size(); i++) {
                 Ability a = abilities.get(i);
+                // get the first dash ability
                 if (a.getName().equals("dash")) {
-                    System.out.println(a.getCurrentCooldown());
-                    System.out.println((a.getCooldown() - a.stats.get("cooldown")));
-
+                    // that's off cooldown
                     if(a.getCurrentCooldown() <= (a.getCooldown()*2 - a.stats.get("cooldown"))) {
+                        // and trigger it
                         a.setCurrentCooldown(0);
                         break;
                     }

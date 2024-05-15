@@ -21,24 +21,25 @@ public class TestAbillityScreen extends Test {
     public TestAbillityScreen(){
         super();
 
-        abilityButtons = new Button[abilities.length];
+        int bc = abilities.length; // button count
+        int bw = Window.dim.x / bc; // button width
+        abilityButtons = new Button[bc];
+
+
         for (int i = 0; i < abilityButtons.length; i++) {
-            abilityButtons[i] = new Button(this, new Vector2f((float) Window.dim.x / abilityButtons.length * i - (float) Window.dim.x / 2 + (float) Window.dim.x / 10 + 100, 0));
+            abilityButtons[i] = new Button(this, new Vector2f(bw * i - bw * (bc/2f), 0));
             Ability ability = abilities[i];
 
-            Label l = new Label(Font.RETRO_TRANSPARENT_WHITE, ability.getName());
-            l.setScale(1f);
-            abilityButtons[i].setLabel(l);
-            abilityButtons[i].scale(250, 85);
+            abilityButtons[i].scale(bw, 85);
             abilityButtons[i].setTooltip(ability.getDescription());
+            abilityButtons[i].setLabel(ability.getName());
             abilityButtons[i].setTexture(new Texture("input.png", 0));
             abilityButtons[i].setShader(Shader.TEXTURING);
-            ColorReplacement cr = new ColorReplacement();
-            cr.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0.122f, 0.224f, 0.6f, 1));
-            abilityButtons[i].setColorReplacement(cr);
 
             abilityButtons[i].setPressedCallback((button) -> {
-                Window.changeTest(new TestGame());
+                TestGame tg = new TestGame();
+                Window.changeTest(tg);
+                tg.getPlayer().addAbility(ability);
             });
         }
         
