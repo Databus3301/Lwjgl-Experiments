@@ -140,9 +140,9 @@ public class TestGame extends Test {
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
-            enemy.update(dt, mousePos, player.getPosition());
+            enemy.update(dt, mousePos, player.getPosition(), room);
             // move enemy to player
-            enemy.translateTowards(player, enemy.getSpeed() * dt);
+
             // push away from each other
             for (Enemy enemy1 : enemies) {
                 if (enemy != enemy1 && enemy.collideCircle(enemy1))

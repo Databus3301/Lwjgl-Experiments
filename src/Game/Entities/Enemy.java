@@ -21,6 +21,10 @@ public class Enemy extends Living implements Able {
     private int minXP = 1;
     private int maxXP = 3;
 
+    public QuintConsumer<Enemy, Float, Vector2f, Vector2f, Room> movement = (enemy, dt, mousepos, target, room) -> {
+        enemy.translateTowards(target, enemy.getSpeed()*dt);
+    };
+
     public Enemy(Vector2f position, ObjModel model, Texture texture, Shader shader, float LP) {
         super(position, model, texture, shader);
         this.maxLP = (int) LP;
@@ -38,14 +42,16 @@ public class Enemy extends Living implements Able {
     }
 
     public void update(float dt, Vector2f mousePos) {
-        update(dt, mousePos, mousePos);
+        update(dt, mousePos, mousePos, null);
     }
 
-    public void update(float dt, Vector2f mousePos, Vector2f target) {
+    public void update(float dt, Vector2f mousePos, Vector2f target, Room room) {
         for (Ability ability : abilities) {
             ability.update(dt, mousePos, target, this);
             // remove out-of-view projectiles
             ability.getProjectiles().removeIf(projectile -> projectile.getPosition().x < -Window.dim.x / 2f + getPosition().x - 100 || projectile.getPosition().x > Window.dim.x / 2f + getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + getPosition().y - 100 || projectile.getPosition().y > Window.dim.y / 2f + getPosition().y + 100);
+
+            movement.accept(this, dt, mousePos, target, room);
         }
     }
 
@@ -116,5 +122,13 @@ public class Enemy extends Living implements Able {
     }
     public void setMinXP(int minXP) {
         this.minXP = minXP;
+    }
+
+    public void setMovement(QuintConsumer<Enemy, Float, Vector2f, Vector2f, Room> movement) {
+        this.movement = movement;
+    }
+    @FunctionalInterface
+    public interface QuintConsumer<T, U, V, W, Y> {
+        void accept(T t, U u, V v, W w, Y y);
     }
 }

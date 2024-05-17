@@ -2,6 +2,8 @@ package Game.Entities;
 
 import Game.Action.Abilities;
 import Game.Action.Ability;
+import Render.Entity.Entity2D;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
@@ -90,7 +92,7 @@ public class Enemies {
 
         boss.setiSeconds(0.02f);
         boss.setMaxLP(2000);
-        boss.setLP(200);
+        boss.setLP(2000);
 
         boss.setMinXP(10);
         boss.setMaxXP(30);
@@ -107,4 +109,5 @@ public class Enemies {
 
         return boss;
     }
+
 }

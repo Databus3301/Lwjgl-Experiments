@@ -51,7 +51,7 @@ public class Ability {
     }
 
     public void update(float dt, Vector2f mousePos, Vector2f target, Entity2D trigger) {
-        if(trigger instanceof Player p && p.getAutoshooting()) {
+        if (trigger instanceof Player p && p.getAutoshooting() || !(trigger instanceof Player)) {
             if (currentCooldown > 0) {
                 currentCooldown -= dt;
             } else {
@@ -91,33 +91,43 @@ public class Ability {
     public float getCooldown() {
         return cooldown;
     }
+
     public float getCurrentCooldown() {
         return currentCooldown;
     }
+
     public Projectile[] getProjectileTypes() {
         return projectileTypes;
     }
+
     public ArrayList<Projectile> getProjectiles() {
         return projectiles;
     }
+
     public int getLevel() {
         return level;
     }
+
     public String getDescription() {
         return description;
     }
+
     public String getName() {
         return name;
     }
+
     public Test getScene() {
         return scene;
     }
+
     public UUID getUUID() {
         return uuid;
     }
+
     public ArrayList<Upgrade> getUpgrades() {
         return upgrades;
     }
+
     public Upgrade getRndmUpgrade() {
         float[] probabilityDistribution = new float[upgrades.size()];
         float sum = 0;
@@ -141,50 +151,62 @@ public class Ability {
         this.cooldown = cooldown;
         return this;
     }
+
     public void setOnTrigger(HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger) {
         this.onTrigger = onTrigger;
     }
+
     public void setProjectileTypes(Projectile[] projectileTypes) {
         this.projectileTypes = projectileTypes;
     }
+
     public Ability setScene(Test scene) {
         this.scene = scene;
         return this;
     }
+
     public String setDescription(String description) {
         return this.description = description;
     }
+
     public void setLevel(int level) {
         this.level = level;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public Ability setCurrentCooldown(float currentCooldown) {
         this.currentCooldown = currentCooldown;
         return this;
     }
+
     public void setProjectiles(ArrayList<Projectile> projectiles) {
         this.projectiles = projectiles;
     }
+
     public void setUUID() {
         this.uuid = UUID.randomUUID();
     }
+
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
+
     public void addUpgrade(Upgrade upgrade) {
         upgrades.add(upgrade);
     }
+
     public void addUpgrades(Upgrade... upgrades) {
         for (Upgrade upgrade : upgrades) {
             addUpgrade(upgrade);
         }
     }
+
     public void setUpgrades(ArrayList<Upgrade> upgrades) {
         this.upgrades = upgrades;
     }
-
 
 
     @FunctionalInterface
