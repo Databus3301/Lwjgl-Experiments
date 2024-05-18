@@ -90,22 +90,23 @@ public class Enemies {
         boss.setScale(10 * 4, 12 * 4);
         boss.setColor(new Vector4f(0, 1, 1, 1));
 
-        boss.setiSeconds(0.02f);
-        boss.setMaxLP(2000);
-        boss.setLP(2000);
+        boss.setiSeconds(0.05f);
+        boss.setMaxLP(1000);
+        boss.setLP(1000);
 
         boss.setMinXP(10);
         boss.setMaxXP(30);
 
-        Ability shoot = Abilities.getSHOOT();
+        Ability shoot1 = Abilities.getSHOOT();
         Ability shoot2 = Abilities.getCIRCLESHOOT();
-        shoot2.setCooldown(4f);
-        shoot .getProjectileTypes()[0].setScale(20f);
+        shoot1.setCooldown(2f);
+        shoot2.setCooldown(8f);
+        shoot1.getProjectileTypes()[0].setScale(20f);
         shoot2.getProjectileTypes()[0].setScale(20f);
-        boss.addAbility(shoot);
+        boss.addAbility(shoot1);
         boss.addAbility(shoot2);
 
-        boss.setSpeed(90f);
+        boss.setSpeed(45f);
 
         return boss;
     }

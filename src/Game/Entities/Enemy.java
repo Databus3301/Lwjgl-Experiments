@@ -46,12 +46,24 @@ public class Enemy extends Living implements Able {
     }
 
     public void update(float dt, Vector2f mousePos, Vector2f target, Room room) {
+
+        // trigger abilities
         for (Ability ability : abilities) {
             ability.update(dt, mousePos, target, this);
             // remove out-of-view projectiles
             ability.getProjectiles().removeIf(projectile -> projectile.getPosition().x < -Window.dim.x / 2f + getPosition().x - 100 || projectile.getPosition().x > Window.dim.x / 2f + getPosition().x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + getPosition().y - 100 || projectile.getPosition().y > Window.dim.y / 2f + getPosition().y + 100);
+        }
+        // move
+        movement.accept(this, dt, mousePos, target, room);
 
-            movement.accept(this, dt, mousePos, target, room);
+        reduceISeconds(dt);
+    }
+
+    public void collide(float dt, ArrayList<Enemy> enemies) {
+        // push away from each other
+        for (Enemy enemy : enemies) {
+            if (this != enemy && this.collideCircle(enemy))
+                this.translateTowards(enemy, -this.getSpeed() * dt); // negated "towards" becomes "away"
         }
     }
 

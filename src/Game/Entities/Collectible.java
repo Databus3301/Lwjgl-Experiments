@@ -1,6 +1,5 @@
 package Game.Entities;
 
-import Game.Entities.Projectiles.Projectile;
 import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
@@ -12,11 +11,10 @@ import org.joml.Vector2f;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static Game.Entities.Projectiles.Homing.orthogonalComponent;
-
 public class Collectible extends Interactable {
 
     private boolean isHoming = true;
+    private float lifeTime = 5f;
     private float homingDistance;
     private float intensity = 100f;
     private Living target;
@@ -57,6 +55,8 @@ public class Collectible extends Interactable {
             }
         }
 
+        lifeTime -= dt;
+
         if (this.onUpdate != null)
             this.onUpdate.accept(this);
         translate(velocity.mul(dt, new Vector2f()));
@@ -81,5 +81,9 @@ public class Collectible extends Interactable {
 
     public void setOnCollect(BiConsumer<Collectible, Entity2D> onCollect) {
         this.onCollect = onCollect;
+    }
+
+    public boolean shouldDisappear() {
+        return lifeTime <= 0;
     }
 }

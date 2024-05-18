@@ -703,4 +703,5 @@ public class Entity2D {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
+
 }

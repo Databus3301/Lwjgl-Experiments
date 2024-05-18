@@ -140,16 +140,11 @@ public class TestGame extends Test {
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
+            // movement, abilities, iFrames, etc..
             enemy.update(dt, mousePos, player.getPosition(), room);
-            // move enemy to player
-
             // push away from each other
-            for (Enemy enemy1 : enemies) {
-                if (enemy != enemy1 && enemy.collideCircle(enemy1))
-                    enemy.translateTowards(enemy1, -enemy.getSpeed() * dt); // negated "towards" becomes "away"
-            }
+            enemy.collide(dt, enemies);
             // kill enemies
-            enemy.reduceISeconds(dt);
             if (enemy.getLP() <= 0) {
                 enemy.spawnXp(this, props, player, room);
                 enemyIterator.remove();
@@ -273,6 +268,12 @@ public class TestGame extends Test {
                 }
             }
         }
+
+        // kill all enemies
+        if (key == GLFW_KEY_K && action == GLFW_PRESS) {
+            enemies.clear();
+        }
+
     }
 
     public Room getRoom() {
