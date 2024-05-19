@@ -46,10 +46,10 @@ public class Player extends Living implements Able {
         addAbility(Abilities.getDASH());
 //        addAbility(Abilities.getDASH());
         addAbility(Abilities.getCIRCLESHOOT());
-//        addAbility(Abilities.getHOMING());
-//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
-//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
-//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
+        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
+        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
     }
 
     public void update(float dt, Vector2f mousePos) {
@@ -173,14 +173,14 @@ public class Player extends Living implements Able {
 
         // brotato's system (https://brotato.wiki.spellsandguns.com/Experience)
         // level 10 after first floor
-//        return (lvl + 3)*(lvl + 3);
+        return (lvl + 3)*(lvl + 3);
 
         // vampire survivor's system (https://vampire-survivors.fandom.com/wiki/Level_up)
-        // level . after first floor
-        if(lvl < 2) return 5;
-        if(lvl < 21) return 10 * lvl - 5;
-        if(lvl < 41) return 13 * lvl - 210;
-        return 16 * lvl - 610;
+        // level 13 after first floor
+//        if(lvl < 2) return 5;
+//        if(lvl < 21) return 10 * lvl - 5;
+//        if(lvl < 41) return 13 * lvl - 210;
+//        return 16 * lvl - 610;
 
     }
 }

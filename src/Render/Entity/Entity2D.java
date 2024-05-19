@@ -34,7 +34,7 @@ public class Entity2D {
     protected Quaternionf rotation; // rotation in degrees
     protected Vector2f scale; // x y scale
     protected Vector2f velocity; // pixels per second
-    protected float speed; // pixels per second
+    protected float speed = 100; // pixels per second
 
     protected boolean isStatic; // if the entity is static, it will not be updated every frame
     protected boolean isHidden; // if the entity is hidden, it will not be drawn

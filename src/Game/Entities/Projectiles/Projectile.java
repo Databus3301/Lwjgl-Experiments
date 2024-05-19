@@ -16,6 +16,7 @@ public class Projectile extends Entity2D {
     protected float dmg, armorPen;
     protected int pierce;
 
+
     protected BiConsumer<Projectile, Boolean> onHit;
     protected Consumer<Projectile> onUpdate;
 
