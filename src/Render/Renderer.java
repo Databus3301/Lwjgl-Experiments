@@ -22,6 +22,7 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL43;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static Tests.Test.renderer;
@@ -255,6 +256,8 @@ public class Renderer {
             if (able.getAbilities() == null) return;
             for (Ability ability : able.getAbilities()) {
                 for (Projectile projectile : ability.getProjectiles()) {
+                    if(Objects.equals(ability.getName(), "Homing"))
+                        System.out.println("drawing projectile");
                     draw(projectile);
                 }
             }

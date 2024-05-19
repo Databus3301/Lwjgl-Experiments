@@ -34,8 +34,7 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 public class TestGame extends Test {
     private final Player player;
     private Room room;
-    private final Entity2D cursor;
-    private Entity2D bg;
+    private final Entity2D cursor, bg;
 
 
     private final EnemySpawner spawner = new EnemySpawner();
@@ -54,8 +53,7 @@ public class TestGame extends Test {
         // take cam control
         renderer.setCamera(camera = new Camera());
 
-        int numOfEnemies = 100;
-        float scale = 3f;
+        float scale = 1f;
 
         // init player
         player = new Player(
@@ -73,7 +71,7 @@ public class TestGame extends Test {
         player.addAnimation("idleUp", new Animation(anims, 2, 0, 1, 1, 3));
         player.addAnimation("idleRight", new Animation(anims, 3, 0, 2, 3, 3));
         player.switchAnimation("idleDown");
-        player.scale(scale * (4 + numOfEnemies / (numOfEnemies / 10f)));
+        player.scale(42.0f * scale);
 
         // track mouse and indicate cursor position
         Texture cursor = new Texture("woodCrate.png", 0);
@@ -123,7 +121,7 @@ public class TestGame extends Test {
 
         if (!shouldSimulate) return;
         // move player
-        player.translate(new Vector2f(player.getVelocity()).mul(300 * dt));
+        player.translate(new Vector2f(player.getVelocity()).mul(player.getSpeed() * dt));
         camera.centerOn(player);
         // move target to mouse
         cursor.setPosition(renderer.screenToWorldCoords(mousePos));
@@ -150,7 +148,7 @@ public class TestGame extends Test {
                 enemyIterator.remove();
             }
             // print debug info if on cursor
-            if (enemy.collideRect(cursor))
+            if (cursor.collideRect(enemy))
                 renderer.drawText("LivePoints: " + enemy.getLP(), new Vector2f(enemy.getPosition().x - enemy.getScale().x / 2f, enemy.getPosition().y + 15), 5);
         }
 
@@ -180,7 +178,6 @@ public class TestGame extends Test {
 
         renderer.drawUI(bg);
         UI.draw();
-
 
         // DEBUG COLLIDERS
         /*

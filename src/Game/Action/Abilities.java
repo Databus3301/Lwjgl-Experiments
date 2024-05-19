@@ -56,9 +56,13 @@ public class Abilities {
         DASH.stats.put("cooldown", 2f);
         DASH.addUpgrade(Upgrades.getFlatCooldownStats());
         DASH.addUpgrade(Upgrades.getHalfCooldownStats());
+        DASH.stats.put("reach", 150f);
+        DASH.addUpgrade(Upgrades.getFlatReach());
+        DASH.addUpgrade(Upgrades.getDoubleReach());
 
         DASH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
-            origin.translate(new Vector2f(origin.getVelocity()).mul(200));
+            float reach = ability.stats.get("reach");
+            origin.translate(new Vector2f(origin.getVelocity()).mul(reach));
         });
         return DASH;
     }
@@ -101,7 +105,7 @@ public class Abilities {
         HOMING.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Homing projectile = (Homing) ability.getProjectileTypes()[0].clone();
             projectile.setPosition(origin.getPosition());
-            projectile.accelerateTowards(targetPos, 100);
+            projectile.accelerateTowards(targetPos, projectile.getSpeed());
             ability.getProjectiles().add(projectile);
         });
 

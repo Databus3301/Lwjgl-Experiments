@@ -72,7 +72,7 @@ public class Projectile extends Entity2D {
     }
     public <T extends Living> void collide(ArrayList<T> entities) {
         for (T collider : entities) {
-            if (collider.collideRect(this)) {
+            if (this.collideRect(collider)) {
                 boolean gotDamaged = collider.damage(dmg);
                 if(gotDamaged) pierce--;
                 if(onHit != null) onHit.accept(this, gotDamaged);

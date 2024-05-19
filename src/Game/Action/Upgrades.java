@@ -17,7 +17,7 @@ public class Upgrades {
         int inc = pc.getLevel();
 
         pc.setGenerateDescription(ability -> {
-            return ability.setDescription("Increases the projectile count of the ability from\n" + ability.stats.get("projectileCount") + " to " + (ability.stats.get("projectileCount") + inc));
+            return ability.setDescription("Increases the projectile count of the ability\n from" + ability.stats.get("projectileCount") + " to " + (ability.stats.get("projectileCount") + inc));
         });
         pc.setOnApply((ability, upgrade) -> {
             ability.stats.put("projectileCount", ability.stats.get("projectileCount") + inc);
@@ -108,6 +108,20 @@ public class Upgrades {
         });
         return cd;
     }
+    public static Upgrade getFlatReach() {
+        Upgrade reach = new Upgrade("Reach");
+        reach.setRarity(0.25f);
+
+        int inc = reach.getLevel() * 50;
+
+        reach.setGenerateDescription(ability -> {
+            return ability.setDescription("Increases the reach of the ability by " + inc + " pixels");
+        });
+        reach.setOnApply((ability, upgrade) -> {
+            ability.stats.put("reach", ability.stats.get("reach") + inc);
+        });
+        return reach;
+    }
 
     // DOUBLES
     public static Upgrade getDoubleProjectiles() {
@@ -195,6 +209,18 @@ public class Upgrades {
         });
         return cd;
     }
+    public static Upgrade getDoubleReach() {
+        Upgrade reach = new Upgrade("Reach");
+        reach.setRarity(0.05f);
+
+        reach.setGenerateDescription(ability -> {
+            return ability.setDescription("Doubles the reach of the ability from\n" + toDecimal(ability.stats.get("reach")) + " to " + toDecimal(ability.stats.get("reach") * 2f) + " pixels");
+        });
+        reach.setOnApply((ability, upgrade) -> {
+            ability.stats.put("reach", ability.stats.get("reach") * 2f);
+        });
+        return reach;
+    }
 
 
     // ideas
@@ -219,16 +245,15 @@ public class Upgrades {
     }
 
     public static float toDecimal(float f, int decimal) {
-        return (float) ((f * Math.pow(10, decimal)) / Math.pow(10, decimal));
+        return (float) ((int)(f * Math.pow(10, decimal)) / Math.pow(10, decimal));
     }
     public static float toDecimal(float f) {
-        return (f * 100f) / 100f;
+        return ((int)(f * 100f) / 100f);
     }
     public static float toDecimal(double f, int decimal) {
-        return (float) ((f * Math.pow(10, decimal)) / Math.pow(10, decimal));
+        return (float) ((int)(f * Math.pow(10, decimal)) / Math.pow(10, decimal));
     }
     public static float toDecimal(double f) {
-        return (float) (f * 100f) / 100f;
+        return ((int)(f * 100f) / 100f);
     }
-
 }

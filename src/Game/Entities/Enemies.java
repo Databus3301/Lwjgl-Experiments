@@ -78,7 +78,8 @@ public class Enemies {
         shooter.setMaxXP(6);
 
         Ability shoot = Abilities.getSHOOT();
-        shoot.getProjectileTypes()[0].setScale(5f);
+        shoot.setCooldown(2.5f);
+        shoot.getProjectileTypes()[0].setScale(2f);
         shooter.addAbility(shoot);
         shooter.setSpeed(110f);
 

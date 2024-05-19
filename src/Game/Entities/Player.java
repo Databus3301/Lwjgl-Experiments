@@ -23,7 +23,7 @@ public class Player extends Living implements Able {
     private final ArrayList<Ability> abilities = new ArrayList<>();
     private final Map<String, Animation> animations = new HashMap<>();
     private final Entity2D collider = new Entity2D(ObjModel.SQUARE);
-    private int xp = 0;
+    private int xp, lvl, XPtoLvlUp;
 
     private boolean isAutoshooting = false;
 
@@ -40,6 +40,7 @@ public class Player extends Living implements Able {
         this.scene = scene;
         this.maxLP = maxLivePoints;
         this.LP = maxLivePoints;
+        speed = 300;
 
         // --TEMP-- add shooting ability as a default
         addAbility(Abilities.getDASH());
@@ -52,20 +53,28 @@ public class Player extends Living implements Able {
     }
 
     public void update(float dt, Vector2f mousePos) {
+        // update animation
         if (animation != null)
             animation.update(dt);
-
+        // update abilities
         for (Ability ability : abilities) {
             ability.update(dt, mousePos, this);
             // remove out-of-view projectiles
             ability.getProjectiles().removeIf(projectile -> projectile.getPosition().x < -Window.dim.x / 2f + position.x - 100 || projectile.getPosition().x > Window.dim.x / 2f + position.x + 100 || projectile.getPosition().y < -Window.dim.y / 2f + position.y - 100 || projectile.getPosition().y > Window.dim.y / 2f + position.y + 100);
+        }
+        // level up
+        if(xp >= XPtoLvlUp) {
+            xp -= XPtoLvlUp;
+            lvl++;
+            XPtoLvlUp = getXPtoLvlUp();
+            System.out.println("Player leveled up to " + lvl);
         }
     }
 
     public <T extends Living> void collide(ArrayList<T> entities) {
         for (Living collider : entities) {
             // push away from player
-            if (collider.collideRect(this)) {
+            if (this.collideRect(collider)) {
                 collider.translate(
                         new Vector2f(position).sub(collider.getPosition())
                                 .sub((float) Math.random() * 20f - 1f, (float) Math.random() * 20f - 1f) // randomize a bit (to avoid getting stuck in a loop of pushing each other back and forth
@@ -108,7 +117,6 @@ public class Player extends Living implements Able {
                 if(collider.collideCircle(collectible)) {
                     ((Collectible) prop).onCollect.accept((Collectible) prop, this);
                     iterator.remove();
-                    System.out.println("Player xp: " + xp);
                 }
             }
         }
@@ -154,5 +162,25 @@ public class Player extends Living implements Able {
 
     public boolean getAutoshooting() {
         return isAutoshooting;
+    }
+
+    public int getXPtoLvlUp() {
+        // minecraft's system (https://minecraft.fandom.com/wiki/Experience#Leveling_up)
+        // level 21 after first floor
+//        if(lvl < 16) return 2 * lvl + 7;
+//        if(lvl < 31) return 5 * lvl - 38;
+//        return 9 * lvl - 158;
+
+        // brotato's system (https://brotato.wiki.spellsandguns.com/Experience)
+        // level 10 after first floor
+//        return (lvl + 3)*(lvl + 3);
+
+        // vampire survivor's system (https://vampire-survivors.fandom.com/wiki/Level_up)
+        // level . after first floor
+        if(lvl < 2) return 5;
+        if(lvl < 21) return 10 * lvl - 5;
+        if(lvl < 41) return 13 * lvl - 210;
+        return 16 * lvl - 610;
+
     }
 }
