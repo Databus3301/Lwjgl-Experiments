@@ -29,6 +29,9 @@ public class Wave {
                 enemiesSpawned += (int)(spawnTimer / spawnRate); // spawn multiple enemies if a lot of time elapsed since last update
                 spawnTimer = 0;
             }
+            if(enemiesLeft < 0) {
+                enemiesLeft = 0;
+            }
         } else {
             finishedSpawning = true;
         }

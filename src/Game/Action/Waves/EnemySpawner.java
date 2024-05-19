@@ -120,8 +120,8 @@ public class EnemySpawner {
      * Only use if you know what you are doing! <br>
      * It's the spawners job to set results via < update >
      */
-    public void setLastResult() {
-        this.lastResult = Result.NOTHING;
+    public void setLastResult(Result r) {
+        this.lastResult = r;
     }
 
     public enum Result {

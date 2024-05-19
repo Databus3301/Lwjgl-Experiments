@@ -116,15 +116,16 @@ public class TestGame extends Test {
         // wave over
         if (spawner.getLastResult() == WAVE_OVER) {
             shouldSimulate = true;
-            UI.onLvlUp(player, this, room, 3);
+            //UI.onLvlUp(player, this, room, 3);
+            UI.onRoomCompletion(player, this, 3);
         }
+        // move target to mouse
+        cursor.setPosition(renderer.screenToWorldCoords(mousePos));
 
         if (!shouldSimulate) return;
         // move player
         player.translate(new Vector2f(player.getVelocity()).mul(player.getSpeed() * dt));
         camera.centerOn(player);
-        // move target to mouse
-        cursor.setPosition(renderer.screenToWorldCoords(mousePos));
         // collide player and its fields
         player.collide(enemies);
         player.collide(room);
@@ -132,7 +133,7 @@ public class TestGame extends Test {
         // spawn enemies
         spawner.update(dt, enemies);
         // change room
-        room = room.update(dt, spawner, player, enemies, projectiles);
+        room = room.update(dt, spawner, player, enemies, projectiles, props);
 
 
         Iterator<Enemy> enemyIterator = enemies.iterator();

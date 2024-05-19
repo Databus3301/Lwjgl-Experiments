@@ -31,7 +31,7 @@ public class Abilities {
 
         SHOOT = new Ability(projectiles, 0.25f);
         SHOOT.setName("Shoot");
-        SHOOT.setDescription("Shoots a projectile in direction of cursor}\n every 0.25 seconds dealing 50 damage");
+        SHOOT.setDescription("Shoots a projectile in direction of cursor\n every 0.25 seconds dealing 50 damage");
         SHOOT.addUpgrades(Upgrades.getDefaults());
         SHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Projectile projectile = ability.getProjectileTypes()[0].clone();
@@ -51,7 +51,7 @@ public class Abilities {
         Projectile[] projectiles = new Projectile[0];
         DASH = new Ability(projectiles, 1000); // Float.MAX_VALUE /3f - 2
         DASH.setName("Dash");
-        DASH.setDescription("Dashes in the current walking direction\n with a cooldown of 2 seconds\n (can be stacked)");
+        DASH.setDescription("Dashes in the current walking direction\nwith a cooldown of 2 seconds\n(can be stacked)");
 
         DASH.stats.put("cooldown", 2f);
         DASH.addUpgrade(Upgrades.getFlatCooldownStats());
@@ -71,7 +71,7 @@ public class Abilities {
         Projectile[] projectiles = new Projectile[0];
         SHIELD = new Ability(projectiles, 2f);
         SHIELD.setName("Shield");
-        SHIELD.setDescription("Gives the player a shield for 2 seconds\n that blocks all incoming damage");
+        SHIELD.setDescription("Gives the player a shield for 2 seconds\nthat blocks all incoming damage");
 
         AtomicBoolean shielded = new AtomicBoolean(true);
         SHIELD.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
@@ -99,7 +99,7 @@ public class Abilities {
 
         HOMING = new Ability(projectiles, 0.5f);
         HOMING.setName("Homing");
-        HOMING.setDescription("Shoots a homing projectile\n following the closest enemy in front of it\n every 0.5 seconds dealing 100 damage");
+        HOMING.setDescription("Shoots a homing projectile\nfollowing the closest enemy in front of it\nevery 0.5 seconds dealing 100 damage");
         HOMING.addUpgrades(Upgrades.getDefaults());
 
         HOMING.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
@@ -130,7 +130,7 @@ public class Abilities {
         CIRCLESHOOT = new Ability(projectiles, 2f);
         CIRCLESHOOT.stats.put("projectileCount", 6f);
         CIRCLESHOOT.setName("Circle-Shoot");
-        CIRCLESHOOT.setDescription("Shoots " + CIRCLESHOOT.stats.get("projectileCount") + "projectiles in all directions\n every 2 seconds dealing 50 damage each");
+        CIRCLESHOOT.setDescription("Shoots " + CIRCLESHOOT.stats.get("projectileCount") + " projectiles in all directions\nevery 2 seconds dealing 50 damage each");
 
         CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
         CIRCLESHOOT.addUpgrade(Upgrades.getFlatProjectiles());

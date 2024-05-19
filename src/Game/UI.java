@@ -1,9 +1,11 @@
 package Game;
 
+import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Action.Upgrade;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
+import Game.Entities.Dungeon.Door;
 import Game.Entities.Dungeon.Room;
 import Game.Entities.Player;
 import Render.Entity.Interactable.Button;
@@ -14,17 +16,21 @@ import Tests.TestGame;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import static Game.Action.Waves.EnemySpawner.Result.FINISHED_SPAWNING;
+import static Game.Action.Waves.EnemySpawner.Result.NOTHING;
 import static Render.Entity.Interactable.Interactable.States.HOVER;
 
 public class UI {
     private static Button[] upgradeButtons;
 
-    public static void onLvlUp(Player player, TestGame scene, Room room, int bcnt) {
+    public static void onLvlUp(Player player, TestGame scene, int bcnt) {
         float bw = (float) Window.dim.x / bcnt;
         float bh = Window.dim.y / (bcnt+1f);
 
         if(upgradeButtons == null) {
             upgradeButtons = new Button[bcnt];
+            scene.setShouldSimulate(false);
+
             for (int i = 0; i < bcnt; i++) {
                 upgradeButtons[i] = new Button(scene, new Vector2f(0, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f)));
                 upgradeButtons[i].scale(bw/2f, bh/2f);
@@ -68,11 +74,13 @@ public class UI {
                      */
                     rU.applyTo(finalRA);
 
-                    EnemySpawner sp = scene.getSpawner();
-                    sp.setCurrentWave(Wave.getEmptyWave());
-                    sp.setLastResult();
-
+                    player.setJustLeveledUp(false);
                     scene.setShouldSimulate(true);
+
+                    for(Button ub : upgradeButtons) {
+                        ub.setReleasedCallback((interactable) -> {});
+                    }
+
                     upgradeButtons = null;
                 });
             }
@@ -86,25 +94,99 @@ public class UI {
         }
     }
 
+    private static Button[] abilityButtons;
+    public static void onRoomCompletion(Player player, TestGame scene, int bcnt) {
+        float bw = (float) Window.dim.x / bcnt;
+        float bh = Window.dim.y / (bcnt+1f);
+
+        if(abilityButtons == null) {
+            abilityButtons = new Button[bcnt];
+            for (int i = 0; i < bcnt; i++) {
+                abilityButtons[i] = new Button(scene, new Vector2f(0, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f)));
+                abilityButtons[i].scale(bw/2f, bh/2f);
+                abilityButtons[i].setColor(0.6f, 0.6f, 0.6f, 0.25f);
+                abilityButtons[i].setHitTime(100);
+
+                int l = Abilities.abilities.length;
+                Ability rA = Abilities.abilities[(int) (Math.random() * l)];
+
+                abilityButtons[i].setLabel(rA.getName());
+                abilityButtons[i].setTooltip(rA.getDescription());
+
+                abilityButtons[i].setReleasedCallback((button) -> {
+                    player.addAbility(rA);
+                    System.out.println("added ability: " + rA.getName() + " to player");
+
+                    EnemySpawner sp = scene.getSpawner();
+                    sp.setCurrentWave(Wave.getEmptyWave());
+                    sp.setLastResult(NOTHING);
+                    for(Door d : scene.getRoom().getDoors()) {
+                        d.open();
+                    }
+
+                    for(Button ab : abilityButtons) {
+                        ab.setReleasedCallback((interactable) -> {});
+                    }
+
+                    abilityButtons = null;
+                });
+            }
+        }
+        if(abilityButtons == null)
+            return;
+        for (int i = 0; i < abilityButtons.length; i++) {
+            Vector2f cp = Test.renderer.getCamera().getPosition();
+            pos.set(-cp.x, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f) + -cp.y);
+            abilityButtons[i].setPosition(pos);
+        }
+    }
+
+    public static Button[] getAbilityButtons() {
+        return abilityButtons;
+    }
+
 
     private static final Vector2f pos = new Vector2f(0, 0);
     private static final Vector2f scale = new Vector2f(0, 0);
     public static void draw() {
-        if(upgradeButtons != null)
+        if(upgradeButtons != null) {
             for (int i = 0; i < upgradeButtons.length; i++) {
                 Test.renderer.draw(upgradeButtons[i]);
 
                 Vector4f color;
-                if(upgradeButtons[i].getState() == HOVER)
+                if (upgradeButtons[i].getState() == HOVER)
                     color = new Vector4f(.1f, .7f, .1f, 1);
-                else
-                if(upgradeButtons[i].getState() == Interactable.States.DRAGGED)
+                else if (upgradeButtons[i].getState() == Interactable.States.DRAGGED)
                     color = new Vector4f(.5f, 1f, .5f, 1);
                 else
                     color = new Vector4f(.6f, .6f, .6f, 1);
 
                 Test.renderer.drawRect(upgradeButtons[i].getPosition().sub(upgradeButtons[i].getScale(), pos), upgradeButtons[i].getScale().mul(2, scale), color);
+
+                upgradeButtons[i].onUpdate(-1, Test.mousePos);
+                if(upgradeButtons == null)
+                    break;
             }
+        }
+        if(abilityButtons != null) {
+            for (int i = 0; i < abilityButtons.length; i++) {
+                Test.renderer.draw(abilityButtons[i]);
+
+                Vector4f color;
+                if (abilityButtons[i].getState() == HOVER)
+                    color = new Vector4f(.1f, .7f, .1f, 1);
+                else if (abilityButtons[i].getState() == Interactable.States.DRAGGED)
+                    color = new Vector4f(.5f, 1f, .5f, 1);
+                else
+                    color = new Vector4f(.6f, .6f, .6f, 1);
+
+                Test.renderer.drawRect(abilityButtons[i].getPosition().sub(abilityButtons[i].getScale(), pos), abilityButtons[i].getScale().mul(2, scale), color);
+
+                abilityButtons[i].onUpdate(-1, Test.mousePos);
+                if(abilityButtons == null)
+                    break;
+            }
+        }
     }
 
 }

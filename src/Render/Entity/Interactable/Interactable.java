@@ -125,6 +125,9 @@ public class Interactable extends Entity2D {
             state = States.DEFAULT;
         }
     }
+    public void updateStates() {
+        updateStates(Test.mousePos);
+    }
 
     public boolean isHovered(Vector2f mousePos) {
         return collideAABB(Test.renderer.screenToWorldCoords(mousePos));
@@ -158,6 +161,24 @@ public class Interactable extends Entity2D {
     public void setKeyCallback(QuintConsumer<Interactable, Integer, Integer, Integer, Vector2f> callback) {
         this.keyCallback = callback;
     }
+
+    public void hover() {
+        state = States.HOVER;
+        hoverCallback.accept(this);
+    }
+    public void press() {
+        state = States.PRESSED;
+        pressedCallback.accept(this);
+    }
+    public void release() {
+        state = States.RELEASED;
+        releasedCallback.accept(this);
+    }
+    public void drag() {
+        state = States.DRAGGED;
+        draggedCallback.accept(this);
+    }
+
     public void setTriggerDistance(float triggerDistance) {
         this.triggerDistance = triggerDistance;
         this.triggerDistanceSquared = triggerDistance * triggerDistance;

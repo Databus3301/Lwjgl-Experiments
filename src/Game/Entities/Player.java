@@ -3,12 +3,14 @@ package Game.Entities;
 import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Entities.Dungeon.Room;
+import Game.UI;
 import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Texturing.Animation;
 import Render.Window;
 import Tests.Test;
+import Tests.TestGame;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -26,13 +28,7 @@ public class Player extends Living implements Able {
     private int xp, lvl, XPtoLvlUp;
 
     private boolean isAutoshooting = false;
-
-    public Player(Entity2D player, int maxLivePoints, Map<String, Animation> animations) {
-        player.clone(this);
-        this.maxLP = maxLivePoints;
-        this.LP = maxLivePoints;
-        this.animations.putAll(animations);
-    }
+    private boolean justLeveledUp = false;
 
     public <T extends Test> Player(T scene, Entity2D player, int maxLivePoints) {
         scene.addUpdateListener(this::update);
@@ -45,11 +41,13 @@ public class Player extends Living implements Able {
         // --TEMP-- add shooting ability as a default
         addAbility(Abilities.getDASH());
 //        addAbility(Abilities.getDASH());
-        addAbility(Abilities.getCIRCLESHOOT());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
-        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
-        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
+//        addAbility(Abilities.getCIRCLESHOOT());
+          Ability h = Abilities.getHOMING();
+          h.setCooldown(0.1f);
+          addAbility(h);
+//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
+//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
+//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
     }
 
     public void update(float dt, Vector2f mousePos) {
@@ -67,8 +65,10 @@ public class Player extends Living implements Able {
             xp -= XPtoLvlUp;
             lvl++;
             XPtoLvlUp = getXPtoLvlUp();
-            System.out.println("Player leveled up to " + lvl);
+            justLeveledUp = true;
         }
+        if(justLeveledUp)
+            UI.onLvlUp(this, (TestGame)scene, 3);
     }
 
     public <T extends Living> void collide(ArrayList<T> entities) {
@@ -146,6 +146,9 @@ public class Player extends Living implements Able {
         this.isAutoshooting = !isAutoshooting;
     }
 
+    public void setJustLeveledUp(boolean justLeveledUp) {
+        this.justLeveledUp = justLeveledUp;
+    }
 
     public ArrayList<Ability> getAbilities() {
         return abilities;

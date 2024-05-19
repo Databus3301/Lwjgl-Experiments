@@ -7,6 +7,7 @@ import Game.Entities.Enemies;
 import Game.Entities.Enemy;
 import Game.Entities.Player;
 import Game.Entities.Projectiles.Projectile;
+import Game.UI;
 import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
@@ -194,11 +195,12 @@ public class Room {
         onSwitch.accept(player, enemies);
     }
 
-    public Room update(float dt, EnemySpawner spawner, Player player, ArrayList<Enemy> enemies, ArrayList<Projectile> projectiles) {
+    public Room update(float dt, EnemySpawner spawner, Player player, ArrayList<Enemy> enemies, ArrayList<Projectile> projectiles, ArrayList<Interactable> props) {
 
         if (spawner.getLastResult() == WAVE_OVER) {
             for (Door door : doors) {
                 door.open();
+                System.out.println("Opening door");
             }
         }
 
@@ -215,7 +217,10 @@ public class Room {
                 }
                 projectiles.clear();
                 enemies.clear();
+                props.clear();
                 spawner.getCurrentWave().setFinishedSpawning(false);
+                if(UI.getAbilityButtons() != null)
+                    UI.getAbilityButtons()[0].release();
                 renderer.setPostProcessingShader(new Shader("texturing_plain.shader"));
 
                 // init new room
