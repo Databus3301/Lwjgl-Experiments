@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
 import static org.lwjgl.openal.AL10.*;
 
 /**
@@ -26,7 +27,6 @@ public class AudioSource {
     int source;
     int buffer;
 
-    AudioClip audioClip = null;
 
     public AudioSource() {
         source = alGenSources();
@@ -35,23 +35,26 @@ public class AudioSource {
     }
 
     public void playSound(String filename) {
+        AudioClip audioClip = null;
         try {
             audioClip = AudioLoader.loadWavFile(filename);
         } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
+        assert audioClip != null : "[ERROR] Failed to load audio file";
         playSound(audioClip);
     }
 
     public void playSound(AudioClip clip) {
-        assert clip != null;
-        this.audioClip = clip;
+        assert clip != null : "[ERROR] Provided <AudioClip> is null";
+
 
         int formatAL = AL_FORMAT_MONO8;
         if (clip.getChannels() == 1)
             formatAL += clip.getSampleSizeInBits() / 8 - 1;
         else if (clip.getChannels() == 2)
             formatAL += clip.getSampleSizeInBits() / 8 + 1;
+
 
         alBufferData(buffer, formatAL, clip.getRawAudioBuffer(), clip.getSampleRate());
         alSourcei(source, AL_BUFFER, buffer);
@@ -99,10 +102,12 @@ public class AudioSource {
     }
 
 
+
     public Vector3f getPosition() {
         return position;
     }
-    public AudioClip getAudioClip() {
-        return audioClip;
+
+    public boolean isPlaying() {
+        return alGetSourcei(source, AL_SOURCE_STATE) == AL_PLAYING;
     }
 }

@@ -1,15 +1,20 @@
 package Render.Entity;
 
+import Audio.AudioClip;
+import Audio.AudioSource;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Animation;
 import Render.MeshData.Texturing.ColorReplacement;
 import Render.MeshData.Texturing.Texture;
+import Render.Window;
 import org.joml.*;
 
 import java.lang.Math;
 import java.util.HashMap;
 import java.util.Objects;
+
+import static Game.Entities.Dungeon.Dungeon.ENTITY_VOLUME;
 
 /**
  * Entity2D is a class that represents a 2D entity in the world
@@ -22,10 +27,10 @@ public class Entity2D {
     protected ObjModel model;
     protected Texture texture;
     protected Animation animation;
+    protected AudioSource audioSource;
 
     protected HashMap<String, Texture> textures;
     protected Shader shader;
-
     protected Vector4f color;
     protected ColorReplacement colorReplacement;
 
@@ -91,6 +96,11 @@ public class Entity2D {
         this.offset = new Vector2f(0, 0);
         this.color = new Vector4f(0.976f, 0.164f, 0.976f, 1.0f);
         this.animation = null;
+        // if al capabilities have been initialsied, create a new audio source
+        if (Window.getWindow() != null) {
+            this.audioSource = new AudioSource();
+            audioSource.setVolume(ENTITY_VOLUME);
+        }
     }
 
     public Entity2D clone(Entity2D into) { // TODO: test this
@@ -465,7 +475,6 @@ public class Entity2D {
         return min;
     }
 
-
     public boolean collideCircle(Entity2D other) {
         Vector2f p2 = other.position;
         return position.distanceSquared(p2.x, p2.y) < (scale.x + other.scale.x) * (scale.x + other.scale.x);
@@ -488,6 +497,13 @@ public class Entity2D {
 
         // Return the smallest distance
         return Math.min(Math.min(left, right), Math.min(bottom, top));
+    }
+
+    public void playSound(AudioClip clip) {
+        if (this.audioSource != null && clip != null) {
+            System.out.println("Playing sound " + clip + " from " + this.audioSource);
+            this.audioSource.playSound(clip);
+        }
     }
 
     public void accelerate(Vector2f acceleration) {

@@ -1,5 +1,7 @@
 package Tests;
 
+import Audio.AudioClip;
+import Audio.AudioSource;
 import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
@@ -53,8 +55,6 @@ public class TestGame extends Test {
         // take cam control
         renderer.setCamera(camera = new Camera());
 
-        float scale = 1f;
-
         // init player
         player = new Player(
                 this,
@@ -71,7 +71,7 @@ public class TestGame extends Test {
         player.addAnimation("idleUp", new Animation(anims, 2, 0, 1, 1, 3));
         player.addAnimation("idleRight", new Animation(anims, 3, 0, 2, 3, 3));
         player.switchAnimation("idleDown");
-        player.scale(42.0f * scale);
+        player.scale(42.0f);
 
         // track mouse and indicate cursor position
         Texture cursor = new Texture("woodCrate.png", 0);
@@ -280,7 +280,6 @@ public class TestGame extends Test {
     public EnemySpawner getSpawner() {
         return spawner;
     }
-
 
     public void setRoom(Room room) {
         this.room = room;

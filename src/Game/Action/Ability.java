@@ -1,5 +1,8 @@
 package Game.Action;
 
+import Audio.AudioClip;
+import Audio.AudioLoader;
+import Audio.AudioSource;
 import Game.Entities.Living;
 import Game.Entities.Player;
 import Game.Entities.Projectiles.Projectile;
@@ -10,6 +13,8 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+
+import static Game.Entities.Dungeon.Dungeon.ABILITY_VOLUME;
 
 public class Ability {
     private Test scene;
@@ -30,12 +35,16 @@ public class Ability {
     public HashMap<String, Float> stats = new HashMap<>();
     private int level;
 
+    private AudioSource audioSource = new AudioSource();
+    private AudioClip sound = null;
+
     public HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger;
 
     public Ability(Projectile[] projectileTypes, float cooldown) {
         this.projectileTypes = projectileTypes;
         this.cooldown = cooldown;
         this.currentCooldown = .5f;
+        audioSource.setVolume(ABILITY_VOLUME);
         uuid = UUID.randomUUID();
     }
 
@@ -43,6 +52,7 @@ public class Ability {
         this.projectileTypes = new Projectile[]{new Projectile()};
         this.cooldown = 1f;
         this.currentCooldown = .5f;
+        audioSource.setVolume(ABILITY_VOLUME);
         uuid = UUID.randomUUID();
     }
 
@@ -57,6 +67,7 @@ public class Ability {
             } else {
                 currentCooldown = cooldown * 2;
                 onTrigger.accept(this, dt, mousePos, target, trigger, scene);
+                playSound();
             }
         }
         projectiles.forEach(projectile -> projectile.update(dt));
@@ -78,6 +89,8 @@ public class Ability {
         into.setUUID();
         into.setUpgrades(new ArrayList<>(upgrades));
         into.stats = new HashMap<>(stats);
+        into.audioSource = new AudioSource();
+        into.setSound(sound);
 
         return into;
     }
@@ -145,69 +158,67 @@ public class Ability {
         }
         return upgrades.get(index);
     }
-
+    public AudioSource getAudioSource() {
+        return audioSource;
+    }
+    public AudioClip getSound() {
+        return sound;
+    }
+    public void playSound() {
+        if(sound != null)
+            audioSource.playSound(sound);
+    }
 
     public Ability setCooldown(float cooldown) {
         this.cooldown = cooldown;
         return this;
     }
-
     public void setOnTrigger(HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger) {
         this.onTrigger = onTrigger;
     }
-
     public void setProjectileTypes(Projectile[] projectileTypes) {
         this.projectileTypes = projectileTypes;
     }
-
     public Ability setScene(Test scene) {
         this.scene = scene;
         return this;
     }
-
     public String setDescription(String description) {
         return this.description = description;
     }
-
     public void setLevel(int level) {
         this.level = level;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public Ability setCurrentCooldown(float currentCooldown) {
         this.currentCooldown = currentCooldown;
         return this;
     }
-
     public void setProjectiles(ArrayList<Projectile> projectiles) {
         this.projectiles = projectiles;
     }
-
     public void setUUID() {
         this.uuid = UUID.randomUUID();
     }
-
-    public void setUuid(UUID uuid) {
+    public void setUUID(UUID uuid) {
         this.uuid = uuid;
     }
-
     public void addUpgrade(Upgrade upgrade) {
         upgrades.add(upgrade);
     }
-
     public void addUpgrades(Upgrade... upgrades) {
         for (Upgrade upgrade : upgrades) {
             addUpgrade(upgrade);
         }
     }
-
     public void setUpgrades(ArrayList<Upgrade> upgrades) {
         this.upgrades = upgrades;
     }
-
+    public void setSound(AudioClip sound) {
+        this.sound = sound;
+    }
 
     @FunctionalInterface
     public interface HexConsumer<T, U, V, W, X, Y> {

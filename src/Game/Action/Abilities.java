@@ -1,5 +1,8 @@
 package Game.Action;
 
+import Audio.AudioClip;
+import Audio.AudioLoader;
+import Audio.AudioSource;
 import Game.Entities.Player;
 import Game.Entities.Projectiles.Homing;
 import Game.Entities.Projectiles.Projectile;
@@ -60,6 +63,8 @@ public class Abilities {
         DASH.addUpgrade(Upgrades.getFlatReach());
         DASH.addUpgrade(Upgrades.getDoubleReach());
 
+        DASH.setSound(AudioLoader.loadWavFileSafe("dash.wav"));
+
         DASH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             float reach = ability.stats.get("reach");
             origin.translate(new Vector2f(origin.getVelocity()).mul(reach));
@@ -101,6 +106,7 @@ public class Abilities {
         HOMING.setName("Homing");
         HOMING.setDescription("Shoots a homing projectile\nfollowing the closest enemy in front of it\nevery 0.5 seconds dealing 100 damage");
         HOMING.addUpgrades(Upgrades.getDefaults());
+        HOMING.setSound(AudioLoader.loadWavFileSafe("shoot.wav"));
 
         HOMING.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Homing projectile = (Homing) ability.getProjectileTypes()[0].clone();

@@ -1,5 +1,6 @@
 package Game.Entities;
 
+import Audio.AudioLoader;
 import Game.Action.Ability;
 import Game.Entities.Dungeon.Room;
 import Render.Entity.Entity2D;
@@ -11,9 +12,11 @@ import Render.Window;
 import Tests.Test;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Enemy extends Living implements Able {
 
@@ -99,9 +102,11 @@ public class Enemy extends Living implements Able {
             xpCollectible.setTarget(player);
             xpCollectible.setIntensity(500);
             xpCollectible.setHomingDistance(15);
+            xpCollectible.setSound(AudioLoader.loadWavFileSafe("pickup.wav"));
 
             xpCollectible.setOnCollect((c, p) -> {
                 ((Player)p).addXP(1);
+                playSound(Objects.requireNonNull(AudioLoader.loadWavFileSafe("pickup.wav")));
             });
             // rndm pos in a radius of radius
             int radius = 20;

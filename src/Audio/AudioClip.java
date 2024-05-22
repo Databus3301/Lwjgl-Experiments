@@ -106,8 +106,5 @@ public class AudioClip {
         this.bigEndian = bigEndian;
     }
 
-    public AudioClip(ByteBuffer rawAudioBuffer, int format, int sampleRate) {
-
-    }
 
 }

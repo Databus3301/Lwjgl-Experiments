@@ -1,5 +1,8 @@
 package Game.Entities;
 
+import Audio.AudioClip;
+import Audio.AudioLoader;
+import Audio.AudioSource;
 import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Entities.Dungeon.Room;
@@ -30,6 +33,11 @@ public class Player extends Living implements Able {
     private boolean isAutoshooting = false;
     private boolean justLeveledUp = false;
 
+    private AudioClip walkSound, xpSound, levelUpSound;
+
+    private AudioSource asXp = new AudioSource();
+    private AudioSource asLvl = new AudioSource();
+
     public <T extends Test> Player(T scene, Entity2D player, int maxLivePoints) {
         scene.addUpdateListener(this::update);
         player.clone(this);
@@ -38,16 +46,14 @@ public class Player extends Living implements Able {
         this.LP = maxLivePoints;
         speed = 300;
 
-        // --TEMP-- add shooting ability as a default
+        // --TEMP-- add dash ability as a default
         addAbility(Abilities.getDASH());
-//        addAbility(Abilities.getDASH());
-//        addAbility(Abilities.getCIRCLESHOOT());
-          Ability h = Abilities.getHOMING();
-          h.setCooldown(0.1f);
-          addAbility(h);
-//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.1f));
-//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.2f));
-//        addAbility(Abilities.getHOMING().setCurrentCooldown(0.3f));
+
+        levelUpSound = AudioLoader.loadWavFileSafe("levelUp.wav");
+        walkSound = AudioLoader.loadWavFileSafe("walk.wav");
+        xpSound = AudioLoader.loadWavFileSafe("pickup.wav");
+        asXp.setVolume(0.5f);
+        asLvl.setVolume(0.2f);
     }
 
     public void update(float dt, Vector2f mousePos) {
@@ -66,6 +72,7 @@ public class Player extends Living implements Able {
             lvl++;
             XPtoLvlUp = getXPtoLvlUp();
             justLeveledUp = true;
+            asLvl.playSound(levelUpSound);
         }
         if(justLeveledUp)
             UI.onLvlUp(this, (TestGame)scene, 3);
@@ -115,7 +122,8 @@ public class Player extends Living implements Able {
                     iterator.remove();
                 } else
                 if(collider.collideCircle(collectible)) {
-                    ((Collectible) prop).onCollect.accept((Collectible) prop, this);
+                    Collectible c = ((Collectible) prop);
+                    c.onCollect.accept(c, this);
                     iterator.remove();
                 }
             }
@@ -136,6 +144,12 @@ public class Player extends Living implements Able {
 
     public void addXP(int xp) {
         this.xp += xp;
+        if(!asLvl.isPlaying()) {
+            if(asXp.isPlaying())
+                asXp.stopSound();
+            else
+                asXp.playSound(xpSound);
+        }
     }
 
 

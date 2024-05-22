@@ -5,13 +5,11 @@ import Audio.AudioSource;
 
 public class TestAudio extends Test {
     private int f;
-    private AudioSource audioSource = new AudioSource();
-    private AudioClip audioClip;
+    private final AudioSource audioSource = new AudioSource();
 
     public TestAudio() {
         super();
         audioSource.playSound("res/audio/sample.wav");
-        audioClip = audioSource.getAudioClip();
     }
     @Override
     public void OnUpdate(float dt) {
@@ -29,7 +27,7 @@ public class TestAudio extends Test {
             audioSource.stopSound();
 
         if (f == 7000)
-            audioSource.playSound(audioClip);
+            audioSource.resumeSound();
 
         if (f == 15000)
             f = 0;
