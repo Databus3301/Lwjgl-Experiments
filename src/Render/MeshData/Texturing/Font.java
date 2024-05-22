@@ -58,6 +58,20 @@ public class Font extends TextureAtlas {
         return new Vector2f(xComponent, yComponent);
     }
 
+    public static Vector2f centerLongestLine_UI_MaxLength(TextPosParams p) {
+        p.offset.set(Test.renderer.getCamera().getPosition());
+
+        int longestLine = getLongestLine(p)+1;
+        float sizedWidth = getSizedWidth(longestLine, p.font, p.size);
+        if(sizedWidth > p.maxWidth)
+            p.size.set(p.size.x * p.maxWidth / sizedWidth);
+
+        float xComponent = -getSizedWidth(longestLine, p.font, p.size) + p.pos.x - p.offset.x;
+        float yComponent = p.font.getCharHeight() * p.size.y / ((p.font.getCharWidth() + 1) / 2f) + p.pos.y + p.font.getCharWidth() - p.offset.y ;
+
+        return new Vector2f(xComponent, yComponent);
+    }
+
 
     public static int getLongestLine(TextPosParams p){
         int longestLine = 0;

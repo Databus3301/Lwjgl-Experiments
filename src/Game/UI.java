@@ -48,8 +48,8 @@ public class UI {
 
                 Upgrade rU = rA.getRndmUpgrade();
                 String d = rU.genDescription(rA);
-                upgradeButtons[i].setLabel(rU.getName() + ": " + d);
-                upgradeButtons[i].setTooltip(rU.getName() + ": " + d);
+                upgradeButtons[i].setLabel(rA.getName() + "\n" + rU.getName() + ": " + d);
+                //upgradeButtons[i].setTooltip(rA.getName() + "\n" + rU.getName() + ": " + d);
 
                 Ability finalRA = rA;
                 upgradeButtons[i].setReleasedCallback((button) -> {
@@ -85,13 +85,18 @@ public class UI {
                 });
             }
         }
-        if(upgradeButtons == null)
+        if (upgradeButtons == null)
             return;
+
+        Vector2f cp = Test.renderer.getCamera().getPosition();
         for (int i = 0; i < upgradeButtons.length; i++) {
-            Vector2f cp = Test.renderer.getCamera().getPosition();
-            pos.set(-cp.x, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f) + -cp.y);
+            if (abilityButtons != null) // prevent buttons from stacking on top of each other if active simultaneously
+                pos.set(100000, 1000000);
+            else
+                pos.set(-cp.x, bh * i - bh * (bcnt / 2f - 0.5f) + 5 * i - 5 * (bcnt / 2f) + -cp.y);
             upgradeButtons[i].setPosition(pos);
         }
+
     }
 
     private static Button[] abilityButtons;

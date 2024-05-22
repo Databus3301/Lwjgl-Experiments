@@ -304,7 +304,7 @@ public class Renderer {
                         label.getText(),
                         camera.getPosition().mul(-1, new Vector2f()),
                         (int) (button.getScale().x - label.getFont().getCharWidth() * 3)
-                ), Shader.TEXTURING, Font::centerFirstLine_UI_MaxLength, button.getColorReplacement());
+                ), Shader.TEXTURING, Font::centerLongestLine_UI_MaxLength, button.getColorReplacement());
 
         if (button.getState() != Interactable.States.HOVER) return;
         if (!button.shouldDisplayTooltip()) return;

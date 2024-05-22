@@ -26,7 +26,7 @@ public class Upgrade {
     private float rarity;
 
     private BiConsumer<Ability, Upgrade> onApply = (ability, upgrade) -> {};
-    private DescGenerator<Ability> generateDescription = ability -> {return "";};
+    private DescGenerator<Ability, Upgrade> generateDescription = (ability, upgrade) -> {return "";};
 
 
     public Upgrade(String name, String description, int level) {
@@ -45,20 +45,20 @@ public class Upgrade {
         onApply.accept(ability, this);
     }
     public String genDescription(Ability ability) {
-        return generateDescription.accept(ability);
+        return generateDescription.accept(ability, this);
     }
 
     public void setOnApply(BiConsumer<Ability, Upgrade> onApply) {
         this.onApply = onApply;
     }
-    public void setGenerateDescription(DescGenerator<Ability> generateDescription) {
+    public void setGenerateDescription(DescGenerator<Ability, Upgrade> generateDescription) {
         this.generateDescription = generateDescription;
     }
     public void setLevel(int level) {
         this.level = level;
     }
-    public void setDescription(String description) {
-        this.description = description;
+    public String setDescription(String description) {
+        return this.description = description;
     }
     public void setName(String name) {
         this.name = name;
@@ -89,7 +89,7 @@ public class Upgrade {
     }
 
     @FunctionalInterface
-    public interface DescGenerator<A> {
-        String accept(A a);
+    public interface DescGenerator<A, B> {
+        String accept(A a, B b);
     }
 }
