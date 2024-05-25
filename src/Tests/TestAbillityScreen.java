@@ -22,18 +22,20 @@ public class TestAbillityScreen extends Test {
         super();
 
         int bc = abilities.length; // button count
-        int bw = Window.dim.x / bc; // button width
+        int bw = Window.dim.x / (bc+1); // button width
+        int bo = bw/bc; // button offset
+
         abilityButtons = new Button[bc];
 
 
         for (int i = 0; i < abilityButtons.length; i++) {
             // create and spread out buttons
-            abilityButtons[i] = new Button(this, new Vector2f(bw * i - bw * (bc/2f - 0.5f), 0));
+            abilityButtons[i] = new Button(this, new Vector2f((bw+bo) * i - (bw+bo) * (bc/2f - 0.5f), 0));
             Ability ability = abilities[i];
 
             abilityButtons[i].scale(bw/2f, 85);
             abilityButtons[i].setTooltip(ability.getDescription());
-            abilityButtons[i].setLabel(ability.getName());
+            abilityButtons[i].setLabel(" " + ability.getName());
             abilityButtons[i].getLabel().setFont(Font.RETRO_TRANSPARENT_WHITE);
             abilityButtons[i].getLabel().setScale(15f);
             abilityButtons[i].setTexture(new Texture("input.png", 0));

@@ -9,6 +9,7 @@ import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Button;
 import Render.Entity.Interactable.Interactable;
 import Render.Entity.Interactable.Label;
+import Render.Entity.Interactable.Slider;
 import Render.MeshData.*;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
@@ -22,7 +23,6 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL43;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.function.Function;
 
 import static Tests.Test.renderer;
@@ -274,6 +274,19 @@ public class Renderer {
             if (entity != null)
                 draw(entity);
         }
+    }
+    public <T extends Slider> void draw(T slider) {
+        draw(slider.getBar());
+        draw((Interactable) slider);
+        drawText(
+                new TextPosParams(
+                        new Vector2f(slider.getBar().getPosition().x - slider.getBar().getScale().x*(4/(slider.getBar().getScale().x/100)), slider.getBar().getPosition().y + slider.getScale().y * 2.5f),
+                        new Vector2f(slider.getScale().y),
+                        Font.RETRO_TRANSPARENT_WHITE,
+                        slider.getLabel().getText(),
+                        null
+                ), Shader.TEXTURING, Font::centerFirstLine, null
+        );
     }
 
     public <T extends Entity2D> void drawUI(T entity) {
