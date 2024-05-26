@@ -95,6 +95,7 @@ public class TestStartScreen extends Test {
     public void OnStart() {
         super.OnStart();
         renderer.cursorShow();
+        renderer.setPostProcessingShader(Shader.TEXTURING);
     }
     @Override
     public void OnUpdate(float dt) {

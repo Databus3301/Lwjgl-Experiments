@@ -9,7 +9,7 @@ public class TestAudio extends Test {
 
     public TestAudio() {
         super();
-        audioSource.playSound("res/audio/sample.wav");
+        audioSource.playSound("heartbeat.wav");
     }
     @Override
     public void OnUpdate(float dt) {

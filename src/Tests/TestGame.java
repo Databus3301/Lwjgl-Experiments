@@ -35,6 +35,7 @@ import static org.lwjgl.opengl.GL30.glClearColor;
 
 public class TestGame extends Test {
     private final Player player;
+    private Dungeon dungeon;
     private Room room;
     private final Entity2D cursor, bg;
 
@@ -99,7 +100,7 @@ public class TestGame extends Test {
         renderer.cursorHide();
 
         // init dungeon
-        Dungeon dungeon = new Dungeon(player, this);
+        dungeon = new Dungeon(player, this);
         room = dungeon.getStart();
         room.onSwitch(player, enemies, spawner);
     }
@@ -121,6 +122,12 @@ public class TestGame extends Test {
         }
         // move target to mouse
         cursor.setPosition(renderer.screenToWorldCoords(mousePos));
+
+        // restart music
+        if(dungeon.hasStartedPlayingMusic() && !dungeon.getMusicAudioSource().isPlaying()) {
+            dungeon.getMusicAudioSource().resumeSound();
+        }
+
 
         if (!shouldSimulate) return;
         // move player

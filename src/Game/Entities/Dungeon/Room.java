@@ -1,5 +1,7 @@
 package Game.Entities.Dungeon;
 
+import Audio.AudioLoader;
+import Audio.AudioSource;
 import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
@@ -49,6 +51,9 @@ public class Room {
     private final ArrayList<Entity2D> walls;
     private final ArrayList<Interactable> contents;
 
+    private final AudioSource[] audios = new AudioSource[2];
+
+
     public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Dungeon dungeon, Vector2f dimensions) {
         assert numOfDoors >= 0 : "A room can't have a negative number of doors";
 
@@ -61,6 +66,10 @@ public class Room {
         this.onSwitch = (p, e) -> {
             System.out.println("Switched to room: " + title);
         };
+        for (int i = 0; i < audios.length; i++) {
+            audios[i] = new AudioSource();
+            audios[i].setVolume(Dungeon.EFFECT_VOLUME);
+        }
 
         contents = new ArrayList<>();
         walls = new ArrayList<>((int) (dimensions.x + dimensions.y) * 2 + numOfDoors + 3);
@@ -165,6 +174,9 @@ public class Room {
                 for(Door d : doors) {
                     d.open();
                 }
+
+                audios[0].playSound("weird.wav");
+                audios[1].playSound("heartbeat.wav");
             }
             case END -> {
                 player.setAutoshooting(true);
@@ -184,6 +196,7 @@ public class Room {
             case NORMAL -> {
                 // init enemy Spawner to appropriate wave
                 //spawner.setProbabilityDistribution(new float[]{0.5f, 0.5f});
+
 
                 // TODO: better wave generation
                 Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
@@ -222,6 +235,15 @@ public class Room {
                 if(UI.getAbilityButtons() != null)
                     UI.getAbilityButtons()[0].release();
                 renderer.setPostProcessingShader(new Shader("texturing_plain.shader"));
+
+                for(AudioSource audio : audios) {
+                    audio.cleanup();
+                }
+                if(this.type == Dungeon.RoomType.START) {
+                    dungeon.getMusicAudioSource().playSound("normal_music.wav");
+                    dungeon.setStartedPlaying(true);
+                }
+
 
                 // init new room
                 room.onSwitch(player, enemies, spawner); // TODO: IMPLEMENT THIS

@@ -22,15 +22,13 @@ public class TestAbillityScreen extends Test {
         super();
 
         int io = 0; // iterator offset
-        int skips = 2; // skip dash
+        int skips = 2; // non weapon ability count
 
         int bc = abilities.length - skips; // button count
         int bw = Window.dim.x / (bc+1); // button width
         int bo = bw/bc; // button offset
 
-
         abilityButtons = new Button[bc];
-
 
         for (int i = 0; i < abilities.length; i++) {
             Ability ability = abilities[i];
@@ -53,7 +51,7 @@ public class TestAbillityScreen extends Test {
 //            cr.swap(new Vector4f(1, 1, 1, 1), new Vector4f(1f, 1f, 0.2f, 1));
 //            abilityButtons[i].setColorReplacement(cr);
 
-            abilityButtons[(i-io)].setPressedCallback((button) -> {
+            abilityButtons[i-io].setPressedCallback((button) -> {
                 TestGame tg = new TestGame();
                 Window.changeTest(tg);
                 tg.getPlayer().addAbility(ability);

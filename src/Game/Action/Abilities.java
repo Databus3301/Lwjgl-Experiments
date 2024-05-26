@@ -31,6 +31,7 @@ public class Abilities {
         projectiles[0].setDmg(50);
         projectiles[0].setScale(10f);
         projectiles[0].setTexture(new Texture("fireball.png", 0));
+        projectiles[0].setSpeed(350f);
 
         SHOOT = new Ability(projectiles, 0.25f);
         SHOOT.setName("Shoot");
@@ -39,7 +40,7 @@ public class Abilities {
         SHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Projectile projectile = ability.getProjectileTypes()[0].clone();
             projectile.setPosition(origin.getPosition());
-            projectile.accelerateTowards(targetPos, 350);
+            projectile.accelerateTowards(targetPos, projectile.getSpeed());
             projectile.setOnHit((p, damaged) -> {
                 if (damaged)
                     projectile.getScale().mul(1);
@@ -137,6 +138,7 @@ public class Abilities {
         CIRCLESHOOT.stats.put("projectileCount", 6f);
         CIRCLESHOOT.setName("Circle-Shoot");
         CIRCLESHOOT.setDescription("Shoots " + CIRCLESHOOT.stats.get("projectileCount") + " projectiles in all directions\nevery 2 seconds dealing 50 damage each");
+        CIRCLESHOOT.setSound(AudioLoader.loadWavFileSafe("shoot.wav"));
 
         CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
         CIRCLESHOOT.addUpgrade(Upgrades.getFlatProjectiles());

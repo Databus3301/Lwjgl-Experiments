@@ -21,17 +21,18 @@ import static org.lwjgl.openal.AL10.*;
  */
 
 public class AudioSource {
-    Vector3f position;
-    Vector3f velocity;
+    private final Vector3f position,velocity;
 
-    int source;
-    int buffer;
-
+    public final int source, buffer;
 
     public AudioSource() {
         source = alGenSources();
         buffer = alGenBuffers();
+
+
         position = new Vector3f(0, 0, 0);
+        velocity = new Vector3f(0, 0, 0);
+
     }
 
     public void playSound(String filename) {
@@ -92,12 +93,12 @@ public class AudioSource {
     }
 
     public void setPosition(Vector3f position) {
-        this.position = position;
+        this.position.set(position);
         alSource3f(source, AL_POSITION, position.x, position.y, position.z);
     }
 
     public void setVelocity(Vector3f velocity) {
-        this.velocity = velocity;
+        this.velocity.set(velocity);
         alSource3f(source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
     }
 

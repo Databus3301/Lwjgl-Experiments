@@ -34,10 +34,9 @@ public class Player extends Living implements Able {
     private boolean isAutoshooting = false;
     private boolean justLeveledUp = false;
 
-    private AudioClip walkSound, xpSound, levelUpSound;
-
-    private AudioSource asXp = new AudioSource();
-    private AudioSource asLvl = new AudioSource();
+    private final AudioClip xpSound, levelUpSound;
+    private final AudioSource asXp = new AudioSource();
+    private final AudioSource asLvl = new AudioSource();
 
     public <T extends Test> Player(T scene, Entity2D player, int maxLivePoints) {
         scene.addUpdateListener(this::update);
@@ -46,12 +45,12 @@ public class Player extends Living implements Able {
         this.maxLP = maxLivePoints;
         this.LP = maxLivePoints;
         speed = 300;
+        lvl = 1;
 
         // --TEMP-- add dash ability as a default
         addAbility(Abilities.getDASH());
 
         levelUpSound = AudioLoader.loadWavFileSafe("levelUp.wav");
-        walkSound = AudioLoader.loadWavFileSafe("walk.wav");
         xpSound = AudioLoader.loadWavFileSafe("pickup.wav");
         asXp.setVolume(Dungeon.EFFECT_VOLUME - 0.2f > 0 ? Dungeon.EFFECT_VOLUME - 0.2f : 0.1f);
         asLvl.setVolume(Dungeon.EFFECT_VOLUME);

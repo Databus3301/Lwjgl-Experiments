@@ -1,5 +1,6 @@
 package Game.Entities.Dungeon;
 
+import Audio.AudioSource;
 import Game.Entities.Player;
 import Tests.Test;
 import org.joml.Vector2f;
@@ -26,6 +27,9 @@ public class Dungeon { // TODO: load settings file
 
     private int rc = 1;
 
+    private final AudioSource asMusic = new AudioSource();
+    private boolean startedPlaying = false;
+
     public Dungeon(Player player, Test scene) {
         this(player, scene, DEFAULT_DEPTH);
     }
@@ -33,6 +37,7 @@ public class Dungeon { // TODO: load settings file
         this.scene = scene;
         this.player = player;
         this.depth = depth;
+        asMusic.setVolume(MUSIC_VOLUME);
 
         start = new Room(player, RoomType.START, "Start", DEFAULT_START_CONNECTIONS, RoomDesign.STONE, this, new Vector2f(10, 10));
         start.setConnectedRooms(generate(depth, DEFAULT_MAX_DOORS, DEFAULT_START_CONNECTIONS));
@@ -88,6 +93,13 @@ public class Dungeon { // TODO: load settings file
     public Test getScene() {
         return scene;
     }
+    public AudioSource getMusicAudioSource() {
+        return asMusic;
+    }
+
+    public boolean hasStartedPlayingMusic() {
+        return startedPlaying;
+    }
 
     public enum RoomType {
         START ("start.png"),
@@ -123,6 +135,7 @@ public class Dungeon { // TODO: load settings file
     }
 
 
-
-
+    public void setStartedPlaying(boolean startedPlaying) {
+        this.startedPlaying = startedPlaying;
+    }
 }
