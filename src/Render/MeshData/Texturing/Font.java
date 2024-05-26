@@ -81,9 +81,15 @@ public class Font extends TextureAtlas {
         }
         return longestLine;
     }
-    public static int getWidth(int length, Font font) {
-        return length * font.getCharWidth();
+    public int getLongestLine(String s){
+        int longestLine = 0;
+        for (String line : s.split("\n")) {
+            if (line.length() > longestLine)
+                longestLine = line.length();
+        }
+        return longestLine;
     }
+
     public static int getSizedWidth(int length, Font font, Vector2f size) {
         return (int) (length * font.getCharWidth() * size.x / (font.getCharHeight()+0.5f));
     }
@@ -92,6 +98,13 @@ public class Font extends TextureAtlas {
     }
     public int getWidth(String text) {
         return text.length() * getCharWidth();
+    }
+    public static int getWidth(int length, Font font) {
+        return length * font.getCharWidth();
+    }
+
+    public int getHeight(String text) {
+        return text.split("\n").length * getCharHeight();
     }
 
 

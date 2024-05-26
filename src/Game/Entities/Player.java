@@ -5,6 +5,7 @@ import Audio.AudioLoader;
 import Audio.AudioSource;
 import Game.Action.Abilities;
 import Game.Action.Ability;
+import Game.Entities.Dungeon.Dungeon;
 import Game.Entities.Dungeon.Room;
 import Game.UI;
 import Render.Entity.Entity2D;
@@ -52,8 +53,8 @@ public class Player extends Living implements Able {
         levelUpSound = AudioLoader.loadWavFileSafe("levelUp.wav");
         walkSound = AudioLoader.loadWavFileSafe("walk.wav");
         xpSound = AudioLoader.loadWavFileSafe("pickup.wav");
-        asXp.setVolume(0.5f);
-        asLvl.setVolume(0.2f);
+        asXp.setVolume(Dungeon.EFFECT_VOLUME - 0.2f > 0 ? Dungeon.EFFECT_VOLUME - 0.2f : 0.1f);
+        asLvl.setVolume(Dungeon.EFFECT_VOLUME);
     }
 
     public void update(float dt, Vector2f mousePos) {
@@ -144,12 +145,8 @@ public class Player extends Living implements Able {
 
     public void addXP(int xp) {
         this.xp += xp;
-        if(!asLvl.isPlaying()) {
-            if(asXp.isPlaying())
-                asXp.stopSound();
-            else
-                asXp.playSound(xpSound);
-        }
+        if(!asLvl.isPlaying())
+            asXp.playSound(xpSound);
     }
 
 

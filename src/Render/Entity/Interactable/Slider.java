@@ -12,10 +12,11 @@ import static Tests.Test.renderer;
 
 public class Slider extends Interactable {
 
-    Entity2D sliderBar;
-    float value = 0.5f;
+    private Entity2D sliderBar;
+    private float value = 0.5f, lastValue;
+    private boolean changed = false;
 
-    Label l = new Label(Font.RETRO_TRANSPARENT_WHITE, "", 10);
+    private Label l = new Label(Font.RETRO_TRANSPARENT_WHITE, "", 10);
 
     public Slider(Test scene, Vector2f position) {
         super(scene, position);
@@ -31,7 +32,7 @@ public class Slider extends Interactable {
 
     public void initSlider() {
 
-        setScale(sliderBar.getScale().y + sliderBar.getScale().y/5f);
+        setScale(sliderBar.getScale().y *1.2f);
         position.set(sliderBar.getPosition());
 
         this.setDraggedCallback((s) -> {
@@ -45,6 +46,13 @@ public class Slider extends Interactable {
         });
     }
 
+    @Override
+    public void onUpdate(float dt, Vector2f mousePos) {
+        super.onUpdate(dt, mousePos);
+        if(lastValue != value)
+            changed = true;
+        lastValue = value;
+    }
 
     public void setBarScale(float x, float y)  {
         sliderBar.scale(x, y);
@@ -59,17 +67,34 @@ public class Slider extends Interactable {
     public Label getLabel() {
         return l;
     }
+    public boolean changedSinceLastRead() {
+        if(changed) {
+            changed = false;
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void setPosition(Vector2f position) {
         super.setPosition(position);
         initSlider();
     }
-
     public void setLabel(Label l) {
         this.l = l;
     }
     public void setLabel(String text) {
         l.setText(text);
     }
+
+    public void setValue(float value) {
+        this.value = value;
+
+        // update value indicator position
+        Vector2f pos = new Vector2f(sliderBar.getPosition());
+        pos.x -= sliderBar.getScale().x;
+        pos.x += sliderBar.getScale().x * value * 2;
+        position.set(pos);
+    }
+
 }

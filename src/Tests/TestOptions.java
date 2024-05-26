@@ -17,11 +17,8 @@ import org.joml.Vector4f;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.IllegalFormatWidthException;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static Render.Entity.Interactable.Interactable.States.DRAGGED;
 
@@ -29,12 +26,11 @@ public class TestOptions extends Test {
 
     private static final Path  optionsPath = Path.of("res", "Settings", "settings.txt");
     private final Slider effectVolume, musicVolume;
-
     private final Button back;
+    private Label controls;
 
     public TestOptions(float tw, float th, float bo) {
         super();
-
 
         effectVolume = new Slider(this, new Vector2f(-Window.dim.x/4f, -th*2 + bo));
         effectVolume.setBarScale(150, 15);
@@ -54,17 +50,25 @@ public class TestOptions extends Test {
         back.setColorReplacement(cr);
         Label l = new Label(Font.RETRO_TRANSPARENT_WHITE, "  Back", 1000);
         back.setLabel(l);
+
+        controls = new Label(Font.RETRO_TRANSPARENT_WHITE, "Controls:\n\nWASD - Move\nSpace - Dash\nE - Interact\nQ - Autoshoot\nEsc - Exit", (int)(effectVolume.getBar().getScale().y *1.2f));
+        int longestLine = controls.getFont().getLongestLine(controls.getText());
+        maxWidth = controls.getFont().getWidth(" ".repeat(longestLine));
     }
 
     @Override
     public void OnStart() {
         super.OnStart();
+        renderer.setPostProcessingShader(Shader.TEXTURING);
+        readOptions();
+        effectVolume.setValue(Dungeon.EFFECT_VOLUME);
+        musicVolume.setValue(Dungeon.MUSIC_VOLUME);
     }
 
     @Override
     public void OnUpdate(float dt) {
         super.OnUpdate(dt);
-        if(effectVolume.getState() != DRAGGED) {
+        if(effectVolume.getState() != DRAGGED && effectVolume.changedSinceLastRead()) {
             write(line -> {
                 if (line.startsWith("EFFECT_VOLUME= ")) {
                     return "EFFECT_VOLUME= " + effectVolume.getValue();
@@ -72,7 +76,7 @@ public class TestOptions extends Test {
                 return line;
             });
         }
-        if(musicVolume.getState() != DRAGGED) {
+        if(musicVolume.getState() != DRAGGED && musicVolume.changedSinceLastRead()) {
             write(line -> {
                 if (line.startsWith("MUSIC_VOLUME= ")) {
                     return "MUSIC_VOLUME= " + musicVolume.getValue();
@@ -104,7 +108,7 @@ public class TestOptions extends Test {
             for(String line : lines) {
                 switch (line.split("= ")[0]) {
                     case "EFFECT_VOLUME":
-                        Dungeon.ABILITY_VOLUME = Float.parseFloat(line.split("= ")[1]);
+                        Dungeon.EFFECT_VOLUME = Float.parseFloat(line.split("= ")[1]);
                         break;
                     case "MUSIC_VOLUME":
                         Dungeon.MUSIC_VOLUME = Float.parseFloat(line.split("= ")[1]);
@@ -116,11 +120,15 @@ public class TestOptions extends Test {
         }
     }
 
+
+
+    float maxWidth = 0;
     @Override
     public void OnRender() {
         super.OnRender();
         renderer.draw(effectVolume);
         renderer.draw(musicVolume);
+        renderer.draw(controls, pos.set(Window.dim.x/4f - maxWidth*3f, musicVolume.getBar().getPosition().y + musicVolume.getScale().y *5f));
         renderer.draw(back);
     }
 
@@ -128,4 +136,7 @@ public class TestOptions extends Test {
     public void OnClose() {
         super.OnClose();
     }
+
+
+    Vector2f pos = new Vector2f(0, 0);
 }

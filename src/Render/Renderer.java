@@ -289,6 +289,18 @@ public class Renderer {
         );
     }
 
+    public <T extends Label> void draw(T label, Vector2f at) {
+        drawText(
+                new TextPosParams(
+                        new Vector2f(at),
+                        new Vector2f(label.getScale()),
+                        label.getFont(),
+                        label.getText(),
+                        null
+                ), Shader.TEXTURING, null, null
+        );
+    }
+
     public <T extends Entity2D> void drawUI(T entity) {
         entity.setOffset(camera.getPosition().mul(-1, new Vector2f()));
         draw(entity);

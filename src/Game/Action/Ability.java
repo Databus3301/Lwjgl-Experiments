@@ -1,7 +1,6 @@
 package Game.Action;
 
 import Audio.AudioClip;
-import Audio.AudioLoader;
 import Audio.AudioSource;
 import Game.Entities.Living;
 import Game.Entities.Player;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static Game.Entities.Dungeon.Dungeon.ABILITY_VOLUME;
+import static Game.Entities.Dungeon.Dungeon.EFFECT_VOLUME;
 
 public class Ability {
     private Test scene;
@@ -44,7 +43,7 @@ public class Ability {
         this.projectileTypes = projectileTypes;
         this.cooldown = cooldown;
         this.currentCooldown = .5f;
-        audioSource.setVolume(ABILITY_VOLUME);
+        audioSource.setVolume(EFFECT_VOLUME);
         uuid = UUID.randomUUID();
     }
 
@@ -52,7 +51,7 @@ public class Ability {
         this.projectileTypes = new Projectile[]{new Projectile()};
         this.cooldown = 1f;
         this.currentCooldown = .5f;
-        audioSource.setVolume(ABILITY_VOLUME);
+        audioSource.setVolume(EFFECT_VOLUME);
         uuid = UUID.randomUUID();
     }
 

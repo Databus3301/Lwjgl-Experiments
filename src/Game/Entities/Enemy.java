@@ -102,11 +102,9 @@ public class Enemy extends Living implements Able {
             xpCollectible.setTarget(player);
             xpCollectible.setIntensity(500);
             xpCollectible.setHomingDistance(15);
-            xpCollectible.setSound(AudioLoader.loadWavFileSafe("pickup.wav"));
 
             xpCollectible.setOnCollect((c, p) -> {
                 ((Player)p).addXP(1);
-                playSound(Objects.requireNonNull(AudioLoader.loadWavFileSafe("pickup.wav")));
             });
             // rndm pos in a radius of radius
             int radius = 20;

@@ -25,16 +25,12 @@ public class Collectible extends Interactable {
     protected Consumer<Collectible> onUpdate;
     protected BiConsumer<Collectible, Entity2D> onCollect;
 
-    private AudioSource as;
-    private AudioClip sound;
-
     public <T extends Test> Collectible(T scene, Vector2f position, ObjModel model, Texture texture, Shader shader) {
         super(scene, position, model, texture, shader);
         scene.addUpdateListener(this::update);
         setScale(5);
         setIntensity(700);
         setHomingDistance(10);
-        as = new AudioSource();
     }
 
     public <T extends Test> Collectible(T scene, Vector2f position) {
@@ -43,7 +39,6 @@ public class Collectible extends Interactable {
         setScale(5);
         setIntensity(700);
         setHomingDistance(10);
-        as = new AudioSource();
     }
 
 
@@ -88,14 +83,7 @@ public class Collectible extends Interactable {
     public void setOnCollect(BiConsumer<Collectible, Entity2D> onCollect) {
         this.onCollect = onCollect;
     }
-    public void setSound(AudioClip sound) {
-        this.sound = sound;
-    }
-
     public boolean shouldDisappear() {
         return lifeTime <= 0;
-    }
-    public AudioClip getSound() {
-        return sound;
     }
 }

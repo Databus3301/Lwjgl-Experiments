@@ -21,32 +21,39 @@ public class TestAbillityScreen extends Test {
     public TestAbillityScreen(){
         super();
 
-        int bc = abilities.length; // button count
+        int io = 0; // iterator offset
+        int skips = 2; // skip dash
+
+        int bc = abilities.length - skips; // button count
         int bw = Window.dim.x / (bc+1); // button width
         int bo = bw/bc; // button offset
+
 
         abilityButtons = new Button[bc];
 
 
-        for (int i = 0; i < abilityButtons.length; i++) {
-            // create and spread out buttons
-            abilityButtons[i] = new Button(this, new Vector2f((bw+bo) * i - (bw+bo) * (bc/2f - 0.5f), 0));
+        for (int i = 0; i < abilities.length; i++) {
             Ability ability = abilities[i];
+            // exclude non weapon abilities | increment iterator offset
+            if((ability.getName() == "Dash" || ability.getName() == "Shield") && ++io > -1)  continue;
 
-            abilityButtons[i].scale(bw/2f, 85);
-            abilityButtons[i].setTooltip(ability.getDescription());
-            abilityButtons[i].setLabel(" " + ability.getName());
-            abilityButtons[i].getLabel().setFont(Font.RETRO_TRANSPARENT_WHITE);
-            abilityButtons[i].getLabel().setScale(15f);
-            abilityButtons[i].setTexture(new Texture("input.png", 0));
-            abilityButtons[i].setShader(Shader.TEXTURING);
+            // create and spread out buttons
+            abilityButtons[i-io] = new Button(this, new Vector2f((bw+bo) * (i-io) - (bw+bo) * (bc/2f - 0.5f), 0));
+
+            abilityButtons[i-io].scale(bw/2f, 85);
+            abilityButtons[i-io].setTooltip(ability.getDescription());
+            abilityButtons[i-io].setLabel(" " + ability.getName());
+            abilityButtons[i-io].getLabel().setFont(Font.RETRO_TRANSPARENT_WHITE);
+            abilityButtons[i-io].getLabel().setScale(15f);
+            abilityButtons[i-io].setTexture(new Texture("input.png", 0));
+            abilityButtons[i-io].setShader(Shader.TEXTURING);
 
             // change text colors
 //            ColorReplacement cr = new ColorReplacement();
 //            cr.swap(new Vector4f(1, 1, 1, 1), new Vector4f(1f, 1f, 0.2f, 1));
 //            abilityButtons[i].setColorReplacement(cr);
 
-            abilityButtons[i].setPressedCallback((button) -> {
+            abilityButtons[(i-io)].setPressedCallback((button) -> {
                 TestGame tg = new TestGame();
                 Window.changeTest(tg);
                 tg.getPlayer().addAbility(ability);

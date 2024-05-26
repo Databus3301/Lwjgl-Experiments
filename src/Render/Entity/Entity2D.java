@@ -14,7 +14,7 @@ import java.lang.Math;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static Game.Entities.Dungeon.Dungeon.ENTITY_VOLUME;
+import static Game.Entities.Dungeon.Dungeon.EFFECT_VOLUME;
 
 /**
  * Entity2D is a class that represents a 2D entity in the world
@@ -99,7 +99,7 @@ public class Entity2D {
         // if al capabilities have been initialsied, create a new audio source
         if (Window.getWindow() != null) {
             this.audioSource = new AudioSource();
-            audioSource.setVolume(ENTITY_VOLUME);
+            audioSource.setVolume(EFFECT_VOLUME);
         }
     }
 
@@ -501,7 +501,6 @@ public class Entity2D {
 
     public void playSound(AudioClip clip) {
         if (this.audioSource != null && clip != null) {
-            System.out.println("Playing sound " + clip + " from " + this.audioSource);
             this.audioSource.playSound(clip);
         }
     }

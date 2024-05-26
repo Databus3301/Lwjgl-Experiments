@@ -14,10 +14,8 @@ public class Dungeon { // TODO: load settings file
     public static final Vector2f MIN_ROOM_SIZE = new Vector2f(8, 8);
     public static final Vector2f MAX_ROOM_SIZE = new Vector2f(16, 16);
 
-    public static float ABILITY_VOLUME = 0.2f;
+    public static float EFFECT_VOLUME = 0.2f;
     public static float MUSIC_VOLUME = 0.2f;
-    public static float ENTITY_VOLUME = 0.5f;
-
 
     private final Test scene;
 
