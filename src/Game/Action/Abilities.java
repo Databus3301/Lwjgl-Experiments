@@ -1,8 +1,6 @@
 package Game.Action;
 
-import Audio.AudioClip;
 import Audio.AudioLoader;
-import Audio.AudioSource;
 import Game.Entities.Player;
 import Game.Entities.Projectiles.Homing;
 import Game.Entities.Projectiles.Projectile;
@@ -36,7 +34,6 @@ public class Abilities {
         SHOOT = new Ability(projectiles, 0.25f);
         SHOOT.setName("Shoot");
         SHOOT.setDescription("Shoots a projectile in direction of cursor\n every 0.25 seconds dealing 50 damage");
-        SHOOT.addUpgrades(Upgrades.getDefaults());
         SHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             Projectile projectile = ability.getProjectileTypes()[0].clone();
             projectile.setPosition(origin.getPosition());
@@ -58,11 +55,14 @@ public class Abilities {
         DASH.setDescription("Dashes in the current walking direction\nwith a cooldown of 2 seconds\n(can be stacked)");
 
         DASH.stats.put("cooldown", 2f);
-        DASH.addUpgrade(Upgrades.getFlatCooldownStats());
-        DASH.addUpgrade(Upgrades.getHalfCooldownStats());
         DASH.stats.put("reach", 150f);
-        DASH.addUpgrade(Upgrades.getFlatReach());
-        DASH.addUpgrade(Upgrades.getDoubleReach());
+        DASH.setOnUpgradeGen((a) -> {
+            a.getUpgrades().clear();
+            a.addUpgrade(Upgrades.getFlatCooldownStats());
+            a.addUpgrade(Upgrades.getHalfCooldownStats());
+            a.addUpgrade(Upgrades.getFlatReach());
+            a.addUpgrade(Upgrades.getDoubleReach());
+        });
 
         DASH.setSound(AudioLoader.loadWavFileSafe("dash.wav"));
 
@@ -106,7 +106,11 @@ public class Abilities {
         HOMING = new Ability(projectiles, 0.5f);
         HOMING.setName("Homing");
         HOMING.setDescription("Shoots a homing projectile\nfollowing the closest enemy in front of it\nevery 0.5 seconds dealing 100 damage");
-        HOMING.addUpgrades(Upgrades.getDefaults());
+        HOMING.setOnUpgradeGen((a) -> {
+            a.getUpgrades().clear();
+            a.addUpgrades(Upgrades.getDefaults());
+            a.addUpgrade(Upgrades.getFlatIntensity());
+        });
         HOMING.setSound(AudioLoader.loadWavFileSafe("shoot.wav"));
 
         HOMING.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
@@ -136,13 +140,17 @@ public class Abilities {
 
         CIRCLESHOOT = new Ability(projectiles, 2f);
         CIRCLESHOOT.stats.put("projectileCount", 6f);
+
         CIRCLESHOOT.setName("Circle-Shoot");
         CIRCLESHOOT.setDescription("Shoots " + CIRCLESHOOT.stats.get("projectileCount") + " projectiles in all directions\nevery 2 seconds dealing 50 damage each");
         CIRCLESHOOT.setSound(AudioLoader.loadWavFileSafe("shoot.wav"));
 
-        CIRCLESHOOT.addUpgrade(Upgrades.getDoubleProjectiles());
-        CIRCLESHOOT.addUpgrade(Upgrades.getFlatProjectiles());
-        CIRCLESHOOT.addUpgrades(Upgrades.getDefaults());
+        CIRCLESHOOT.setOnUpgradeGen((a) -> {
+            a.getUpgrades().clear();
+            a.addUpgrades(Upgrades.getDefaults());
+            a.addUpgrade(Upgrades.getDoubleProjectiles());
+            a.addUpgrade(Upgrades.getFlatProjectiles());
+        });
 
         CIRCLESHOOT.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
             float pc = ability.stats.get("projectileCount");

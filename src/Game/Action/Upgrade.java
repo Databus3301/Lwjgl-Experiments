@@ -71,7 +71,7 @@ public class Upgrade {
      * @param rarity
      */
     public void setRarity(float rarity) {
-        assert rarity >= 0 && rarity <= 1 : "Rarity must be between 0 and 1";
+        //assert rarity >= 0 && rarity <= 1 : "Rarity must be between 0 and 1";
         this.rarity = rarity;
     }
 
@@ -83,6 +83,13 @@ public class Upgrade {
     }
     public int getLevel() {
         return level;
+    }
+    public int getRndmLevel() {
+        double d = Math.random();
+        if(d < 0.4) return 1;
+        if(d < 0.7) return 2;
+        if(d < 0.9) return 3;
+        return 4;
     }
     public float getRarity() {
         return rarity;

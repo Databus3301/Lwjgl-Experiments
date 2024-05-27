@@ -1,14 +1,11 @@
 package Game;
 
-import Audio.AudioLoader;
-import Audio.AudioSource;
 import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Action.Upgrade;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
 import Game.Entities.Dungeon.Door;
-import Game.Entities.Dungeon.Room;
 import Game.Entities.Player;
 import Render.Entity.Interactable.Button;
 import Render.Entity.Interactable.Interactable;
@@ -18,7 +15,6 @@ import Tests.TestGame;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import static Game.Action.Waves.EnemySpawner.Result.FINISHED_SPAWNING;
 import static Game.Action.Waves.EnemySpawner.Result.NOTHING;
 import static Render.Entity.Interactable.Interactable.States.HOVER;
 
@@ -47,6 +43,7 @@ public class UI {
 
                 int l = player.getAbilities().size();
                 Ability rA = player.getAbilities().get((int) (Math.random() * l));
+                rA.onUpgradeGen.accept(rA);
                 while(rA.getUpgrades().isEmpty())
                     rA = player.getAbilities().get((int) (Math.random() * l));
 

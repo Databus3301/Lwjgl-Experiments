@@ -46,6 +46,7 @@ public class Player extends Living implements Able {
         this.LP = maxLivePoints;
         speed = 300;
         lvl = 1;
+        XPtoLvlUp = getXPtoLvlUp();
 
         // --TEMP-- add dash ability as a default
         addAbility(Abilities.getDASH());

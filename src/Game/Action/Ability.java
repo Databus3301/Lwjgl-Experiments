@@ -12,6 +12,7 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static Game.Entities.Dungeon.Dungeon.EFFECT_VOLUME;
 
@@ -38,6 +39,7 @@ public class Ability {
     private AudioClip sound = null;
 
     public HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger;
+    public Consumer<Ability> onUpgradeGen = (a) -> {a.setUpgrades(Upgrades.getDefaults());};
 
     public Ability(Projectile[] projectileTypes, float cooldown) {
         this.projectileTypes = projectileTypes;
@@ -94,6 +96,7 @@ public class Ability {
         return into;
     }
 
+
     public Ability clone() {
         Ability a = new Ability();
         return clone(a);
@@ -141,6 +144,9 @@ public class Ability {
     }
 
     public Upgrade getRndmUpgrade() {
+        upgrades.clear();
+        onUpgradeGen.accept(this);
+
         float[] probabilityDistribution = new float[upgrades.size()];
         float sum = 0;
         for (int i = 0; i < upgrades.size(); i++) {
@@ -174,6 +180,9 @@ public class Ability {
     }
     public void setOnTrigger(HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger) {
         this.onTrigger = onTrigger;
+    }
+    public void setOnUpgradeGen(Consumer<Ability> onUpgradeGen) {
+        this.onUpgradeGen = onUpgradeGen;
     }
     public void setProjectileTypes(Projectile[] projectileTypes) {
         this.projectileTypes = projectileTypes;
@@ -212,8 +221,12 @@ public class Ability {
             addUpgrade(upgrade);
         }
     }
-    public void setUpgrades(ArrayList<Upgrade> upgrades) {
-        this.upgrades = upgrades;
+    public void setUpgrades(Upgrade... upgrades) {
+        this.upgrades.clear();
+        this.addUpgrades(upgrades);
+    }
+    private void setUpgrades(ArrayList<Upgrade> ul) {
+        this.upgrades = ul;
     }
     public void setSound(AudioClip sound) {
         this.sound = sound;

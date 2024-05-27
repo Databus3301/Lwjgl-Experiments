@@ -43,6 +43,7 @@ public class Homing extends Projectile {
         p.setOffset(offset);
         p.setColor(color);
         p.setAnimation(animation);
+        p.setSpeed(speed);
 
         p.setPierce(pierce);
         p.setArmorPen(armorPen);
@@ -64,7 +65,8 @@ public class Homing extends Projectile {
             float dist = target.getPosition().distance(this.getPosition());
             if(dist < homingDistance * homingDistance) {
                 Vector2f direction = new Vector2f(target.getPosition()).sub(this.getPosition()).normalize();
-                velocity.add(orthogonalComponent(new Vector2f(velocity), direction.mul(intensity * (1 / (dist+1)))));
+                velocity.add(orthogonalComponent(new Vector2f(velocity), direction.mul((intensity+speed/2) * (1 / (dist+1)))));
+                velocity.normalize().mul(speed);
             }
         }
 
