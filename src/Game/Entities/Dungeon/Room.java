@@ -14,15 +14,20 @@ import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
+import Render.MeshData.Texturing.Animation;
 import Render.MeshData.Texturing.Texture;
+import Render.MeshData.Texturing.TextureAtlas;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import javax.xml.transform.Source;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
 import static Game.Action.Waves.EnemySpawner.Result.*;
 import static Tests.Test.renderer;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 /**
  * A room manages the entities and the logic of a game level.
@@ -64,7 +69,7 @@ public class Room {
         this.design = design;
         this.dimensions = dimensions;
         this.onSwitch = (p, e) -> {
-            System.out.println("Switched to room: " + title);
+            System.out.println("Switched to room: " + title + " - " + type);
         };
         for (int i = 0; i < audios.length; i++) {
             audios[i] = new AudioSource();
@@ -163,7 +168,7 @@ public class Room {
 
     }
 
-    public void onSwitch(Player player, ArrayList<Enemy> enemies, EnemySpawner spawner) {
+    public void onSwitch(Player player, ArrayList<Enemy> enemies, EnemySpawner spawner, ArrayList<Interactable> props) {
         // change contents to include interactables like blacksmith, shop, etc.
         // call specific room callback
         switch (type) {
@@ -183,15 +188,57 @@ public class Room {
             }
             case BOSS -> {
                 // add boss to room
+                player.setAutoshooting(true);
                 enemies.add(Enemies.getBOSS());
+
+                // TODO: remove this
+                for(Door d : doors) {
+                    d.open();
+                }
             }
             case SHOP -> {
                 // add shop to room
                 player.setAutoshooting(false);
+                for(Door d : doors) {
+                    d.open();
+                }
             }
             case SMITH -> {
-                // add blacksmith to room
                 player.setAutoshooting(false);
+                for(Door d : doors) {
+                    d.open();
+                }
+
+                // add blacksmith to room
+                TextureAtlas smithAtlas = new TextureAtlas(new Texture("SmithAnim.png", 0), 3, 1, 3, 32, 32, 0);
+                Animation smithIdle = new Animation(smithAtlas, 0, 0, 3, 10);
+
+                Interactable smith = new Interactable(dungeon.getScene());
+                smith.setModel(ObjModel.SQUARE.clone());
+                smith.setShader(Shader.TEXTURING);
+                smith.setAnimation(smithIdle);
+                smith.scale(32 * Dungeon.SCALE * 1.2f);
+                smith.setPosition(position);
+                smith.setStatic(true);
+                smith.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
+                    // open shop
+                    if(key == GLFW_KEY_E && action == GLFW_PRESS)
+                        System.out.println("Smithy");
+                });
+
+                props.add(smith);
+
+                // add anvil to room
+                Interactable anvil = new Interactable(dungeon.getScene());
+                anvil.setModel(ObjModel.SQUARE.clone());
+                anvil.setShader(Shader.TEXTURING);
+                anvil.setTexture(new Texture("anvil.png"));
+                anvil.scale(32 * Dungeon.SCALE * 1.2f);
+                anvil.setPosition(position.x + 12 * Dungeon.SCALE, position.y - 26 * Dungeon.SCALE);
+                anvil.setStatic(true);
+
+                props.add(anvil);
+
             }
             case NORMAL -> {
                 // init enemy Spawner to appropriate wave
@@ -213,7 +260,6 @@ public class Room {
         if (spawner.getLastResult() == WAVE_OVER) {
             for (Door door : doors) {
                 door.open();
-                System.out.println("Opening door");
             }
         }
 
@@ -239,19 +285,21 @@ public class Room {
                 for(AudioSource audio : audios) {
                     audio.cleanup();
                 }
+                // if you leave the start room, start the music
                 if(this.type == Dungeon.RoomType.START) {
                     dungeon.getMusicAudioSource().playSound("normal_music.wav");
                     dungeon.setStartedPlaying(true);
                 }
 
-
                 // init new room
-                room.onSwitch(player, enemies, spawner); // TODO: IMPLEMENT THIS
+                room.onSwitch(player, enemies, spawner, props); // TODO: IMPLEMENT THIS
                 break;
             }
         }
         return room;
     }
+
+
 
 
 

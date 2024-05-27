@@ -88,6 +88,9 @@ public class Interactable extends Entity2D {
             changedState = false;
         }
 
+        if(animation != null)
+            animation.update(dt);
+
 
     }
     public void onKeyInput(int key, int scancode, int action, int mods, Vector2f mousePos) {

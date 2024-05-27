@@ -374,7 +374,7 @@ public class Upgrades {
         int inc =  20 * speed.getRndmLevel();
 
         speed.setGenerateDescription((ability, upgrade) -> {
-            return  upgrade.setDescription("Reduces the speed of each projectile by " + inc + " pixels per second,\npreviously " + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Entity2D::getSpeed).average().orElse(0)) + " (average)");
+            return  upgrade.setDescription("Reduces the speed of each projectile\n by " + inc + " pixels per second, previously " + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(Entity2D::getSpeed).average().orElse(0)) + " (average)");
         });
         speed.setOnApply((ability, upgrade) -> {
             Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> projectile.setSpeed(projectile.getSpeed() - inc));

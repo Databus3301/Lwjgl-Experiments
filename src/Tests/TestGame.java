@@ -102,7 +102,7 @@ public class TestGame extends Test {
         // init dungeon
         dungeon = new Dungeon(player, this);
         room = dungeon.getStart();
-        room.onSwitch(player, enemies, spawner);
+        room.onSwitch(player, enemies, spawner, props);
     }
 
     @Override

@@ -63,8 +63,8 @@ public class Dungeon { // TODO: load settings file
             // generate random design
             RoomDesign design = RoomDesign.values()[(int) (Math.random() * RoomDesign.values().length)];
             // generate random type
-            //RoomType type = RoomType.values()[(int) (Math.random() * (RoomType.values().length-1)+1)];
-            RoomType type = RoomType.NORMAL;
+            RoomType type = rndmRoomType();
+            //RoomType type = RoomType.SMITH;
             String name = "Room " + depth + "-" + j;
 
             rooms[j] = new Room(player, type, name, newDoors, design, this, dim);
@@ -82,6 +82,18 @@ public class Dungeon { // TODO: load settings file
         start = new Room(player, RoomType.START, "Start", 1, RoomDesign.STONE, this, new Vector2f(10, 10));
         start.setConnectedRooms(generate(5, 4, 1));
         return start;
+    }
+
+    public RoomType rndmRoomType() {
+        // random room type excluding START and END,,, NORMAL should be the most common
+        RoomType[] type = new RoomType[(RoomType.values().length-2)*3];
+        for(int i = 0; i < type.length; i++) {
+            if(i < RoomType.values().length-2)
+                type[i] =  RoomType.values()[i+2];
+            else
+                type[i] = RoomType.NORMAL;
+        }
+        return type[(int) (Math.random() * type.length)];
     }
 
     public Room getStart() {
@@ -108,6 +120,7 @@ public class Dungeon { // TODO: load settings file
         SHOP  ("shop.png"),
         SMITH ("smith.png"),
         NORMAL("normal.png");
+
 
         private final String texture;
 

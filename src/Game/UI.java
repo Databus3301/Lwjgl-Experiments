@@ -121,7 +121,6 @@ public class UI {
 
                 abilityButtons[i].setReleasedCallback((button) -> {
                     player.addAbility(rA);
-                    System.out.println("added ability: " + rA.getName() + " to player");
 
                     EnemySpawner sp = scene.getSpawner();
                     sp.setCurrentWave(Wave.getEmptyWave());
