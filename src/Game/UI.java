@@ -22,8 +22,9 @@ public class UI {
     private static Button[] upgradeButtons;
 
     public static void onLvlUp(Player player, TestGame scene, int bcnt) {
-        float bw = (float) Window.dim.x / bcnt;
-        float bh = Window.dim.y / (bcnt+1f);
+        Vector2f diff = Window.getDifferP();
+        float bw = (float) Window.dim.x / bcnt / diff.x / diff.x;
+        float bh = Window.dim.y / (bcnt+1f)    / diff.y / diff.y;
 
 
 
@@ -35,7 +36,7 @@ public class UI {
                 upgradeButtons[i] = new Button(scene, new Vector2f(0, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f)));
                 upgradeButtons[i].scale(bw/2f, bh/2f);
                 upgradeButtons[i].setColor(0.6f, 0.6f, 0.6f, 0.25f);
-                upgradeButtons[i].setHitTime(100000);
+                upgradeButtons[i].setHitTime(1500);
 
                 // rndm ability that has upgrades
                 if(player.getAbilities().isEmpty())
@@ -54,25 +55,6 @@ public class UI {
 
                 Ability finalRA = rA;
                 upgradeButtons[i].setReleasedCallback((button) -> {
-                    //TODO: field design
-                    /*
-                    - white rect-border with text inside
-                    - possibly one icon
-
-                    - Upgrades
-                        - large ability name plus colon
-                        - small upgrade description
-                    - Abilities
-                        - large ability name
-                        - small ability description
-
-                    - on hover: border color darkens
-                    - on click: border color lightens
-                    - on release: upgrade is applied
-
-                    stop simulation
-
-                     */
                     rU.applyTo(finalRA);
 
                     player.setJustLeveledUp(false);
@@ -102,8 +84,9 @@ public class UI {
 
     private static Button[] abilityButtons;
     public static void onRoomCompletion(Player player, TestGame scene, int bcnt) {
-        float bw = (float) Window.dim.x / bcnt;
-        float bh = Window.dim.y / (bcnt+1f);
+        Vector2f diff = Window.getDifferP();
+        float bw = (float) Window.dim.x / bcnt / diff.x / diff.x;
+        float bh = Window.dim.y / (bcnt+1f)    / diff.y / diff.y;
 
         if(abilityButtons == null) {
             abilityButtons = new Button[bcnt];

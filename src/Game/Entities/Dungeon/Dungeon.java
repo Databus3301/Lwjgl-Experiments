@@ -2,16 +2,17 @@ package Game.Entities.Dungeon;
 
 import Audio.AudioSource;
 import Game.Entities.Player;
+import Render.Window;
 import Tests.Test;
 import org.joml.Vector2f;
 
 public class Dungeon { // TODO: load settings file
-    public static final float SCALE = 1.2f;
+    public static float SCALE = 1.4f * Window.getDifferP1920().length();
     // DEFAULTS
     public static final int DEFAULT_DEPTH = 5;
     public static final int DEFAULT_MAX_DOORS = 4;
     public static final int DEFAULT_START_CONNECTIONS = 2;
-    public static final int DEFAULT_MIN_DOORS = 2;
+    public static final int DEFAULT_MIN_DOORS = 2;                          
     public static final Vector2f MIN_ROOM_SIZE = new Vector2f(8, 8);
     public static final Vector2f MAX_ROOM_SIZE = new Vector2f(16, 16);
 
@@ -49,7 +50,7 @@ public class Dungeon { // TODO: load settings file
 
         if(depth <= 0) {
             rc++;
-            return new Room[]{new Room(player, RoomType.END, "End", 0, RoomDesign.STONE, this, dim)};
+            return new Room[]{new Room(player, RoomType.BOSS, "End", 0, RoomDesign.STONE, this, dim)};
         }
 
         int newDoors = (int) (Math.random() * (maxDoors-(DEFAULT_MIN_DOORS-1)) + DEFAULT_MIN_DOORS);
@@ -85,8 +86,8 @@ public class Dungeon { // TODO: load settings file
     }
 
     public RoomType rndmRoomType() {
-        // random room type excluding START and END,,, NORMAL should be the most common
-        RoomType[] type = new RoomType[(RoomType.values().length-2)*3];
+        // random room type excluding START and END,,, NORMAL should be the most common ↓
+        RoomType[] type = new RoomType[(RoomType.values().length-2)          *          2];
         for(int i = 0; i < type.length; i++) {
             if(i < RoomType.values().length-2)
                 type[i] =  RoomType.values()[i+2];
@@ -115,9 +116,8 @@ public class Dungeon { // TODO: load settings file
 
     public enum RoomType {
         START ("start.png"),
-        END   ("end.png"),
         BOSS  ("boss.png"),
-        SHOP  ("shop.png"),
+        //SHOP  ("shop.png"),
         SMITH ("smith.png"),
         NORMAL("normal.png");
 

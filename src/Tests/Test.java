@@ -6,7 +6,6 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 // TODO: rework into interface?
 
@@ -18,7 +17,6 @@ public class Test {
 
     public static Renderer renderer;
     public static Vector2f mousePos = new Vector2f(0, 0);
-
 
     private final ArrayList<Interactable.QuintConsumer<Integer, Integer, Integer, Integer, Vector2f>> keyCallbacks;
     private final ArrayList<BiConsumer<Float, Vector2f>> updateCallbacks;
@@ -61,6 +59,9 @@ public class Test {
         keyCallbacks.forEach(callback -> {
             callback.accept(key, scancode, action, mods, mousePos);
         });
+    }
+
+    public void OnResize(int width, int height) {
     }
 
 

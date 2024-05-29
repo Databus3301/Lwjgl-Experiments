@@ -1,6 +1,7 @@
 package Render;
 
 import Tests.*;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -120,7 +121,9 @@ public class Window {
             }
             glViewport(0, 0, dim.x, dim.y);
 
-            frameBuffer.resize(dim.x, dim.y);
+            frameBuffer = new Renderer.FrameBuffer(dim.x, dim.y);
+            if(currentTest != null) currentTest.OnResize(dim.x, dim.y);
+            //frameBuffer.resize(dim.x, dim.y);
         });
 
         glfwSetErrorCallback((error, description) -> {
@@ -328,6 +331,8 @@ public class Window {
         // Terminate GLFW and free the error callback
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+
+        System.exit(0);
     }
 
     static public void GlClearError() {
@@ -360,5 +365,19 @@ public class Window {
 
     public Renderer.FrameBuffer getFrameBuffer() {
         return frameBuffer;
+    }
+
+    public static Vector2f getDifferP() {
+        return new Vector2f((float) dim.x / baseDim.x, (float) dim.y / baseDim.y);
+    }
+    public static Vector2i getDifferF() {
+        return baseDim.sub(dim, new Vector2i());
+    }
+
+    public static Vector2f getDifferP1920() {
+        return new Vector2f((float) dim.x / 1920, (float) dim.y / 1080);
+    }
+    public static Vector2i getDifferF1920() {
+        return new Vector2i(dim.x - 1920, dim.y - 1080);
     }
 }

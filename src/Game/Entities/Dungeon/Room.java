@@ -183,9 +183,6 @@ public class Room {
                 audios[0].playSound("weird.wav");
                 audios[1].playSound("heartbeat.wav");
             }
-            case END -> {
-                player.setAutoshooting(true);
-            }
             case BOSS -> {
                 // add boss to room
                 player.setAutoshooting(true);
@@ -196,13 +193,13 @@ public class Room {
                     d.open();
                 }
             }
-            case SHOP -> {
-                // add shop to room
-                player.setAutoshooting(false);
-                for(Door d : doors) {
-                    d.open();
-                }
-            }
+           // case SHOP -> {
+           //     // add shop to room
+           //     player.setAutoshooting(false);
+           //     for(Door d : doors) {
+           //         d.open();
+           //     }
+           // }
             case SMITH -> {
                 player.setAutoshooting(false);
                 for(Door d : doors) {

@@ -11,6 +11,7 @@ import Render.MeshData.Texturing.Font;
 import Render.MeshData.Texturing.Texture;
 import Render.Window;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 
@@ -25,19 +26,32 @@ import static Render.Entity.Interactable.Interactable.States.DRAGGED;
 public class TestOptions extends Test {
 
     private static final Path  optionsPath = Path.of("res", "Settings", "settings.txt");
-    private final Slider effectVolume, musicVolume;
-    private final Button back;
+    private Slider effectVolume, musicVolume;
+    private Button back;
     private Label controls;
 
-    public TestOptions(float tw, float th, float bo) {
+    public TestOptions() {
         super();
+        init();
+    }
+
+    public void init() {
+        Vector2f d = Window.getDifferP1920(); // res diff
+        float bc = 3;                         // button count
+        float bw = (float) Window.baseDim.x / bc * d.x; // button with   max
+        float bh = Window.baseDim.y / (bc+1f)    * d.y;    // button height max
+        float tw = 250 * d.x;                       // target width
+        float th = 85  * d.y;                        // target height
+        float bo = bh/bc/3;                   // button offset
+        if(tw > bw) tw = bw;
+        if(th > bh) th = bh;
 
         effectVolume = new Slider(this, new Vector2f(-Window.dim.x/4f, -th*2 + bo));
-        effectVolume.setBarScale(150, 15);
+        effectVolume.setBarScale(tw/2, tw/20);
         effectVolume.setLabel("Effect Volume:");
 
         musicVolume = new Slider(this, new Vector2f(-Window.dim.x/4f, th*2 + bo));
-        musicVolume.setBarScale(150, 15);
+        musicVolume.setBarScale(tw/2, tw/20);
         musicVolume.setLabel("Music Volume:");
 
         back = new Button(this, new Vector2f(0, -Window.dim.y/2f + th*2), ObjModel.SQUARE, new Texture("input.png", 0), Shader.TEXTURING);
@@ -131,6 +145,17 @@ public class TestOptions extends Test {
         renderer.draw(controls, pos.set(Window.dim.x/4f - maxWidth*3f, musicVolume.getBar().getPosition().y + musicVolume.getScale().y *5f));
         renderer.draw(back);
     }
+
+    @Override public void OnResize(int width, int height) {
+        renderer = new Render.Renderer();
+        effectVolume = musicVolume = null;
+        back = null;
+        controls = null;
+        init();
+        OnStart();
+    }
+
+
 
     @Override
     public void OnClose() {

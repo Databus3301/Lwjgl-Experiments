@@ -6,6 +6,7 @@ import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.ColorReplacement;
 import Render.MeshData.Texturing.Font;
 import Render.MeshData.Texturing.Texture;
+import Render.Renderer;
 import Render.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -17,15 +18,20 @@ public class TestStartScreen extends Test {
     Button start, options, exit;
     public TestStartScreen() {
         super();
+        init();
+    }
 
+    public void init() {
+        Vector2f d = Window.getDifferP1920(); // res diff
         float bc = 3;                         // button count
-        float bw = (float) Window.dim.x / bc; // button with   max
-        float bh = Window.dim.y / (bc+1f);    // button height max
-        float tw = 250;                       // target width
-        float th = 85;                        // target height
+        float bw = (float) Window.baseDim.x / bc * d.x; // button with   max
+        float bh = Window.baseDim.y / (bc+1f) * d.y;    // button height max
+        float tw = 250 * d.x;                       // target width
+        float th = 85  * d.y;                        // target height
         float bo = bh/bc/3;                   // button offset
         if(tw > bw) tw = bw;
         if(th > bh) th = bh;
+
 
         {
             int bn = 0;
@@ -62,12 +68,8 @@ public class TestStartScreen extends Test {
             cr.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0.122f, 0.224f, 0.6f, 1));
             options.setColorReplacement(cr);
 
-
-            float thf = th;
-            float twf = tw;
-
             options.setPressedCallback((button) -> {
-                Window.changeTest(new TestOptions(twf, thf, bo));
+                Window.changeTest(new TestOptions());
             });
         }
         {
@@ -111,5 +113,13 @@ public class TestStartScreen extends Test {
     @Override
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         super.OnKeyInput(window, key, scancode, action, mods);
+    }
+
+    @Override public void OnResize(int width, int height) {
+        super.OnResize(width, height);
+        options = start = exit = null;
+        renderer = new Renderer();
+        init();
+        OnStart();
     }
 }

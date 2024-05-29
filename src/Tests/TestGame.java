@@ -103,6 +103,8 @@ public class TestGame extends Test {
         dungeon = new Dungeon(player, this);
         room = dungeon.getStart();
         room.onSwitch(player, enemies, spawner, props);
+
+        Window.baseDim = new Vector2i(Window.dim);
     }
 
     @Override
@@ -180,24 +182,12 @@ public class TestGame extends Test {
         // UI
         // live points
         float widthLP = (float) Window.dim.x / 4f;
-        Vector2i differ = Window.baseDim.sub(Window.dim, new Vector2i());
+        Vector2i differ = Window.getDifferF();
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP, 25), new Vector4f(1, 0, 0, 1));
         renderer.fillRect(new Vector2f(Window.dim.x / 2f - widthLP + differ.x / 2f, Window.dim.y / 2f - 25f + differ.y / 2f).sub(camera.getPosition()), new Vector2f(widthLP * ((float) player.getLP() / player.getMaxLP()), 25), new Vector4f(0, 1, 0, 1));
 
         renderer.drawUI(bg);
         UI.draw();
-
-        // DEBUG COLLIDERS
-        /*
-        for (Entity2D wall : room.getWalls()) {
-            renderer.drawCollisionRectRotated(wall);
-            if (wall instanceof Door d) {
-                renderer.drawTriggerDistance(d);
-            }
-        }
-        //renderer.drawCollisionRect(collider);
-        renderer.drawRect(room.getCollisionRect());
-        //*/
     }
 
     @Override
