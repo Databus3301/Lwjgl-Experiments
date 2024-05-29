@@ -259,7 +259,7 @@ public class Upgrades {
     }
     public static Upgrade getHalfCooldown() {
         Upgrade cd = new Upgrade("Cooldown");
-        cd.setRarity(0.03f);
+        cd.setRarity(10000.03f);
 
         // 70% chance of getting a debuff alongside the double
         Upgrade debuff = getBlank();
@@ -347,7 +347,7 @@ public class Upgrades {
         scale.setOnApply((ability, upgrade) -> {
             Arrays.stream(ability.getProjectileTypes()).forEach(projectile -> {
                 projectile.getScale().sub(inc, inc);
-                if (projectile.getScale().length() <= 0) projectile.getScale().add(1, 1);
+                if(projectile.getScale().x <= 0 && projectile.getScale().y <= 0) projectile.getScale().set(2, 2);
             });
         });
         return scale;
@@ -444,7 +444,7 @@ public class Upgrades {
         return new Upgrade[]{getFlatDmg(), getFlatScale(), getFlatPierce(), getFlatSpeed(), getFlatCooldown(), getDoubleDmg(), getDoubleScale(), getDoublePierce(), getDoubleSpeed(), getHalfCooldown()};
     }
     public static Upgrade[] getDebuffs() {
-        return new Upgrade[]{getFlatDmgReduction(), getFlatScaleReduction(), getFlatPierceReduction(), getFlatSpeedReduction(), getFlatCooldownIncrease()};
+        return new Upgrade[]{getFlatScaleReduction()};//, getFlatDmgReduction(),  getFlatPierceReduction(), getFlatSpeedReduction(), getFlatCooldownIncrease()};
     }
 
     public static float toDecimal(float f, int decimal) {

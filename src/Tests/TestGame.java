@@ -75,10 +75,9 @@ public class TestGame extends Test {
         player.scale(30.0f * Dungeon.SCALE);
 
         // track mouse and indicate cursor position
-        Texture cursor = new Texture("woodCrate.png", 0);
+        Texture cursor = new Texture("crosshair.png", 0);
         this.cursor = new Entity2D(new Vector2f(), ObjModel.SQUARE, cursor, Shader.TEXTURING);
-        this.cursor.scale(32);
-        this.cursor.setColor(1, 0, 0, 1);
+        this.cursor.scale(16*Dungeon.SCALE);
 
         // define text colors
         colorReplacement.swap(new Vector4f(1, 1, 1, 1), new Vector4f(0, 1, 1, 1));
