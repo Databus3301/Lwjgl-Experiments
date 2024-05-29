@@ -1,6 +1,5 @@
 package Game.Entities.Dungeon;
 
-import Audio.AudioLoader;
 import Audio.AudioSource;
 import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
@@ -20,7 +19,6 @@ import Render.MeshData.Texturing.TextureAtlas;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import javax.xml.transform.Source;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
@@ -176,10 +174,6 @@ public class Room {
                 renderer.setPostProcessingShader(new Shader("post_processing.shader"));
                 player.setAutoshooting(false);
 
-                for(Door d : doors) {
-                    d.open();
-                }
-
                 audios[0].playSound("weird.wav");
                 audios[1].playSound("heartbeat.wav");
             }
@@ -257,6 +251,22 @@ public class Room {
         if (spawner.getLastResult() == WAVE_OVER) {
             for (Door door : doors) {
                 door.open();
+            }
+        }
+
+        // animate door opening based on audio playback progress
+        if(type == Dungeon.RoomType.START) {
+            if(audios[0] != null) {
+                if (audios[0].getPlaybackPercentage() > 0.6f) {
+                    for (Door d : doors) {
+                        d.setToHalfClosedT();
+                    }
+                }
+                if (!audios[0].isPlaying()) {
+                    for (Door d : doors) {
+                        d.open();
+                    }
+                }
             }
         }
 

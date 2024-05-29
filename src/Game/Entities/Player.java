@@ -44,7 +44,7 @@ public class Player extends Living implements Able {
         this.scene = scene;
         this.maxLP = maxLivePoints;
         this.LP = maxLivePoints;
-        speed = 300;
+        speed = 350;
         lvl = 1;
         XPtoLvlUp = getXPtoLvlUp();
 

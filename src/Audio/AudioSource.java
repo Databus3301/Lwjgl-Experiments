@@ -1,6 +1,7 @@
 package Audio;
 
 import org.joml.Vector3f;
+import org.lwjgl.openal.AL11;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class AudioSource {
     private final Vector3f position,velocity;
 
     public final int source, buffer;
+    private AudioClip clip;
 
     public AudioSource() {
         source = alGenSources();
@@ -48,6 +50,7 @@ public class AudioSource {
 
     public void playSound(AudioClip clip) {
         assert clip != null : "[ERROR] Provided <AudioClip> is null";
+        this.clip = clip;
 
 
         int formatAL = AL_FORMAT_MONO8;
@@ -87,16 +90,13 @@ public class AudioSource {
     public void setVolume(float volume) {
         alSourcef(source, AL_GAIN, volume);
     }
-
     public void setPitch(float pitch) {
         alSourcef(source, AL_PITCH, pitch);
     }
-
     public void setPosition(Vector3f position) {
         this.position.set(position);
         alSource3f(source, AL_POSITION, position.x, position.y, position.z);
     }
-
     public void setVelocity(Vector3f velocity) {
         this.velocity.set(velocity);
         alSource3f(source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
@@ -107,8 +107,12 @@ public class AudioSource {
     public Vector3f getPosition() {
         return position;
     }
-
     public boolean isPlaying() {
         return alGetSourcei(source, AL_SOURCE_STATE) == AL_PLAYING;
+    }
+    public float getPlaybackPercentage() {
+        int sampleOffset = AL11.alGetSourcei(source, AL11.AL_SAMPLE_OFFSET);
+        int totalSamples = clip.getFrameLength();
+        return (float) sampleOffset / totalSamples;
     }
 }

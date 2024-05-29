@@ -7,7 +7,7 @@ import Tests.Test;
 import org.joml.Vector2f;
 
 public class Dungeon { // TODO: load settings file
-    public static float SCALE = 1.4f * Window.getDifferP1920().length();
+    public static float SCALE = 2.5f * Window.getDifferP1920().length();
     // DEFAULTS
     public static final int DEFAULT_DEPTH = 5;
     public static final int DEFAULT_MAX_DOORS = 4;

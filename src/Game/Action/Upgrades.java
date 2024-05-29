@@ -25,7 +25,7 @@ public class Upgrades {
         int inc = pc.getRndmLevel();
 
         pc.setGenerateDescription((ability, upgrade) -> {
-            return  upgrade.setDescription("Increases the projectile count of the ability\n from" + ability.stats.get("projectileCount") + " to " + (ability.stats.get("projectileCount") + inc));
+            return  upgrade.setDescription("Increases the projectile count of the ability\n from " + ability.stats.get("projectileCount") + " to " + (ability.stats.get("projectileCount") + inc));
         });
         pc.setOnApply((ability, upgrade) -> {
             ability.stats.put("projectileCount", ability.stats.get("projectileCount") + inc);
@@ -206,7 +206,7 @@ public class Upgrades {
         Upgrade fDebuff = debuff;
         scale.setGenerateDescription((ability, upgrade) -> {
             return  upgrade.setDescription("Doubles the scale of each projectile from\n" + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0))) + "~ to " + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0) * 2f) +
-                    (fDebuff.getDescription().isEmpty() ? "" : "\n" + fDebuff.getDescription()
+                    (fDebuff.genDescription(ability).isEmpty() ? "" : "\n" + fDebuff.genDescription(ability)
                 );
         });
         scale.setOnApply((ability, upgrade) -> {

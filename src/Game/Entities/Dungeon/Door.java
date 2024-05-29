@@ -14,15 +14,16 @@ public class Door extends Interactable {
     private Entity2D connectedRoomDisplay;
     private Room connectedRoom;
 
-    private final Texture lockedT, unlockedT;
+    private final Texture closedT, openT, halfClosedT;
     private boolean isLocked, isOpen = false;
 
     public <T extends Test> Door(T scene) {
         super(scene);
         setModel(ObjModel.SQUARE.clone());
 
-        setTexture(lockedT = new Texture("rooms/door/locked.png"));
-        unlockedT = new Texture("rooms/door/unlocked.png");
+        setTexture(closedT = new Texture("rooms/door/closed.png"));
+        openT = new Texture("rooms/door/open.png");
+        halfClosedT = new Texture("rooms/door/half_closed.png");
         setShader(Shader.TEXTURING);
 
         scale(32 * Dungeon.SCALE);
@@ -57,22 +58,27 @@ public class Door extends Interactable {
 
 
     public void lock() {
-        setTexture(lockedT);
+        setTexture(closedT);
         isLocked = true;
         isOpen = false;
     }
     public void unlock() {
-        setTexture(unlockedT);
+        setTexture(openT);
         isLocked = false;
     }
 
     // TODO: visual indicators
     public void open() {
+        setTexture(openT);
         isOpen = true;
     }
     public void close() {
-
+        setTexture(closedT);
         isOpen = false;
+    }
+
+    public void setToHalfClosedT() {
+        setTexture(halfClosedT);
     }
 
 

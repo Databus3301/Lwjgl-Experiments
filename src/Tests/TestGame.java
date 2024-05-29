@@ -72,7 +72,7 @@ public class TestGame extends Test {
         player.addAnimation("idleUp", new Animation(anims, 2, 0, 1, 1, 3));
         player.addAnimation("idleRight", new Animation(anims, 3, 0, 2, 3, 3));
         player.switchAnimation("idleDown");
-        player.scale(42.0f);
+        player.scale(30.0f * Dungeon.SCALE);
 
         // track mouse and indicate cursor position
         Texture cursor = new Texture("woodCrate.png", 0);
