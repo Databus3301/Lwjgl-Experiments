@@ -27,6 +27,7 @@ public class Enemy extends Living implements Able {
     public QuintConsumer<Enemy, Float, Vector2f, Vector2f, Room> movement = (enemy, dt, mousepos, target, room) -> {
         enemy.translateTowards(target, enemy.getSpeed()*dt);
     };
+    private float movementFuncProgress = 0;
 
     public Enemy(Vector2f position, ObjModel model, Texture texture, Shader shader, float LP) {
         super(position, model, texture, shader);
@@ -90,6 +91,7 @@ public class Enemy extends Living implements Able {
         e.currentIseconds = currentIseconds;
         e.minXP = minXP;
         e.maxXP = maxXP;
+        e.setMovement(movement);
 
         return e;
     }
@@ -141,6 +143,9 @@ public class Enemy extends Living implements Able {
 
     public void setMovement(QuintConsumer<Enemy, Float, Vector2f, Vector2f, Room> movement) {
         this.movement = movement;
+    }
+    public float getMovementFuncProgress() {
+        return movementFuncProgress;
     }
     @FunctionalInterface
     public interface QuintConsumer<T, U, V, W, Y> {
