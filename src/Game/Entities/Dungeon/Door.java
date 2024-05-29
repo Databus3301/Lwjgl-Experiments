@@ -14,7 +14,7 @@ public class Door extends Interactable {
     private Entity2D connectedRoomDisplay;
     private Room connectedRoom;
 
-    private final Texture closedT, openT, halfClosedT;
+    private final Texture closedT, openT, halfClosedT, lockedT, unlockedT;
     private boolean isLocked, isOpen = false;
 
     public <T extends Test> Door(T scene) {
@@ -24,6 +24,8 @@ public class Door extends Interactable {
         setTexture(closedT = new Texture("rooms/door/closed.png"));
         openT = new Texture("rooms/door/open.png");
         halfClosedT = new Texture("rooms/door/half_closed.png");
+        lockedT = new Texture("rooms/door/locked.png");
+        unlockedT = new Texture("rooms/door/unlocked.png");
         setShader(Shader.TEXTURING);
 
         scale(32 * Dungeon.SCALE);
@@ -58,12 +60,12 @@ public class Door extends Interactable {
 
 
     public void lock() {
-        setTexture(closedT);
+        setTexture(lockedT);
         isLocked = true;
         isOpen = false;
     }
     public void unlock() {
-        setTexture(openT);
+        setTexture(unlockedT);
         isLocked = false;
     }
 
@@ -100,7 +102,10 @@ public class Door extends Interactable {
         this.connectedRoomDisplay.setModel(ObjModel.SQUARE.clone());
         this.connectedRoomDisplay.scale(32, 32);
         this.connectedRoomDisplay.getScale().mul(Dungeon.SCALE);
+        this.connectedRoomDisplay.setShader(Shader.TEXTURING);
         this.connectedRoomDisplay.setTexture(new Texture("rooms/door/signs/" + connectedRoomDisplay.getTextureName()));
+
+        this.connectedRoomDisplay.setPosition(getPosition().x, getPosition().y + 48 * Dungeon.SCALE);
     }
     public void setConnectedRoomDisplay(Entity2D connectedRoomDisplay) {
         this.connectedRoomDisplay = connectedRoomDisplay;

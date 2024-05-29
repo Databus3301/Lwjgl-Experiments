@@ -268,6 +268,12 @@ public class Renderer {
                 draw(entity);
         }
     }
+    public <T extends Door> void draw(T[] entities) {
+        for (T entity : entities) {
+            if (entity != null)
+                draw(entity);
+        }
+    }
 
     public <T extends Entity2D> void draw(ArrayList<T> entities) {
         for (T entity : entities) {
@@ -350,7 +356,8 @@ public class Renderer {
 
     public <T extends Door> void draw(T door) {
         draw((Interactable) door);
-        draw(door.getConnectedRoomDisplay());
+        if(door.isOpen())
+            draw(door.getConnectedRoomDisplay());
     }
 
     public Batch setupBatch(Entity2D[] entities) {

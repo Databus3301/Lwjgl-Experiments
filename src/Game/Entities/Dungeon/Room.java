@@ -116,7 +116,7 @@ public class Room {
             door = (doorIndices.length > 0 && doorIndex < doorIndices.length && i == doorIndices[doorIndex]);
             if (door) {
                 doors[doorIndex].setPosition(new Vector2f(i * scale * 2 + position.x - offset.x, position.y + (dimensions.y - 1) * scale * 2 - offset.y));
-                doors[doorIndex].lock();
+                doors[doorIndex].close();
                 //walls.remove(walls.size()-1);
                 walls.add(doors[doorIndex++]);
             }

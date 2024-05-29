@@ -84,21 +84,21 @@ public class Enemies {
         shooter.setSpeed(110f);
 
         shooter.setMovement((enemy, dt, mousepos, target, room) -> {
-            // move towards player if distance is greater than 250 else move away from player
-            System.out.println(enemy.getPosition().distance(target));
+            // move towards player if distance is greater than 250
             if (enemy.getPosition().distance(target) > 250)
                 enemy.translateTowards(target, enemy.getSpeed()*dt);
+
+            // move away from player if distance is less than 250
             if (enemy.getPosition().distance(target) < 250)
                 enemy.translateTowards(target, -enemy.getSpeed()*dt);
+
             // if distance is between 240 and 260, orbit target
             if (enemy.getPosition().distance(target) > 240 && enemy.getPosition().distance(target) < 260) {
                 // Calculate the direction from the enemy to the target
                 Vector2f direction = enemy.translateTowards(target, 0);
-
                 // Rotate the direction by 90 degrees to get the orbiting direction
                 // This will make the enemy move in a direction that is perpendicular to the target, creating an orbiting effect
                 Vector2f orbitDirection = new Vector2f(-direction.y, direction.x);
-
                 // Move the enemy in the orbiting direction
                 enemy.translate(orbitDirection.mul(enemy.getSpeed()*dt)); // Assuming 'speed' is the speed at which you want the enemy to orbit the target
             }
