@@ -80,7 +80,12 @@ public class Ability {
     }
 
     public Ability clone(Ability into) {
-        into.setProjectileTypes(projectileTypes);
+        Projectile[] pT = new Projectile[this.projectileTypes.length];
+        for (int i = 0; i < this.projectileTypes.length; i++) {
+            pT[i] = this.projectileTypes[i].clone();
+        }
+        into.setProjectileTypes(pT);
+
         into.setCooldown(cooldown);
         into.setOnTrigger(onTrigger);
         into.setScene(scene);

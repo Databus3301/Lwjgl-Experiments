@@ -1,8 +1,9 @@
 package Game.Entities;
 
+import Audio.AudioSource;
 import Game.Action.Abilities;
 import Game.Action.Ability;
-import Render.Entity.Entity2D;
+import Render.MeshData.Texturing.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -12,7 +13,7 @@ public class Enemies {
     public static final Enemy BASIC = getBASIC();
     public static final Enemy TANK = getTANK();
     public static final Enemy SHOOTER = getSHOOTER();
-    public static final Enemy BOSS = getBOSS();
+    public static final Enemy MINIBOSS = getMINIBOSS();
     public static final Enemy FAST = getFAST();
 
     public static final ArrayList<Enemy> enemies = defineEnemies();
@@ -23,7 +24,7 @@ public class Enemies {
         enemies.add(BASIC);
         enemies.add(TANK);
         enemies.add(SHOOTER);
-        enemies.add(BOSS);
+        enemies.add(MINIBOSS);
         enemies.add(FAST);
         return enemies;
     }
@@ -107,17 +108,17 @@ public class Enemies {
         return shooter;
     }
 
-    public static Enemy getBOSS() {
-        Enemy boss = new Enemy();
-        boss.setScale(10 * 4, 12 * 4);
-        boss.setColor(new Vector4f(0, 1, 1, 1));
+    public static Enemy getMINIBOSS() {
+        Enemy miniboss = new Enemy();
+        miniboss.setScale(10 * 4, 12 * 4);
+        miniboss.setColor(new Vector4f(0, 1, 1, 1));
 
-        boss.setiSeconds(0.05f);
-        boss.setMaxLP(1000);
-        boss.setLP(1000);
+        miniboss.setiSeconds(0.05f);
+        miniboss.setMaxLP(1000);
+        miniboss.setLP(1000);
 
-        boss.setMinXP(10);
-        boss.setMaxXP(30);
+        miniboss.setMinXP(10);
+        miniboss.setMaxXP(30);
 
         Ability shoot1 = Abilities.getSHOOT();
         Ability shoot2 = Abilities.getCIRCLESHOOT();
@@ -125,12 +126,75 @@ public class Enemies {
         shoot2.setCooldown(8f);
         shoot1.getProjectileTypes()[0].setScale(20f);
         shoot2.getProjectileTypes()[0].setScale(20f);
-        boss.addAbility(shoot1);
-        boss.addAbility(shoot2);
+        miniboss.addAbility(shoot1);
+        miniboss.addAbility(shoot2);
 
-        boss.setSpeed(45f);
+        miniboss.setSpeed(45f);
+
+        return miniboss;
+    }
+
+    public static Enemy getBOSS() {
+        // BOSS ENEMY
+        Enemy boss = new Enemy();
+        boss.setMaxLP(5000);
+        boss.setLP(5000);
+        boss.setiSeconds(0.06f);
+        boss.setScale(80, 96);
+        boss.setSpeed(50f);
+        boss.setMinXP(25);
+        boss.setMaxXP(55);
+
+
+        Ability shoot = Abilities.getSHOOT();
+        shoot.setCooldown(10000f);
+        shoot.getProjectileTypes()[0].setScale(20f);
+
+        boss.addAbility(shoot);
+
+        Texture bossT = new Texture("boss0.png");
+        Texture bossT2 = new Texture("boss1.png");
+        Texture bossT3 = new Texture("boss2.png");
+
+        boss.setMovement((enemy, dt, mousepos, target, room) -> {
+            enemy.translateTowards(target, enemy.getSpeed()*dt);
+
+            // should move in large zigs zagging patterns
+            float p = enemy.getMovementFuncProgress();
+            enemy.setMovementFuncProgress(p+dt);
+            if (p < 0)
+                enemy.translateTowards(target, enemy.getSpeed()*dt);
+            else if (p > 0.5f && p < 2)
+                enemy.translateTowards(new Vector2f((target.x-enemy.getPosition().x+5) *5, enemy.getPosition().y - target.y/50), -enemy.getSpeed()*dt*10);
+            else if (p > 2)
+                enemy.translateTowards(new Vector2f((target.x-enemy.getPosition().x+5)*-10, enemy.getPosition().y - target.y/50), -enemy.getSpeed()*dt*10);
+            if (p > 4)
+                enemy.setMovementFuncProgress(-0);
+
+            if(p > 0.5f && p < 4f && p % 0.5f < 0.1f)
+                enemy.getAbilities().get(0).setCurrentCooldown(0);
+
+
+            // hijack the movement function to change the texture based on health
+            if(enemy.getLP() < boss.getMaxLP()/3f) {
+                room.getAudios()[4].playSound("ghast3.wav");
+                enemy.setTexture(bossT3);
+            }
+            else if(enemy.getLP() < boss.getMaxLP()/3f*2) {
+                room.getAudios()[3].playSound("ghast1.wav");
+                enemy.setTexture(bossT2);
+            }
+            else {
+                enemy.setTexture(bossT);
+            }
+        });
 
         return boss;
     }
+
+
+
+
+
 
 }

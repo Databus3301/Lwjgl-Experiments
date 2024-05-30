@@ -132,6 +132,9 @@ public class Enemy extends Living implements Able {
     public int getMaxXP() {
         return maxXP;
     }
+    public float getMovementFuncProgress() {
+        return movementFuncProgress;
+    }
 
 
     public void setMaxXP(int maxXP) {
@@ -140,13 +143,13 @@ public class Enemy extends Living implements Able {
     public void setMinXP(int minXP) {
         this.minXP = minXP;
     }
-
     public void setMovement(QuintConsumer<Enemy, Float, Vector2f, Vector2f, Room> movement) {
         this.movement = movement;
     }
-    public float getMovementFuncProgress() {
-        return movementFuncProgress;
+    public void setMovementFuncProgress(float v) {
+        movementFuncProgress = v;
     }
+
     @FunctionalInterface
     public interface QuintConsumer<T, U, V, W, Y> {
         void accept(T t, U u, V v, W w, Y y);

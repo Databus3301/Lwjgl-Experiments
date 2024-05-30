@@ -49,6 +49,7 @@ public class TestGame extends Test {
     private final ColorReplacement colorReplacement = new ColorReplacement();
     private final int[] keyArr = new int[4];
     private boolean shouldSimulate = true;
+    private boolean shouldAdvanceFloor = false;
 
 
     public TestGame() {
@@ -99,15 +100,25 @@ public class TestGame extends Test {
         renderer.cursorHide();
 
         // init dungeon
-        dungeon = new Dungeon(player, this);
+        int floor = dungeon == null ? 0 : dungeon.getFloor();
+        dungeon = new Dungeon(player, this, Dungeon.DEFAULT_DEPTH+floor*2, floor+1);
         room = dungeon.getStart();
+        props.clear();
+        player.setPosition(room.getPosition());
         room.onSwitch(player, enemies, spawner, props);
+
+        shouldAdvanceFloor = false;
+        if(floor > 1)
+            dungeon.setStartedPlaying(true);
 
         Window.baseDim = new Vector2i(Window.dim);
     }
 
     @Override
     public void OnUpdate(float dt) {
+        if(shouldAdvanceFloor)
+            OnStart();
+
         // game over
         if (player.getLP() <= 0) {
             String text = "> GAME OVER <";
@@ -285,6 +296,9 @@ public class TestGame extends Test {
     }
     public void setShouldSimulate(boolean shouldSimulate) {
         this.shouldSimulate = shouldSimulate;
+    }
+    public void setShouldAdvanceFloor(boolean shouldAdvanceFloor) {
+       this.shouldAdvanceFloor = shouldAdvanceFloor;
     }
 }
 

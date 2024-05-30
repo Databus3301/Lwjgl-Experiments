@@ -259,7 +259,7 @@ public class Upgrades {
     }
     public static Upgrade getHalfCooldown() {
         Upgrade cd = new Upgrade("Cooldown");
-        cd.setRarity(10000.03f);
+        cd.setRarity(0.03f);
 
         // 70% chance of getting a debuff alongside the double
         Upgrade debuff = getBlank();

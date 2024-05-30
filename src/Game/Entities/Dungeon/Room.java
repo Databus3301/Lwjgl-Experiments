@@ -16,6 +16,7 @@ import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Animation;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Texturing.TextureAtlas;
+import Tests.TestGame;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -41,6 +42,7 @@ public class Room {
     private final Dungeon.RoomType type;
     private Dungeon.RoomDesign design;
     private int depth;
+    private int floor;
 
 
     private Vector2f position = new Vector2f();
@@ -54,15 +56,16 @@ public class Room {
     private final ArrayList<Entity2D> walls;
     private final ArrayList<Interactable> contents;
 
-    private final AudioSource[] audios = new AudioSource[2];
+    private final AudioSource[] audios = new AudioSource[5];
 
 
-    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Dungeon dungeon, Vector2f dimensions) {
+    public Room(Player player, Dungeon.RoomType type, String title, int numOfDoors, Dungeon.RoomDesign design, Dungeon dungeon, Vector2f dimensions, int floor) {
         assert numOfDoors >= 0 : "A room can't have a negative number of doors";
 
         this.dungeon = dungeon;
         this.type = type;
         this.title = title;
+        this.floor = floor;
         this.numOfDoors = numOfDoors;
         this.design = design;
         this.dimensions = dimensions;
@@ -180,20 +183,15 @@ public class Room {
             case BOSS -> {
                 // add boss to room
                 player.setAutoshooting(true);
-                enemies.add(Enemies.getBOSS());
+                Enemy b = Enemies.getBOSS();
+                enemies.add(b);
+                b.setPosition(position);
+                b.translate(1,1);
 
-                // TODO: remove this
-                for(Door d : doors) {
-                    d.open();
-                }
+                audios[2].playSound("ghast2.wav");
+
+                // TODO: if b is killed open stairs to next floor
             }
-           // case SHOP -> {
-           //     // add shop to room
-           //     player.setAutoshooting(false);
-           //     for(Door d : doors) {
-           //         d.open();
-           //     }
-           // }
             case SMITH -> {
                 player.setAutoshooting(false);
                 for(Door d : doors) {
@@ -270,6 +268,28 @@ public class Room {
             }
         }
 
+
+
+
+        if (type == Dungeon.RoomType.BOSS) {
+            if (enemies.isEmpty()) {
+                Interactable stairs = new Interactable(dungeon.getScene());
+                stairs.setModel(ObjModel.SQUARE.clone());
+                stairs.setShader(Shader.TEXTURING);
+                stairs.setTexture(new Texture("stairs.png"));
+                stairs.scale(32 * Dungeon.SCALE);
+                stairs.setPosition(position.x + dimensions.x * 32 * Dungeon.SCALE / 2, position.y + dimensions.y * 32 * Dungeon.SCALE / 2);
+
+                stairs.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
+                    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+                        ((TestGame)dungeon.getScene()).setShouldAdvanceFloor(true);
+                    }
+                });
+
+                props.add(stairs);
+            }
+        }
+
         Room room = this;
         for(int i = 0; i< doors.length; i++) {
             if(!doors[i].isOpen()) continue;
@@ -299,7 +319,7 @@ public class Room {
                 }
 
                 // init new room
-                room.onSwitch(player, enemies, spawner, props); // TODO: IMPLEMENT THIS
+                room.onSwitch(player, enemies, spawner, props);
                 break;
             }
         }
@@ -387,4 +407,9 @@ public class Room {
     public float getHeight() {
         return dimensions.y*32*Dungeon.SCALE;
     }
+
+    public AudioSource[] getAudios() {
+        return audios;
+    }
+
 }
