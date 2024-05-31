@@ -7,6 +7,7 @@ import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Entities.Dungeon.Dungeon;
 import Game.Entities.Dungeon.Room;
+import Game.Entities.Projectiles.Projectile;
 import Game.UI;
 import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
@@ -77,6 +78,8 @@ public class Player extends Living implements Able {
         }
         if(justLeveledUp)
             UI.onLvlUp(this, (TestGame)scene, 3);
+
+        reduceISeconds(dt);
     }
 
     public <T extends Living> void collide(ArrayList<T> entities) {
@@ -94,6 +97,7 @@ public class Player extends Living implements Able {
         // collide projectiles / custom ability colliders
         abilities.forEach(ability -> ability.collide(entities));
     }
+
 
     public <T extends Room> void collide(T room) {
         this.collider.setScale(this.scale.x / 1.5f, this.scale.y / 2f);

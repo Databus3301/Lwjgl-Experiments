@@ -78,6 +78,9 @@ public class Ability {
     public <T extends Living> void collide(ArrayList<T> entities) {
         projectiles.forEach(projectile -> projectile.collide(entities));
     }
+    public void collide(Player player) {
+        projectiles.forEach(projectile -> projectile.collide(player));
+    }
 
     public Ability clone(Ability into) {
         Projectile[] pT = new Projectile[this.projectileTypes.length];

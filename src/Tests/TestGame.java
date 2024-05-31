@@ -61,7 +61,7 @@ public class TestGame extends Test {
         player = new Player(
                 this,
                 new Entity2D(new Vector2f(0, 0), ObjModel.SQUARE.clone(), Shader.TEXTURING),
-                50000
+                500
         );
         TextureAtlas anims = new TextureAtlas(new Texture("LinkAnim.png", 0), 10, 8, 10, 120, 130, 0);
         player.addAnimation("walkDown", new Animation(anims, 4, 0, 20, 10));
@@ -118,12 +118,13 @@ public class TestGame extends Test {
     public void OnUpdate(float dt) {
         if(shouldAdvanceFloor)
             OnStart();
-
+        System.out.println(player.getLP());
         // game over
         if (player.getLP() <= 0) {
             String text = "> GAME OVER <";
             float size = 20;
             renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine_UI, colorReplacement, null);
+            Window.changeTest(new TestGameOverScreen());
             shouldSimulate = false;
         }
         // wave over
@@ -161,7 +162,7 @@ public class TestGame extends Test {
             // movement, abilities, iFrames, etc..
             enemy.update(dt, mousePos, player.getPosition(), room);
             // push away from each other
-            enemy.collide(dt, enemies);
+            enemy.collide(dt, enemies, player);
             // kill enemies
             if (enemy.getLP() <= 0) {
                 enemy.spawnXp(this, props, player, room);

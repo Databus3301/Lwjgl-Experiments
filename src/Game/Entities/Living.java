@@ -29,7 +29,7 @@ public class Living extends Entity2D {
     }
 
     public boolean damage() {
-        return damage(1);
+        return damage(100);
     }
     public void heal() {
         LP++;

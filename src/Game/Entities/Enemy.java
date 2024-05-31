@@ -63,12 +63,13 @@ public class Enemy extends Living implements Able {
         reduceISeconds(dt);
     }
 
-    public void collide(float dt, ArrayList<Enemy> enemies) {
+    public void collide(float dt, ArrayList<Enemy> enemies, Player player) {
         // push away from each other
         for (Enemy enemy : enemies) {
             if (this != enemy && this.collideCircle(enemy))
                 this.translateTowards(enemy, -this.getSpeed() * dt); // negated "towards" becomes "away"
         }
+        abilities.forEach(ability -> ability.collide(player));
     }
 
     public Enemy clone() {

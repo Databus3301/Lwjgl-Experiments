@@ -122,7 +122,7 @@ public class Window {
             glViewport(0, 0, dim.x, dim.y);
 
             frameBuffer = new Renderer.FrameBuffer(dim.x, dim.y);
-            if(currentTest != null) currentTest.OnResize(dim.x, dim.y);
+            if (currentTest != null) currentTest.OnResize(dim.x, dim.y);
             //frameBuffer.resize(dim.x, dim.y);
         });
 
@@ -261,6 +261,9 @@ public class Window {
                 case "abilityscreen", "as":
                     currentTest = new TestAbillityScreen();
                     break;
+                case "gameoverscreen", "gos":
+                    currentTest = new TestGameOverScreen();
+                    break;
                 default:
                     currentTest = new Test();
             }
@@ -370,6 +373,7 @@ public class Window {
     public static Vector2f getDifferP() {
         return new Vector2f((float) dim.x / baseDim.x, (float) dim.y / baseDim.y);
     }
+
     public static Vector2i getDifferF() {
         return baseDim.sub(dim, new Vector2i());
     }
@@ -377,6 +381,7 @@ public class Window {
     public static Vector2f getDifferP1920() {
         return new Vector2f((float) dim.x / 1920, (float) dim.y / 1080);
     }
+
     public static Vector2i getDifferF1920() {
         return new Vector2i(dim.x - 1920, dim.y - 1080);
     }

@@ -1,6 +1,7 @@
 package Game.Entities.Projectiles;
 
 import Game.Entities.Living;
+import Game.Entities.Player;
 import Render.Entity.Entity2D;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Shader.Shader;
@@ -80,6 +81,15 @@ public class Projectile extends Entity2D {
                 if (pierce <= 0) return;
             }
         }
+    }
+    public void collide(Player player) {
+            if (this.collideRect(player)) {
+                boolean gotDamaged = player.damage(dmg);
+                if(gotDamaged) pierce--;
+                if(onHit != null) onHit.accept(this, gotDamaged);
+                if (pierce <= 0) return;
+            }
+
     }
 
 
