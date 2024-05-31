@@ -17,6 +17,7 @@ import Render.MeshData.Texturing.Animation;
 import Render.MeshData.Texturing.Texture;
 import Render.MeshData.Texturing.TextureAtlas;
 import Tests.TestGame;
+import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -185,12 +186,11 @@ public class Room {
                 player.setAutoshooting(true);
                 Enemy b = Enemies.getBOSS();
                 enemies.add(b);
-                b.setPosition(position);
+                b.setPosition(position.x, position.y + 128 * Dungeon.SCALE);
                 b.translate(1,1);
 
                 audios[2].playSound("ghast2.wav");
 
-                // TODO: if b is killed open stairs to next floor
             }
             case SMITH -> {
                 player.setAutoshooting(false);
@@ -269,24 +269,51 @@ public class Room {
         }
 
 
-
-
         if (type == Dungeon.RoomType.BOSS) {
-            if (enemies.isEmpty()) {
+            if (enemies.isEmpty() && props.isEmpty()) {
                 Interactable stairs = new Interactable(dungeon.getScene());
                 stairs.setModel(ObjModel.SQUARE.clone());
                 stairs.setShader(Shader.TEXTURING);
                 stairs.setTexture(new Texture("stairs.png"));
                 stairs.scale(32 * Dungeon.SCALE);
-                stairs.setPosition(position.x + dimensions.x * 32 * Dungeon.SCALE / 2, position.y + dimensions.y * 32 * Dungeon.SCALE / 2);
+                stairs.setPosition(position.x, position.y);
+                stairs.setTriggerDistance(110f);
 
                 stairs.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
                     if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-                        ((TestGame)dungeon.getScene()).setShouldAdvanceFloor(true);
+                        if(player.getPosition().distanceSquared(interactable.getPosition()) < interactable.getTriggerDistanceSquared())
+                         ((TestGame)dungeon.getScene()).setShouldAdvanceFloor(true);
                     }
                 });
 
                 props.add(stairs);
+
+
+                // health collectible healing player by half max lp add to props
+                // add health collectible to room
+                Interactable health = new Interactable(dungeon.getScene());
+                health.setModel(ObjModel.SQUARE.clone());
+                health.setShader(Shader.TEXTURING);
+                //health.setTexture(new Texture("health.png"));
+                health.setColor(0, 1, 0, 1);
+                health.scale(8 * Dungeon.SCALE);
+                health.setPosition(position.x + (float)(32 * Math.random()), position.y + (float)(32 * Math.random() + 96 * Dungeon.SCALE));
+                health.setTriggerDistance(75f);
+
+                health.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
+                    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+                        if (player.getPosition().distanceSquared(interactable.getPosition()) < interactable.getTriggerDistanceSquared()) {
+                            System.out.println(player.getPosition().distanceSquared(interactable.getPosition()));
+                            player.heal(player.getMaxLP() / 2);
+                            interactable.setColor(0.2f, 0.2f, 0.2f, 1);
+                            interactable.setKeyCallback((i, k, s, a, m) -> {});
+                        }
+                    }
+
+                });
+
+                props.add(health);
+
             }
         }
 
@@ -323,6 +350,9 @@ public class Room {
                 break;
             }
         }
+        if(!props.isEmpty())
+            renderer.drawTriggerDistance(props.get(0));
+
         return room;
     }
 

@@ -56,7 +56,7 @@ public class Dungeon { // TODO: load settings file
 
         if(depth <= 0) {
             rc++;
-            return new Room[]{new Room(player, RoomType.BOSS, "End", 0, RoomDesign.values()[floor % RoomDesign.values().length], this, dim, floor)};
+            return new Room[]{new Room(player, RoomType.BOSS, "End", 0, RoomDesign.values()[floor % RoomDesign.values().length], this, dim.add(2, 2), floor)};
         }
 
         int newDoors = (int) (Math.random() * (maxDoors-(DEFAULT_MIN_DOORS-1)) + DEFAULT_MIN_DOORS);

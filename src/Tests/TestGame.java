@@ -118,19 +118,15 @@ public class TestGame extends Test {
     public void OnUpdate(float dt) {
         if(shouldAdvanceFloor)
             OnStart();
-        System.out.println(player.getLP());
         // game over
         if (player.getLP() <= 0) {
-            String text = "> GAME OVER <";
-            float size = 20;
-            renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine_UI, colorReplacement, null);
             Window.changeTest(new TestGameOverScreen());
             shouldSimulate = false;
         }
         // wave over
         if (spawner.getLastResult() == WAVE_OVER) {
             shouldSimulate = true;
-            //UI.onLvlUp(player, this, room, 3);
+            dungeon.getMusicAudioSource().stopSound();
             UI.onRoomCompletion(player, this, 3);
         }
         // move target to mouse

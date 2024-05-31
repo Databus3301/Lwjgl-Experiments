@@ -52,6 +52,26 @@ public class Player extends Living implements Able {
         // --TEMP-- add dash ability as a default
         addAbility(Abilities.getDASH());
 
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+        addAbility(Abilities.getHOMING());
+
         levelUpSound = AudioLoader.loadWavFileSafe("levelUp.wav");
         xpSound = AudioLoader.loadWavFileSafe("pickup.wav");
         asXp.setVolume(Dungeon.EFFECT_VOLUME - 0.2f > 0 ? Dungeon.EFFECT_VOLUME - 0.2f : 0.1f);

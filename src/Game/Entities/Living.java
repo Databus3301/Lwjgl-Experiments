@@ -43,7 +43,10 @@ public class Living extends Entity2D {
         return false;
     }
     public void heal(int heal) {
-        LP += heal;
+        if(LP + heal > maxLP)
+            LP = maxLP;
+        else
+            LP += heal;
     }
 
     public void reduceISeconds() {

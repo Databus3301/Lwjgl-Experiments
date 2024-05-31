@@ -67,6 +67,9 @@ public class TestGameOverScreen extends Test {
     @Override
     public void OnRender() {
         super.OnRender();
+        String text = "> GAME OVER <";
+        float size = 20;
+        renderer.drawText(text, new Vector2f(), size, Font.RETRO, Shader.TEXTURING, Font::centerFirstLine_UI, null, null);
         renderer.draw(exit);
     }
     @Override
