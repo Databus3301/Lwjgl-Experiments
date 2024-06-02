@@ -50,7 +50,7 @@ Was wir uns aber vor allem von dem Projekt erhofft haben, war es viel ausprobier
 #### 2 - Struktur
 
 **Main.java:**
-Die Main Methode ist der Einstiegspunkt in das Programm. Es erstellt ein neues Fenster und initialisiert es, worauf es die window.run ausführt welches die Hauptschleife vom Spiel startet.
+Die Main Methode ist der Einstiegspunkt in das Programm. Es erstellt ein neues Fenster und initialisiert es, worauf es die ```window.run``` ausführt welches die Hauptschleife vom Spiel startet.
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
