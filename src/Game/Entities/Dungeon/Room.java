@@ -271,18 +271,21 @@ public class Room {
 
         if (type == Dungeon.RoomType.BOSS) {
             if (enemies.isEmpty() && props.isEmpty()) {
+                renderer.setPostProcessingShader(Shader.TEXTURING);
+
                 Interactable stairs = new Interactable(dungeon.getScene());
                 stairs.setModel(ObjModel.SQUARE.clone());
                 stairs.setShader(Shader.TEXTURING);
                 stairs.setTexture(new Texture("stairs.png"));
                 stairs.scale(32 * Dungeon.SCALE);
-                stairs.setPosition(position.x, position.y);
+                stairs.setPosition(position.x + (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()), position.y + (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()  - (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random())));
+                System.out.println((float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()));
                 stairs.setTriggerDistance(110f);
 
                 stairs.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
                     if (key == GLFW_KEY_E && action == GLFW_PRESS) {
                         if(player.getPosition().distanceSquared(interactable.getPosition()) < interactable.getTriggerDistanceSquared())
-                         ((TestGame)dungeon.getScene()).setShouldAdvanceFloor(true);
+                            ((TestGame) dungeon.getScene()).setShouldAdvanceFloor(true);
                     }
                 });
 
@@ -294,18 +297,19 @@ public class Room {
                 Interactable health = new Interactable(dungeon.getScene());
                 health.setModel(ObjModel.SQUARE.clone());
                 health.setShader(Shader.TEXTURING);
-                //health.setTexture(new Texture("health.png"));
-                health.setColor(0, 1, 0, 1);
-                health.scale(8 * Dungeon.SCALE);
-                health.setPosition(position.x + (float)(32 * Math.random()), position.y + (float)(32 * Math.random() + 96 * Dungeon.SCALE));
+                health.setTexture(new Texture("heart.png"));
+                health.scale(32 * Dungeon.SCALE);
+
+                health.setPosition(position.x + (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()), position.y + (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()  - (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random())));
+                while(health.getPosition().distance(stairs.getPosition()) < (2f * Dungeon.SCALE))
+                    health.setPosition(position.x + (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()), position.y + (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()  - (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random())));
                 health.setTriggerDistance(75f);
 
                 health.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
                     if (key == GLFW_KEY_E && action == GLFW_PRESS) {
                         if (player.getPosition().distanceSquared(interactable.getPosition()) < interactable.getTriggerDistanceSquared()) {
-                            System.out.println(player.getPosition().distanceSquared(interactable.getPosition()));
                             player.heal(player.getMaxLP() / 2);
-                            interactable.setColor(0.2f, 0.2f, 0.2f, 1);
+                            interactable.setHidden(true);
                             interactable.setKeyCallback((i, k, s, a, m) -> {});
                         }
                     }

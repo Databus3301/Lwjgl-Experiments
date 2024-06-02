@@ -42,15 +42,15 @@ uniform vec4 uColor;
 uniform float uTime;
 uniform vec2 uResolution;
 
-float dot2( in vec2 v ) { return dot(v,v); }
-
-float sdHeart( in vec2 p ) { // https://www.shadertoy.com/view/3tyBzV
-    p.x = abs(p.x);
-
-    if( p.y+p.x>1.0 )
-        return sqrt(dot2(p-vec2(0.25,0.75))) - sqrt(2.0)/4.0;
-    return sqrt(min(dot2(p-vec2(0.00,1.00)), dot2(p-0.5*max(p.x+p.y,0.0)))) * sign(p.x-p.y);
-}
+//float dot2( in vec2 v ) { return dot(v,v); }
+//
+//float sdHeart( in vec2 p ) { // https://www.shadertoy.com/view/3tyBzV
+//    p.x = abs(p.x);
+//
+//    if( p.y+p.x>1.0 )
+//        return sqrt(dot2(p-vec2(0.25,0.75))) - sqrt(2.0)/4.0;
+//    return sqrt(min(dot2(p-vec2(0.00,1.00)), dot2(p-0.5*max(p.x+p.y,0.0)))) * sign(p.x-p.y);
+//}
 
 void main () {
     vec2 uv = v_ModelPos.xy * (uResolution.x / uResolution.y);
@@ -79,17 +79,16 @@ void main () {
 
     // HEARTS
     vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y) + uResolution.x / uResolution.y - 0.185f, v_ScreenPos.y+1. - 1.85f)*10.;
-    //vec2 p = vec2(v_ScreenPos.x * (uResolution.x / uResolution.y), v_ScreenPos.y+(1.*sin(uTime*1.5)*2.+2.))*(1./((sin(uTime*1.5)*2.+2.)*2.));
 
-    float d = sdHeart(p); // heart distance
-    d = abs(d) - 0.05; // hollow heart
-
-    float h = 0.1; // tolerance for "inside"
-    //float alpha = step(-0.15, d) * (1.-step(-0.1, d)); // hard cut  between -0.15 and -0.10
-    float alpha = smoothstep(-0.2, -0.10, d) * (1.0 - smoothstep(-0.10, -0.05, d)); // smooth cut between -0.10 and -0.05
-    alpha = smoothstep(h, -h, d) * (1.-alpha); // only color pixels close/inside the heart
-    float falloff = 1. / length(p/10.) * 0.2; // falloff effect
-    color = mix(color, vec4(1.0, 0.0, 0.0, 1.- smoothstep(1.0, 0.0, falloff)), alpha);
+    //float d = sdHeart(p); // heart distance
+    //d = abs(d) - 0.05; // hollow heart
+//
+    //float h = 0.1; // tolerance for "inside"
+    ////float alpha = step(-0.15, d) * (1.-step(-0.1, d)); // hard cut  between -0.15 and -0.10
+    //float alpha = smoothstep(-0.2, -0.10, d) * (1.0 - smoothstep(-0.10, -0.05, d)); // smooth cut between -0.10 and -0.05
+    //alpha = smoothstep(h, -h, d) * (1.-alpha); // only color pixels close/inside the heart
+    //float falloff = 1. / length(p/10.) * 0.2; // falloff effect
+    //color = mix(color, vec4(1.0, 0.0, 0.0, 1.- smoothstep(1.0, 0.0, falloff)), alpha);
 
 
     // SCANLINE/PIXELATION EFFECT

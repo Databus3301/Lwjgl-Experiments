@@ -3,7 +3,9 @@ package Game.Entities;
 import Audio.AudioSource;
 import Game.Action.Abilities;
 import Game.Action.Ability;
+import Render.MeshData.Shader.Shader;
 import Render.MeshData.Texturing.Texture;
+import Tests.Test;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -178,10 +180,12 @@ public class Enemies {
             // hijack the movement function to change the texture based on health
             if(enemy.getLP() < boss.getMaxLP()/3f) {
                 room.getAudios()[4].playSound("ghast3.wav");
+                Test.renderer.setPostProcessingShader(Shader.POST_PROCESSING_SWIZZLE);
                 enemy.setTexture(bossT3);
             }
             else if(enemy.getLP() < boss.getMaxLP()/3f*2) {
                 room.getAudios()[3].playSound("ghast1.wav");
+                Test.renderer.setPostProcessingShader(Shader.POST_PROCESSING_INVERT);
                 enemy.setTexture(bossT2);
             }
             else {

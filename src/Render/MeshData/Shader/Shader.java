@@ -17,6 +17,8 @@ import static org.lwjgl.opengl.GL43.*;
 public class Shader {
     public static final Shader DEFAULT = new Shader("default.shader");
     public static final Shader TEXTURING = new Shader("texturing.shader");
+    public static final Shader POST_PROCESSING_SWIZZLE = new Shader("post_processing_2.shader");
+    public static final Shader POST_PROCESSING_INVERT = new Shader("post_processing_3.shader");
 
     private final int m_RendererID;
     private final HashMap<String, Integer> m_UniformLocationMap = new HashMap<>();
