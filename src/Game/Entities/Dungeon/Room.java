@@ -186,7 +186,6 @@ public class Room {
                 b.translate(1,1);
 
                 audios[2].playSound("ghast2.wav");
-
             }
             case SMITH -> {
                 player.setAutoshooting(false);

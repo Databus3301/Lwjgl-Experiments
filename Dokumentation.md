@@ -1,3 +1,22 @@
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+---
+
+<div style="font-variant:small-caps;text-align:center"> Projektsdokumenation</div>
+<div style="font-variant:small-caps;text-align:center"> 2024</div>
+<div style="font-variant:small-caps;text-align:center">PXIF1 - DR</div>
+<div style="visibility:hidden">a</div>
+<div style="font-variant:small-caps;text-align:center"> Cornelius Bonn & Felix Rose</div>
+
+---
+
+<br><br><br><br>
+
+<!--- Pagebreak --->
+<div style="page-break-after: always"></div>
+
+
+
 1. Projektbeschreibung/Zielsetzung/Anforderungen an das Projekt
 {
 Das Ziel des Projekts war es, ein einfaches 2D-Spiel zu erstellen, das auf dem Konzept des klassischen Dungeoon Crawlers basiert. Das Spiel sollte eine Vielzahl von Funktionen und Mechaniken enthalten, die es dem Spieler ermöglichen, verschiedene Arten von Gegnern zu bekämpfen, verschiedene Waffen und Fähigkeiten zu verwenden und verschiedene Level erreichen.Das Ziel des Spiels ist es so weit wie nur möglich in den Dungeon vorzudringen. Ursprünglich war es zwar die Idee einen Wellen basierten Vampire suvivors like zu kreieren, nach einiger Zeit haben wir uns für diese Art von spiel mehr begeistern können und habne uns deshalb dazu entschieden den WEllenbasierten Ansatz auf einer einzigen Map zu verwerfen und dafür den Ansatz zu wählen, dass man durch verschiedene Räume muss und in jedem eine gewisse Anzahl gegner zu besiegen hat. Dass man durch ein level up System seine Fähigkeiten upgraden oder neue erhalten kann, war für uns aber schon von Anfang an im Spiel vorgesehen. Wir hatten uns das SPiel zuerst farbenfroher vorgestellt mit einer detailiert designten map allerdings haben wir im verlauf gemerkt, dass wenn wir uns weniger auf die Grafiken konzentrieren mehr noch auf die SPiel mechaniken konzentrieren können. Dazu kam, dass wir gefallen an dem "einfachen" Stil unseres Spiel gefunden haben und deshalb uns unter anderem auch dazu entschieden haben die Gegner bei farbigen vierecken zu belassen. Der einfache Stil war zwar Ursprünglich nicht geplant aber gibt unserer Meinung nach dem Spiel einen eigenen CHarm der den Fokus mehr darauf legt, Fortschritt im Spiel zu erzielen, und weniger darauf sich schön designte Aspekte anzusehen. Außerdem hilft das simple design dabei, sich mit den Projektilen zurechtzufinden, da diese in unserem Spiel teilweise sehr viele werden könnten, somit wird der Fokus mehr auf kompetitivs spielen gelegt als auf schönes design. DIe Umsetzung mit einem Start und Game Over SCreen war auch von vorne rein festgelegt, wobei man sagen muss, dass die Idee zuvor noch ein wenig ausgebauter war als sie jetzt schlussendlich geworden ist. wir hatten überlegt collectibels zu implimentieren, die auch über mehrere Runden verteilt gespeichert werden und einem entweder Vorteile bringen oder nur dem Sammlungsaspekt dienen.Auch ein hub war in Überlegung also ein Ort wo man zwischen den Runden zeit ferbringen kann, allerdings mussten wir beide Ideen verwerfen, da wir uns auf das wesentliche konzentriert haben und uns die Zeit fehlte um diese Ideen zu implimentieren.
