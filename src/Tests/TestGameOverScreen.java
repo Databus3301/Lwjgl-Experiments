@@ -36,11 +36,11 @@ public class TestGameOverScreen extends Test {
         {
             int bn = 2;
             exit = new Button(this, new Vector2f(0, (th*-2-bo) * bn + (th*2+bo) * (bc/2f - 0.5f) + 5*bn - 5*(bc/2f)));
-            Label l = new Label(Font.RETRO_TRANSPARENT_WHITE, " Exit");
+            Label l = new Label(Font.RETRO_TRANSPARENT_WHITE, " Menu");
             l.setScale(1000f);
             exit.setLabel(l);
             exit.scale(tw, th);
-            exit.setTooltip("Exit the game");
+            exit.setTooltip("Back to the Start Menu");
             exit.setTexture(new Texture("input.png", 0));
             exit.setShader(Shader.TEXTURING);
 
@@ -49,7 +49,7 @@ public class TestGameOverScreen extends Test {
             exit.setColorReplacement(cr);
 
             exit.setPressedCallback((button) -> {
-                glfwSetWindowShouldClose(Window.getWindowPtr(), true);
+                Window.changeTest(new TestStartScreen());
             });
         }
     }

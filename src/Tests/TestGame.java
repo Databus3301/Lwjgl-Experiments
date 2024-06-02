@@ -120,6 +120,14 @@ public class TestGame extends Test {
             OnStart();
         // game over
         if (player.getLP() <= 0) {
+            // clean up scene
+            for(Ability ability : player.getAbilities()) {
+                ability.getProjectiles().clear();
+            }
+            projectiles.clear();
+            enemies.clear();
+            props.clear();
+
             Window.changeTest(new TestGameOverScreen());
             shouldSimulate = false;
         }

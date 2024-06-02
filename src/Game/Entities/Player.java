@@ -49,28 +49,8 @@ public class Player extends Living implements Able {
         lvl = 1;
         XPtoLvlUp = getXPtoLvlUp();
 
-        // --TEMP-- add dash ability as a default
+        // add dash ability as a default
         addAbility(Abilities.getDASH());
-
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
-        addAbility(Abilities.getHOMING());
 
         levelUpSound = AudioLoader.loadWavFileSafe("levelUp.wav");
         xpSound = AudioLoader.loadWavFileSafe("pickup.wav");

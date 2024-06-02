@@ -6,10 +6,10 @@ import Render.Window;
 import Tests.Test;
 import org.joml.Vector2f;
 
-public class Dungeon { // TODO: load settings file
+public class Dungeon {
     public static float SCALE = 2.5f * Window.getDifferP1920().length();
     // DEFAULTS
-    public static final int DEFAULT_DEPTH = 1; // 5
+    public static final int DEFAULT_DEPTH = 1;
     public static final int DEFAULT_MAX_DOORS = 4;
     public static final int DEFAULT_START_CONNECTIONS = 2;
     public static final int DEFAULT_MIN_DOORS = 2;                          
@@ -26,6 +26,7 @@ public class Dungeon { // TODO: load settings file
     private Room start;
 
     private final int depth;
+    private final int max_depth;
     private int floor = 1;
 
     private int rc = 1;
@@ -43,10 +44,11 @@ public class Dungeon { // TODO: load settings file
         this.scene = scene;
         this.player = player;
         this.depth = depth;
+        this.max_depth = depth;
         this.floor = floor;
         asMusic.setVolume(MUSIC_VOLUME);
 
-        start = new Room(player, RoomType.START, "Start", DEFAULT_START_CONNECTIONS, RoomDesign.values()[floor % RoomDesign.values().length], this, new Vector2f(10, 10), floor);
+        start = new Room(player, RoomType.START, "Start" , DEFAULT_START_CONNECTIONS, RoomDesign.values()[floor % RoomDesign.values().length], this, new Vector2f(10, 10), floor);
         start.setConnectedRooms(generate(depth, DEFAULT_MAX_DOORS, DEFAULT_START_CONNECTIONS));
         System.out.println("Room count: " + rc);
     }
@@ -56,7 +58,7 @@ public class Dungeon { // TODO: load settings file
 
         if(depth <= 0) {
             rc++;
-            return new Room[]{new Room(player, RoomType.BOSS, "End", 0, RoomDesign.values()[floor % RoomDesign.values().length], this, dim.add(2, 2), floor)};
+            return new Room[]{new Room(player, RoomType.BOSS, "Boss", 0, RoomDesign.values()[floor % RoomDesign.values().length], this, dim.add(2, 2), floor)};
         }
 
         int newDoors = (int) (Math.random() * (maxDoors-(DEFAULT_MIN_DOORS-1)) + DEFAULT_MIN_DOORS);
@@ -72,7 +74,7 @@ public class Dungeon { // TODO: load settings file
             // generate random type
             RoomType type = rndmRoomType();
             //RoomType type = RoomType.SMITH;
-            String name = "Room " + depth + "-" + j;
+            String name = "Room " + (max_depth-depth + 1) + "-" + floor;
 
             rooms[j] = new Room(player, type, name, newDoors, design, this, dim, floor);
             rooms[j].setDepth(depth);

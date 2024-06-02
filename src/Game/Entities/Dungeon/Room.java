@@ -13,15 +13,14 @@ import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
 import Render.MeshData.Model.ObjModel;
 import Render.MeshData.Shader.Shader;
-import Render.MeshData.Texturing.Animation;
-import Render.MeshData.Texturing.Texture;
-import Render.MeshData.Texturing.TextureAtlas;
+import Render.MeshData.Texturing.*;
 import Tests.TestGame;
 import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import static Game.Action.Waves.EnemySpawner.Result.*;
@@ -37,13 +36,12 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 public class Room {
 
     private final Dungeon dungeon;
-    private BiConsumer<Player, ArrayList<Enemy>> onSwitch;
-
     private final String title;
     private final Dungeon.RoomType type;
     private Dungeon.RoomDesign design;
     private int depth;
     private int floor;
+    private float timeSinceLoad = 0;
 
 
     private Vector2f position = new Vector2f();
@@ -70,9 +68,7 @@ public class Room {
         this.numOfDoors = numOfDoors;
         this.design = design;
         this.dimensions = dimensions;
-        this.onSwitch = (p, e) -> {
-            System.out.println("Switched to room: " + title + " - " + type);
-        };
+        this.timeSinceLoad = 0;
         for (int i = 0; i < audios.length; i++) {
             audios[i] = new AudioSource();
             audios[i].setVolume(Dungeon.EFFECT_VOLUME);
@@ -207,13 +203,30 @@ public class Room {
                 smith.setShader(Shader.TEXTURING);
                 smith.setAnimation(smithIdle);
                 smith.scale(32 * Dungeon.SCALE * 1.2f);
-                smith.setPosition(position);
+                smith.setPosition(position.x + (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()), position.y + (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()  - (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random())));
+                while(smith.getPosition().distanceSquared(position) < ((dimensions.x/2f+1)*Dungeon.SCALE) * ((dimensions.x/2f+1)*Dungeon.SCALE))
+                    smith.setPosition(position.x + (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()), position.y + (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()  - (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random())));
                 smith.setStatic(true);
+                smith.setTriggerDistance(150f);
+
+                final boolean[] hasDisplayedHint = {false};
+
                 smith.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
-                    // open shop
-                    if(key == GLFW_KEY_E && action == GLFW_PRESS)
-                        System.out.println("Smithy");
+                    if(interactable.distance(player) < interactable.getTriggerDistance()) {
+                        // open shop
+                        if(key == GLFW_KEY_E && action == GLFW_PRESS) {
+                            smith.setUpdateCallback((i, mp) -> {});
+                        }
+                        // display hint
+                        if(!hasDisplayedHint[0]) {
+                            hasDisplayedHint[0] = true;
+                            smith.setUpdateCallback((i, mp) -> {
+                                renderer.drawText("Press E to interact", new Vector2f(interactable.getPosition().x, interactable.getPosition().y + 64), 15);
+                            });
+                        }
+                    }
                 });
+
 
                 props.add(smith);
 
@@ -223,7 +236,7 @@ public class Room {
                 anvil.setShader(Shader.TEXTURING);
                 anvil.setTexture(new Texture("anvil.png"));
                 anvil.scale(32 * Dungeon.SCALE * 1.2f);
-                anvil.setPosition(position.x + 12 * Dungeon.SCALE, position.y - 26 * Dungeon.SCALE);
+                anvil.setPosition(smith.getPosition().x + 12 * Dungeon.SCALE, smith.getPosition().y - 26 * Dungeon.SCALE);
                 anvil.setStatic(true);
 
                 props.add(anvil);
@@ -233,15 +246,14 @@ public class Room {
                 // init enemy Spawner to appropriate wave
                 //spawner.setProbabilityDistribution(new float[]{0.5f, 0.5f});
 
-
-                // TODO: better wave generation
                 Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
                 spawner.setCurrentWave(w);
 
                 player.setAutoshooting(true);
             }
         }
-        onSwitch.accept(player, enemies);
+
+
     }
 
     public Room update(float dt, EnemySpawner spawner, Player player, ArrayList<Enemy> enemies, ArrayList<Projectile> projectiles, ArrayList<Interactable> props) {
@@ -250,6 +262,18 @@ public class Room {
             for (Door door : doors) {
                 door.open();
             }
+        }
+
+        timeSinceLoad += dt;
+        if(timeSinceLoad < 2 && type != Dungeon.RoomType.START) {
+            ColorReplacement cr = new ColorReplacement();
+
+            Vector4f t_color = new Vector4f(1, 1, 1, 1 * (1 - timeSinceLoad/2));
+            if (Objects.equals(title, "Boss")) t_color.set(1, 0, 0, t_color.w);
+            
+            cr.swap(new Vector4f(1, 1, 1, 1), t_color);
+
+            renderer.drawText(title, new Vector2f(position.x, position.y + 64), 45, Font.RETRO_TRANSPARENT_WHITE, Shader.TEXTURING_CRA, Font::centerFirstLine_UI, cr, null);
         }
 
         // animate door opening based on audio playback progress
@@ -279,7 +303,6 @@ public class Room {
                 stairs.setTexture(new Texture("stairs.png"));
                 stairs.scale(32 * Dungeon.SCALE);
                 stairs.setPosition(position.x + (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()), position.y + (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()  - (float)((((dimensions.y-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random())));
-                System.out.println((float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()) - (float)((((dimensions.x-1)/2f+1) * 32 * Dungeon.SCALE) * Math.random()));
                 stairs.setTriggerDistance(110f);
 
                 stairs.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
@@ -334,6 +357,7 @@ public class Room {
                 }
                 projectiles.clear();
                 enemies.clear();
+                for(Interactable p : props) p.setUpdateCallback((in, mp) -> {});
                 props.clear();
                 spawner.getCurrentWave().setFinishedSpawning(false);
                 if(UI.getAbilityButtons() != null)
@@ -354,9 +378,6 @@ public class Room {
                 break;
             }
         }
-        if(!props.isEmpty())
-            renderer.drawTriggerDistance(props.get(0));
-
         return room;
     }
 
@@ -414,9 +435,6 @@ public class Room {
     public void setDoors(Door[] doors) {
         assert doors.length == numOfDoors : "The number of doors must match the number of doors set in the constructor";
         this.doors = doors;
-    }
-    public void setOnSwitch(BiConsumer<Player, ArrayList<Enemy>> onSwitch) {
-        this.onSwitch = onSwitch;
     }
     public void addDoorTrigger(Entity2D trigger) {
         for(Door door : doors) {

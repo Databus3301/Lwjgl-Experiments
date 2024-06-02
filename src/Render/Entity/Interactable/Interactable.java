@@ -8,6 +8,7 @@ import Tests.Test;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -34,6 +35,8 @@ public class Interactable extends Entity2D {
     private Consumer<Interactable> draggedCallback = (interactable) -> {};
     private QuintConsumer<Interactable, Integer, Integer, Integer, Vector2f>
                                     keyCallback = (interactable, key, scancode, action, mousePos) -> {};
+
+    private BiConsumer<Interactable, Vector2f> updateCallback = (interactable, mousePos) -> {};
 
     /**
      * performance optimization: check if the entity is hovered only every n-th frame
@@ -92,7 +95,10 @@ public class Interactable extends Entity2D {
             animation.update(dt);
 
 
+        updateCallback.accept(this, mousePos);
     }
+
+
     public void onKeyInput(int key, int scancode, int action, int mods, Vector2f mousePos) {
         updateStates(key, scancode, action, mods, mousePos);
         keyCallback.accept(this, key, scancode, action, mousePos);
@@ -163,6 +169,9 @@ public class Interactable extends Entity2D {
     }
     public void setKeyCallback(QuintConsumer<Interactable, Integer, Integer, Integer, Vector2f> callback) {
         this.keyCallback = callback;
+    }
+    public void setUpdateCallback(BiConsumer<Interactable, Vector2f> callback) {
+        this.updateCallback = callback;
     }
 
     public void hover() {
