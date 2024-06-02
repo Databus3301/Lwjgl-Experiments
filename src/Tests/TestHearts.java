@@ -7,6 +7,9 @@ import Render.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
+/**
+ * DEPRECATED
+ */
 public class TestHearts extends Test{
     Entity2D bg;
 

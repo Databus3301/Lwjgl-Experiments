@@ -245,18 +245,15 @@ public class Room {
                 // init enemy Spawner to appropriate wave
                 //spawner.setProbabilityDistribution(new float[]{0.5f, 0.5f});
 
-                Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f);
+                Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f - floor/10f);
                 spawner.setCurrentWave(w);
 
                 player.setAutoshooting(true);
             }
         }
-
-
     }
 
     public Room update(float dt, EnemySpawner spawner, Player player, ArrayList<Enemy> enemies, ArrayList<Projectile> projectiles, ArrayList<Interactable> props) {
-
         if (spawner.getLastResult() == WAVE_OVER) {
             for (Door door : doors) {
                 door.open();
@@ -291,7 +288,7 @@ public class Room {
             }
         }
 
-
+        // add floor changing props after boss kill
         if (type == Dungeon.RoomType.BOSS) {
             if (enemies.isEmpty() && props.isEmpty()) {
                 renderer.setPostProcessingShader(Shader.TEXTURING);
@@ -345,9 +342,11 @@ public class Room {
 
         Room room = this;
         for(int i = 0; i< doors.length; i++) {
+            // short circuit if doors are closed to better performance
             if(!doors[i].isOpen()) continue;
-
+            // if player entered door → switch room
             if(doors[i].collideRect(player.getCollider())) {
+                // switch room
                 room = doors[i].getConnectedRoom();
                 player.setPosition(doors[i].getConnectedRoom().getPosition());
                 // clean up scene
@@ -359,8 +358,10 @@ public class Room {
                 for(Interactable p : props) p.setUpdateCallback((in, mp) -> {});
                 props.clear();
                 spawner.getCurrentWave().setFinishedSpawning(false);
+                // choose first ability if player chose none yet
                 if(UI.getAbilityButtons() != null)
                     UI.getAbilityButtons()[0].release();
+                // reset post-processing shader
                 renderer.setPostProcessingShader(new Shader("texturing_plain.shader"));
 
                 for(AudioSource audio : audios) {

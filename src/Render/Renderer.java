@@ -408,70 +408,6 @@ public class Renderer {
         return new Batch(va, ib);
     }
 
-    private Batch _setupBatch(float[][][] texCoordArr, Entity2D base, Vector2f offset) {
-        assert base != null : "[ERROR] (Render.Renderer.setupBatch) base entity is null";
-        assert base.getModel() != null : "[ERROR] (Render.Renderer.setupBatch) base entity has no model";
-        assert texCoordArr != null : "[ERROR] (Render.Renderer.setupBatch) textureCoords array is null";
-        assert texCoordArr.length > 0 : "[ERROR] (Render.Renderer.setupBatch) textureCoords array is empty";
-        assert texCoordArr[0][0].length == 2 : "[ERROR] (Render.Renderer.setupBatch) textureCoords array has wrong dimensions";
-        assert offset != null : "[ERROR] (Render.Renderer.setupBatch) offset is null";
-
-        ObjModel model = base.getModel();
-        setCurrentShader(base.getShader());
-
-        VertexArray va = new VertexArray();
-        int totalVertices = model.getVertexCount() * texCoordArr.length * Vertex.SIZE;
-        int totalIndices = model.getIndexCount() * texCoordArr.length;
-
-        // Create combined vertex and index buffers
-        VertexBuffer vb = new VertexBuffer(totalVertices);
-        IndexBuffer ib = new IndexBuffer(totalIndices);
-
-        long vertexOffset = 0;
-        long indexOffset = 0;
-
-        // Append data from each entity's buffers to the combined buffers
-        short[][][] faces = model.getFaces();
-        float[][] positions = model.getPositions();
-        int xOffset = 0;
-
-        for (int i = 0; i < texCoordArr.length; i++) {
-            float[] data = new float[model.getVertexCount() * Vertex.SIZE];
-            int[] indices = new int[model.getIndexCount()];
-
-            short dataIndex = 0;
-            for (short[][] face : faces) {
-                for (short k = 0; k < face.length; k++) {
-                    float[] position = positions[face[k][0] - 1];
-                    data[dataIndex++] = position[0] * base.getScale().x + base.getPosition().x + offset.x * i - (((xOffset + 1f) * base.getScale().x * 2));
-                    data[dataIndex++] = position[1] * base.getScale().y + base.getPosition().y + offset.y * i - base.getScale().y /* / characterAspect */ * 2; //TODO: sum up drawText and this into one???
-                    data[dataIndex++] = position[2];
-
-                    if (Vertex.SIZE > 3) {
-                        if (face[k].length > 1) {
-                            float[] texture = texCoordArr[i][face[k][1] - 1]; // potential optimisation:
-                            data[dataIndex++] = texture[0];
-                            data[dataIndex++] = texture[1];
-                        } else {
-                            dataIndex += 2;
-                        }
-                    }
-                    indices[dataIndex / Vertex.SIZE - 1] = (short) (dataIndex / Vertex.SIZE - 1) + (int) indexOffset / 4;
-                }
-            }
-            xOffset++;
-
-            vb.update(data, vertexOffset);
-            ib.update(indices, indexOffset);
-
-            vertexOffset += data.length * 4L;
-            indexOffset += indices.length * 4L;
-        }
-
-        va.addBuffer(vb, Vertex.getLayout());
-        return new Batch(va, ib);
-    } // delete eventually? texture-attlassing
-
     Matrix4f buffer = new Matrix4f();
     public void SetUniforms(Shader shader, Entity2D entity) {
         Matrix4f modelMatrix;
@@ -765,11 +701,6 @@ public class Renderer {
         projectedCoords.mul(camera.getProjectionMatrix().invert(invertedProj));
         return new Vector2f(projectedCoords.x, projectedCoords.y).sub(camera.getPosition());
     }
-
-    public void toggleCursor() {
-
-    }
-
     public void cursorHide() {
         glfwSetInputMode(Window.getWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }

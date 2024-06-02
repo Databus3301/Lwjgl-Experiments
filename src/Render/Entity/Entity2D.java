@@ -23,7 +23,7 @@ import static Game.Entities.Dungeon.Dungeon.EFFECT_VOLUME;
  * it is used as a base class for all 2D entities
  */
 public class Entity2D {
-    protected Matrix4f modelMatrix = new Matrix4f(); // TODO: keep up to date, throughout method calls like scale() and rotate() to avoid recalculating everything every frame
+    protected Matrix4f modelMatrix = new Matrix4f();
     protected ObjModel model;
     protected Texture texture;
     protected Animation animation;

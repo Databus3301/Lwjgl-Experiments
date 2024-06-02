@@ -65,8 +65,6 @@ public class Dungeon {
         if(depth == 1)
             newDoors = 1;
 
-        //System.out.println("Depth: " + "*".repeat(depth) + "\t\tnewDoors: " + newDoors + "  connections: " + connections);
-
         Room[] rooms = new Room[connections];
         for (int j = 0; j < connections; j++) {
             // generate random design

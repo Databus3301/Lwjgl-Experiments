@@ -137,14 +137,13 @@ public class TestGame extends Test {
             dungeon.getMusicAudioSource().stopSound();
             UI.onRoomCompletion(player, this, 3);
         }
-        // move target to mouse
+        // move <target> to mouse
         cursor.setPosition(renderer.screenToWorldCoords(mousePos));
 
         // restart music
         if(dungeon.hasStartedPlayingMusic() && !dungeon.getMusicAudioSource().isPlaying()) {
             dungeon.getMusicAudioSource().resumeSound();
         }
-
 
         if (!shouldSimulate) return;
         // move player
@@ -158,7 +157,6 @@ public class TestGame extends Test {
         spawner.update(dt, enemies);
         // change room
         room = room.update(dt, spawner, player, enemies, projectiles, props);
-
 
         Iterator<Enemy> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
