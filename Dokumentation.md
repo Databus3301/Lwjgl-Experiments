@@ -21,11 +21,11 @@
 ---
 
 #### 1 - Projektbeschreibung/Zielsetzung/Anforderungen an das Projekt
-Das Ziel des Projekts war es, ein einfaches 2D-Spiel zu erstellen, das auf dem Konzept des klassischen Dungeon Crawlers basiert. Das Spiel sollte eine Vielzahl von Funktionen und Mechaniken enthalten, die es dem Spieler ermöglichen, verschiedene Arten von Gegnern zu bekämpfen, verschiedene Waffen und Fähigkeiten zu verwenden und verschiedene Level erreichen. 
+Das Ziel des Projekts war es, ein einfaches 2D-Spiel zu erstellen, das auf dem Konzept eines Vampire-Suvivors-Like basiert. Das Spiel sollte eine Vielzahl von Funktionen und Mechaniken enthalten, die es dem Spieler ermöglichen, verschiedene Arten von Gegnern zu bekämpfen, verschiedene Waffen und Fähigkeiten zu verwenden und verschiedene Level erreichen. 
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
-Das Ziel des Spiels ist es so weit wie nur möglich in den Dungeon vorzudringen. Ursprünglich war es zwar die Idee einen Wellen basierten Vampire-Suvivors-Like zu kreieren, nach einiger Zeit haben wir uns für diese Art von Spiel mehr begeistern können und haben uns deshalb dazu entschieden den Wellenbasierten Ansatz auf einer einzigen Map zu verwerfen und dafür den Ansatz zu wählen, dass man durch verschiedene Räume muss und in jedem eine gewisse Anzahl Gegner zu besiegen hat. 
+Das Ziel des Spiels ist es so weit wie nur möglich in den Dungeon vorzudringen. Ursprünglich war es zwar die Idee einen Vampire-Suvivors-Like zu kreieren, nach einiger Zeit haben wir uns für diese Art von Spiel mehr begeistern können und haben uns deshalb dazu entschieden den Wellenbasierten Ansatz auf einer einzigen Map zu verwerfen und dafür den Ansatz zu wählen, dass man durch verschiedene Räume muss und in jedem eine gewisse Anzahl Gegner zu besiegen hat. 
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
@@ -72,4 +72,4 @@ Dieses Paket enthält Klassen, die für die Audiofunktionen i, Spiel verantwortl
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
 **Tests Paket:**
-Dieses Paket enthält verschiedene Testklassen, die verschiedene Aspekte Ihres Spiels testen. Es würde keinen Sinn machen in der documentation  alle Tests durchzugehen,deshalb werden wir uns auf die für das Spiel wesentlichen fokosieren. Die Restlichen Tests waren meistens Experimente oder Tests um Mechaniken auszuprobieren, wie zum Beispiel ein Test um die Kollisionskontrolle zu überprüfen. Zu den wichtigen Tests fürs Spiel gehören die AbilitySelectionScreen, TestGame, TestStartScreen und TestGameOverScreen Klassen.  
+Dieses Paket enthält verschiedene Testklassen, die verschiedene Aspekte des Spiels testen. Es würde keinen Sinn machen in der dokumentation alle Tests durchzugehen,deshalb werden wir uns auf die für das Spiel wesentlichen fokosieren. Die Restlichen Tests waren meistens Experimente oder Tests um Mechaniken auszuprobieren, wie zum Beispiel ein Test um die Kollisionskontrolle zu überprüfen. Zu den wichtigen Tests fürs Spiel gehören die AbilitySelectionScreen, TestGame, TestStartScreen und TestGameOverScreen Klassen.  
