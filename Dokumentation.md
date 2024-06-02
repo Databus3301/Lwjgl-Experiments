@@ -73,3 +73,6 @@ Dieses Paket enthält Klassen, die für die Audiofunktionen i, Spiel verantwortl
 
 **Tests Paket:**
 Dieses Paket enthält verschiedene Testklassen, die verschiedene Aspekte Ihres Spiels testen. Es würde keinen Sinn machen in der documentation  alle Tests durchzugehen,deshalb werden wir uns auf die für das Spiel wesentlichen fokosieren. Die Restlichen Tests waren meistens Experimente oder Tests um Mechaniken auszuprobieren, wie zum Beispiel ein Test um die Kollisionskontrolle zu überprüfen. Zu den wichtigen Tests fürs Spiel gehören die AbilitySelectionScreen, TestGame, TestStartScreen und TestGameOverScreen Klassen.  
+
+
+![img](https://cdn.discordapp.com/attachments/801184991316148254/1245063652504244254/image.png?ex=665dfae2&is=665ca962&hm=561a0e8eb0253d433f4ea4fa36925bf70d96777c1e088a661486c5c2a24ced50&)
