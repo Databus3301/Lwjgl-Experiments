@@ -21,16 +21,16 @@
 ---
 
 #### 1 - Projektbeschreibung/Zielsetzung/Anforderungen an das Projekt
-Das Ziel des Projekts war es, ein einfaches 2D-Spiel zu erstellen, das auf dem Konzept des klassischen Dungeon Crawlers basiert. Das Spiel sollte eine Vielzahl von Funktionen und Mechaniken enthalten, die es dem Spieler ermöglichen, verschiedene Arten von Gegnern zu bekämpfen, verschiedene Waffen und Fähigkeiten zu verwenden und verschiedene Level erreichen. 
+Das Ziel des Projekts war es, ein einfaches 2D-Spiel zu erstellen, das auf dem Konzept eines Vampire-Survivors-Like basiert. Das Spiel sollte eine Vielzahl von Funktionen und Mechaniken enthalten, die es dem Spieler ermöglichen, verschiedene Arten von Gegnern zu bekämpfen, verschiedene Waffen und Fähigkeiten zu verwenden und verschiedene Level erreichen. 
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
-Das Ziel des Spiels ist es so weit wie nur möglich in den Dungeon vorzudringen. Ursprünglich war es zwar die Idee einen Wellen basierten Vampire-Suvivors-Like zu kreieren, nach einiger Zeit haben wir uns für diese Art von Spiel mehr begeistern können und haben uns deshalb dazu entschieden den Wellenbasierten Ansatz auf einer einzigen Map zu verwerfen und dafür den Ansatz zu wählen, dass man durch verschiedene Räume muss und in jedem eine gewisse Anzahl Gegner zu besiegen hat. 
+Das Ziel des Spiels ist es so weit wie nur möglich in den Dungeon vorzudringen. Ursprünglich war es zwar die Idee Vampire-Suvivors-Like zu kreieren, nach einiger Zeit haben wir uns für diese Art von Spiel mehr begeistern können und haben uns deshalb dazu entschieden den Wellenbasierten Ansatz auf einer einzigen Map zu verwerfen und dafür den Ansatz zu wählen, dass man durch verschiedene Räume muss und in jedem eine gewisse Anzahl Gegner zu besiegen hat. 
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
-Dass man durch ein Level-Up-System seine Fähigkeiten zu verbessern oder neue erhalten kann, war für uns aber schon von Anfang an im Spiel vorgesehen. 
-Wir hatten uns das Spiel zuerst farbenfroher vorgestellt mit einer detailliert designten Map allerdings haben wir im verlauf gemerkt, dass wenn wir uns weniger auf die Grafiken konzentrieren mehr noch auf die Spielmechaniken konzentrieren können. Dazu kam, dass wir gefallen an dem "einfachen" Stil unseres Spiel gefunden haben und deshalb uns unter anderem auch dazu entschieden haben die Gegner bei farbigen Vierecken zu belassen. Der einfache Stil war zwar Ursprünglich nicht geplant aber gibt unserer Meinung nach dem Spiel einen eigenen Charm der den Fokus mehr darauf legt, Fortschritt im Spiel zu erzielen, und weniger darauf sich schön designte Aspekte anzusehen.
+Dass man durch ein Level-Up-System seine Fähigkeiten zu verbessern oder neue erhalten kann, war für uns schon von Anfang an im Spiel vorgesehen. 
+Wir hatten uns das Spiel zuerst farbenfroher vorgestellt mit einer detailliert designten Map allerdings haben wir im Verlauf gemerkt, dass wenn wir uns weniger auf die Grafiken konzentrieren mehr noch auf die Spielmechaniken konzentrieren können. Dazu kam, dass wir gefallen an dem "einfachen" Stil unseres Spiel gefunden haben und deshalb uns unter anderem auch dazu entschieden haben die Gegner bei farbigen Vierecken zu belassen. Der einfache Stil war zwar Ursprünglich nicht geplant aber gibt unserer Meinung nach dem Spiel einen eigenen Charm der den Fokus mehr darauf legt, Fortschritt im Spiel zu erzielen, und weniger darauf sich schön designte Aspekte anzusehen.
 Außerdem hilft das simple Design dabei, sich mit den Projektilen zurechtzufinden, da diese in unserem Spiel teilweise sehr viele werden könnten, somit wird der Fokus mehr auf kompetitives Spielen gelegt als auf schönes Design. 
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
@@ -72,4 +72,4 @@ Dieses Paket enthält Klassen, die für die Audiofunktionen i, Spiel verantwortl
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
 **Tests Paket:**
-Dieses Paket enthält verschiedene Testklassen, die verschiedene Aspekte Ihres Spiels testen. Es würde keinen Sinn machen in der documentation  alle Tests durchzugehen,deshalb werden wir uns auf die für das Spiel wesentlichen fokosieren. Die Restlichen Tests waren meistens Experimente oder Tests um Mechaniken auszuprobieren, wie zum Beispiel ein Test um die Kollisionskontrolle zu überprüfen. Zu den wichtigen Tests fürs Spiel gehören die AbilitySelectionScreen, TestGame, TestStartScreen und TestGameOverScreen Klassen.  
+Dieses Paket enthält verschiedene Testklassen, die verschiedene Aspekte des Spiels testen. Es würde keinen Sinn machen in der Dokumentation alle Tests durchzugehen,deshalb werden wir uns auf die für das Spiel wesentlichen fokosieren. Die Restlichen Tests waren meistens Experimente oder Tests um Mechaniken auszuprobieren, wie zum Beispiel ein Test um die Kollisionskontrolle zu überprüfen. Zu den wichtigen Tests fürs Spiel gehören die AbilitySelectionScreen, TestGame, TestStartScreen und TestGameOverScreen Klassen.  
