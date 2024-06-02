@@ -21,7 +21,15 @@
 ---
 
 #### 1 - Projektbeschreibung/Zielsetzung/Anforderungen an das Projekt
-Das Ziel des Projekts war es, ein einfaches 2D-Spiel zu erstellen, das auf dem Konzept eines Vampire-Suvivors-Like basiert. Das Spiel sollte eine Vielzahl von Funktionen und Mechaniken enthalten, die es dem Spieler ermöglichen, verschiedene Arten von Gegnern zu bekämpfen, verschiedene Waffen und Fähigkeiten zu verwenden und verschiedene Level erreichen. 
+Das Ziel des Projekts war es, ein einfaches 2D-Spiel zu erstellen, das auf dem Konzept eines Vampire-Suvivors-Like basiert. Das Spiel sollte eine Vielzahl von Funktionen und Mechaniken enthalten, die es dem Spieler ermöglichen, verschiedene Arten von Gegnern zu bekämpfen, verschiedene Waffen und Fähigkeiten zu verwenden und verschiedene Level erreichen.
+
+Beispiele für Vampire-survivor-likes:
+
+Vampire Surviviors:
+![img](https://www.google.com/url?sa=i&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F1794680%2FVampire_Survivors%2F%3Fl%3Dgerman&psig=AOvVaw0rq2bjENvPxpmk43yCV4Yb&ust=1717449002421000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOiShJ_qvYYDFQAAAAAdAAAAABAE)
+
+Brotato:
+![img](https://www.google.com/url?sa=i&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F1942280%2FBrotato%2F%3Fl%3Dgerman%26curator_clanid%3D4218320&psig=AOvVaw2vImgqC4Ghyb-cTN0gvtta&ust=1717449090993000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNiLksrqvYYDFQAAAAAdAAAAABAJ)
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
@@ -33,11 +41,22 @@ Dass man durch ein Level-Up-System seine Fähigkeiten zu verbessern oder neue er
 Wir hatten uns das Spiel zuerst farbenfroher vorgestellt mit einer detailliert designten Map allerdings haben wir im verlauf gemerkt, dass wenn wir uns weniger auf die Grafiken konzentrieren mehr noch auf die Spielmechaniken konzentrieren können. Dazu kam, dass wir gefallen an dem "einfachen" Stil unseres Spiel gefunden haben und deshalb uns unter anderem auch dazu entschieden haben die Gegner bei farbigen Vierecken zu belassen. Der einfache Stil war zwar Ursprünglich nicht geplant aber gibt unserer Meinung nach dem Spiel einen eigenen Charm der den Fokus mehr darauf legt, Fortschritt im Spiel zu erzielen, und weniger darauf sich schön designte Aspekte anzusehen.
 Außerdem hilft das simple Design dabei, sich mit den Projektilen zurechtzufinden, da diese in unserem Spiel teilweise sehr viele werden könnten, somit wird der Fokus mehr auf kompetitives Spielen gelegt als auf schönes Design. 
 
+Beispiel Upgrade Auswahl:
+!img[]()
+
+Beispiel Gegner:
+!img[]()
+
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
 Die Umsetzung mit einem Start und Game Over Screen war auch von Beginn an festgelegt, wobei man sagen muss, dass die Idee zuvor noch ein wenig ausgebauter war als sie jetzt schlussendlich geworden ist. wir hatten überlegt Collectibels zu implementieren, die auch über mehrere Runden verteilt gespeichert werden und einem entweder Vorteile bringen oder nur dem Sammlelaspekt dienen.Auch ein hub war in Überlegung also ein Ort wo man zwischen den Runden zeit ferbringen kann, allerdings mussten wir beide Ideen verwerfen, da wir uns auf das wesentliche konzentriert haben und uns die Zeit fehlte um diese Ideen zu implementieren.
 Was wir uns aber vor allem von dem Projekt erhofft haben, war es viel ausprobieren zu können und viel zu experimentieren, was man denke ich mal an der riesigen Menge an verschiedenen Tests sieht.
 
+Startscreen:
+![img]()
+
+GameoverScreen:
+![img]()
 
 <!--- Pagebreak --->
 <div style="page-break-after: always"></div>
@@ -48,6 +67,8 @@ Was wir uns aber vor allem von dem Projekt erhofft haben, war es viel ausprobier
 ---
 
 #### 2 - Struktur
+**Res Ordner:**
+Der Res Ordner enthält alle Ressourcen, die das Spiel benötigt, wie z.B. die Texturen für den Schmied. Die Ressourcen sind in verschiedene Unterordner unterteilt, um sie besser zu organisieren. Die Unterordner sind: Fonts, Images, Music, Shaders und Sounds.
 
 **Main.java:**
 Die Main Methode ist der Einstiegspunkt in das Programm. Es erstellt ein neues Fenster und initialisiert es, worauf es die ```window.run``` ausführt welches die Hauptschleife vom Spiel startet.
