@@ -138,7 +138,7 @@ Assets: <br>
      - select newest sdk
 - import lib folder as lib (right-click)
 - import lwjgl2 folder as lwjgl lib
-- set run configuration to new application and set program arguments to "-" "TEST_NAME" "dimX" "dimY" or provide program args via some other way
+- set run configuration to new application and set program arguments to "-" "TEST_NAME" "dimX" "dimY" or "- TEST_NAME" or provide program args via some other way
 - potentially run IDEA-repair tool
 
-- TEST_NAMEs can be found jn the window class
+- TEST_NAMEs can be found in the window class

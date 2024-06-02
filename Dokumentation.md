@@ -2,7 +2,7 @@
 
 ---
 
-<div style="font-variant:small-caps;text-align:center"> Projektsdokumenation</div>
+<div style="font-variant:small-caps;text-align:center"> Projektdokumenation</div>
 <div style="font-variant:small-caps;text-align:center"> 2024</div>
 <div style="font-variant:small-caps;text-align:center">PXIF1 - DR</div>
 <div style="visibility:hidden">a</div>
@@ -67,34 +67,50 @@ GameoverScreen:
 ---
 
 #### 2 - Struktur
-**Res Ordner:**
-Der Res Ordner enthält alle Ressourcen, die das Spiel benötigt, wie z.B. die Texturen für den Schmied. Die Ressourcen sind in verschiedene Unterordner unterteilt, um sie besser zu organisieren. Die Unterordner sind: Fonts, Images, Music, Shaders und Sounds.
 
 **Main.java:**
 Die Main Methode ist der Einstiegspunkt in das Programm. Es erstellt ein neues Fenster und initialisiert es, worauf es die ```window.run``` ausführt welches die Hauptschleife vom Spiel startet.
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
+**Audio Paket:**
+Dieses Paket enthält Klassen, die für die Audiofunktionen im Spiel verantwortlich sind. Es verwendet die OpenAL Bibliothek, um Audio im Spiel zu spielen.  
+
+<p style="font-variant:small-caps" align="center">«-<—>-»</p> 
+
 **Render Paket:**
-Dieses Paket enthält Klassen, die für das Rendern von Grafiken in Ihrem 
-Spiel verantwortlich sind. Dazu gehört die Window Klasse, die das Hauptfenster des Spiels erstellt und verwaltet, sowie die Renderer Klasse, die für das Zeichnen von Spielobjekten auf dem Bildschirm verantwortlich ist.  Weitere unterkategorien sind die Camera, die wie der Name bereits verrät die Kamera verwaltet und dafür sorgt das der Spieler immer mittig bleibt und die Interactabels, Eine Ansammlung an Klassen, die dafür da sind, dass man verschiedene Dinge auf dem Bildschirm anzeigen lassen kann, mit denen man entweder Interagieren kann oder durch eine Interaktion zum Vorschein kommen. Des Weiteren befindet sich im Render package die Unterkategorie Meshdata, die Klassen, die zur veränderung von allem visuell wahrnehmbaren da sind, verwaltet.  
-Eine der wichtigsten Klassen des package ist die Entity2D Klasse. Sie gibt durch vererbung an andere Klassen einen Grundbaustein, an dem sich eine sehr große Anzahl an Klassen orientieren, so ist jeder Gegner, der Spieler, jedes Projektil ein Objekt dessen Klasse von Entity2D abstammt.  
+Zusammen mit dem Audio Packet und der Test-Klasse bildet das Render-Paket sämtlichen Hintergrundverwaltung von OpenGL, OpenAL und ihren Abstraktionen in handlichere Basiseinheiten wie ```Entity2D```, ```Interactable```, ```Shader``` oder ```Texture```.
+Dieses Paket alleine stellt also das Pendant zur gemeinsam entwickelten Spieleumgebung bzw.  populäreren Game-Engines wie Godot oder Unreal.
+
+Dieses Paket enthält vornehmlich Klassen, die ein funktionales und einfaches Rendern und Verwalten jeglicher Grafiken sichern. Dazu gehört die ```Window``` Klasse, die das Hauptfenster des Spiels erstellt und verwaltet, sowie die ```Renderer``` Klasse, die für das Zeichnen von Spielobjekten auf dem Bildschirm verantwortlich ist.  Weitere Unterkategorien sind die ```Camera```, die neben Kameraverwaltung auch dafür sorgt das der Spieler immer mittig bleibt sowie die ```Interactabels```, Eine Ansammlung an Klassen. die ```Entity2D```'s um Interagierbarkeit, wie des Klickens, Hoverns, Antippens und Ziehens erweitert. 
+
+Darüber hinaus befindet sich im Render-Package die Unterkategorie ```Meshdata```, die Klassen, die zur Veränderung von allem visuell wahrnehmbaren da sind, verwaltet.  
+Eine der wichtigsten Klassen des package ist die ```Entity2D``` Klasse. Sie gibt durch vererbung an andere Klassen einen Grundbaustein, an dem sich eine sehr große Anzahl an Klassen orientieren, so ist jeder Gegner, der Spieler, jedes Projektil ein Objekt dessen Klasse von Entity2D abstammt.  
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
 **Game Paket:**
-Dieses Paket enthält Klassen, die die Spiellogik und den Spielzustand verwalten. Das Game Paket wird noch einmal unterteilt in zwei Kategorien. Die Action und die Entities Kategorie. Die Entities Kategorie verwaltet sehr viele verschiedene Klassen die von Entitiy 2D meistens abstammen, und unterteilt alle Entitiys noch einmal in Unterklassen wie living oder collectible. Die Action Kategorie verwaltet Klassen, die dann die Entities aus Entities nehmen und ihnen eine logistische aufgabe geben, indem sie zum Beispiel eine ENemyspawner lasse verwaltet, die wiederum alle Gegner die erscheinen verwaltet. Oder die Klasse Abillity die dafür sorgt, dass man Projectile immer in einem gewissen Rhythmus verschießen kann.
+Dieses Paket enthält aufbauend auf dem Render-/Audio-Paket spielspezifische Klassen, die die Spiellogik und den Spielzustand auf einer Ebene verwalten, die sich nicht für eine verallgemeinerte Implementation im Renderpaket geeignet haben ( ```Dungeon``` , ```Room``` oder ```Homing```). 
 
-<p style="font-variant:small-caps" align="center">«-<—>-»</p> 
+Das Game Paket unterteilt sich wiederhohlt in zwei Kategorien. ```Action``` und die ```Entities```. 
 
-**Audio Paket:**
-Dieses Paket enthält Klassen, die für die Audiofunktionen i, Spiel verantwortlich sind. Es verwendet die OpenAL Bibliothek, um Audio im Spiel zu spielen.  
+Die Entities Kategorie verwaltet verschiedene Klassen die meistens von ```Entitiy2D```  erben, und sich über Vererbung oder Interfaces weiter in z.B. "lebend" und "fähig" unterteilen. 
+
+Die Action Kategorie verwaltet Klassen, die auf zurückgreifen auf die Entities leben in das Spiel hauchen. Beispielhaft dafür ist der Erscheinungsprozess von Gegnern über ```Wave``` und ```EnemySpawner``` oder ```Ability``` und ```Upgrade``` die Gegner wie Spielern modulbasiert Fähigkeiten zuschreiben, um etwa ein ```Projectile``` zu schießen oder mit der _Dash-Ability_ aus der Abilitysammlung ```Abilities``` einen kleinen Teleport in Laufrichtung auszuführen.
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
 **Tests Paket:**
-Dieses Paket enthält verschiedene Testklassen, die verschiedene Aspekte des Spiels testen. Es würde keinen Sinn machen in der dokumentation alle Tests durchzugehen,deshalb werden wir uns auf die für das Spiel wesentlichen fokosieren. Die Restlichen Tests waren meistens Experimente oder Tests um Mechaniken auszuprobieren, wie zum Beispiel ein Test um die Kollisionskontrolle zu überprüfen. Zu den wichtigen Tests fürs Spiel gehören die AbilitySelectionScreen, TestGame, TestStartScreen und TestGameOverScreen Klassen.  
+Dieses Paket enthält verschiedene Testklassen, die vorrangig des Funktionstestens dienten, im späteren Verlauf aber immer mehr zu klasisch verwaltbaren Szenen wurden wie man sie aus Godot oder Unity kennt. Sie sind also ladbare Bestandteile etwas Größerem die abgeleitet von ```Test``` die autarken Szenen eines Spiels, wie etwas einen Hauptbildschirm, ein Einstellungsmenü oder einen Game-Over-Screen, darstellen und organisieren.
 
+Wesentliche Test / Szenen unseres Spiels zählen den AbilitySelectionScreen, TestGame, TestStartScreen und TestGameOverScreen. Die Restlichen Szenen waren meistens Experimente oder Tests um Mechaniken auszuprobieren, wie zum Beispiel ein Test um die Kollisionskontrolle zu überprüfen. 
+
+<p style="font-variant:small-caps" align="center">«-<—>-»</p> 
+
+**"Res"-Ordner:**
+Der *Res* Ordner enthält alle Ressourcen oder Assets die vom Spiel über Java-Quellcode hinaus benötigt werden. Darunter zählen ```textures``` für Spieler, Text und Räume, 3D / 2D ```models``` die aus Blender geladen werden können um Komplexere Formen abzubilden,  ```audio```-clips für Musik und Effekte, ```shaders``` für Programme auf Graphikkartenseite zum richtigen Interpretieren von Punktpositionen und RGB-Buffern, sowie die ```Settings``` zum programmausführungsübergreifenden Einstellungsverwalten.
+
+<br><br><br>
 <!--- Pagebreak --->
 <div style="page-break-after: always"></div>
 
@@ -103,4 +119,24 @@ Dieses Paket enthält verschiedene Testklassen, die verschiedene Aspekte des Spi
 
 ---
 
-#### 3 - Implementation
+#### 3 - Implementation und Techniken
+
+**Ausmaße:**
+
+Die abertausende Zeilen an Quellcode einzeln zu analysieren würde ein Ausmaß von mindestens genauso vielen Seiten verlangen.
+
+![](https://cdn.discordapp.com/attachments/801184991316148254/1246957936576565298/image.png?ex=665e4793&is=665cf613&hm=c1b9862696b43d59dca27c08723681cc6e4537a82085e1dd63f33692ff40a40b&)
+<sub>Code-Frequency Analyse von [GitHub](https://github.com/Databus3301/Lwjgl-Experiments/graphs/code-frequency)</sub>
+
+Und da es zum Glück auch nur um Schlüsselstellen geht ist das auch nicht weiter schlimm. Es ist allerdings ganz hilfreich sich vor trotz fehlender Dokumentation von jeder Nische vor die Augen zu rufen um welches Ausmaß es sich hier handelt.
+
+Was gegeben war, waren die 115 Zeilen minimalstem [Startercodes](https://www.lwjgl.org/guide)  aus der LWJGL Dokumentation. Darin enthalten: 
+- Betriebssystemunabhängiges erschaffen eines Fensters
+- Weiterleiten von Tastatur- und Mauseingaben an Programmschnittstellen 
+- Und Aufsetzen des *OpenGL* Graphik-Standarts der es unter anderem ermöglicht Buffer an eine Graphikkarte zu Schicken und dieser von Grund auf zu beschreiben wie dieser Interpretiert werden soll
+Dazu kommt die Mathe-Bibliothek *JOML* die lineare Algebra auf Vektoren und Matrizen ermöglicht und *OpenAL* als Standart für die Schnittstelle zu den Lautsprechern.
+
+ALLES Andere hinweg über ```Shader```, ```Texture```, ```VertexBuffer```, ```IndexBuffer```, ```ObjModelParser```, ```Font```, ```TextureAtlas``` und ```Button```, ```Slider``` oder ```Entity2D``` und jeder anderen ```src``` Datei ist auf der oben beschrieben Basis unter Anwendung von Computer-Graphik Methodik und ganz viel Mathematik entstanden und sprengt damit schon jeglichen Rahmen. 
+
+
+<p style="font-variant:small-caps" align="center">«-<—>-»</p> 
