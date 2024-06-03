@@ -312,7 +312,7 @@ Die dabei wohl relevanteste Szene bildet TestGame in der die Kernlogik des Spiel
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
 **EnemySpawner:**
-Erschaffen werden die Gegner immer dann wenn genug Zeit verstrichen ist um eine Diskrepanz zwischen erschaffenen und zu erschaffen gehabt zu habenen Gegnern herscht.
+Erschaffen werden die Gegner immer dann wenn genug Zeit verstrichen ist um eine Diskrepanz zwischen erschaffenen und zu erschaffen gehabt zu habenen Gegnern zu kreieren.
 
 Die Frequenz und Ereigniszahl werden dabei durch die ```currentWave``` beeinflusst.
 ![](https://cdn.discordapp.com/attachments/801184991316148254/1246980338756882593/image.png?ex=665e5c70&is=665d0af0&hm=b0b24e4f9f65707e6e1b056706c9502f189007137c0d27b503aced6faf3e0f13&)
