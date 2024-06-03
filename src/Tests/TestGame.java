@@ -2,6 +2,7 @@ package Tests;
 
 import Audio.AudioClip;
 import Audio.AudioSource;
+import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Action.Waves.EnemySpawner;
 import Game.Action.Waves.Wave;
@@ -49,7 +50,7 @@ public class TestGame extends Test {
     private final ColorReplacement colorReplacement = new ColorReplacement();
     private final int[] keyArr = new int[4];
     private boolean shouldSimulate = true;
-    private boolean shouldAdvanceFloor = false;
+    private boolean shouldAdvanceFloor = false, shouldGenSmithUpgrades = false;
 
 
     public TestGame() {
@@ -112,12 +113,20 @@ public class TestGame extends Test {
             dungeon.setStartedPlaying(true);
 
         Window.baseDim = new Vector2i(Window.dim);
+
+        player.removeAllAbilities();
+        System.out.println(player.getAbilities());
+        player.addAbility(Abilities.getDASH());
     }
 
     @Override
     public void OnUpdate(float dt) {
         if(shouldAdvanceFloor)
             OnStart();
+        if(shouldGenSmithUpgrades) {
+            UI.onSmithUpgradeGen(player, this, 5);
+            shouldGenSmithUpgrades = false;
+        }
         // game over
         if (player.getLP() <= 0) {
             // clean up scene
@@ -301,6 +310,10 @@ public class TestGame extends Test {
     }
     public void setShouldAdvanceFloor(boolean shouldAdvanceFloor) {
        this.shouldAdvanceFloor = shouldAdvanceFloor;
+    }
+
+    public void setShouldGenSmithUpgrades(boolean shouldGenSmithUpgrades) {
+        this.shouldGenSmithUpgrades = shouldGenSmithUpgrades;
     }
 }
 

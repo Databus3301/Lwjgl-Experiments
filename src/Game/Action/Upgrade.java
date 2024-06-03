@@ -86,10 +86,10 @@ public class Upgrade {
     }
     public int getRndmLevel() {
         double d = Math.random();
-        if(d < 0.4) return 1;
-        if(d < 0.7) return 2;
-        if(d < 0.9) return 3;
-        return 4;
+        if(d < 0.4) return 1 + level;
+        if(d < 0.7) return 2 + level;
+        if(d < 0.9) return 3 + level;
+        return 4 + level;
     }
     public float getRarity() {
         return rarity;

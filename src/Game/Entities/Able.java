@@ -27,4 +27,8 @@ public interface Able {
         getAbilities().removeIf(a -> a.getUUID().equals(index));
     }
 
+    default void removeAllAbilities() {
+        getAbilities().clear();
+    }
+
 }

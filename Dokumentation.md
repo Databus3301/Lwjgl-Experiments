@@ -126,7 +126,7 @@ Der *Res* Ordner enthält alle Ressourcen oder Assets die vom Spiel über Java-Q
 <div style="page-break-after: always"></div>
 
 
-<div style="text-align:right">2-Implementation</div>
+<div style="text-align:right">3-Implementation und Techniken</div>
 
 ---
 
@@ -598,17 +598,17 @@ Die Zentrale Renderinginstanz der Engine die die vereinfachenden Abstraktionen z
   ```
 
 ![](https://cdn.discordapp.com/attachments/801184991316148254/1246937358767493151/image.png?ex=665e3469&is=665ce2e9&hm=4fbde18f57da9a4e7fef3da6ef8939a47a51300baeccd51f689695a323b11185&)
-<sub>Texturenatlas oben links, Texturabschnitt rechts → Texturkoordinaten aus der Batch-Vorbereitung</sub>
+<sub>Texturenatlas oben links, Texturabschnitt rechts → Modifizierte Texturkoordinaten → TestTextureAtlas // "ta"</sub>
 
 <p style="font-variant:small-caps" align="center">«-<—>-»</p> 
 
 **ObjModel:**
 
-Die Engine benutzt, weil ich einen Interpretierer für 3D Dateien schreiben wollte intern das leicht einzulesende *Wavefront OBJ* Format.
+Die Engine benutzt, weil ich einen Interpretierer für 3D Dateien schreiben wollte, intern das leicht einzulesende *Wavefront OBJ* Format.
 
 
 ![](https://media.discordapp.net/attachments/801184991316148254/1246937097617801307/image.png?ex=665e342b&is=665ce2ab&hm=fb7f211f22b3c84e1a6c3dcb170725b4677d0337f778de17f449d2ff855c7e07&=&format=webp&quality=lossless&width=394&height=350)
-<sub>Aus Blender exportierte .obj Datei drehend in Test3Dspin / "3d"</sub>
+<sub>Aus Blender exportierte .obj Datei drehend im Test3Dspin / "3d"</sub>
 
 Da das Format als ASCII-Text vorliegt ist es einzulesen recht trivial:
 ```java
@@ -681,3 +681,32 @@ Das *Separating Axis Theorem* ist der Grundstein der meisten Kollisionsalgorithm
 Der Algorithmus über den ich ein Mathe-Referat gehalten hab, basiert auf Projektion, dem Skalarprodukt, Normalenvektoren und auf der einfachen Grundlage das sollten sich 2 konvexe Formen nicht überlappen es möglich sein muss eine Linie zwischen ihnen zu ziehen die beide nicht berührt und das diese Linie wenn es sie gibt orthogonal zu einer der Kanten aller beteilitgten Formen ist. 
 
 Er lässt sich auf beliebig viele Dimensionen erweitern und führte zwischenzeitig unsere Kollisionserkennung an. Über Optimierungen wie das zusammenfassen eines Raumes als ein Kollisionsrechteck statt Kollisionen mit jeder Wand zu überprüfen ist er allerdings größtenteils überfällig geworden.
+
+
+
+
+<div style="text-align:right">4-Reflexion</div>
+
+---
+
+#### 3 - Reflexion
+
+**Habe wir unsere Ziele erreicht?**
+Mit dem obersten Ziel der Selbstweiterbildung abseits von Noten kann man diese Frage nur bejahen. Abgeglichen mit dem Modulhandbuch Informatik des KIT's  entspricht der Umfang und die Methodik bis auf Bildsyntheseverfahren dem behandeltem Stoff des Wahlmodules [Computergraphik](https://www.informatik.kit.edu/downloads/stud/SS24_BScINFO2015_MHB_2024_04_03_de.pdf#%5B%7B%22num%22%3A1401%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C36.52%2C791.2%2C0%5D)
+
+Mein Persöhnliches Highlight des 3D Modelle Einlesens funktioniert nach wie vor Astrein (auch wenn es nie zur Anwendung gefunden hat) und wird außerhalb des Projektrahmens hoffentlich noch ausgebaut sollte ich Zeit finden.
+
+**Was hat sich als schwierig/unlösbar erwiesen?**
+Probleme in kleinere Aufzuteilen und diese nach und nach abzuhaken hat auch hier super funktioniert. Jedoch brauchte es gerade für den grundlegenden OpenGL kram einen Überblick der sich schwer zu erarbeiten war (viel neue lineare Algebra, wenig einsteiger Anleitungen (mit Java bezug)), wobei sich ein Verständnis von C-Pointern definitiv bewährt hat.
+
+Unlösbar bis zum Schluss war das *Instatiating* eine Computer-Graphik-Methode die ähnlich wie Batch-Rendering an Draw Calls spart aber nur vielfache vom gleichen Objekt mahlen kann. Nützlich für etwa Partikel Systeme.
+
+**Welchen Erkenntniszuwachs hat mir das Projekt gebracht?**
+Wenn nicht die bereits erwähnten Kenntnisse aus dem Wahlmodul, dann die Dimensionen in denen Software Projekte wie Unity, Godot und Unreal arbeiten. Die Vielfalt an simulatenen Baustellen die praktisch sauberen Code erzwingt und Versionsmanagement im Arbeiten von (zweier) Teams über GitHub
+
+**Was würde ich bei einem ähnlichen Projekt anders machen?**
+Spezifischer für mein Ziel entwickeln statt alle Wege zu erkunden. Auch wenn mir letzteres auch viel Spaß bereitet ist der Zeitliche Rahmen irgendwo dann doch der limitierende Faktor.
+
+
+**Wie zufrieden bin ich mit dem Endergebnis?**
+Alles in allem sind wir sehr zufrieden mit dem Ergebnis. Es ist am Ende doch noch alles zusammengekommen und der Weg dahin war ein langer und lehrreicher.

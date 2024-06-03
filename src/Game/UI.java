@@ -129,6 +129,65 @@ public class UI {
         }
     }
 
+    private static Button[] smithButtons;
+    public static void onSmithUpgradeGen(Player player, TestGame scene, int bcnt) {
+        Vector2f diff = Window.getDifferP();
+        float bw = (float) Window.dim.x / bcnt / diff.x / diff.x;
+        float bh = Window.dim.y / (bcnt+1f)    / diff.y / diff.y;
+
+
+
+        if(smithButtons == null) {
+            smithButtons = new Button[bcnt];
+            scene.setShouldSimulate(false);
+
+            for (int i = 0; i < bcnt; i++) {
+                smithButtons[i] = new Button(scene, new Vector2f(0, bh * i - bh * (bcnt/2f - 0.5f) + 5*i - 5*(bcnt/2f)));
+                smithButtons[i].scale(bw/2f, bh/2f);
+                smithButtons[i].setColor(0.6f, 0.6f, 0.6f, 0.25f);
+                smithButtons[i].setHitTime(600);
+
+                // rndm ability that has upgrades
+                if(player.getAbilities().isEmpty())
+                    return;
+
+                int l = player.getAbilities().size();
+                Ability rA = player.getAbilities().get((int) (Math.random() * l));
+                rA.onUpgradeGen.accept(rA);
+                while(rA.getUpgrades().isEmpty())
+                    rA = player.getAbilities().get((int) (Math.random() * l));
+
+                Upgrade rU = rA.getRndmUpgrade();
+                rU.setLevel(4);
+                String d = rU.genDescription(rA);
+                smithButtons[i].setLabel(rA.getName() + "\n" + rU.getName() + ": " + d);
+                smithButtons[i].setTooltip(rA.getName() + "\n" + rU.getName() + ": " + d);
+
+                Ability finalRA = rA;
+                smithButtons[i].setReleasedCallback((button) -> {
+                    rU.applyTo(finalRA);
+
+                    scene.setShouldSimulate(true);
+
+                    for(Button ub : smithButtons) {
+                        ub.setReleasedCallback((interactable) -> {});
+                    }
+
+                    smithButtons = null;
+                });
+            }
+        }
+
+        if (smithButtons == null)
+            return;
+
+        Vector2f cp = Test.renderer.getCamera().getPosition();
+        for (int i = 0; i < smithButtons.length; i++) {
+            smithButtons[i].setPosition(-cp.x, bh * i - bh * (bcnt / 2f - 0.5f) + 5 * i - 5 * (bcnt / 2f) + -cp.y);
+        }
+    }
+
+
     public static Button[] getAbilityButtons() {
         return abilityButtons;
     }
@@ -172,6 +231,25 @@ public class UI {
 
                 abilityButtons[i].onUpdate(-1, Test.mousePos);
                 if(abilityButtons == null)
+                    break;
+            }
+        }
+        if (smithButtons != null) {
+            for (int i = 0; i < smithButtons.length; i++) {
+                Test.renderer.draw(smithButtons[i]);
+
+                Vector4f color;
+                if (smithButtons[i].getState() == HOVER)
+                    color = new Vector4f(.1f, .7f, .1f, 1);
+                else if (smithButtons[i].getState() == Interactable.States.DRAGGED)
+                    color = new Vector4f(.5f, 1f, .5f, 1);
+                else
+                    color = new Vector4f(.6f, .6f, .6f, 1);
+
+                Test.renderer.drawRect(smithButtons[i].getPosition().sub(smithButtons[i].getScale(), pos), smithButtons[i].getScale().mul(2, scale), color);
+
+                smithButtons[i].onUpdate(-1, Test.mousePos);
+                if(smithButtons == null)
                     break;
             }
         }

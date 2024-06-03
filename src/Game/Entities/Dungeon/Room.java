@@ -206,13 +206,17 @@ public class Room {
                 smith.setTriggerDistance(150f);
 
                 final boolean[] hasDisplayedHint = {false};
+                final boolean[] hasUpgraded = {false};
 
                 smith.setKeyCallback((interactable, key, scancode, action, mousePos) -> {
                     if(interactable.distance(player) < interactable.getTriggerDistance()) {
                         // open shop
                         if(key == GLFW_KEY_E && action == GLFW_PRESS) {
                             smith.setUpdateCallback((i, mp) -> {});
-                        }
+                            if(!hasUpgraded[0]) {
+                                hasUpgraded[0] = true;
+                                ((TestGame) dungeon.getScene()).setShouldGenSmithUpgrades(true);
+                            }                        }
                         // display hint
                         if(!hasDisplayedHint[0]) {
                             hasDisplayedHint[0] = true;
