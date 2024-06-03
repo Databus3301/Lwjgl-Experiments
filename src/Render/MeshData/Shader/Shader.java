@@ -34,7 +34,7 @@ public class Shader {
     }
 
     public void bind() {
-        Renderer renderer = Test.getRenderer();
+        Renderer renderer = Test.renderer;
         if(!renderer.getCurrentShader().equals(this)) { // if the current shader is not this shader
             renderer.setCurrentShader(this);
             glUseProgram(m_RendererID);

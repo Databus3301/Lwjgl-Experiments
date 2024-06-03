@@ -53,8 +53,6 @@ public class Room {
     private Door[] doors;
     private Room[] connectedRooms;
     private final ArrayList<Entity2D> walls;
-    private final ArrayList<Interactable> contents;
-
     private final AudioSource[] audios = new AudioSource[5];
 
 
@@ -74,7 +72,6 @@ public class Room {
             audios[i].setVolume(Dungeon.EFFECT_VOLUME);
         }
 
-        contents = new ArrayList<>();
         walls = new ArrayList<>((int) (dimensions.x + dimensions.y) * 2 + numOfDoors + 3);
         float scale = 32 * Dungeon.SCALE;
 

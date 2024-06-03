@@ -58,7 +58,7 @@ public class Ability {
     }
 
     public void update(float dt, Vector2f mousePos, Entity2D trigger) {
-        update(dt, mousePos, Test.getRenderer().screenToWorldCoords(mousePos), trigger);
+        update(dt, mousePos, Test.renderer.screenToWorldCoords(mousePos), trigger);
     }
 
     public void update(float dt, Vector2f mousePos, Vector2f target, Entity2D trigger) {

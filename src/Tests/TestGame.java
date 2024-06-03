@@ -134,7 +134,6 @@ public class TestGame extends Test {
         // wave over
         if (spawner.getLastResult() == WAVE_OVER) {
             shouldSimulate = true;
-            dungeon.getMusicAudioSource().stopSound();
             UI.onRoomCompletion(player, this, 3);
         }
         // move <target> to mouse
@@ -147,7 +146,7 @@ public class TestGame extends Test {
 
         if (!shouldSimulate) return;
         // move player
-        player.translate(new Vector2f(player.getVelocity()).mul(player.getSpeed() * dt));
+        player.translate(player.getVelocity().mul(player.getSpeed() * dt, new Vector2f()));
         camera.centerOn(player);
         // collide player and its fields
         player.collide(enemies);

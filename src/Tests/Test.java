@@ -7,8 +7,6 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-// TODO: rework into interface?
-
 /**
 Serves as a template for all tests.
 Tests are used to test the functionality of the engine.
@@ -32,7 +30,6 @@ public class Test {
      * Called on the first frame of the test.
      */
     public void OnStart() {
-
     }
     /**
      * Called every frame.
@@ -50,24 +47,33 @@ public class Test {
         renderer.getCamera().onRender();
         renderer.clear();
     }
-
+    /**
+     * Called when the window is closed.
+     */
     public void OnClose() {
         renderer.getCurrentShader().delete();
         removeAllKeyListeners();
     }
+
+    /**
+     * Called when a key is pressed/released/held
+     */
     public void OnKeyInput(long window, int key, int scancode, int action, int mods) {
         keyCallbacks.forEach(callback -> {
             callback.accept(key, scancode, action, mods, mousePos);
         });
     }
 
+    /**
+     * Called when the window is resized
+     */
     public void OnResize(int width, int height) {
     }
 
 
-    public static Renderer getRenderer() {
-        return renderer;
-    }
+
+
+
     public void addKeyListener(Interactable.QuintConsumer<Integer, Integer, Integer, Integer, Vector2f> callback) {
         keyCallbacks.add(callback);
     }
