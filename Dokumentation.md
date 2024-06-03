@@ -318,7 +318,7 @@ Die Frequenz und Ereigniszahl werden dabei durch die ```currentWave``` beeinflus
 ![](https://cdn.discordapp.com/attachments/801184991316148254/1246980338756882593/image.png?ex=665e5c70&is=665d0af0&hm=b0b24e4f9f65707e6e1b056706c9502f189007137c0d27b503aced6faf3e0f13&)
 <sub>Zusammenhang ```EnemySpawner``` // ```Wave```</sub>
 
-Je nach eingetretenem Fall wird eine andere ```Result``` enum zurückgemeldet, um beispielsweise das ende einer Welle zur Anzeige von neuen Fähigkeiten zu nutzen.
+Je nach eingetretenem Fall wird eine andere ```Result``` enum zurückgemeldet, um beispielsweise das Ende einer Welle zur Anzeige von neuen Fähigkeiten zu nutzen.
 
 ```java
 public Result update(float dt, ArrayList<Enemy> enemyCollection) {  
@@ -472,7 +472,7 @@ Und diese Räume verwalten wiederum ihre Wände, Türen, Verbindungen und auch T
 
 Die Zentrale Renderinginstanz der Engine die die vereinfachenden Abstraktionen zurück in für den Datentransfer zur GPU geeignete Packete verwandelt.
 
-- Dazu Zählt das Übertragen Variabeln, wie diese Transformationsmatrizen 
+- Dazu Zählt das Übertragen von Variabeln, wie diese Transformationsmatrizen 
 	 ```java
 		shader.setUniformMat4f("uModel", modelMatrix);  
 		shader.setUniformMat4f("uView", camera.calcViewMatrix());  
