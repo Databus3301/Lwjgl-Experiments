@@ -139,7 +139,7 @@ Die abertausende Zeilen an Quellcode einzeln zu analysieren würde ein Ausmaß v
 ![](https://cdn.discordapp.com/attachments/801184991316148254/1246957936576565298/image.png?ex=665e4793&is=665cf613&hm=c1b9862696b43d59dca27c08723681cc6e4537a82085e1dd63f33692ff40a40b&)
 <sub>Code-Frequency Analyse von [GitHub](https://github.com/Databus3301/Lwjgl-Experiments/graphs/code-frequency)</sub>
 
-Und da es zum Glück auch nur um Schlüsselstellen geht ist das auch nicht weiter schlimm. Es ist allerdings ganz hilfreich sich vor trotz fehlender Dokumentation von jeder Nische vor die Augen zu rufen um welches Ausmaß es sich hier handelt.
+Und da es zum Glück auch nur um Schlüsselstellen geht ist das auch nicht weiter schlimm. Es ist allerdings ganz hilfreich sich trotz fehlender Dokumentation von jeder Nische vor die Augen zu rufen um welches Ausmaß es sich hier handelt.
 
 Was gegeben war, waren die 115 Zeilen minimalstem [Startercodes](https://www.lwjgl.org/guide)  aus der LWJGL Dokumentation. Darin enthalten: 
 - Betriebssystemunabhängiges erschaffen eines Fensters
