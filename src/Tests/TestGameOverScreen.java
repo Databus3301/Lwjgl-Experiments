@@ -1,5 +1,7 @@
 package Tests;
 
+import Game.Action.Abilities;
+import Game.Entities.Player;
 import Render.Entity.Interactable.Button;
 import Render.Entity.Interactable.Label;
 import Render.MeshData.Shader.Shader;
@@ -15,8 +17,10 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class TestGameOverScreen extends Test {
     Button exit;
-    public TestGameOverScreen() {
+    Player player;
+    public TestGameOverScreen(Player player) {
         super();
+        this.player = player;
         init();
     }
 
@@ -49,6 +53,7 @@ public class TestGameOverScreen extends Test {
             exit.setColorReplacement(cr);
 
             exit.setPressedCallback((button) -> {
+                player.removeAllAbilities();
                 Window.changeTest(new TestStartScreen());
             });
         }

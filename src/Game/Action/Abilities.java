@@ -1,6 +1,7 @@
 package Game.Action;
 
 import Audio.AudioLoader;
+import Game.Entities.Living;
 import Game.Entities.Player;
 import Game.Entities.Projectiles.Homing;
 import Game.Entities.Projectiles.Projectile;
@@ -79,9 +80,19 @@ public class Abilities {
         SHIELD.setName("Shield");
         SHIELD.setDescription("Gives the player a shield for 2 seconds\nthat blocks all incoming damage");
 
+        SHIELD.stats.put("duration", 2f);
+
+        SHIELD.setOnUpgradeGen((a) -> {
+            a.getUpgrades().clear();
+            a.addUpgrade(Upgrades.getDoubleDuration());
+            a.addUpgrade(Upgrades.getFlatDuration());
+        });
+
         AtomicBoolean shielded = new AtomicBoolean(true);
         SHIELD.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
-            ((Player) origin).setiSeconds(2);
+            float dur = ability.stats.get("duration");
+            ((Player) origin).setiSeconds(dur);
+
             origin.setShader(new Shader("texturing.player.shader"));
             if (!shielded.get()) {
                 origin.setColor(0, 0, 1f, 0);
@@ -168,6 +179,52 @@ public class Abilities {
         });
 
         return CIRCLESHOOT;
+    }
+
+    public static Ability getSPEED() {
+        Projectile[] projectiles = new Projectile[1];
+        Ability SPEED = new Ability(projectiles, 0.5f);
+        SPEED.setName("Speed");
+
+        SPEED.stats.put("speed", 350f);
+        SPEED.setOnUpgradeGen((a) -> {
+            a.getUpgrades().clear();
+            a.addUpgrade(Upgrades.getFlatSpeedPlayer());
+        });
+
+        SPEED.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
+            origin.setSpeed(ability.stats.get("speed"));
+            System.out.println("Speed: " + origin.getSpeed());
+        });
+
+        return SPEED;
+    }
+
+    public static Ability getMAXHP() {
+        Projectile[] projectiles = new Projectile[1];
+        Ability MAX_HEALTH = new Ability(projectiles, 0.5f);
+        MAX_HEALTH.setName("Max Health");
+
+        MAX_HEALTH.stats.put("maxHealth", 1000f);
+        MAX_HEALTH.setOnUpgradeGen((a) -> {
+            a.getUpgrades().clear();
+            a.addUpgrade(Upgrades.getFlatMaxHealthPlayer());
+        });
+
+        MAX_HEALTH.setOnTrigger((ability, dt, mousePos, targetPos, origin, scene) -> {
+            Living l = (Living) origin;
+            float max_lp_diff = ability.stats.get("maxHealth") - l.getMaxLP();
+            l.setMaxLP((ability.stats.get("maxHealth").intValue()));
+            l.heal((int)max_lp_diff);
+        });
+
+        MAX_HEALTH.setOnApplyToAble((ability, target) -> {
+            Living l = (Living) target;
+            l.setMaxLP((ability.stats.get("maxHealth").intValue()));
+            l.setLP(l.getMaxLP());
+        });
+
+        return MAX_HEALTH;
     }
 
 }

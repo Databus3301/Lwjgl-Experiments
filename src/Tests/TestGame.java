@@ -113,10 +113,6 @@ public class TestGame extends Test {
             dungeon.setStartedPlaying(true);
 
         Window.baseDim = new Vector2i(Window.dim);
-
-        player.removeAllAbilities();
-        System.out.println(player.getAbilities());
-        player.addAbility(Abilities.getDASH());
     }
 
     @Override
@@ -124,7 +120,7 @@ public class TestGame extends Test {
         if(shouldAdvanceFloor)
             OnStart();
         if(shouldGenSmithUpgrades) {
-            UI.onSmithUpgradeGen(player, this, 5);
+            UI.onSmithUpgradeGen(player, this, 4);
             shouldGenSmithUpgrades = false;
         }
         // game over
@@ -137,7 +133,7 @@ public class TestGame extends Test {
             enemies.clear();
             props.clear();
 
-            Window.changeTest(new TestGameOverScreen());
+            Window.changeTest(new TestGameOverScreen(player));
             shouldSimulate = false;
         }
         // wave over
@@ -162,7 +158,7 @@ public class TestGame extends Test {
         player.collide(room);
         player.collıde(props);
         // spawn enemies
-        spawner.update(dt, enemies);
+        spawner.update(dt, enemies, room.getFloor());
         // change room
         room = room.update(dt, spawner, player, enemies, projectiles, props);
 

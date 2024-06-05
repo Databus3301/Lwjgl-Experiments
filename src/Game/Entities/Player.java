@@ -7,7 +7,6 @@ import Game.Action.Abilities;
 import Game.Action.Ability;
 import Game.Entities.Dungeon.Dungeon;
 import Game.Entities.Dungeon.Room;
-import Game.Entities.Projectiles.Projectile;
 import Game.UI;
 import Render.Entity.Entity2D;
 import Render.Entity.Interactable.Interactable;
@@ -45,12 +44,14 @@ public class Player extends Living implements Able {
         this.scene = scene;
         this.maxLP = maxLivePoints;
         this.LP = maxLivePoints;
-        speed = 350;
+        speed = 200;
         lvl = 1;
         XPtoLvlUp = getXPtoLvlUp();
 
         // add dash ability as a default
         addAbility(Abilities.getDASH());
+        addAbility(Abilities.getSPEED());
+        addAbility(Abilities.getMAXHP());
 
         levelUpSound = AudioLoader.loadWavFileSafe("levelUp.wav");
         xpSound = AudioLoader.loadWavFileSafe("pickup.wav");

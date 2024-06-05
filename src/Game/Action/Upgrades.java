@@ -205,7 +205,7 @@ public class Upgrades {
 
         Upgrade fDebuff = debuff;
         scale.setGenerateDescription((ability, upgrade) -> {
-            return  upgrade.setDescription("Doubles the scale of each projectile from\n" + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0))) + "~ to " + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0) * 2f) +
+            return  upgrade.setDescription("Doubles the scale of each projectile from\n" + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile != null ? projectile.getScale().length() : 0).average().orElse(0))) + "~ to " + toDecimal(Arrays.stream(ability.getProjectileTypes()).mapToDouble(projectile -> projectile.getScale().length()).average().orElse(0) * 2f) +
                     (fDebuff.genDescription(ability).isEmpty() ? "" : "\n" + fDebuff.genDescription(ability)
                 );
         });
@@ -320,6 +320,27 @@ public class Upgrades {
         });
         return reach;
     }
+    public static Upgrade getDoubleDuration() {
+        Upgrade duration = new Upgrade("Duration");
+        duration.setRarity(0.03f);
+
+        // 70% chance of getting a debuff alongside the double
+        Upgrade debuff = getBlank();
+        if (duration.getRndmLevel() < 3)
+            debuff = Math.random() > 0.5 ? getFlatCooldownStatsIncrease() : getFlatReachReduction();
+
+        Upgrade fDebuff = debuff;
+        duration.setGenerateDescription((ability, upgrade) -> {
+            return  upgrade.setDescription("Doubles the duration of the ability from\n" + toDecimal(ability.stats.get("duration")) + " to " + toDecimal(ability.stats.get("duration") * 2f) + " seconds"
+                                          //  + (fDebuff.genDescription(ability).isEmpty() ? "" : "\n\n" + fDebuff.genDescription(ability))
+            );
+        });
+        duration.setOnApply((ability, upgrade) -> {
+            ability.stats.put("duration", ability.stats.get("duration") * 2f);
+            //fDebuff.applyTo(ability);
+        });
+        return duration;
+    }
 
     // NEGATIVE FLATS
 
@@ -421,31 +442,64 @@ public class Upgrades {
         return reach;
     }
 
+    public static Upgrade getFlatDuration() {
+        Upgrade duration = new Upgrade("Duration Reduction");
+
+        float inc = duration.getRndmLevel() * 0.2f;
+
+        duration.setGenerateDescription((ability, upgrade) -> {
+            return  upgrade.setDescription("Increases the duration of the ability by " + inc + " seconds");
+        });
+        duration.setOnApply((ability, upgrade) -> {
+            ability.stats.put("duration", ability.stats.get("duration") + inc);
+        });
+        return duration;
+    }
 
 
-    // ideas
-//    public static Upgrade getDoubleDuration() {
-//        Upgrade dur = new Upgrade("Duration", "Doubles the duration of the ability", 0);
-//        dur.setOnApply((ability, upgrade) -> {
-//            ability.stats.put("duration", ability.stats.get("duration") * 2);
-//        });
-//        return dur;
-//    }
-//
-//    public static Upgrade getDoubleRadius() {
-//        Upgrade rad = new Upgrade("Radius", "Doubles the radius of the ability", 0);
-//        rad.setOnApply((ability, upgrade) -> {
-//            ability.stats.put("radius", ability.stats.get("radius") * 2);
-//        });
-//        return rad;
-//    }
+
+    // PLAYER UPGRADES (movement, maxHealth, health)
+    public static Upgrade getFlatSpeedPlayer() {
+        Upgrade speed = new Upgrade("Speed");
+        speed.setRarity(0.25f);
+
+        int inc =  30 * speed.getRndmLevel();
+
+        speed.setGenerateDescription((ability, upgrade) -> {
+            return  upgrade.setDescription("Increases the speed of the player by " + inc + " pixels per second,\npreviously " + toDecimal(ability.stats.get("speed")) + " (average)");
+        });
+        speed.setOnApply((ability, upgrade) -> {
+            ability.stats.put("speed", ability.stats.get("speed") + inc);
+        });
+        return speed;
+    }
+
+    public static Upgrade getFlatMaxHealthPlayer() {
+        Upgrade health = new Upgrade("Health");
+        health.setRarity(0.25f);
+
+        int inc =  50 * health.getRndmLevel();
+
+        health.setGenerateDescription((ability, upgrade) -> {
+            return  upgrade.setDescription("Increases the max health of the player by " + inc + " health points,\npreviously " + toDecimal(ability.stats.get("maxHealth")) + " (average)");
+        });
+        health.setOnApply((ability, upgrade) -> {
+            ability.stats.put("maxHealth", ability.stats.get("maxHealth") + inc);
+        });
+        return health;
+    }
+
+
 
     public static Upgrade[] getDefaults() {
         return new Upgrade[]{getFlatDmg(), getFlatScale(), getFlatPierce(), getFlatSpeed(), getFlatCooldown(), getDoubleDmg(), getDoubleScale(), getDoublePierce(), getDoubleSpeed(), getHalfCooldown()};
     }
     public static Upgrade[] getDebuffs() {
-        return new Upgrade[]{getFlatScaleReduction()};//, getFlatDmgReduction(),  getFlatPierceReduction(), getFlatSpeedReduction(), getFlatCooldownIncrease()};
+        return new Upgrade[]{getFlatScaleReduction(), getFlatDmgReduction(),  getFlatPierceReduction(), getFlatSpeedReduction(), getFlatCooldownIncrease()};
     }
+
+
+
 
     public static float toDecimal(float f, int decimal) {
         return (float) ((int)(f * Math.pow(10, decimal)) / Math.pow(10, decimal));

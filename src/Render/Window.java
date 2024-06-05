@@ -1,5 +1,7 @@
 package Render;
 
+import Game.Entities.Player;
+import Render.Entity.Entity2D;
 import Tests.*;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -262,7 +264,7 @@ public class Window {
                     currentTest = new TestAbillityScreen();
                     break;
                 case "gameoverscreen", "gos":
-                    currentTest = new TestGameOverScreen();
+                    currentTest = new TestGameOverScreen(new Player(currentTest, new Entity2D(), 1));
                     break;
                 default:
                     currentTest = new Test();

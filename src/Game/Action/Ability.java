@@ -12,6 +12,7 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static Game.Entities.Dungeon.Dungeon.EFFECT_VOLUME;
@@ -40,6 +41,7 @@ public class Ability {
 
     public HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger;
     public Consumer<Ability> onUpgradeGen = (a) -> {a.setUpgrades(Upgrades.getDefaults());};
+    public BiConsumer<Ability, Living> onApplyToAble = (a, b) -> {};
 
     public Ability(Projectile[] projectileTypes, float cooldown) {
         this.projectileTypes = projectileTypes;
@@ -100,6 +102,7 @@ public class Ability {
         into.stats = new HashMap<>(stats);
         into.audioSource = new AudioSource();
         into.setSound(sound);
+        into.setOnApplyToAble(onApplyToAble);
 
         return into;
     }
@@ -188,6 +191,9 @@ public class Ability {
     }
     public void setOnTrigger(HexConsumer<Ability, Float, Vector2f, Vector2f, Entity2D, Test> onTrigger) {
         this.onTrigger = onTrigger;
+    }
+    public void setOnApplyToAble(BiConsumer<Ability, Living> onApplyToAble) {
+        this.onApplyToAble = onApplyToAble;
     }
     public void setOnUpgradeGen(Consumer<Ability> onUpgradeGen) {
         this.onUpgradeGen = onUpgradeGen;

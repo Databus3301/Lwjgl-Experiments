@@ -178,9 +178,21 @@ public class Room {
                 // add boss to room
                 player.setAutoshooting(true);
                 Enemy b = Enemies.getBOSS();
+                // scale boss to floor
+                System.out.println(b.getMaxLP());
+                b.setMaxLP(b.getMaxLP() * floor);
+                System.out.println(b.getMaxLP());
+                b.setLP(b.getMaxLP());
+                b.setSpeed(b.getSpeed() * ((floor + 1f) /2));
+                b.setMaxXP(b.getMaxXP() * floor);
+                b.setMinXP(b.getMinXP() * floor);
+
+                // add and position boss
                 enemies.add(b);
                 b.setPosition(position.x, position.y + 128 * Dungeon.SCALE);
                 b.translate(1,1);
+
+                player.setiSeconds(1);
 
                 audios[2].playSound("ghast2.wav");
             }
@@ -246,7 +258,7 @@ public class Room {
                 // init enemy Spawner to appropriate wave
                 //spawner.setProbabilityDistribution(new float[]{0.5f, 0.5f});
 
-                Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f - floor/10f);
+                Wave w = new Wave(depth, (int)((1f/(depth*depth)) * dungeon.getDepth() * dungeon.getDepth() * dungeon.getDepth()), 0.5f - (floor-1)/5f);
                 spawner.setCurrentWave(w);
 
                 player.setAutoshooting(true);
@@ -465,4 +477,7 @@ public class Room {
         return audios;
     }
 
+    public int getFloor() {
+        return floor;
+    }
 }

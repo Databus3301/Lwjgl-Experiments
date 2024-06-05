@@ -37,13 +37,19 @@ public class EnemySpawner {
 
         return spawned;
     }
-    public Result update(float dt, ArrayList<Enemy> enemyCollection) {
+    public Result update(float dt, ArrayList<Enemy> enemyCollection, int floor) {
         int enemiesLeft = currentWave.getEnemiesLeft();
         currentWave.update(dt);
 
         if (currentWave.getEnemiesLeft() < enemiesLeft) {
             for(int i = 0; i < enemiesLeft - currentWave.getEnemiesLeft(); i++) {
-                enemyCollection.add(spawn());
+                Enemy e = spawn();
+                // scale to floor
+                e.setMaxLP((int) (e.getMaxLP() * (1 + 0.5f * floor-1)));
+                e.setLP(e.getMaxLP());
+                e.setSpeed(e.getSpeed() * (1 + 0.5f * floor-1));
+
+                enemyCollection.add(e);
             }
             return lastResult = Result.SPAWNED;
         }
