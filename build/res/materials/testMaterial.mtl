@@ -1,0 +1,40 @@
+# Example material definition in Wavefront MTL file
+
+newmtl MyMaterial
+Ka 0.2 0.2 0.2
+Kd 0.8 0.8 0.8
+Ks 1.0 1.0 1.0
+Tf 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+Ns 50
+illum 2
+
+map_Ka ambient_texture.jpg
+map_Kd diffuse_texture.jpg
+map_Ks specular_texture.jpg
+map_Ns specular_highlight_texture.jpg
+bump bump_map.jpg
+disp displacement_map.jpg
+decal decal_map.jpg
+map_d alpha_texture.jpg
+refl -type sphere reflection_map.jpg
+
+
+newmtl MyOtherMaterial
+Ka 0.2 0.2 0.2
+Kd 0.8 0.8 0.8
+Ks 1.0 1.0 1.0
+Tf 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+Ns 50
+illum 2
+
+map_Ka ambient_texture.jpg
+map_Kd diffuse_texture.jpg
+map_Ks specular_texture.jpg
+map_Ns specular_highlight_texture.jpg
+bump bump_map.jpg
+disp displacement_map.jpg
+decal decal_map.jpg
+map_d alpha_texture.jpg
+refl -type sphere reflection_map.jpg
