@@ -2,6 +2,11 @@
 
 Documenting my learning process of Open GL and LWJGL for a school project
 
+# Play Main Game:
+- Make sure to have the lastest Java version installed
+- Download "build" folder
+- Run jar using provided scripts
+
 ## Contents (/Tests)
 - Pong
 - Camera
@@ -132,7 +137,7 @@ Assets: <br>
 [Camera Model](https://rigmodels.com/model.php?view=Camera-3d-model__7WSLWPG7ZGVUXV18PUHLN2G4N) <br>
 [Link Animtion](https://forum.unity.com/attachments/linkedit-png.80767/)
 
-## intelij-IDEA "install" (hopefully)
+## intelij-IDEA setup
 - git clone / new project from VCS
 - project-structure
      - select newest sdk
