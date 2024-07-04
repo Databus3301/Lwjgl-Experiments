@@ -266,6 +266,9 @@ public class Window {
                 case "gameoverscreen", "gos":
                     currentTest = new TestGameOverScreen(new Player(currentTest, new Entity2D(), 1));
                     break;
+                case "phyphox", "pp":
+                    currentTest = new TestPhyphoxVis();
+                    break;
                 default:
                     currentTest = new Test();
             }

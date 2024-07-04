@@ -15,7 +15,7 @@ import java.util.Scanner;
 import static org.lwjgl.opengl.GL43.*;
 
 public class Shader {
-    public static final Shader DEFAULT = new Shader("default.shader");
+    public static Shader DEFAULT = new Shader("default.shader");
     public static final Shader TEXTURING = new Shader("texturing.shader");
     public static final Shader TEXTURING_CRA = new Shader("texturing_cra.shader");
     public static final Shader POST_PROCESSING_SWIZZLE = new Shader("post_processing_2.shader");

@@ -19,6 +19,7 @@ import Render.MeshData.Texturing.TextPosParams;
 import Render.MeshData.Texturing.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL43;
 
@@ -457,18 +458,24 @@ public class Renderer {
     }
 
     ///// PRIMITIVES /////
-    public void drawPoint(Vector2f pos, float size, Vector4f color) {
+    public void drawPoint(Vector3f pos, float size, Vector4f color) {
         Shader.DEFAULT.bind();
         SetUniforms(Shader.DEFAULT, null, color);
 
         GL43.glPointSize(size);
         GL43.glBegin(GL_POINTS);
-        GL43.glVertex2f(pos.x, pos.y);
+        GL43.glVertex3f(pos.x, pos.y, 0);
         GL43.glEnd();
     }
 
-    public void drawPoint(Vector2f pos, float size) {
+    public void drawPoint(Vector2f pos, float size, Vector4f color) {
+        drawPoint(new Vector3f(pos, 0), size, color);
+    }
+    public void drawPoint(Vector3f pos, float size) {
         drawPoint(pos, size, new Vector4f(1, 1, 1, 1));
+    }
+    public void drawPoint(Vector2f pos, float size) {
+        drawPoint(new Vector3f(pos,0), size, new Vector4f(1, 1, 1, 1));
     }
 
     public void drawPoint(Vector2f pos) {
@@ -491,15 +498,18 @@ public class Renderer {
         drawPoints(positions, size, new Vector4f(1, 1, 1, 1));
     }
 
-    public void drawLine(Vector2f from, Vector2f to, float size, Vector4f color) {
+    public void drawLine(Vector3f from, Vector3f to, float size, Vector4f color) {
         Shader.DEFAULT.bind();
         SetUniforms(Shader.DEFAULT, null, color);
 
         GL43.glLineWidth(size);
         GL43.glBegin(GL_LINES);
-        GL43.glVertex2f(from.x, from.y);
-        GL43.glVertex2f(to.x, to.y);
+        GL43.glVertex3f(from.x, from.y, from.z);
+        GL43.glVertex3f(to.x, to.y, to.z);
         GL43.glEnd();
+    }
+    public void drawLine(Vector2f from, Vector2f to, float size, Vector4f color) {
+        drawLine(new Vector3f(from, 0), new Vector3f(to, 0), size, color);
     }
 
     public void drawLine(Vector2f from, Vector2f to, float size) {
